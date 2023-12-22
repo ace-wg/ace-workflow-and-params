@@ -1,0 +1,2084 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Alternative Workflow and OAuth Parameters for the Authentication and Authorization for Constrained Environments (ACE) Framework</title>
+<meta content="Marco Tiloca" name="author">
+<meta content="Göran Selander" name="author">
+<meta content="
+       This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines a new, alternative workflow that the Authorization Server can use for uploading an access token to a Resource Server on behalf of the Client. Second, it defines new parameters and encodings for the OAuth 2.0 token endpoint at the Authorization Server. 
+    " name="description">
+<meta content="xml2rfc 3.19.0" name="generator">
+<meta content="Internet-Draft" name="keyword">
+<meta content="draft-ietf-ace-workflow-and-params-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.19.0
+    Python 3.11.6
+    ConfigArgParse 1.7
+    google-i18n-address 3.1.0
+    intervaltree 3.1.0
+    Jinja2 3.1.2
+    lxml 4.9.3
+    platformdirs 4.1.0
+    pycountry 22.3.5
+    PyYAML 6.0.1
+    requests 2.31.0
+    setuptools 68.2.2
+    six 1.16.0
+    wcwidth 0.2.12
+-->
+<link href="draft-ietf-ace-workflow-and-params.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Cabin Condensed", sans-serif;
+  font-weight: 600;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+}
+:is(ol, ul) :is(ol, ul) {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  line-height: 1;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+}
+dl.olPercent {
+  --indent: 5ch;
+}
+dl > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+dl.olPercent > dt {
+  min-width: calc(var(--indent) - 2ch);
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:first-child, .break:first-child + *) {
+  margin-top: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:last-child) {
+  margin-bottom: 0;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    overflow-x: auto;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+}
+a.pilcrow[href] { color: var(--pilcrow-weak); }
+a.pilcrow[href]:hover { text-decoration: none; }
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+}
+#identifiers dt {
+  width: var(--identifier-width);
+  min-width: var(--identifier-width);
+  clear: left;
+  float: left;
+  text-align: right;
+  margin-right: 1ch;
+}
+#identifiers dd {
+  margin: 0;
+  margin-left: calc(1em + var(--identifier-width)) !important;
+  min-width: 5em;
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+#toc nav ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+#toc nav li {
+  line-height: 1.3em;
+  margin: 2px 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+#toc a.xref {
+  white-space: normal;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 10ch;
+  margin-right: 1.5ch;
+}
+.references dt:target::before {
+  content: "⇒";
+  width: 15px;
+  margin: 0 10px 0 -25px;
+}
+.references dd {
+  margin-left: 12ch !important;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 1px 0 0 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc.active {
+      opacity: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 8px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active nav {
+    display: block;
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin-top: 2px;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  #toc nav > ul  {
+    margin-bottom: 2em;
+  }
+  #toc ul {
+    margin: 0 0 0 4px;
+    font-size: var(--small-font-size);
+  }
+  #toc ul :is(p, li) {
+    margin: 2px 0;
+    line-height: 22px;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre, .vcard {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  :is(h2, h3, h4, h5, h6)+*, dd {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+  .toplink {
+    display: none;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Changes introduced to fix issues found during implementation */
+
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin: 8px 0.5em 0;
+}
+
+/* Provide styling for table cell text alignment */
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 20em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">Alternative ACE Workflow and Parameters</td>
+<td class="right">December 2023</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Tiloca &amp; Selander</td>
+<td class="center">Expires 24 June 2024</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">ACE Working Group</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-ietf-ace-workflow-and-params-latest</dd>
+<dt class="label-updates">Updates:</dt>
+<dd class="updates">
+<a href="https://www.rfc-editor.org/rfc/rfc9200" class="eref">9200</a> (if approved)</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2023-12-22" class="published">22 December 2023</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Standards Track</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2024-06-24">24 June 2024</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">M. Tiloca</div>
+<div class="org">RISE AB</div>
+</div>
+<div class="author">
+      <div class="author-name">G. Selander</div>
+<div class="org">Ericsson AB</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Alternative Workflow and OAuth Parameters for the Authentication and Authorization for Constrained Environments (ACE) Framework</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines a new, alternative workflow that the Authorization Server can use for uploading an access token to a Resource Server on behalf of the Client. Second, it defines new parameters and encodings for the OAuth 2.0 token endpoint at the Authorization Server.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-discussion-venues">
+<a href="#name-discussion-venues" class="section-name selfRef">Discussion Venues</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">Discussion of this document takes place on the
+    Authentication and Authorization for Constrained Environments Working Group mailing list (ace@ietf.org),
+    which is archived at <span><a href="https://mailarchive.ietf.org/arch/browse/ace/">https://mailarchive.ietf.org/arch/browse/ace/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">Source for this draft and an issue tracker can be found at
+    <span><a href="https://github.com/ace-wg/ace-workflow-and-params">https://github.com/ace-wg/ace-workflow-and-params</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 24 June 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2023 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-terminology" class="internal xref">Terminology</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-new-ace-workflow" class="internal xref">New ACE Workflow</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-new-ace-parameters" class="internal xref">New ACE Parameters</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-token_uploaded" class="internal xref">token_uploaded</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.1">
+                    <p id="section-toc.1-1.3.2.1.2.1.1"><a href="#section-3.1.1" class="auto internal xref">3.1.1</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-rs_cnf2-and-aud2" class="internal xref">rs_cnf2 and aud2</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.1">
+                    <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1" class="auto internal xref">3.2.1</a>.  <a href="#name-example" class="internal xref">Example</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-anchor_cnf" class="internal xref">anchor_cnf</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.1">
+                    <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="auto internal xref">3.3.1</a>.  <a href="#name-example-2" class="internal xref">Example</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-oauth-parameters-registry" class="internal xref">OAuth Parameters Registry</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-oauth-parameters-cbor-mappi" class="internal xref">OAuth Parameters CBOR Mappings Registry</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-benefits-for-ace-transport-" class="internal xref">Benefits for ACE Transport Profiles</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#appendix-A.1" class="auto internal xref">A.1</a>.  <a href="#name-dtls-profile" class="internal xref">DTLS Profile</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#appendix-A.2" class="auto internal xref">A.2</a>.  <a href="#name-edhoc-and-oscore-profile" class="internal xref">EDHOC and OSCORE Profile</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-open-points" class="internal xref">Open Points</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
+                <p id="section-toc.1-1.8.2.1.1"><a href="#appendix-B.1" class="auto internal xref">B.1</a>.  <a href="#name-new-workflow" class="internal xref">New Workflow</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.1">
+                    <p id="section-toc.1-1.8.2.1.2.1.1"><a href="#appendix-B.1.1" class="auto internal xref">B.1.1</a>.  <a href="#name-allow-the-dynamic-update-of" class="internal xref">Allow the Dynamic Update of Access Rights</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.2">
+                    <p id="section-toc.1-1.8.2.1.2.2.1"><a href="#appendix-B.1.2" class="auto internal xref">B.1.2</a>.  <a href="#name-allow-the-re-uploading-of-t" class="internal xref">Allow the Re-uploading of the Access Token</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1.2.3">
+                    <p id="section-toc.1-1.8.2.1.2.3.1"><a href="#appendix-B.1.3" class="auto internal xref">B.1.3</a>.  <a href="#name-ensure-applicability-to-any" class="internal xref">Ensure Applicability to Any ACE Profile</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
+                <p id="section-toc.1-1.8.2.2.1"><a href="#appendix-B.2" class="auto internal xref">B.2</a>.  <a href="#name-new-parameters" class="internal xref">New Parameters</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.1">
+                    <p id="section-toc.1-1.8.2.2.2.1.1"><a href="#appendix-B.2.1" class="auto internal xref">B.2.1</a>.  <a href="#name-token_uploaded-2" class="internal xref">token_uploaded</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2.2.2">
+                    <p id="section-toc.1-1.8.2.2.2.2.1"><a href="#appendix-B.2.2" class="auto internal xref">B.2.2</a>.  <a href="#name-further-new-parameters-to-c" class="internal xref">Further New Parameters to Consider</a></p>
+</li>
+                </ul>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="intro">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">The Authentication and Authorization for Constrained Environments (ACE) framework <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span> defines an architecture to enforce access control for constrained devices. A Client (C) requests an assertion of granted permissions from an Authorization Server (AS) in the form of an access token, then uploads the access token to the target Resource Server (RS), and finally accesses protected resources at the RS according to the permissions specified in the access token.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">The framework has as main building blocks the OAuth 2.0 framework <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>, the Constrained Application Protocol (CoAP) <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span> for message transfer, CBOR <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> for compact encoding, and COSE <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span><span>[<a href="#RFC9053" class="cite xref">RFC9053</a>]</span> for self-contained protection of access tokens. In addition, separate profile documents define in detail how the participants in the ACE architecture communicate, especially as to the security protocols that they use.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">This document updates <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span> as follows.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1-4.1">
+          <p id="section-1-4.1.1">It defines a new, alternative protocol workflow for the ACE framework (see <a href="#sec-workflow" class="auto internal xref">Section 2</a>), according to which the AS uploads the access token to the RS on behalf of C, and then informs C about the outcome. The new workflow is especially convenient in deployments where the communication leg between C and the RS is constrained, but the communication leg between the AS and the RS is not.<a href="#section-1-4.1.1" class="pilcrow">¶</a></p>
+<p id="section-1-4.1.2">
+The new workflow has no ambition to replace the original workflow. The AS can use one workflow or the other depending, for example, on the specific RS for which an access token has been issued and the nature of the communication leg with that RS.<a href="#section-1-4.1.2" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-4.2">
+          <p id="section-1-4.2.1">It defines additional parameters and encodings for the OAuth 2.0 token endpoint at the AS (see <a href="#sec-parameters" class="auto internal xref">Section 3</a>). These include:<a href="#section-1-4.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1-4.2.2.1">
+              <p id="section-1-4.2.2.1.1">"token_uploaded", used by the AS to inform C about the outcome of the token uploading to the RS, as per the new ACE workflow.<a href="#section-1-4.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-1-4.2.2.2">
+              <p id="section-1-4.2.2.2.1">"rs_cnf2", used by the AS to provide C with the public keys of the RSs in the group-audience for which the access token is issued (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-6.9" class="relref">Section 6.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>).<a href="#section-1-4.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-1-4.2.2.3">
+              <p id="section-1-4.2.2.3.1">"aud2", used by the AS to provide C with the identifiers of the RSs in the group-audience for which the access token is issued.<a href="#section-1-4.2.2.3.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-1-4.2.2.4">
+              <p id="section-1-4.2.2.4.1">"anchor_cnf", used by the AS to provide C with the public keys of trust anchors, which C can use to validate the public key of an RS (e.g., as provided in the parameter "rs_cnf" defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> or in the parameter "rs_cnf2" defined in this document).<a href="#section-1-4.2.2.4.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</li>
+      </ul>
+<div id="terminology">
+<section id="section-1.1">
+        <h3 id="name-terminology">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
+        </h3>
+<p id="section-1.1-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL
+NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED",
+"MAY", and "OPTIONAL" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-2">Readers are expected to be familiar with the terms and concepts described in the ACE framework for Authentication and Authorization <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span><span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span>, as well as with terms and concepts related to CBOR Web Tokens (CWTs) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span> and CWT Confirmation Methods <span>[<a href="#RFC8747" class="cite xref">RFC8747</a>]</span>.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
+<p id="section-1.1-3">The terminology for entities in the considered architecture is defined in OAuth 2.0 <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>. In particular, this includes Client (C), Resource Server (RS), and Authorization Server (AS).<a href="#section-1.1-3" class="pilcrow">¶</a></p>
+<p id="section-1.1-4">Readers are also expected to be familiar with the terms and concepts related to the CoAP protocol <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>, CBOR <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>, and COSE <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span><span>[<a href="#RFC9053" class="cite xref">RFC9053</a>]</span>.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+<p id="section-1.1-5">Note that, unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."<a href="#section-1.1-5" class="pilcrow">¶</a></p>
+<p id="section-1.1-6">Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.<a href="#section-1.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-workflow">
+<section id="section-2">
+      <h2 id="name-new-ace-workflow">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-new-ace-workflow" class="section-name selfRef">New ACE Workflow</a>
+      </h2>
+<p id="section-2-1">As defined in <span><a href="https://rfc-editor.org/rfc/rfc9200#section-4" class="relref">Section 4</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, the ACE framework considers what is shown in <a href="#fig-old-workflow" class="auto internal xref">Figure 1</a> as its basic protocol workflow.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">That is, the Client first sends an access token request to the token endpoint at the AS (step A), specifying permissions that it seeks to obtain for accessing protected resources at the RS, possibly together with information on its own credentials.<a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">Then, if the request has been successfully verified, authenticated, and authorized, the AS replies to the Client (step B), providing an access token and possibly additional parameters as access information including the actually granted permissions.<a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">Finally, the Client uploads the access token to the RS and, consistently with the permissions granted according to the access token, accesses a resource at the RS (step C), which replies with the result of the resource access (step F). Details about what protocol the Client and RS use to establish a secure association, mutually authenticate and secure their communications are defined in the specifically used profile of ACE, e.g., <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span><span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span><span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span><span>[<a href="#I-D.tiloca-ace-group-oscore-profile" class="cite xref">I-D.tiloca-ace-group-oscore-profile</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">Further interactions are possible between the AS and RS, i.e., the exchange of an introspection request and response where the AS validates a previously issued access token for RS (steps D and E).<a href="#section-2-5" class="pilcrow">¶</a></p>
+<span id="name-ace-basic-protocol-workflow"></span><div id="fig-old-workflow">
+<figure id="figure-1">
+        <div class="alignLeft art-text artwork" id="section-2-6.1">
+<pre>
++--------+                               +---------------+
+|        |---(A)-- Token Request -------&gt;|               |
+|        |                               | Authorization |
+|        |&lt;--(B)-- Access Token ---------|    Server     |
+|        |    + Access Information       |               |
+|        |    + Refresh Token (optional) +---------------+
+|        |                                      ^ |
+|        |            Introspection Request  (D)| |
+| Client |                         Response     | |(E)
+|        |            (optional exchange)       | |
+|        |                                      | v
+|        |                               +--------------+
+|        |---(C)-- Token + Request -----&gt;|              |
+|        |                               |   Resource   |
+|        |&lt;--(F)-- Protected Resource ---|    Server    |
+|        |                               |              |
++--------+                               +--------------+
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-ace-basic-protocol-workflow" class="selfRef">ACE Basic Protocol Workflow</a>
+        </figcaption></figure>
+</div>
+<p id="section-2-7">This section defines a new, alternative protocol workflow shown in <a href="#fig-new-workflow" class="auto internal xref">Figure 2</a>, which MAY be supported by the AS. Unlike in the original protocol workflow, the AS uploads the access token to the RS on behalf of the Client, and then informs the Client about the outcome.<a href="#section-2-7" class="pilcrow">¶</a></p>
+<p id="section-2-8">If the token uploading has been successfully completed, the AS does not provide the access token to the Client altogether. Instead, the Client simply establishes a secure association with the RS (if that has not happened already), and then accesses protected resources at the RS according to the permissions granted per the access token and specified by the AS as access information.<a href="#section-2-8" class="pilcrow">¶</a></p>
+<span id="name-ace-alternative-protocol-wo"></span><div id="fig-new-workflow">
+<figure id="figure-2">
+        <div class="alignLeft art-text artwork" id="section-2-9.1">
+<pre>
++--------+                               +----------------------------+
+|        |---(A)-- Token Request -------&gt;|                            |
+|        |                               |       Authorization        |
+|        |&lt;--(B)-- Token Response -------|           Server           |
+|        |    + Access Information       |                            |
+|        |    + Access Token (optional)  +----------------------------+
+|        |    + Refresh Token (optional)   ^ |         | ^
+|        |                                 | |         | | Token-Upload
+|        |        Introspection Request (D)| |     (A1)| |      Request
+| Client |                     Response    | |(E)      | |(A2) Response
+|        |        (optional exchange)      | |         | |
+|        |                                 | v         v |
+|        |                               +----------------------------+
+|        |---(C1)-- Token (Optional) ---&gt;|                            |
+|        |                               |                            |
+|        |---(C2)-- Protected Request --&gt;|          Resource          |
+|        |                               |           Server           |
+|        |&lt;--(F)--- Protected Resource --|                            |
+|        |                               |                            |
++--------+                               +----------------------------+
+</pre>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-ace-alternative-protocol-wo" class="selfRef">ACE Alternative Protocol Workflow</a>
+        </figcaption></figure>
+</div>
+<p id="section-2-10">More specifically, the new workflow consists of the following steps.<a href="#section-2-10" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-2-11.1">
+          <p id="section-2-11.1.1">Step A - This step is as in the original workflow, with the Client sending an Access Token Request to the token endpoint at the AS.<a href="#section-2-11.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-11.2">
+          <p id="section-2-11.2.1">Step A1 - This new step consists of the AS uploading the access token to the RS, typically at the authz-info endpoint, just like the Client does in the original workflow.<a href="#section-2-11.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-11.3">
+          <p id="section-2-11.3.1">Step A2 - This new step consists of the RS replying to the AS, following the uploading of the access token at step A1.<a href="#section-2-11.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-11.4">
+          <p id="section-2-11.4.1">Step B - In the Access Token Response, the AS tells the Client that it has attempted to upload the access token to the RS, specifying the outcome of the token uploading based on the reply received from the RS at step A2.<a href="#section-2-11.4.1" class="pilcrow">¶</a></p>
+<p id="section-2-11.4.2">
+As defined in <a href="#sec-token_uploaded" class="auto internal xref">Section 3.1</a>, this information is conveyed by the "token_uploaded" parameter. If the token uploading has succeeded, the AS does not provide the Client with the access token. Otherwise, the AS provides the Client with the access token.<a href="#section-2-11.4.2" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-11.5">
+          <p id="section-2-11.5.1">Step C1 - This step occurs only if the token uploading from the AS has failed, and the AS has provided the Client with the access token at step B. In such a case, the Client uploads the access token to the RS just like at step C of the original workflow.<a href="#section-2-11.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-11.6">
+          <p id="section-2-11.6.1">Step C2 - The Client attempts to access a protected resource at the RS, according to the permissions granted per the access token and specified by the AS as access information at step B.<a href="#section-2-11.6.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-2-11.7">
+          <p id="section-2-11.7.1">Steps D, E and F are as in the original workflow.<a href="#section-2-11.7.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-2-12">The new workflow has no ambition to replace the original workflow defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>. The AS can use one workflow or the other depending, for example, on the specific RS for which the access token has been issued and the nature of the communication leg with that RS.<a href="#section-2-12" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-parameters">
+<section id="section-3">
+      <h2 id="name-new-ace-parameters">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-new-ace-parameters" class="section-name selfRef">New ACE Parameters</a>
+      </h2>
+<p id="section-3-1">The rest of this section defines a number of additional parameters and encodings for the OAuth 2.0 token endpoint at the AS.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<div id="sec-token_uploaded">
+<section id="section-3.1">
+        <h3 id="name-token_uploaded">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-token_uploaded" class="section-name selfRef">token_uploaded</a>
+        </h3>
+<p id="section-3.1-1">This section defines the additional parameter "token_uploaded" for an Access Token Response, sent by the AS in reply to a request to the token endpoint from C.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">The parameter "token_uploaded" is REQUIRED in a successful Access Token Response with response code 2.01 (Created), if the AS has issued an access token and has attempted to upload it to the RS on behalf of C as per the ACE alternative protocol workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>, irrespective of the result of the token upload. Otherwise, the parameter "token_uploaded" MUST NOT be present.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">If present, the parameter "token_uploaded" MUST encode the CBOR simple value "true" (0xf5) if the token upload at the RS was successful, or the CBOR simple value "false" (0xf4) otherwise.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-4">If the parameter "token_upload" encodes the CBOR simple value "true", the access token MUST NOT be included in the Access Token response. Otherwise, the access token MUST be included.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<div id="examples">
+<section id="section-3.1.1">
+          <h4 id="name-examples">
+<a href="#section-3.1.1" class="section-number selfRef">3.1.1. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
+          </h4>
+<p id="section-3.1.1-1"><a href="#fig-example-AS-to-C-token-uploaded" class="auto internal xref">Figure 3</a> shows an example of Access Token Response from the AS to C, following the issue of an access token bound to a symmetric PoP key. The Access Token Response specifies the parameter "token_uploaded" with value "true", which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-2">Consistently, the Access Token Response does not include the access token, while it still includes the parameter "cnf" specifying the symmetric PoP key bound to the access token.<a href="#section-3.1.1-2" class="pilcrow">¶</a></p>
+<span id="name-example-of-access-token-res"></span><div id="fig-example-AS-to-C-token-uploaded">
+<figure id="figure-3">
+            <div class="alignLeft art-text artwork" id="section-3.1.1-3.1">
+<pre>
+   2.01 Created
+   Content-Format: application/ace+cbor
+   Max-Age: 3560
+   Payload:
+   {
+     "token_uploaded" : true,
+     "expires_in" : 3600,
+     "cnf" : {
+       "COSE_Key" : {
+         "kty" : 1,
+         "kid" : h'3d027833fc6267ce',
+         "k" : h'73657373696f6e6b6579'
+       }
+     }
+   }
+</pre>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-example-of-access-token-res" class="selfRef">Example of Access Token Response, including the parameter "token_uploaded" but not the access token, which is bound to a symmetric key and was uploaded to the RS by the AS</a>
+            </figcaption></figure>
+</div>
+<p id="section-3.1.1-4"><a href="#fig-example-AS-to-C-token-uploaded-failed" class="auto internal xref">Figure 4</a> shows another example of Access Token Response from the AS to C, also following the issue of an access token bound to a symmetric PoP key. In this example, the Access Token Response includes the parameter "token_uploaded" with value "false", which indicates that the AS has failed to upload the access token to the RS on behalf of C. The Access Token Response also includes the access token and the parameter "cnf" specifying the symmetric PoP key bound to the access token.<a href="#section-3.1.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-5">Note that, even though the AS has failed to upload the access token to the RS, the response code 2.01 (Created) is used when replying to C, since the Access Token Request as such has been successfully processed at the AS, with the following issue of the access token.<a href="#section-3.1.1-5" class="pilcrow">¶</a></p>
+<span id="name-example-of-access-token-resp"></span><div id="fig-example-AS-to-C-token-uploaded-failed">
+<figure id="figure-4">
+            <div class="alignLeft art-text artwork" id="section-3.1.1-6.1">
+<pre>
+   2.01 Created
+   Content-Format: application/ace+cbor
+   Max-Age: 3560
+   Payload:
+   {
+     "access_token" : h'd08343a1'/...
+      (remainder of CWT omitted for brevity;
+      CWT contains the symmetric PoP key in the "cnf" claim)/,
+     "token_uploaded" : false,
+     "expires_in" : 3600,
+     "cnf" : {
+       "COSE_Key" : {
+         "kty" : 1,
+         "kid" : h'3d027833fc6267ce',
+         "k" : h'73657373696f6e6b6579'
+       }
+     }
+   }
+</pre>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-example-of-access-token-resp" class="selfRef">Example of Access Token Response, including the parameter "token_uploaded" together with the access token, which is bound to a symmetric key and which the AS failed to upload to the RS</a>
+            </figcaption></figure>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-rs_cnf2-aud2">
+<section id="section-3.2">
+        <h3 id="name-rs_cnf2-and-aud2">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-rs_cnf2-and-aud2" class="section-name selfRef">rs_cnf2 and aud2</a>
+        </h3>
+<p id="section-3.2-1">This section defines the additional parameters "rs_cnf2" and "aud2" for an Access Token Response, sent by the AS in reply to a request to the token endpoint from C.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.2-2.1">
+            <p id="section-3.2-2.1.1">The parameter "rs_cnf2" is OPTIONAL if the token type is "pop", asymmetric keys are used, and the access token is issued for an audience that includes multiple RSs (i.e., a group-audience, see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-6.9" class="relref">Section 6.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>). Otherwise, the parameter "rs_cnf2" MUST NOT be present.<a href="#section-3.2-2.1.1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2.1.2">
+This parameter specifies information about the public keys used by the RSs of a group-audience for authenticating themselves to C, and is used in case the binding between the public keys and the corresponding RS identities are not established through other means. If this parameter is absent, either the RSs in the group-audience do not use a public key, or the AS knows that the RSs can authenticate themselves to C without additional information.<a href="#section-3.2-2.1.2" class="pilcrow">¶</a></p>
+<p id="section-3.2-2.1.3">
+If present, this parameter MUST encode a non-empty CBOR array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. Each element of the CBOR array specifies the public key of one RS in the group-audience, and MUST follow the syntax and semantics of the "cnf" claim either from <span><a href="https://rfc-editor.org/rfc/rfc8747#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC8747" class="cite xref">RFC8747</a>]</span> for CBOR-based interactions, or from <span><a href="https://rfc-editor.org/rfc/rfc7800#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC7800" class="cite xref">RFC7800</a>]</span> for JSON-based interactions. It is not required that all the elements of the CBOR array rely on the same confirmation method.<a href="#section-3.2-2.1.3" class="pilcrow">¶</a></p>
+<p id="section-3.2-2.1.4">
+Each of the public keys may contain parameters specifying information such as the public key algorithm and use (e.g., by means of the parameters "alg" or "key_ops" in a COSE_Key structure). If such information is specified, a Client MUST NOT use a public key that is incompatible with the profile or PoP algorithm according to that information. An RS MUST reject a proof of possession using such a key with a response code equivalent to the CoAP code 4.00 (Bad Request).<a href="#section-3.2-2.1.4" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.2-2.2">
+            <p id="section-3.2-2.2.1">The parameter "aud2" is OPTIONAL and specifies the identifiers of the RSs in the group-audience for which the access token is issued.<a href="#section-3.2-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2.2.2">
+If present, this parameter MUST encode a non-empty CBOR array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. Each element of the CBOR array in the "aud2" parameter MUST be a CBOR text string, with value the identifier of one RS in the group-audience.<a href="#section-3.2-2.2.2" class="pilcrow">¶</a></p>
+<p id="section-3.2-2.2.3">
+The element of the CBOR array referring to an RS in the group-audience SHOULD have the same value that would be used to identify that RS through the parameter "aud" of an Access Token Request to the AS (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.2" class="relref">Section 5.8.2</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>) and an Access Token Response from the AS (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.2" class="relref">Section 5.8.2</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), when requesting and issuing an access token for that individual RS.<a href="#section-3.2-2.2.3" class="pilcrow">¶</a></p>
+<p id="section-3.2-2.2.4">
+The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. The i-th element of the CBOR array in the "aud2" parameter MUST be the identifier of the RS whose public key is specified as the i-th element of the CBOR array in the "rs_cnf2" parameter.<a href="#section-3.2-2.2.4" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<div id="example">
+<section id="section-3.2.1">
+          <h4 id="name-example">
+<a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-example" class="section-name selfRef">Example</a>
+          </h4>
+<p id="section-3.2.1-1"><a href="#fig-example-AS-to-C-rs_cnf2" class="auto internal xref">Figure 5</a> shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience composed of two RSs "rs1" and "rs2", and bound to C's public key as asymmetric PoP key. The Access Token Response includes the access token, as well as the parameters "rs_cnf2" and "aud2". These specify the public key of the two RSs as intended recipients of the access token and the identifiers of those two RSs, respectively.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
+<span id="name-example-of-access-token-respo"></span><div id="fig-example-AS-to-C-rs_cnf2">
+<figure id="figure-5">
+            <div class="alignLeft art-text artwork" id="section-3.2.1-2.1">
+<pre>
+   2.01 Created
+   Content-Format: application/ace+cbor
+   Max-Age: 3600
+   Payload:
+   {
+     "access_token" : b64'SlAV32hk'/...
+      (remainder of CWT omitted for brevity;
+      CWT contains the client's RPK in the "cnf" claim)/,
+     "expires_in" : 3600,
+     "rs_cnf2" : [
+       {
+         "COSE_Key" : {
+           "kty" : 2,
+           "crv" : 1,
+           "x" : h'bbc34960526ea4d32e940cad2a234148
+                   ddc21791a12afbcbac93622046dd44f0',
+           "y" : h'4519e257236b2a0ce2023f0931f1f386
+                   ca7afda64fcde0108c224c51eabf6072'
+         }
+       },
+       {
+         "COSE_Key" : {
+           "kty" : 2,
+           "crv" : 1,
+           "x" : h'ac75e9ece3e50bfc8ed6039988952240
+                   5c47bf16df96660a41298cb4307f7eb6',
+           "y" : h'6e5de611388a4b8a8211334ac7d37ecb
+                   52a387d257e6db3c2a93df21ff3affc8'
+         }
+       }
+     ],
+     "aud2" : ["rs1", "rs2"]
+   }
+</pre>
+</div>
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<a href="#name-example-of-access-token-respo" class="selfRef">Example of Access Token Response with an access token bound to an asymmetric key, using the parameters "rs_cnf2" and "aud2"</a>
+            </figcaption></figure>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-anchor_cnf">
+<section id="section-3.3">
+        <h3 id="name-anchor_cnf">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-anchor_cnf" class="section-name selfRef">anchor_cnf</a>
+        </h3>
+<p id="section-3.3-1">This section defines the additional parameter "anchor_cnf" for an Access Token Response, sent by the AS in reply to a request to the token endpoint from C.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-2">The parameter "anchor_cnf" is OPTIONAL if the token type is "pop" and asymmetric keys are used. Otherwise, the parameter "anchor_cnf" MUST NOT be present.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">This parameter specifies information about the public keys of trust anchors, which C can use to validate the public key of the RS/RSs included in the audience for which the access token is issued. This parameter can be used when the access token is issued for an audience including one RS or multiple RSs.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">If this parameter is absent, either the RS/RSs in the audience do not use a public key, or the AS knows that C can validate the public key of such RS/RSs without additional information (e.g., C has already obtained the required public keys of the involved trust anchors from the AS or through other means).<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">If present, this parameter MUST encode a non-empty CBOR array that MUST be treated as a set, i.e., the order of its elements has no meaning. Each element of the CBOR array specifies the public key of one trust anchor, which can be used to validate the public key of at least one RS included in the audience for which the access token is issued. Each element of the CBOR array MUST follow the syntax and semantics of the "cnf" claim either from <span><a href="https://rfc-editor.org/rfc/rfc8747#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC8747" class="cite xref">RFC8747</a>]</span> for CBOR-based interactions, or from <span><a href="https://rfc-editor.org/rfc/rfc7800#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC7800" class="cite xref">RFC7800</a>]</span> for JSON-based interactions. It is not required that all the elements of the CBOR array rely on the same confirmation method.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.3-6">Each of the public keys specified in the parameter "anchor_cnf" may contain parameters specifying information such as the public key algorithm and use (e.g., by means of the parameters "alg" or "key_ops" in a COSE_Key structure). If such information is specified, a Client MUST NOT use a public key that is incompatible with the profile, or with the public keys to validate and the way to validate those.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
+<p id="section-3.3-7">The presence of this parameter does not require that the Access Token Response also includes the parameter "req_cnf" defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> or the parameter "req_cnf2" defined in <a href="#sec-rs_cnf2-aud2" class="auto internal xref">Section 3.2</a> of this document. That is, C may be able to obtain the public keys of the RS/RSs for which the access token is issued through other means.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
+<p id="section-3.3-8">When the Access Token Response includes both the parameter "anchor_cnf" and the parameter "aud2" defined in <a href="#sec-rs_cnf2-aud2" class="auto internal xref">Section 3.2</a>, then C MUST make sure that a public key PK_RS is associated with an RS identified by an element of "aud2", before using any of the public keys specified in "anchor_cnf" to validate PK_RS.<a href="#section-3.3-8" class="pilcrow">¶</a></p>
+<p id="section-3.3-9">When the Access Token Response includes the parameter "anchor_cnf" but not the parameter "aud2", then C can use the issued access token with any RS in the targeted audience for which "anchor_cnf" can be used to validate PK_RS. This allows C to use the access token with an RS that is deployed later on as part of the same audience, which is particularly useful in the case of a group-audience.<a href="#section-3.3-9" class="pilcrow">¶</a></p>
+<div id="example-1">
+<section id="section-3.3.1">
+          <h4 id="name-example-2">
+<a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-example-2" class="section-name selfRef">Example</a>
+          </h4>
+<p id="section-3.3.1-1"><a href="#fig-example-AS-to-C-anchor_cnf" class="auto internal xref">Figure 6</a> shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience, and bound to C's public key as asymmetric PoP key.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-2">The identifier of the group-audience was specified by the "aud" parameter of the Access Token Request to the AS and is specified by the "aud" claim of the issued access token, and is not repeated in the Access Token Response from the AS.<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-3">The Access Token Response includes the parameter "anchor_cnf". This specifies the public key of a trust anchor that C can use to validate the public keys of any RS with which the access token is going to be used. The public key of the trust anchor is here conveyed within an X.509 certificate used as authentication credential for that trust anchor, by means of the CWT confirmation method "x5chain" defined in <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>.<a href="#section-3.3.1-3" class="pilcrow">¶</a></p>
+<span id="name-example-of-access-token-respon"></span><div id="fig-example-AS-to-C-anchor_cnf">
+<figure id="figure-6">
+            <div class="alignLeft art-text artwork" id="section-3.3.1-4.1">
+<pre>
+   2.01 Created
+   Content-Format: application/ace+cbor
+   Max-Age: 3600
+   Payload:
+   {
+     "access_token" : b64'SlAV32hk'/...
+      (remainder of CWT omitted for brevity;
+      CWT contains the client's RPK in the "cnf" claim)/,
+     "expires_in" : 3600,
+     "anchor_cnf" : [
+       {
+         "x5chain" : h'308201363081dea003020102020301f50d30
+                       0a06082a8648ce3d04030230163114301206
+                       035504030c0b524643207465737420434130
+                       1e170d3230303130313030303030305a170d
+                       3231303230323030303030305a3022312030
+                       1e06035504030c1730312d32332d34352d46
+                       462d46452d36372d38392d41423059301306
+                       072a8648ce3d020106082a8648ce3d030107
+                       03420004b1216ab96e5b3b3340f5bdf02e69
+                       3f16213a04525ed44450b1019c2dfd3838ab
+                       ac4e14d86c0983ed5e9eef2448c6861cc406
+                       547177e6026030d051f7792ac206a30f300d
+                       300b0603551d0f040403020780300a06082a
+                       8648ce3d04030203470030440220445d798c
+                       90e7f500dc747a654cec6cfa6f037276e14e
+                       52ed07fc16294c84660d02205a33985dfbd4
+                       bfdd6d4acf3804c3d46ebf3b7fa62640674f
+                       c0354fa056dbaea6'
+       }
+     ]
+   }
+</pre>
+</div>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-example-of-access-token-respon" class="selfRef">Example of Access Token Response with an access token bound to an asymmetric key, using the parameter "anchor_cnf"</a>
+            </figcaption></figure>
+</div>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="security-considerations">
+<section id="section-4">
+      <h2 id="name-security-considerations">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-4-1">TBD<a href="#section-4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana-considerations">
+<section id="section-5">
+      <h2 id="name-iana-considerations">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-5-1">This document has the following actions for IANA.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<div id="iana-oauth-params">
+<section id="section-5.1">
+        <h3 id="name-oauth-parameters-registry">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-oauth-parameters-registry" class="section-name selfRef">OAuth Parameters Registry</a>
+        </h3>
+<p id="section-5.1-1">IANA is asked to add the following entries to the "OAuth Parameters" registry.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.1-2.1">
+            <p id="section-5.1-2.1.1">Name: "token_uploaded"<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-2.2">
+            <p id="section-5.1-2.2.1">Parameter Usage Location: token response<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-2.3">
+            <p id="section-5.1-2.3.1">Change Controller: IESG<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-2.4">
+            <p id="section-5.1-2.4.1">Reference: [RFC-XXXX]<a href="#section-5.1-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.1-3"></p>
+<ul class="normal">
+<li class="normal" id="section-5.1-4.1">
+            <p id="section-5.1-4.1.1">Name: "rs_cnf2"<a href="#section-5.1-4.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-4.2">
+            <p id="section-5.1-4.2.1">Parameter Usage Location: token response<a href="#section-5.1-4.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-4.3">
+            <p id="section-5.1-4.3.1">Change Controller: IESG<a href="#section-5.1-4.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-4.4">
+            <p id="section-5.1-4.4.1">Reference: [RFC-XXXX]<a href="#section-5.1-4.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.1-5"></p>
+<ul class="normal">
+<li class="normal" id="section-5.1-6.1">
+            <p id="section-5.1-6.1.1">Name: "aud2"<a href="#section-5.1-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-6.2">
+            <p id="section-5.1-6.2.1">Parameter Usage Location: token response<a href="#section-5.1-6.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-6.3">
+            <p id="section-5.1-6.3.1">Change Controller: IESG<a href="#section-5.1-6.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-6.4">
+            <p id="section-5.1-6.4.1">Reference: [RFC-XXXX]<a href="#section-5.1-6.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.1-7"></p>
+<ul class="normal">
+<li class="normal" id="section-5.1-8.1">
+            <p id="section-5.1-8.1.1">Name: "anchor_cnf"<a href="#section-5.1-8.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-8.2">
+            <p id="section-5.1-8.2.1">Parameter Usage Location: token response<a href="#section-5.1-8.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-8.3">
+            <p id="section-5.1-8.3.1">Change Controller: IESG<a href="#section-5.1-8.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-8.4">
+            <p id="section-5.1-8.4.1">Reference: [RFC-XXXX]<a href="#section-5.1-8.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="iana-oauth-cbor-mappings">
+<section id="section-5.2">
+        <h3 id="name-oauth-parameters-cbor-mappi">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-oauth-parameters-cbor-mappi" class="section-name selfRef">OAuth Parameters CBOR Mappings Registry</a>
+        </h3>
+<p id="section-5.2-1">IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" following the procedure specified in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-2.1">
+            <p id="section-5.2-2.1.1">Name: "token_uploaded"<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-2.2">
+            <p id="section-5.2-2.2.1">CBOR Key: TBD<a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-2.3">
+            <p id="section-5.2-2.3.1">Value Type: simple value "true" / simple type "false"<a href="#section-5.2-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-2.4">
+            <p id="section-5.2-2.4.1">Reference: [RFC-XXXX]<a href="#section-5.2-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.2-3"></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-4.1">
+            <p id="section-5.2-4.1.1">Name: "rs_cnf2"<a href="#section-5.2-4.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-4.2">
+            <p id="section-5.2-4.2.1">CBOR Key: TBD<a href="#section-5.2-4.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-4.3">
+            <p id="section-5.2-4.3.1">Value Type: array<a href="#section-5.2-4.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-4.4">
+            <p id="section-5.2-4.4.1">Reference: [RFC-XXXX]<a href="#section-5.2-4.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.2-5"></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-6.1">
+            <p id="section-5.2-6.1.1">Name: "aud2"<a href="#section-5.2-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-6.2">
+            <p id="section-5.2-6.2.1">CBOR Key: TBD<a href="#section-5.2-6.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-6.3">
+            <p id="section-5.2-6.3.1">Value Type: array<a href="#section-5.2-6.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-6.4">
+            <p id="section-5.2-6.4.1">Reference: [RFC-XXXX]<a href="#section-5.2-6.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.2-7"></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-8.1">
+            <p id="section-5.2-8.1.1">Name: "anchor_cnf"<a href="#section-5.2-8.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-8.2">
+            <p id="section-5.2-8.2.1">CBOR Key: TBD<a href="#section-5.2-8.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-8.3">
+            <p id="section-5.2-8.3.1">Value Type: array<a href="#section-5.2-8.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-8.4">
+            <p id="section-5.2-8.4.1">Reference: [RFC-XXXX]<a href="#section-5.2-8.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<section id="section-6">
+      <h2 id="name-references">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-6.1">
+        <h3 id="name-normative-references">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="I-D.ietf-ace-edhoc-oscore-profile">[I-D.ietf-ace-edhoc-oscore-profile]</dt>
+        <dd>
+<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Tiloca, M.</span>, and <span class="refAuthor">R. Höglund</span>, <span class="refTitle">"Ephemeral Diffie-Hellman Over COSE (EDHOC) and Object Security for Constrained Environments (OSCORE) Profile for Authentication and Authorization for Constrained Environments (ACE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-edhoc-oscore-profile-03</span>, <time datetime="2023-10-23" class="refDate">23 October 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-03">https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-03</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6749">[RFC6749]</dt>
+        <dd>
+<span class="refAuthor">Hardt, D., Ed.</span>, <span class="refTitle">"The OAuth 2.0 Authorization Framework"</span>, <span class="seriesInfo">RFC 6749</span>, <span class="seriesInfo">DOI 10.17487/RFC6749</span>, <time datetime="2012-10" class="refDate">October 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6749">https://www.rfc-editor.org/rfc/rfc6749</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7252">[RFC7252]</dt>
+        <dd>
+<span class="refAuthor">Shelby, Z.</span>, <span class="refAuthor">Hartke, K.</span>, and <span class="refAuthor">C. Bormann</span>, <span class="refTitle">"The Constrained Application Protocol (CoAP)"</span>, <span class="seriesInfo">RFC 7252</span>, <span class="seriesInfo">DOI 10.17487/RFC7252</span>, <time datetime="2014-06" class="refDate">June 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7252">https://www.rfc-editor.org/rfc/rfc7252</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7800">[RFC7800]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Bradley, J.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"Proof-of-Possession Key Semantics for JSON Web Tokens (JWTs)"</span>, <span class="seriesInfo">RFC 7800</span>, <span class="seriesInfo">DOI 10.17487/RFC7800</span>, <time datetime="2016-04" class="refDate">April 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7800">https://www.rfc-editor.org/rfc/rfc7800</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8392">[RFC8392]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Wahlstroem, E.</span>, <span class="refAuthor">Erdtman, S.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"CBOR Web Token (CWT)"</span>, <span class="seriesInfo">RFC 8392</span>, <span class="seriesInfo">DOI 10.17487/RFC8392</span>, <time datetime="2018-05" class="refDate">May 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8392">https://www.rfc-editor.org/rfc/rfc8392</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8747">[RFC8747]</dt>
+        <dd>
+<span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Seitz, L.</span>, <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Erdtman, S.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"Proof-of-Possession Key Semantics for CBOR Web Tokens (CWTs)"</span>, <span class="seriesInfo">RFC 8747</span>, <span class="seriesInfo">DOI 10.17487/RFC8747</span>, <time datetime="2020-03" class="refDate">March 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8747">https://www.rfc-editor.org/rfc/rfc8747</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8949">[RFC8949]</dt>
+        <dd>
+<span class="refAuthor">Bormann, C.</span> and <span class="refAuthor">P. Hoffman</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR)"</span>, <span class="seriesInfo">STD 94</span>, <span class="seriesInfo">RFC 8949</span>, <span class="seriesInfo">DOI 10.17487/RFC8949</span>, <time datetime="2020-12" class="refDate">December 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8949">https://www.rfc-editor.org/rfc/rfc8949</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9052">[RFC9052]</dt>
+        <dd>
+<span class="refAuthor">Schaad, J.</span>, <span class="refTitle">"CBOR Object Signing and Encryption (COSE): Structures and Process"</span>, <span class="seriesInfo">STD 96</span>, <span class="seriesInfo">RFC 9052</span>, <span class="seriesInfo">DOI 10.17487/RFC9052</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9052">https://www.rfc-editor.org/rfc/rfc9052</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9053">[RFC9053]</dt>
+        <dd>
+<span class="refAuthor">Schaad, J.</span>, <span class="refTitle">"CBOR Object Signing and Encryption (COSE): Initial Algorithms"</span>, <span class="seriesInfo">RFC 9053</span>, <span class="seriesInfo">DOI 10.17487/RFC9053</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9053">https://www.rfc-editor.org/rfc/rfc9053</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9200">[RFC9200]</dt>
+        <dd>
+<span class="refAuthor">Seitz, L.</span>, <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Wahlstroem, E.</span>, <span class="refAuthor">Erdtman, S.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"Authentication and Authorization for Constrained Environments Using the OAuth 2.0 Framework (ACE-OAuth)"</span>, <span class="seriesInfo">RFC 9200</span>, <span class="seriesInfo">DOI 10.17487/RFC9200</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9200">https://www.rfc-editor.org/rfc/rfc9200</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9201">[RFC9201]</dt>
+      <dd>
+<span class="refAuthor">Seitz, L.</span>, <span class="refTitle">"Additional OAuth Parameters for Authentication and Authorization for Constrained Environments (ACE)"</span>, <span class="seriesInfo">RFC 9201</span>, <span class="seriesInfo">DOI 10.17487/RFC9201</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9201">https://www.rfc-editor.org/rfc/rfc9201</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-6.2">
+        <h3 id="name-informative-references">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="I-D.ietf-ace-revoked-token-notification">[I-D.ietf-ace-revoked-token-notification]</dt>
+        <dd>
+<span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Palombini, F.</span>, <span class="refAuthor">Echeverria, S.</span>, and <span class="refAuthor">G. Lewis</span>, <span class="refTitle">"Notification of Revoked Access Tokens in the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-revoked-token-notification-06</span>, <time datetime="2023-06-02" class="refDate">2 June 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-revoked-token-notification-06">https://datatracker.ietf.org/doc/html/draft-ietf-ace-revoked-token-notification-06</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-lake-edhoc">[I-D.ietf-lake-edhoc]</dt>
+        <dd>
+<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"Ephemeral Diffie-Hellman Over COSE (EDHOC)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lake-edhoc-22</span>, <time datetime="2023-08-25" class="refDate">25 August 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lake-edhoc-22">https://datatracker.ietf.org/doc/html/draft-ietf-lake-edhoc-22</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.tiloca-ace-group-oscore-profile">[I-D.tiloca-ace-group-oscore-profile]</dt>
+        <dd>
+<span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Höglund, R.</span>, <span class="refAuthor">Seitz, L.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"The Group Object Security for Constrained RESTful Environments (Group OSCORE) Profile of the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-tiloca-ace-group-oscore-profile-11</span>, <time datetime="2023-07-10" class="refDate">10 July 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-tiloca-ace-group-oscore-profile-11">https://datatracker.ietf.org/doc/html/draft-tiloca-ace-group-oscore-profile-11</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9202">[RFC9202]</dt>
+        <dd>
+<span class="refAuthor">Gerdes, S.</span>, <span class="refAuthor">Bergmann, O.</span>, <span class="refAuthor">Bormann, C.</span>, <span class="refAuthor">Selander, G.</span>, and <span class="refAuthor">L. Seitz</span>, <span class="refTitle">"Datagram Transport Layer Security (DTLS) Profile for Authentication and Authorization for Constrained Environments (ACE)"</span>, <span class="seriesInfo">RFC 9202</span>, <span class="seriesInfo">DOI 10.17487/RFC9202</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9202">https://www.rfc-editor.org/rfc/rfc9202</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9203">[RFC9203]</dt>
+      <dd>
+<span class="refAuthor">Palombini, F.</span>, <span class="refAuthor">Seitz, L.</span>, <span class="refAuthor">Selander, G.</span>, and <span class="refAuthor">M. Gunnarsson</span>, <span class="refTitle">"The Object Security for Constrained RESTful Environments (OSCORE) Profile of the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="seriesInfo">RFC 9203</span>, <span class="seriesInfo">DOI 10.17487/RFC9203</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9203">https://www.rfc-editor.org/rfc/rfc9203</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+<div id="sec-benefits-for-profiles">
+<section id="appendix-A">
+      <h2 id="name-benefits-for-ace-transport-">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-benefits-for-ace-transport-" class="section-name selfRef">Benefits for ACE Transport Profiles</a>
+      </h2>
+<p id="appendix-A-1">For any transport profile of ACE, the following holds.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-2.1">
+          <p id="appendix-A-2.1.1">The new ACE workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a> is effectively possible to use. This is beneficial for deployments where the communication leg between C and the RS is constrained, but the communication leg between the AS and RS is not.<a href="#appendix-A-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="appendix-A-2.2">
+          <p id="appendix-A-2.2.1">When the new ACE workflow is used, the parameter "token_uploaded" defined in <a href="#sec-token_uploaded" class="auto internal xref">Section 3.1</a> is used to inform C that the AS has attempted to upload the access token to the RS, specifying whether the uploading has succeeded or failed.<a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<div id="dtls-profile">
+<section id="appendix-A.1">
+        <h3 id="name-dtls-profile">
+<a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-dtls-profile" class="section-name selfRef">DTLS Profile</a>
+        </h3>
+<p id="appendix-A.1-1">When the RPK mode of the DTLS profile is used (see <span><a href="https://rfc-editor.org/rfc/rfc9202#section-3.2" class="relref">Section 3.2</a> of [<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>), the parameters "rs_cnf2" and "aud2" defined in <a href="#sec-rs_cnf2-aud2" class="auto internal xref">Section 3.2</a> enable the effective issue of an access token intended to an audience that includes multiple RSs.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="edhoc-and-oscore-profile">
+<section id="appendix-A.2">
+        <h3 id="name-edhoc-and-oscore-profile">
+<a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-edhoc-and-oscore-profile" class="section-name selfRef">EDHOC and OSCORE Profile</a>
+        </h3>
+<p id="appendix-A.2-1">When the EDHOC and OSCORE profile is used <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, the parameters "rs_cnf2" and "aud2" defined in <a href="#sec-rs_cnf2-aud2" class="auto internal xref">Section 3.2</a> enable the effective issue of an access token intended to an audience that includes multiple RSs.<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-open-points">
+<section id="appendix-B">
+      <h2 id="name-open-points">
+<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-open-points" class="section-name selfRef">Open Points</a>
+      </h2>
+<div id="sec-open-points-workflow">
+<section id="appendix-B.1">
+        <h3 id="name-new-workflow">
+<a href="#appendix-B.1" class="section-number selfRef">B.1. </a><a href="#name-new-workflow" class="section-name selfRef">New Workflow</a>
+        </h3>
+<p id="appendix-B.1-1">The following discusses open points related to the use of the new ACE workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>.<a href="#appendix-B.1-1" class="pilcrow">¶</a></p>
+<div id="sec-open-points-workflow-dynamic-access-rights">
+<section id="appendix-B.1.1">
+          <h4 id="name-allow-the-dynamic-update-of">
+<a href="#appendix-B.1.1" class="section-number selfRef">B.1.1. </a><a href="#name-allow-the-dynamic-update-of" class="section-name selfRef">Allow the Dynamic Update of Access Rights</a>
+          </h4>
+<p id="appendix-B.1.1-1">In some profiles of ACE, C can request a new access token to update its access rights, while preserving the same secure association with the RS. The new access token supersedes the current one stored at the RS, as they are both part of the same "token series".<a href="#appendix-B.1.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-2">A token series comprises all the access tokens issued by the same AS for the same pair (Client, Resource Server). Specific profiles can provide a more specialized definition, e.g., by further taking into account the public authentication credentials of C and the RS.<a href="#appendix-B.1.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-3">When using the original ACE workflow, C uploads the new access token to the RS by protecting the message exchange through the secure association with the RS. This allows the RS to determine that the upload of such access token is for updating the access rights of C.<a href="#appendix-B.1.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-4">When using the new ACE workflow, the AS uploads the new access token to the RS also when an update of access rights for C is to be performed. This message exchange would be protected through the secure association between the AS and RS. However, this secure association does not help the RS retrieve the stored access token to supersede, as that is rather bound to the secure association with C.<a href="#appendix-B.1.1-4" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-5">In order for the new ACE workflow to also allow the dynamic update of access rights, it is required that the new access token updating the access rights of C includes an explicit indication for the RS. Such an indication can point the RS to the token series in question (hence to the current access token to supersede), irrespective of the secure association used to protect the token uploading.<a href="#appendix-B.1.1-5" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-6">In some profiles of ACE, such an indication is in fact already present in issued access tokens:<a href="#appendix-B.1.1-6" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-B.1.1-7.1">
+              <p id="appendix-B.1.1-7.1.1">In the PSK mode of the DTLS profile <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>, the token series is indicated by the parameter "kid" within the claim "cnf" of the new access token. This has the same value of the parameter "kid" in the COSE_Key within the claim "cnf" from the first access token of the token series.<a href="#appendix-B.1.1-7.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="appendix-B.1.1-7.2">
+              <p id="appendix-B.1.1-7.2.1">In the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, the token series is indicated by the parameter "kid" within the claim "cnf" of the new access token. This has the same value of the parameter "id" in the OSCORE_Input_Material object within the claim "cnf" from the first access token of the token series.<a href="#appendix-B.1.1-7.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="appendix-B.1.1-7.3">
+              <p id="appendix-B.1.1-7.3.1">In the EDHOC and OSCORE profile <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, the token series is indicated by the parameter "kid" within the claim "cnf" of the new access token. This has the same value of the parameter "id" in the EDHOC_Information object within the claim "cnf" from the first access token of the token series.<a href="#appendix-B.1.1-7.3.1" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-7.3.2">
+Note: version -01 of the EDHOC and OSCORE profile says that an update of access rights is not possible when using the new workflow. However, it is actually possible as discussed above.<a href="#appendix-B.1.1-7.3.2" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="appendix-B.1.1-8">In the three cases above, the update of access rights is possible because there is a value used as de facto "token series ID". This value does not change throughout the lifetime of a token series, and it is used to associate the new access token with the previous one in the same series to be superseded.<a href="#appendix-B.1.1-8" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-9">Such a token series ID is required to have a unique value from a namespace/pool that the AS exclusively control. This is in fact what happens in the profiles of ACE above, where the AS is the entity creating the mentioned objects or COSE Key included in the first access token of a token series.<a href="#appendix-B.1.1-9" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-10">However, this may generally not hold and it is not what happens in other known cases, i.e., the DTLS profile in RPK mode <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span> and the Group OSCORE profile <span>[<a href="#I-D.tiloca-ace-group-oscore-profile" class="cite xref">I-D.tiloca-ace-group-oscore-profile</a>]</span>. At the moment, the dynamic update of access rights is not possible for those, <em>neither in the original nor in the new ACE workflow</em>.<a href="#appendix-B.1.1-10" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-11">In order to make the update of access rights possible also for such cases, as well as both in the original and in the new ACE workflow, those cases can rely on a new parameter and claim "token_series_id" (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2.2</a>), which specifies a unique identifier of the token series which an access token belongs to.<a href="#appendix-B.1.1-11" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-12">As to existing profiles of ACE, the above has no intention to change the current behavior when the update of access rights occurs, irrespective of the used ACE workflow and especially when using the original workflow.<a href="#appendix-B.1.1-12" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-13">If future profiles rely on a construction where the AS creates the object or key included in the claim "cnf" of the first access token in a token series, and a unique ID generated by the AS is included in such object or key, then that ID must be used as de facto "token series ID", rather than the new parameter "token_series_id".<a href="#appendix-B.1.1-13" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-open-points-workflow-token-re-uploading">
+<section id="appendix-B.1.2">
+          <h4 id="name-allow-the-re-uploading-of-t">
+<a href="#appendix-B.1.2" class="section-number selfRef">B.1.2. </a><a href="#name-allow-the-re-uploading-of-t" class="section-name selfRef">Allow the Re-uploading of the Access Token</a>
+          </h4>
+<p id="appendix-B.1.2-1">After the AS has successfully uploaded the access token to the RS when using the new ACE workflow, C does not obtain the access token altogether. It follows that C cannot re-upload the Access Token to the RS by itself, e.g., in order to perform a key update like defined for the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>.<a href="#appendix-B.1.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.2-2">Even in such a case, the token re-uploading can be allowed by relying on a new parameter "token_hash", which the AS provides to C and specifies the hash of the access token (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2.2</a>).<a href="#appendix-B.1.2-2" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.2-3">Then, C can practically "re-upload" the access token to the RS, by sending a request to the authz-info endpoint that includes the parameter "token_hash" instead of the parameter "access_token". Such a request may include further parameters, depending on what is defined for the used transport profile.<a href="#appendix-B.1.2-3" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.2-4">If the RS still stores the access token in question, then the RS can identify it by means of the received token hash, and take the same actions that would have been taken in case the full access token was re-uploaded to the authz-info endpoint.<a href="#appendix-B.1.2-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-open-points-workflow-applicability">
+<section id="appendix-B.1.3">
+          <h4 id="name-ensure-applicability-to-any">
+<a href="#appendix-B.1.3" class="section-number selfRef">B.1.3. </a><a href="#name-ensure-applicability-to-any" class="section-name selfRef">Ensure Applicability to Any ACE Profile</a>
+          </h4>
+<p id="appendix-B.1.3-1">Some profiles of ACE require that C and the RS generate information to be exchanged when uploading the access token. For example:<a href="#appendix-B.1.3-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-B.1.3-2.1">
+              <p id="appendix-B.1.3-2.1.1">In the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, C and RS are required to exchange the nonces N1 and N2, when uploading to the RS the first access token of a token series, as well as when re-uploading any access token (e.g., in order to perform a key update).<a href="#appendix-B.1.3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="appendix-B.1.3-2.2">
+              <p id="appendix-B.1.3-2.2.1">In the EDHOC and OSCORE profile <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, C and the RS are required to exchange the nonces N1 and N2, when re-uploading any access token in order to perform a key update through the function EDHOC_KeyUpdate (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lake-edhoc-22#appendix-I" class="relref">Appendix I</a> of [<a href="#I-D.ietf-lake-edhoc" class="cite xref">I-D.ietf-lake-edhoc</a>]</span>).<a href="#appendix-B.1.3-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="appendix-B.1.3-3">Evidently, using the new ACE workflow prevents C and the RS from directly performing the required exchanges above, since the uploading of the access token does not rely on a direct interaction between C and RS like in the original ACE workflow. For some profiles of ACE, this may prevent the use of the new ACE workflow altogether.<a href="#appendix-B.1.3-3" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.3-4">This issue can be solved by having the AS acting as intermediary also for the exchange of C- and RS-generated information, by relying on two new parameters "to_rs" and "from_rs" (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2.2</a>). In particular, C can use "to_rs" for providing the AS with C-generated information, to be relayed to the RS when uploading the access token. Also, the RS can use "from_rs" for providing the AS with RS-generated information when replying to the token uploading, and to be relayed to C.<a href="#appendix-B.1.3-4" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.3-5">With reference to the two cases mentioned above, "to_rs" can specify the nonce N1 generated by C, while "from_rs" can specify the nonce N2 generated by RS.<a href="#appendix-B.1.3-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-open-points-parameters">
+<section id="appendix-B.2">
+        <h3 id="name-new-parameters">
+<a href="#appendix-B.2" class="section-number selfRef">B.2. </a><a href="#name-new-parameters" class="section-name selfRef">New Parameters</a>
+        </h3>
+<div id="tokenuploaded">
+<section id="appendix-B.2.1">
+          <h4 id="name-token_uploaded-2">
+<a href="#appendix-B.2.1" class="section-number selfRef">B.2.1. </a><a href="#name-token_uploaded-2" class="section-name selfRef">token_uploaded</a>
+          </h4>
+<p id="appendix-B.2.1-1">The parameter "token_uploaded" defined in <a href="#sec-token_uploaded" class="auto internal xref">Section 3.1</a> builds on the assumption that C can operate in the presence of the alternative ACE workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>.<a href="#appendix-B.2.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.1-2">In particular, it assumes that C accepts as valid an Access Token Response that includes the parameter "token_uploaded" encoding the CBOR simple value "true" but not the access token, and that, in such a case, C continues by sending a protected request to the RS.<a href="#appendix-B.2.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.1-3">In turn, this assumes that the AS knows that C can operate in the presence of the alternative ACE workflow. This can be part of the information that C provided to the AS at its registration.<a href="#appendix-B.2.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.1-4">An alternative design choice would instead require C to opt-in when sending the Access Token Request to the AS. That is, C can include the parameter "token_uploaded" in the Access Token Request, encoding the CBOR simple value "true", hence explicitly signaling its understanding of the alternative workflow.<a href="#appendix-B.2.1-4" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.1-5">Only if the AS supports the alternative workflow and the Access Token Request includes the parameter "token_uploaded" encoding the CBOR simple value "true", can the AS attempt to upload the access token to the RS on behalf of C as per the alternative workflow.<a href="#appendix-B.2.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-more-parameters">
+<section id="appendix-B.2.2">
+          <h4 id="name-further-new-parameters-to-c">
+<a href="#appendix-B.2.2" class="section-number selfRef">B.2.2. </a><a href="#name-further-new-parameters-to-c" class="section-name selfRef">Further New Parameters to Consider</a>
+          </h4>
+<p id="appendix-B.2.2-1">The following discusses possible, further new parameters that can be defined for addressing the open points raised earlier in <a href="#sec-open-points" class="auto internal xref">Appendix B</a>.<a href="#appendix-B.2.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-B.2.2-2.1">
+              <p id="appendix-B.2.2-2.1.1">"token_series_id" - This parameter specifies the unique identifier of a token series, thus ensuring that C can dynamically update its access rights, irrespective of the used ACE workflow (see <a href="#sec-open-points-workflow-dynamic-access-rights" class="auto internal xref">Appendix B.1.1</a>).<a href="#appendix-B.2.2-2.1.1" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.2-2.1.2">
+When issuing the first access token of a token series, the AS specifies this parameter in the Access Token Response to C, with value TS_ID. Also, the AS includes a claim "token_series_id" with the same value in the access token.<a href="#appendix-B.2.2-2.1.2" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.2-2.1.3">
+When C requests a new access token in the same tokes series for dynamically updating its access rights, C specifies the value TS_ID as "kid" within the parameter "req_cnf" of the Access Token Request (see <span><a href="https://rfc-editor.org/rfc/rfc9201#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC9201" class="cite xref">RFC9201</a>]</span>). The AS specifies the same value as "kid" within the claim "cnf" of the new access token.<a href="#appendix-B.2.2-2.1.3" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="appendix-B.2.2-2.2">
+              <p id="appendix-B.2.2-2.2.1">"token_hash" - This parameter specifies the hash of an access token that the AS has successfully issued and uploaded to the RS as per the new ACE workflow, and thus that the AS does not provide to C (see <a href="#sec-open-points-workflow-dynamic-access-rights" class="auto internal xref">Appendix B.1.1</a>).<a href="#appendix-B.2.2-2.2.1" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.2-2.2.2">
+The AS specifies this parameter in a successful Access Token Response, in case the parameter "token_uploaded" is also specified as encoding the CBOR simple value "true" (see <a href="#sec-token_uploaded" class="auto internal xref">Section 3.1</a>). The parameter value is the hash computed over the value that the parameter "access_token" would have had in that same response message, if it was included therein specifying the access token.<a href="#appendix-B.2.2-2.2.2" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.2-2.2.3">
+C specifies this parameter in the request sent to the authz-info endpoint at the RS for "re-uploading" the same access token, e.g., in order to perform a key update (see <a href="#sec-open-points-workflow-token-re-uploading" class="auto internal xref">Appendix B.1.2</a>).<a href="#appendix-B.2.2-2.2.3" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.2-2.2.4">
+This parameter also allows C to seamlessly use the method defined in <span>[<a href="#I-D.ietf-ace-revoked-token-notification" class="cite xref">I-D.ietf-ace-revoked-token-notification</a>]</span> for learning of revoked access tokens, even when the new ACE workflow is used and C does not obtain the access token, which makes it impossible for C to compute the token hash by itself.<a href="#appendix-B.2.2-2.2.4" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="appendix-B.2.2-2.3">
+              <p id="appendix-B.2.2-2.3.1">"to_rs" - When using the new ACE workflow, this parameter specifies C-generated information that, according to the used profile of ACE, C has to provide to the RS together with the access token if using the original ACE workflow. This allows the AS to relay such information to the RS upon uploading the access token on behalf of C (see <a href="#sec-open-points-workflow-applicability" class="auto internal xref">Appendix B.1.3</a>).<a href="#appendix-B.2.2-2.3.1" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.2-2.3.2">
+First, C specifies this parameter in the Access Token Request sent to the AS. Then, the AS specifies this parameter in the request to the RS sent for uploading the access token on behalf of C, by simply relaying the value received from C. The used profile of ACE has to define the detailed content and semantics of the information specified in the parameter value.<a href="#appendix-B.2.2-2.3.2" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="appendix-B.2.2-2.4">
+              <p id="appendix-B.2.2-2.4.1">"from_rs" - When using the new ACE workflow, this parameter specifies RS-generated information that, according to the used profile of ACE, the RS has to provide to C after the uploading of an access token if using the original ACE workflow. This allows the AS to relay such information to C after having uploaded the access token on behalf of C (see <a href="#sec-open-points-workflow-applicability" class="auto internal xref">Appendix B.1.3</a>).<a href="#appendix-B.2.2-2.4.1" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.2-2.4.2">
+First, the RS specifies this parameter in the response sent to the AS, after the upload of an access token through a request from the AS. Then, the AS specifies this parameter in the Access Token Response to C, by simply relaying the value received from the RS. The used profile of ACE has to define the detailed content and semantics of the information specified in the parameter value.<a href="#appendix-B.2.2-2.4.2" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+</section>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="acknowledgments">
+<section id="appendix-C">
+      <h2 id="name-acknowledgments">
+<a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="appendix-C-1">The author sincerely thanks <span class="contact-name">Christian Amsüss</span> and <span class="contact-name">Rikard Höglund</span> for their comments and feedback. The work on this document has been partly supported by the H2020 project SIFIS-Home (Grant agreement 952652).<a href="#appendix-C-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-D">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Marco Tiloca</span></div>
+<div dir="auto" class="left"><span class="org">RISE AB</span></div>
+<div dir="auto" class="left"><span class="street-address">Isafjordsgatan 22</span></div>
+<div dir="auto" class="left">SE-<span class="postal-code">16440</span> <span class="locality">Kista</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">Sweden</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:marco.tiloca@ri.se" class="email">marco.tiloca@ri.se</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Göran Selander</span></div>
+<div dir="auto" class="left"><span class="org">Ericsson AB</span></div>
+<div dir="auto" class="left"><span class="street-address">Torshamnsgatan 23</span></div>
+<div dir="auto" class="left">SE-<span class="postal-code">16440 Stockholm</span> <span class="locality">Kista</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">Sweden</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:goran.selander@ericsson.com" class="email">goran.selander@ericsson.com</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
