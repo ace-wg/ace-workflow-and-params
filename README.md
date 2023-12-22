@@ -1,1 +1,30 @@
-# ace-workflow-and-params
+# Alternative Workflow and OAuth Parameters for the Authentication and Authorization for Constrained Environments (ACE) Framework
+
+This is the working area for the IETF [ACE Working Group](https://datatracker.ietf.org/wg/ace/documents/) Internet-Draft, "Alternative Workflow and OAuth Parameters for the Authentication and Authorization for Constrained Environments (ACE) Framework".
+
+* [Editor's Copy](https://ace-wg.github.io/ace-workflow-and-params/#go.draft-ietf-ace-workflow-and-params.html)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-ace-workflow-and-params)
+* [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-ace-workflow-and-params)
+* [Compare Editor's Copy to Working Group Draft](https://ace-wg.github.io/ace-workflow-and-params/#go.draft-ietf-ace-workflow-and-params.diff)
+
+
+## Contributing
+
+See the
+[guidelines for contributions](https://github.com/ace-wg/ace-workflow-and-params/blob/main/CONTRIBUTING.md).
+
+Contributions can be made by creating pull requests.
+The GitHub interface supports creating pull requests using the Edit (✏) button.
+
+
+## Command Line Usage
+
+Formatted text and HTML versions of the draft can be built using `make`.
+
+```sh
+$ make
+```
+
+Command line usage requires that you have the necessary software installed.  See
+[the instructions](https://github.com/martinthomson/i-d-template/blob/main/doc/SETUP.md).
+
