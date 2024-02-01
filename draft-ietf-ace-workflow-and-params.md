@@ -72,7 +72,7 @@ entity:
 
 --- abstract
 
-This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines a new, alternative workflow that the Authorization Server can use for uploading an access token to a Resource Server on behalf of the Client. Second, it defines new parameters and encodings for the OAuth 2.0 token endpoint at the Authorization Server.
+This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines a new, alternative workflow that the Authorization Server can use for uploading an access token to a Resource Server on behalf of the Client. Second, it defines new parameters and encodings for the OAuth 2.0 token endpoint at the Authorization Server. Third, it amends two of the requirements on profiles of the framework.
 
 --- middle
 
@@ -97,6 +97,8 @@ This document updates {{RFC9200}} as follows.
    - "aud2", used by the AS to provide C with the identifiers of the RSs in the group-audience for which the access token is issued.
 
    - "anchor_cnf", used by the AS to provide C with the public keys of trust anchors, which C can use to validate the public key of an RS (e.g., as provided in the parameter "rs_cnf" defined in {{RFC9201}} or in the parameter "rs_cnf2" defined in this document).
+
+* It amends two of the requirements on profiles of the ACE framework (see {{sec-updated-requirements}}).
 
 ## Terminology ## {#terminology}
 
@@ -389,6 +391,32 @@ The Access Token Response includes the parameter "anchor_cnf". This specifies th
 ~~~~~~~~~~~
 {: #fig-example-AS-to-C-anchor_cnf title="Example of Access Token Response with an access token bound to an asymmetric key, using the parameter \"anchor_cnf\""}
 
+# Updated Requirements on Profiles # {#sec-updated-requirements}
+
+{{Section C of RFC9200}} compiles a list of requirements on the profiles of ACE. This document amends two of those requirements as follows.
+
+The text of the fifth requirement
+
+{:quote}
+> Specify the security protocol the client and RS must use to protect their communication (e.g., OSCORE or DTLS). This must provide encryption and integrity and replay protection (Section 5.8.4.3).
+
+is replaced by the following text:
+
+{:quote}
+> Specify the security protocol the client and RS must use to protect their communication (e.g., OSCORE or DTLS). In combination with the used communication protocol, this must provide encryption, integrity and replay protection, and a binding between requests and responses (Section 5.8.4.3 and Section 6.5).
+
+The text of the tenth requirement
+
+{:quote}
+> Specify the communication and security protocol for interactions between the client and AS. This must provide encryption, integrity protection, replay protection, and a binding between requests and responses (Sections 5 and 5.8).
+
+is replaced by the following text:
+
+{:quote}
+> Specify the communication and security protocol for interactions between the client and AS. The combined use of those protocols must provide encryption, integrity protection, replay protection, and a binding between requests and responses (Sections 5 and 5.8).
+
+At the time of writing, all the profiles of ACE that are published as RFC (i.e., {{RFC9202}}{{RFC9203}}{{RFC9431}}) already comply with the two updated requirements as formulated above.
+
 # Security Considerations
 
 The same security considerations from the ACE framework for Authentication and Authorization {{RFC9200}} apply to this document, together with those from the specifically used transport profile of ACE, e.g., {{RFC9202}}{{RFC9203}}{{RFC9431}}{{I-D.ietf-ace-edhoc-oscore-profile}}{{I-D.ietf-ace-group-oscore-profile}}{{RFC9431}}.
@@ -587,6 +615,8 @@ The following discusses possible, further new parameters that can be defined for
 * Definition of the "token series" moved to the "Terminology" section.
 
 * Clarifications and fixes on using parameters in messages.
+
+* Amendeded two of the requirements on profiles of the framework.
 
 * Security considerations inherited from other documents.
 
