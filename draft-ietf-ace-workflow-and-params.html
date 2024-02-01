@@ -1144,7 +1144,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-new-ace-parameters" class="internal xref">New ACE Parameters</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
-                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-token_uploaded" class="internal xref">token_uploaded</a></p>
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-token_upload" class="internal xref">token_upload</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1.2.1">
                     <p id="section-toc.1-1.3.2.1.2.1.1"><a href="#section-3.1.1" class="auto internal xref">3.1.1</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
@@ -1226,15 +1226,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
-                <p id="section-toc.1-1.9.2.2.1"><a href="#appendix-B.2" class="auto internal xref">B.2</a>.  <a href="#name-new-parameters" class="internal xref">New Parameters</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2.2.1">
-                    <p id="section-toc.1-1.9.2.2.2.1.1"><a href="#appendix-B.2.1" class="auto internal xref">B.2.1</a>.  <a href="#name-token_uploaded-2" class="internal xref">token_uploaded</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2.2.2">
-                    <p id="section-toc.1-1.9.2.2.2.2.1"><a href="#appendix-B.2.2" class="auto internal xref">B.2.2</a>.  <a href="#name-further-new-parameters-to-c" class="internal xref">Further New Parameters to Consider</a></p>
-</li>
-                </ul>
+                <p id="section-toc.1-1.9.2.2.1"><a href="#appendix-B.2" class="auto internal xref">B.2</a>.  <a href="#name-further-new-parameters-to-c" class="internal xref">Further New Parameters to Consider</a></p>
 </li>
             </ul>
 </li>
@@ -1274,7 +1266,7 @@ The new workflow has no ambition to replace the original workflow. The AS can us
           <p id="section-1-4.2.1">It defines additional parameters and encodings for the OAuth 2.0 token endpoint at the AS (see <a href="#sec-parameters" class="auto internal xref">Section 3</a>). These include:<a href="#section-1-4.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-4.2.2.1">
-              <p id="section-1-4.2.2.1.1">"token_uploaded", used by the AS to inform C about the outcome of the token uploading to the RS, as per the new ACE workflow.<a href="#section-1-4.2.2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-1-4.2.2.1.1">"token_upload", used by C to inform the AS that it opts in to use the new ACE workflow, and by the AS to inform C about the outcome of the token uploading to the RS per the new workflow.<a href="#section-1-4.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.2">
               <p id="section-1-4.2.2.2.1">"rs_cnf2", used by the AS to provide C with the public keys of the RSs in the group-audience for which the access token is issued (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-6.9" class="relref">Section 6.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>).<a href="#section-1-4.2.2.2.1" class="pilcrow">¶</a></p>
@@ -1390,7 +1382,9 @@ Profiles of ACE can provide their extended and specialized definition, e.g., by 
 <p id="section-2-10">More specifically, the new workflow consists of the following steps.<a href="#section-2-10" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2-11.1">
-          <p id="section-2-11.1.1">Step A - This step is as in the original workflow, with the Client sending an Access Token Request to the token endpoint at the AS.<a href="#section-2-11.1.1" class="pilcrow">¶</a></p>
+          <p id="section-2-11.1.1">Step A - Like in the original workflow, the Client sends an Access Token Request to the token endpoint at the AS, with the additional indication that it opts in to use the alternative workflow.<a href="#section-2-11.1.1" class="pilcrow">¶</a></p>
+<p id="section-2-11.1.2">
+As defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a>, this information is conveyed to the AS by means of the "token_upload" parameter.<a href="#section-2-11.1.2" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-11.2">
           <p id="section-2-11.2.1">Step A1 - This new step consists of the AS uploading the access token to the RS, typically at the authz-info endpoint, just like the Client does in the original workflow.<a href="#section-2-11.2.1" class="pilcrow">¶</a></p>
@@ -1401,7 +1395,7 @@ Profiles of ACE can provide their extended and specialized definition, e.g., by 
         <li class="normal" id="section-2-11.4">
           <p id="section-2-11.4.1">Step B - In the Access Token Response, the AS tells the Client that it has attempted to upload the access token to the RS, specifying the outcome of the token uploading based on the reply received from the RS at step A2.<a href="#section-2-11.4.1" class="pilcrow">¶</a></p>
 <p id="section-2-11.4.2">
-As defined in <a href="#sec-token_uploaded" class="auto internal xref">Section 3.1</a>, this information is conveyed to the Client by means of the "token_uploaded" parameter. If the token uploading has succeeded, the AS does not provide the Client with the access token. Otherwise, the AS provides the Client with the access token.<a href="#section-2-11.4.2" class="pilcrow">¶</a></p>
+As defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a>, this information is conveyed to the Client by means of the "token_upload" parameter. If the token uploading has succeeded, the AS does not provide the Client with the access token. Otherwise, the AS provides the Client with the access token.<a href="#section-2-11.4.2" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-11.5">
           <p id="section-2-11.5.1">Step C1 - This step occurs only if the token uploading from the AS has failed, and the AS has provided the Client with the access token at step B. In such a case, the Client uploads the access token to the RS just like at step C of the original workflow.<a href="#section-2-11.5.1" class="pilcrow">¶</a></p>
@@ -1422,75 +1416,138 @@ As defined in <a href="#sec-token_uploaded" class="auto internal xref">Section 3
 <a href="#section-3" class="section-number selfRef">3. </a><a href="#name-new-ace-parameters" class="section-name selfRef">New ACE Parameters</a>
       </h2>
 <p id="section-3-1">The rest of this section defines a number of additional parameters and encodings for the OAuth 2.0 token endpoint at the AS.<a href="#section-3-1" class="pilcrow">¶</a></p>
-<div id="sec-token_uploaded">
+<div id="sec-token_upload">
 <section id="section-3.1">
-        <h3 id="name-token_uploaded">
-<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-token_uploaded" class="section-name selfRef">token_uploaded</a>
+        <h3 id="name-token_upload">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-token_upload" class="section-name selfRef">token_upload</a>
         </h3>
-<p id="section-3.1-1">This section defines the additional parameter "token_uploaded" for an Access Token Response, sent by the AS in reply to a request to the token endpoint from C.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">The parameter "token_uploaded" is REQUIRED in a successful Access Token Response with response code 2.01 (Created), if the AS has issued an access token and has attempted to upload it to the RS on behalf of C as per the ACE alternative protocol workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>, irrespective of the result of the token upload. Otherwise, the parameter "token_uploaded" MUST NOT be present.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.1-3">If present, the parameter "token_uploaded" MUST encode the CBOR simple value "true" (0xf5) if the token upload at the RS was successful, or the CBOR simple value "false" (0xf4) otherwise.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.1-4">If the parameter "token_upload" encodes the CBOR simple value "true", the access token MUST NOT be included in the Access Token response. Otherwise, the access token MUST be included.<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1-1">This section defines the additional parameter "token_upload". The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-2.1">
+            <p id="section-3.1-2.1.1">In an Access Token Request<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2.1.2">
+The parameter "token_upload" is OPTIONAL in an Access Token Request. If present, this parameter MUST encode the CBOR simple value "true" (0xf5). The presence of the parameter indicates that C opts in to use the new, alternative ACE workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>, whose actual use for uploading the issued access token to the RS is an exclusive prerogative of the AS.<a href="#section-3.1-2.1.2" class="pilcrow">¶</a></p>
+<p id="section-3.1-2.1.3">
+If the AS supports the new ACE workflow and the Access Token Request includes the parameter "token_upload" with value the CBOR simple value "true" (0xf5), then the AS MAY use the new ACE workflow to upload the access token to the RS on behalf of C. Otherwise, the AS MUST NOT use the new ACE workflow.<a href="#section-3.1-2.1.3" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-2.2">
+            <p id="section-3.1-2.2.1">In an Access Token Response<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2.2.2">
+The parameter "token_upload" is REQUIRED in a successful Access Token Response with response code 2.01 (Created), if both the following conditions apply. Otherwise, the parameter "token_upload" MUST NOT be present.<a href="#section-3.1-2.2.2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-2.2.3.1">
+                <p id="section-3.1-2.2.3.1.1">The corresponding Access Token Request included the parameter "token_upload", with value the CBOR simple value "true" (0xf5).<a href="#section-3.1-2.2.3.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.1-2.2.3.2">
+                <p id="section-3.1-2.2.3.2.1">The AS has attempted to upload the issued access token at the RS as per the new ACE workflow, irrespective of the result of the token upload.<a href="#section-3.1-2.2.3.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+<p id="section-3.1-2.2.4">
+When the parameter "token_upload" is present in the Access Token Response, the following applies.<a href="#section-3.1-2.2.4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-2.2.5.1">
+                <p id="section-3.1-2.2.5.1.1">If the token upload at the RS was successful, then the parameter "token_upload" MUST encode the CBOR simple value "true" (0xf5), and the access token MUST NOT be included in the Access Token Response.<a href="#section-3.1-2.2.5.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.1-2.2.5.2">
+                <p id="section-3.1-2.2.5.2.1">If the token upload at the RS was not successful, then the parameter "token_upload" MUST encode the CBOR simple value "false" (0xf4), and the access token MUST be included in the Access Token Response.<a href="#section-3.1-2.2.5.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+        </ul>
 <div id="examples">
 <section id="section-3.1.1">
           <h4 id="name-examples">
 <a href="#section-3.1.1" class="section-number selfRef">3.1.1. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
           </h4>
-<p id="section-3.1.1-1"><a href="#fig-example-AS-to-C-token-uploaded" class="auto internal xref">Figure 3</a> shows an example of Access Token Response from the AS to C, following the issue of an access token bound to a symmetric PoP key. The Access Token Response specifies the parameter "token_uploaded" with value "true", which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1.1-2">Consistently, the Access Token Response does not include the access token, while it still includes the parameter "cnf" specifying the symmetric PoP key bound to the access token.<a href="#section-3.1.1-2" class="pilcrow">¶</a></p>
-<span id="name-example-of-access-token-res"></span><div id="fig-example-AS-to-C-token-uploaded">
+<p id="section-3.1.1-1"><a href="#fig-example-AS-to-C-token-upload" class="auto internal xref">Figure 3</a> shows an example with first an Access Token Request from C to the AS, and then an Access Token Response from the AS to C, following the issue of an access token bound to a symmetric PoP key.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-2">The Access Token Response specifies the parameter "token_upload" with value "true", which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.<a href="#section-3.1.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-3">Consistently, the Access Token Response does not include the access token, while it still includes the parameter "cnf" specifying the symmetric PoP key bound to the access token.<a href="#section-3.1.1-3" class="pilcrow">¶</a></p>
+<span id="name-example-of-access-token-req"></span><div id="fig-example-AS-to-C-token-upload">
 <figure id="figure-3">
-            <div class="alignLeft art-text artwork" id="section-3.1.1-3.1">
+            <div class="alignLeft art-text artwork" id="section-3.1.1-4.1">
 <pre>
-   2.01 Created
+   / Access Token Request /
+
+   Header: POST (Code=0.02)
+   Uri-Host: "as.example.com"
+   Uri-Path: "token"
+   Content-Format: application/ace+cbor
+   Payload:
+   {
+            "audience" : "tempSensor4711",
+               "scope" : "read",
+        "token_upload" : true
+   }
+
+
+   / Access Token Response /
+
+   Header: Created (Code=2.01)
    Content-Format: application/ace+cbor
    Max-Age: 3560
    Payload:
    {
-     "token_uploaded" : true,
-     "expires_in" : 3600,
-     "cnf" : {
-       "COSE_Key" : {
-         "kty" : 1,
-         "kid" : h'3d027833fc6267ce',
-         "k" : h'73657373696f6e6b6579'
-       }
-     }
+     "token_upload" : true,
+       "expires_in" : 3600,
+              "cnf" : {
+                "COSE_Key" : {
+                  "kty" : 1,
+                  "kid" : h'3d027833fc6267ce',
+                    "k" : h'73657373696f6e6b6579'
+                }
+              }
    }
 </pre>
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
-<a href="#name-example-of-access-token-res" class="selfRef">Example of Access Token Response, including the parameter "token_uploaded" but not the access token, which is bound to a symmetric key and was uploaded to the RS by the AS</a>
+<a href="#name-example-of-access-token-req" class="selfRef">Example of Access Token Request-Response Exchange. The Access Token Response includes the parameter "token_upload" but not the access token, which is bound to a symmetric key and was uploaded to the RS by the AS</a>
             </figcaption></figure>
 </div>
-<p id="section-3.1.1-4"><a href="#fig-example-AS-to-C-token-uploaded-failed" class="auto internal xref">Figure 4</a> shows another example of Access Token Response from the AS to C, also following the issue of an access token bound to a symmetric PoP key. In this example, the Access Token Response includes the parameter "token_uploaded" with value "false", which indicates that the AS has failed to upload the access token to the RS on behalf of C. The Access Token Response also includes the access token and the parameter "cnf" specifying the symmetric PoP key bound to the access token.<a href="#section-3.1.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.1.1-5">Note that, even though the AS has failed to upload the access token to the RS, the response code 2.01 (Created) is used when replying to C, since the Access Token Request as such has been successfully processed at the AS, with the following issue of the access token.<a href="#section-3.1.1-5" class="pilcrow">¶</a></p>
-<span id="name-example-of-access-token-resp"></span><div id="fig-example-AS-to-C-token-uploaded-failed">
+<p id="section-3.1.1-5"><a href="#fig-example-AS-to-C-token-upload-failed" class="auto internal xref">Figure 4</a> shows another example with first an Access Token Request from C to the AS, and then an Access Token Response from the AS to C, also following the issue of an access token bound to a symmetric PoP key.<a href="#section-3.1.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-6">In this example, the Access Token Response includes the parameter "token_upload" with value "false", which indicates that the AS has failed to upload the access token to the RS on behalf of C. The Access Token Response also includes the access token and the parameter "cnf" specifying the symmetric PoP key bound to the access token.<a href="#section-3.1.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-7">Note that, even though the AS has failed to upload the access token to the RS, the response code 2.01 (Created) is used when replying to C, since the Access Token Request as such has been successfully processed at the AS, with the following issue of the access token.<a href="#section-3.1.1-7" class="pilcrow">¶</a></p>
+<span id="name-example-of-access-token-requ"></span><div id="fig-example-AS-to-C-token-upload-failed">
 <figure id="figure-4">
-            <div class="alignLeft art-text artwork" id="section-3.1.1-6.1">
+            <div class="alignLeft art-text artwork" id="section-3.1.1-8.1">
 <pre>
-   2.01 Created
+   / Access Token Request /
+
+   Header: POST (Code=0.02)
+   Uri-Host: "as.example.com"
+   Uri-Path: "token"
+   Content-Format: application/ace+cbor
+   Payload:
+   {
+            "audience" : "tempSensor4711",
+               "scope" : "read",
+        "token_upload" : true
+   }
+
+
+   / Access Token Response /
+
+   Header: Created (Code=2.01)
    Content-Format: application/ace+cbor
    Max-Age: 3560
    Payload:
    {
-     "access_token" : h'd08343a1'/...
-      (remainder of CWT omitted for brevity;
-      CWT contains the symmetric PoP key in the "cnf" claim)/,
-     "token_uploaded" : false,
-     "expires_in" : 3600,
-     "cnf" : {
-       "COSE_Key" : {
-         "kty" : 1,
-         "kid" : h'3d027833fc6267ce',
-         "k" : h'73657373696f6e6b6579'
-       }
-     }
+       "access_token" : h'd08343a1'/...
+        (remainder of CWT omitted for brevity;
+        CWT contains the symmetric PoP key in the "cnf" claim)/,
+       "token_upload" : false,
+         "expires_in" : 3600,
+                "cnf" : {
+                  "COSE_Key" : {
+                    "kty" : 1,
+                    "kid" : h'3d027833fc6267ce',
+                      "k" : h'73657373696f6e6b6579'
+                  }
+                }
    }
 </pre>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
-<a href="#name-example-of-access-token-resp" class="selfRef">Example of Access Token Response, including the parameter "token_uploaded" together with the access token, which is bound to a symmetric key and which the AS failed to upload to the RS</a>
+<a href="#name-example-of-access-token-requ" class="selfRef">Example of Access Token Request-Response Exchange. The Access Token Response includes the parameter "token_upload" together with the access token, which is bound to a symmetric key and which the AS failed to upload to the RS</a>
             </figcaption></figure>
 </div>
 </section>
@@ -1529,7 +1586,7 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
 <a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-example" class="section-name selfRef">Example</a>
           </h4>
 <p id="section-3.2.1-1"><a href="#fig-example-AS-to-C-rs_cnf2" class="auto internal xref">Figure 5</a> shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience composed of two RSs "rs1" and "rs2", and bound to C's public key as asymmetric PoP key. The Access Token Response includes the access token, as well as the parameters "rs_cnf2" and "aud2". These specify the public key of the two RSs as intended recipients of the access token and the identifiers of those two RSs, respectively.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
-<span id="name-example-of-access-token-respo"></span><div id="fig-example-AS-to-C-rs_cnf2">
+<span id="name-example-of-access-token-res"></span><div id="fig-example-AS-to-C-rs_cnf2">
 <figure id="figure-5">
             <div class="alignLeft art-text artwork" id="section-3.2.1-2.1">
 <pre>
@@ -1569,7 +1626,7 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
 </pre>
 </div>
 <figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
-<a href="#name-example-of-access-token-respo" class="selfRef">Example of Access Token Response with an access token bound to an asymmetric key, using the parameters "rs_cnf2" and "aud2"</a>
+<a href="#name-example-of-access-token-res" class="selfRef">Example of Access Token Response with an access token bound to an asymmetric key, using the parameters "rs_cnf2" and "aud2"</a>
             </figcaption></figure>
 </div>
 </section>
@@ -1598,7 +1655,7 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
 <p id="section-3.3.1-1"><a href="#fig-example-AS-to-C-anchor_cnf" class="auto internal xref">Figure 6</a> shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience, and bound to C's public key as asymmetric PoP key.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.3.1-2">The identifier of the group-audience was specified by the "aud" parameter of the Access Token Request to the AS and is specified by the "aud" claim of the issued access token, and is not repeated in the Access Token Response from the AS.<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.3.1-3">The Access Token Response includes the parameter "anchor_cnf". This specifies the public key of a trust anchor that C can use to validate the public keys of any RS with which the access token is going to be used. The public key of the trust anchor is here conveyed within an X.509 certificate used as public authentication credential for that trust anchor, by means of the CWT confirmation method "x5chain" defined in <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>.<a href="#section-3.3.1-3" class="pilcrow">¶</a></p>
-<span id="name-example-of-access-token-respon"></span><div id="fig-example-AS-to-C-anchor_cnf">
+<span id="name-example-of-access-token-resp"></span><div id="fig-example-AS-to-C-anchor_cnf">
 <figure id="figure-6">
             <div class="alignLeft art-text artwork" id="section-3.3.1-4.1">
 <pre>
@@ -1637,7 +1694,7 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
 </pre>
 </div>
 <figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
-<a href="#name-example-of-access-token-respon" class="selfRef">Example of Access Token Response with an access token bound to an asymmetric key, using the parameter "anchor_cnf"</a>
+<a href="#name-example-of-access-token-resp" class="selfRef">Example of Access Token Response with an access token bound to an asymmetric key, using the parameter "anchor_cnf"</a>
             </figcaption></figure>
 </div>
 </section>
@@ -1694,10 +1751,10 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
 <p id="section-6.1-1">IANA is asked to add the following entries to the "OAuth Parameters" registry.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6.1-2.1">
-            <p id="section-6.1-2.1.1">Name: "token_uploaded"<a href="#section-6.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-6.1-2.1.1">Name: "token_upload"<a href="#section-6.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-6.1-2.2">
-            <p id="section-6.1-2.2.1">Parameter Usage Location: token response<a href="#section-6.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-6.1-2.2.1">Parameter Usage Location: token request and token response<a href="#section-6.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-6.1-2.3">
             <p id="section-6.1-2.3.1">Change Controller: IESG<a href="#section-6.1-2.3.1" class="pilcrow">¶</a></p>
@@ -1761,13 +1818,13 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
 <p id="section-6.2-1">IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" following the procedure specified in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-6.2-2.1">
-            <p id="section-6.2-2.1.1">Name: "token_uploaded"<a href="#section-6.2-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-6.2-2.1.1">Name: "token_upload"<a href="#section-6.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-6.2-2.2">
             <p id="section-6.2-2.2.1">CBOR Key: TBD<a href="#section-6.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-6.2-2.3">
-            <p id="section-6.2-2.3.1">Value Type: simple value "true" / simple type "false"<a href="#section-6.2-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-6.2-2.3.1">Value Type: simple value "true" / simple value "false"<a href="#section-6.2-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-6.2-2.4">
             <p id="section-6.2-2.4.1">Reference: [RFC-XXXX]<a href="#section-6.2-2.4.1" class="pilcrow">¶</a></p>
@@ -1909,10 +1966,6 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
         <dd>
 <span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Palombini, F.</span>, <span class="refAuthor">Echeverria, S.</span>, and <span class="refAuthor">G. Lewis</span>, <span class="refTitle">"Notification of Revoked Access Tokens in the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-revoked-token-notification-06</span>, <time datetime="2023-06-02" class="refDate">2 June 2023</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-revoked-token-notification-06">https://datatracker.ietf.org/doc/html/draft-ietf-ace-revoked-token-notification-06</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="I-D.ietf-lake-edhoc">[I-D.ietf-lake-edhoc]</dt>
-        <dd>
-<span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"Ephemeral Diffie-Hellman Over COSE (EDHOC)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-lake-edhoc-23</span>, <time datetime="2024-01-22" class="refDate">22 January 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-lake-edhoc-23">https://datatracker.ietf.org/doc/html/draft-ietf-lake-edhoc-23</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="RFC9202">[RFC9202]</dt>
         <dd>
 <span class="refAuthor">Gerdes, S.</span>, <span class="refAuthor">Bergmann, O.</span>, <span class="refAuthor">Bormann, C.</span>, <span class="refAuthor">Selander, G.</span>, and <span class="refAuthor">L. Seitz</span>, <span class="refTitle">"Datagram Transport Layer Security (DTLS) Profile for Authentication and Authorization for Constrained Environments (ACE)"</span>, <span class="seriesInfo">RFC 9202</span>, <span class="seriesInfo">DOI 10.17487/RFC9202</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9202">https://www.rfc-editor.org/rfc/rfc9202</a>&gt;</span>. </dd>
@@ -1940,7 +1993,15 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
           <p id="appendix-A-2.1.1">The new ACE workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a> is effectively possible to use. This is beneficial for deployments where the communication leg between C and the RS is constrained, but the communication leg between the AS and RS is not.<a href="#appendix-A-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.2">
-          <p id="appendix-A-2.2.1">When the new ACE workflow is used, the parameter "token_uploaded" defined in <a href="#sec-token_uploaded" class="auto internal xref">Section 3.1</a> is used to inform C that the AS has attempted to upload the access token to the RS, specifying whether the uploading has succeeded or failed.<a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.2.1">When the new ACE workflow is used, the parameter "token_upload" defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a> is used:<a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-A-2.2.2.1">
+              <p id="appendix-A-2.2.2.1.1">To inform the AS that C opts in to use the new ACE workflow; and<a href="#appendix-A-2.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="appendix-A-2.2.2.2">
+              <p id="appendix-A-2.2.2.2.1">To inform C that the AS has attempted to upload the issued access token to the RS, specifying whether the uploading has succeeded or failed.<a href="#appendix-A-2.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
 </li>
       </ul>
 <div id="dtls-profile">
@@ -1996,7 +2057,7 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
 <p id="appendix-B.1.1-7">In the three cases above, the update of access rights is possible because there is a value used as de facto "token series ID". This value does not change throughout the lifetime of a token series, and it is used to associate the new access token with the previous one in the same series to be superseded.<a href="#appendix-B.1.1-7" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-8">Such a token series ID is required to have a unique value from a namespace/pool that the AS exclusively controls. This is in fact what happens in the profiles of ACE above, where the AS is the entity creating the mentioned objects or COSE Key included in the first access token of a token series.<a href="#appendix-B.1.1-8" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-9">However, this may generally not hold and it is not what happens in other known cases, i.e., the DTLS profile in RPK mode <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span> and the Group OSCORE profile <span>[<a href="#I-D.ietf-ace-group-oscore-profile" class="cite xref">I-D.ietf-ace-group-oscore-profile</a>]</span>. At the moment, the dynamic update of access rights is not possible for those, <em>neither in the original nor in the new ACE workflow</em>.<a href="#appendix-B.1.1-9" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-10">In order to make the update of access rights possible also for such cases, as well as both in the original and in the new ACE workflow, those cases can rely on a new parameter and claim "token_series_id" (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2.2</a>), which specifies a unique identifier of the token series which an access token belongs to.<a href="#appendix-B.1.1-10" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-10">In order to make the update of access rights possible also for such cases, as well as both in the original and in the new ACE workflow, those cases can rely on a new parameter and claim "token_series_id" (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2</a>), which specifies a unique identifier of the token series which an access token belongs to.<a href="#appendix-B.1.1-10" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-11">As to existing profiles of ACE, the above has no intention to change the current behavior when the update of access rights occurs, irrespective of the used ACE workflow and especially when using the original workflow.<a href="#appendix-B.1.1-11" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-12">If future profiles rely on a construction where the AS creates the object or the key included in the claim "cnf" of the first access token in a token series, and a unique ID generated by the AS is included in such object or key, then that ID must be used as de facto "token series ID", rather than the new parameter "token_series_id".<a href="#appendix-B.1.1-12" class="pilcrow">¶</a></p>
 </section>
@@ -2007,7 +2068,7 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
 <a href="#appendix-B.1.2" class="section-number selfRef">B.1.2. </a><a href="#name-allow-the-re-uploading-of-t" class="section-name selfRef">Allow the Re-uploading of the Access Token</a>
           </h4>
 <p id="appendix-B.1.2-1">After the AS has successfully uploaded the access token to the RS when using the new ACE workflow, C does not obtain the access token altogether. It follows that C cannot re-upload the Access Token to the RS by itself, e.g., in order to perform a key update like defined for the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>.<a href="#appendix-B.1.2-1" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.2-2">Even in such a case, the token re-uploading can be allowed by relying on a new parameter "token_hash", which the AS provides to C and specifies the hash of the access token (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2.2</a>).<a href="#appendix-B.1.2-2" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.2-2">Even in such a case, the token re-uploading can be allowed by relying on a new parameter "token_hash", which the AS provides to C and specifies the hash of the access token (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2</a>).<a href="#appendix-B.1.2-2" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.2-3">Then, C can practically "re-upload" the access token to the RS, by sending a request to the authz-info endpoint that includes the parameter "token_hash" instead of the parameter "access_token". Such a request may include further parameters, depending on what is defined for the used transport profile.<a href="#appendix-B.1.2-3" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.2-4">If the RS still stores the access token in question, then the RS can identify it by means of the received token hash, and take the same actions that would have been taken in case the full access token was re-uploaded to the authz-info endpoint.<a href="#appendix-B.1.2-4" class="pilcrow">¶</a></p>
 </section>
@@ -2020,69 +2081,50 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
 <p id="appendix-B.1.3-1">Some profiles of ACE require that C and the RS generate information to be exchanged when uploading the access token.<a href="#appendix-B.1.3-1" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.3-2">For example, in the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, C and the RS exchange the nonces N1 and N2 together with their OSCORE Recipient IDs ID1 and ID2, when uploading to the RS the first access token of a token series, as well as when re-uploading any access token (e.g., in order to perform a key update).<a href="#appendix-B.1.3-2" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.3-3">Evidently, using the new ACE workflow prevents C and the RS from directly performing the required exchanges above, since the uploading of the access token does not rely on a direct interaction between C and the RS like in the original ACE workflow. For some profiles of ACE, this may prevent the use of the new ACE workflow altogether.<a href="#appendix-B.1.3-3" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.3-4">This issue can be solved by having the AS acting as intermediary also for the exchange of C- and RS-generated information, by relying on two new parameters "to_rs" and "from_rs" (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2.2</a>). In particular, C can use "to_rs" for providing the AS with C-generated information, to be relayed to the RS when uploading the access token. Also, the RS can use "from_rs" for providing the AS with RS-generated information when replying to the token uploading, and to be relayed to C.<a href="#appendix-B.1.3-4" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.3-4">This issue can be solved by having the AS acting as intermediary also for the exchange of C- and RS-generated information, by relying on two new parameters "to_rs" and "from_rs" (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2</a>). In particular, C can use "to_rs" for providing the AS with C-generated information, to be relayed to the RS when uploading the access token. Also, the RS can use "from_rs" for providing the AS with RS-generated information when replying to the token uploading, and to be relayed to C.<a href="#appendix-B.1.3-4" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.3-5">With reference to the two cases mentioned above, "to_rs" can specify the nonce N1 generated by C, while "from_rs" can specify the nonce N2 generated by the RS.<a href="#appendix-B.1.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
-<div id="sec-open-points-parameters">
-<section id="appendix-B.2">
-        <h3 id="name-new-parameters">
-<a href="#appendix-B.2" class="section-number selfRef">B.2. </a><a href="#name-new-parameters" class="section-name selfRef">New Parameters</a>
-        </h3>
-<div id="tokenuploaded">
-<section id="appendix-B.2.1">
-          <h4 id="name-token_uploaded-2">
-<a href="#appendix-B.2.1" class="section-number selfRef">B.2.1. </a><a href="#name-token_uploaded-2" class="section-name selfRef">token_uploaded</a>
-          </h4>
-<p id="appendix-B.2.1-1">The parameter "token_uploaded" defined in <a href="#sec-token_uploaded" class="auto internal xref">Section 3.1</a> builds on the assumption that C can operate in the presence of the alternative ACE workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>.<a href="#appendix-B.2.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.1-2">In particular, it assumes that C accepts as valid an Access Token Response that includes the parameter "token_uploaded" encoding the CBOR simple value "true" but not the access token, and that, in such a case, C continues by sending a protected request to the RS.<a href="#appendix-B.2.1-2" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.1-3">In turn, this assumes that the AS knows that C can operate in the presence of the alternative ACE workflow. This can be part of the information that C provided to the AS at its registration.<a href="#appendix-B.2.1-3" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.1-4">An alternative design choice would instead require C to opt-in when sending the Access Token Request to the AS. That is, C can include the parameter "token_uploaded" in the Access Token Request, encoding the CBOR simple value "true", hence explicitly signaling its understanding of the alternative workflow.<a href="#appendix-B.2.1-4" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.1-5">Only if the AS supports the alternative workflow and the Access Token Request includes the parameter "token_uploaded" encoding the CBOR simple value "true", can the AS attempt to upload the access token to the RS on behalf of C as per the alternative workflow.<a href="#appendix-B.2.1-5" class="pilcrow">¶</a></p>
-</section>
-</div>
 <div id="sec-more-parameters">
-<section id="appendix-B.2.2">
-          <h4 id="name-further-new-parameters-to-c">
-<a href="#appendix-B.2.2" class="section-number selfRef">B.2.2. </a><a href="#name-further-new-parameters-to-c" class="section-name selfRef">Further New Parameters to Consider</a>
-          </h4>
-<p id="appendix-B.2.2-1">The following discusses possible, further new parameters that can be defined for addressing the open points raised earlier in <a href="#sec-open-points" class="auto internal xref">Appendix B</a>.<a href="#appendix-B.2.2-1" class="pilcrow">¶</a></p>
+<section id="appendix-B.2">
+        <h3 id="name-further-new-parameters-to-c">
+<a href="#appendix-B.2" class="section-number selfRef">B.2. </a><a href="#name-further-new-parameters-to-c" class="section-name selfRef">Further New Parameters to Consider</a>
+        </h3>
+<p id="appendix-B.2-1">The following discusses possible, further new parameters that can be defined for addressing the open points raised earlier in <a href="#sec-open-points" class="auto internal xref">Appendix B</a>.<a href="#appendix-B.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="appendix-B.2.2-2.1">
-              <p id="appendix-B.2.2-2.1.1">"token_series_id" - This parameter specifies the unique identifier of a token series, thus ensuring that C can dynamically update its access rights, irrespective of the used ACE workflow (see <a href="#sec-open-points-workflow-dynamic-access-rights" class="auto internal xref">Appendix B.1.1</a>).<a href="#appendix-B.2.2-2.1.1" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.2-2.1.2">
-When issuing the first access token of a token series, the AS specifies this parameter in the Access Token Response to C, with value TS_ID. Also, the AS includes a claim "token_series_id" with the same value in the access token.<a href="#appendix-B.2.2-2.1.2" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.2-2.1.3">
-When C requests a new access token in the same tokes series for dynamically updating its access rights, C specifies TS_ID as value of the parameter "token_series_id" of the Access Token Request, which MUST omit the parameter "req_cnf" (see <span><a href="https://rfc-editor.org/rfc/rfc9201#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC9201" class="cite xref">RFC9201</a>]</span>). The AS specifies the same value within the claim "token_series_id" of the new access token.<a href="#appendix-B.2.2-2.1.3" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.2-2.1.4">
-When this parameter is used, the information about the token series in question has to be specified in that parameter and in the corresponding token claim. Instead, the "req_cnf" parameter and the "cnf" claim are used for their main purpose, i.e., for specifying the public authentication credential of the Client, by value or by reference.<a href="#appendix-B.2.2-2.1.4" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.2-2.1.5">
-If a profile of ACE can use or is already using a different parameter/claim as de-facto identifier of the token series, then that profile will continue to do so, and will not use this new parameter "token_series_id".<a href="#appendix-B.2.2-2.1.5" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-B.2-2.1">
+            <p id="appendix-B.2-2.1.1">"token_series_id" - This parameter specifies the unique identifier of a token series, thus ensuring that C can dynamically update its access rights, irrespective of the used ACE workflow (see <a href="#sec-open-points-workflow-dynamic-access-rights" class="auto internal xref">Appendix B.1.1</a>).<a href="#appendix-B.2-2.1.1" class="pilcrow">¶</a></p>
+<p id="appendix-B.2-2.1.2">
+When issuing the first access token of a token series, the AS specifies this parameter in the Access Token Response to C, with value TS_ID. Also, the AS includes a claim "token_series_id" with the same value in the access token.<a href="#appendix-B.2-2.1.2" class="pilcrow">¶</a></p>
+<p id="appendix-B.2-2.1.3">
+When C requests a new access token in the same tokes series for dynamically updating its access rights, C specifies TS_ID as value of the parameter "token_series_id" of the Access Token Request, which MUST omit the parameter "req_cnf" (see <span><a href="https://rfc-editor.org/rfc/rfc9201#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC9201" class="cite xref">RFC9201</a>]</span>). The AS specifies the same value within the claim "token_series_id" of the new access token.<a href="#appendix-B.2-2.1.3" class="pilcrow">¶</a></p>
+<p id="appendix-B.2-2.1.4">
+When this parameter is used, the information about the token series in question has to be specified in that parameter and in the corresponding token claim. Instead, the "req_cnf" parameter and the "cnf" claim are used for their main purpose, i.e., for specifying the public authentication credential of the Client, by value or by reference.<a href="#appendix-B.2-2.1.4" class="pilcrow">¶</a></p>
+<p id="appendix-B.2-2.1.5">
+If a profile of ACE can use or is already using a different parameter/claim as de-facto identifier of the token series, then that profile will continue to do so, and will not use this new parameter "token_series_id".<a href="#appendix-B.2-2.1.5" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="appendix-B.2.2-2.2">
-              <p id="appendix-B.2.2-2.2.1">"token_hash" - This parameter specifies the hash of an access token that the AS has successfully issued and uploaded to the RS as per the new ACE workflow, and thus that the AS does not provide to C (see <a href="#sec-open-points-workflow-dynamic-access-rights" class="auto internal xref">Appendix B.1.1</a>).<a href="#appendix-B.2.2-2.2.1" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.2-2.2.2">
-The AS specifies this parameter in a successful Access Token Response, in case the parameter "token_uploaded" is also specified as encoding the CBOR simple value "true" (see <a href="#sec-token_uploaded" class="auto internal xref">Section 3.1</a>). The parameter value is the hash computed over the value that the parameter "access_token" would have had in that same response message, if it was included therein specifying the access token.<a href="#appendix-B.2.2-2.2.2" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.2-2.2.3">
-C specifies this parameter in the request sent to the authz-info endpoint at the RS for "re-uploading" the same access token, e.g., in order to perform a key update (see <a href="#sec-open-points-workflow-token-re-uploading" class="auto internal xref">Appendix B.1.2</a>).<a href="#appendix-B.2.2-2.2.3" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.2-2.2.4">
-This parameter also allows C to seamlessly use the method defined in <span>[<a href="#I-D.ietf-ace-revoked-token-notification" class="cite xref">I-D.ietf-ace-revoked-token-notification</a>]</span> for learning of revoked access tokens, even when the new ACE workflow is used and C does not obtain the access token, which makes it impossible for C to compute the token hash by itself.<a href="#appendix-B.2.2-2.2.4" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.2-2.2">
+            <p id="appendix-B.2-2.2.1">"token_hash" - This parameter specifies the hash of an access token that the AS has successfully issued and uploaded to the RS as per the new ACE workflow, and thus that the AS does not provide to C (see <a href="#sec-open-points-workflow-dynamic-access-rights" class="auto internal xref">Appendix B.1.1</a>).<a href="#appendix-B.2-2.2.1" class="pilcrow">¶</a></p>
+<p id="appendix-B.2-2.2.2">
+The AS specifies this parameter in a successful Access Token Response, in case the parameter "token_upload" is also specified as encoding the CBOR simple value "true" (see <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a>). The parameter value is the hash computed over the value that the parameter "access_token" would have had in that same response message, if it was included therein specifying the access token.<a href="#appendix-B.2-2.2.2" class="pilcrow">¶</a></p>
+<p id="appendix-B.2-2.2.3">
+C specifies this parameter in the request sent to the authz-info endpoint at the RS for "re-uploading" the same access token, e.g., in order to perform a key update (see <a href="#sec-open-points-workflow-token-re-uploading" class="auto internal xref">Appendix B.1.2</a>).<a href="#appendix-B.2-2.2.3" class="pilcrow">¶</a></p>
+<p id="appendix-B.2-2.2.4">
+This parameter also allows C to seamlessly use the method defined in <span>[<a href="#I-D.ietf-ace-revoked-token-notification" class="cite xref">I-D.ietf-ace-revoked-token-notification</a>]</span> for learning of revoked access tokens, even when the new ACE workflow is used and C does not obtain the access token, which makes it impossible for C to compute the token hash by itself.<a href="#appendix-B.2-2.2.4" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="appendix-B.2.2-2.3">
-              <p id="appendix-B.2.2-2.3.1">"to_rs" - When using the new ACE workflow, this parameter specifies C-generated information that, according to the used profile of ACE, C has to provide to the RS together with the access token if using the original ACE workflow. This allows the AS to relay such information to the RS upon uploading the access token on behalf of C (see <a href="#sec-open-points-workflow-applicability" class="auto internal xref">Appendix B.1.3</a>).<a href="#appendix-B.2.2-2.3.1" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.2-2.3.2">
-First, C specifies this parameter in the Access Token Request sent to the AS. Then, the AS specifies this parameter in the request to the RS sent for uploading the access token on behalf of C, by simply relaying the value received from C. The used profile of ACE has to define the detailed content and semantics of the information specified in the parameter value.<a href="#appendix-B.2.2-2.3.2" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.2-2.3">
+            <p id="appendix-B.2-2.3.1">"to_rs" - When using the new ACE workflow, this parameter specifies C-generated information that, according to the used profile of ACE, C has to provide to the RS together with the access token if using the original ACE workflow. This allows the AS to relay such information to the RS upon uploading the access token on behalf of C (see <a href="#sec-open-points-workflow-applicability" class="auto internal xref">Appendix B.1.3</a>).<a href="#appendix-B.2-2.3.1" class="pilcrow">¶</a></p>
+<p id="appendix-B.2-2.3.2">
+First, C specifies this parameter in the Access Token Request sent to the AS. Then, the AS specifies this parameter in the request to the RS sent for uploading the access token on behalf of C, by simply relaying the value received from C. The used profile of ACE has to define the detailed content and semantics of the information specified in the parameter value.<a href="#appendix-B.2-2.3.2" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="appendix-B.2.2-2.4">
-              <p id="appendix-B.2.2-2.4.1">"from_rs" - When using the new ACE workflow, this parameter specifies RS-generated information that, according to the used profile of ACE, the RS has to provide to C after the uploading of an access token if using the original ACE workflow. This allows the AS to relay such information to C after having uploaded the access token on behalf of C (see <a href="#sec-open-points-workflow-applicability" class="auto internal xref">Appendix B.1.3</a>).<a href="#appendix-B.2.2-2.4.1" class="pilcrow">¶</a></p>
-<p id="appendix-B.2.2-2.4.2">
-First, the RS specifies this parameter in the response sent to the AS, after the upload of an access token through a request from the AS. Then, the AS specifies this parameter in the Access Token Response to C, by simply relaying the value received from the RS. The used profile of ACE has to define the detailed content and semantics of the information specified in the parameter value.<a href="#appendix-B.2.2-2.4.2" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-B.2-2.4">
+            <p id="appendix-B.2-2.4.1">"from_rs" - When using the new ACE workflow, this parameter specifies RS-generated information that, according to the used profile of ACE, the RS has to provide to C after the uploading of an access token if using the original ACE workflow. This allows the AS to relay such information to C after having uploaded the access token on behalf of C (see <a href="#sec-open-points-workflow-applicability" class="auto internal xref">Appendix B.1.3</a>).<a href="#appendix-B.2-2.4.1" class="pilcrow">¶</a></p>
+<p id="appendix-B.2-2.4.2">
+First, the RS specifies this parameter in the response sent to the AS, after the upload of an access token through a request from the AS. Then, the AS specifies this parameter in the Access Token Response to C, by simply relaying the value received from the RS. The used profile of ACE has to define the detailed content and semantics of the information specified in the parameter value.<a href="#appendix-B.2-2.4.2" class="pilcrow">¶</a></p>
 </li>
-          </ul>
-</section>
-</div>
+        </ul>
 </section>
 </div>
 </section>
@@ -2109,10 +2151,16 @@ First, the RS specifies this parameter in the response sent to the AS, after the
             <p id="appendix-C.1-1.3.1">Amendeded two of the requirements on profiles of the framework.<a href="#appendix-C.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-C.1-1.4">
-            <p id="appendix-C.1-1.4.1">Security considerations inherited from other documents.<a href="#appendix-C.1-1.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.4.1">The Client has to opt-in for using the alternative workflow.<a href="#appendix-C.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-C.1-1.5">
-            <p id="appendix-C.1-1.5.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.5.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.5.1">Parameter "token_uploaded" renamed to "token_upload".<a href="#appendix-C.1-1.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-C.1-1.6">
+            <p id="appendix-C.1-1.6.1">Security considerations inherited from other documents.<a href="#appendix-C.1-1.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-C.1-1.7">
+            <p id="appendix-C.1-1.7.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.7.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
