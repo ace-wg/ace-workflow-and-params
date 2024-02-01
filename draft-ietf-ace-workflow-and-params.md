@@ -13,7 +13,7 @@ wg: ACE Working Group
 kw: Internet-Draft
 cat: std
 submissiontype: IETF
-updates: 9200
+updates: 9200, 9202, 9203, 9431
 
 coding: utf-8
 pi:    # can use array (if all yes) or hash here
@@ -50,19 +50,27 @@ normative:
   RFC8174:
   RFC8392:
   RFC8446:
+  RFC8610:
   RFC8747:
   RFC8949:
   RFC9052:
   RFC9053:
   RFC9200:
   RFC9201:
-  RFC9430:
-  I-D.ietf-ace-edhoc-oscore-profile:
-
-informative:
   RFC9202:
   RFC9203:
+  RFC9290:
+  RFC9430:
   RFC9431:
+  I-D.ietf-ace-edhoc-oscore-profile:
+  ACE.OAuth.Error.Code.CBOR.Mappings:
+    author:
+      org: IANA
+    date: false
+    title: OAuth Error Code CBOR Mappings
+    target: https://www.iana.org/assignments/ace/ace.xhtml#oauth-error-code-cbor-mappings
+
+informative:
   I-D.ietf-ace-revoked-token-notification:
   I-D.ietf-ace-group-oscore-profile:
 
@@ -71,7 +79,7 @@ entity:
 
 --- abstract
 
-This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines a new, alternative workflow that the Authorization Server can use for uploading an access token to a Resource Server on behalf of the Client. Second, it defines new parameters and encodings for the OAuth 2.0 token endpoint at the Authorization Server. Third, it amends two of the requirements on profiles of the framework.
+This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines a new, alternative workflow that the Authorization Server can use for uploading an access token to a Resource Server on behalf of the Client. Second, it defines new parameters and encodings for the OAuth 2.0 token endpoint at the Authorization Server. Third, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses conveying an error code, when using the Constrained Application Protocol (CoAP) and/or CBOR encoding, and defines a new one according to the problem-details format specified in RFC 9290. In this respect, it also updates the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431.
 
 --- middle
 
@@ -99,6 +107,11 @@ This document updates {{RFC9200}} as follows.
 
 * It amends two of the requirements on profiles of the ACE framework (see {{sec-updated-requirements}}).
 
+* It deprecates the original payload format of error responses conveying an error code, when using CoAP and/or CBOR encoding in the ACE framework. Also, it defines a new payload format according to the problem-details format specified in {{RFC9290}} (see {{sec-updated-error-responses}}).
+
+   In this respect, it also updates the profiles of the ACE framework defined in {{RFC9202}}, {{RFC9203}}, and {{RFC9431}}.
+
+
 ## Terminology ## {#terminology}
 
 {::boilerplate bcp14}
@@ -107,7 +120,7 @@ Readers are expected to be familiar with the terms and concepts described in the
 
 The terminology for entities in the considered architecture is defined in OAuth 2.0 {{RFC6749}}. In particular, this includes Client (C), Resource Server (RS), and Authorization Server (AS).
 
-Readers are also expected to be familiar with the terms and concepts related to the CoAP protocol {{RFC7252}}, CBOR {{RFC8949}}, and COSE {{RFC9052}}{{RFC9053}}.
+Readers are also expected to be familiar with the terms and concepts related to the CoAP protocol {{RFC7252}}, CDDL {{RFC8610}}, CBOR {{RFC8949}}, and COSE {{RFC9052}}{{RFC9053}}.
 
 Note that, unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."
 
@@ -247,9 +260,9 @@ Consistently, the Access Token Response does not include the access token, while
    Content-Format: application/ace+cbor
    Payload:
    {
-            "audience" : "tempSensor4711",
-               "scope" : "read",
-        "token_upload" : true
+         "audience" : "tempSensor4711",
+            "scope" : "read",
+     "token_upload" : true
    }
 
 
@@ -288,9 +301,9 @@ Note that, even though the AS has failed to upload the access token to the RS, t
    Content-Format: application/ace+cbor
    Payload:
    {
-            "audience" : "tempSensor4711",
-               "scope" : "read",
-        "token_upload" : true
+         "audience" : "tempSensor4711",
+            "scope" : "read",
+     "token_upload" : true
    }
 
 
@@ -301,18 +314,18 @@ Note that, even though the AS has failed to upload the access token to the RS, t
    Max-Age: 3560
    Payload:
    {
-       "access_token" : h'd08343a1'/...
-        (remainder of CWT omitted for brevity;
-        CWT contains the symmetric PoP key in the "cnf" claim)/,
-       "token_upload" : false,
-         "expires_in" : 3600,
-                "cnf" : {
-                  "COSE_Key" : {
-                    "kty" : 1,
-                    "kid" : h'3d027833fc6267ce',
-                      "k" : h'73657373696f6e6b6579'
-                  }
+     "access_token" : h'd08343a1'/...
+      (remainder of CWT omitted for brevity;
+      CWT contains the symmetric PoP key in the "cnf" claim)/,
+     "token_upload" : false,
+       "expires_in" : 3600,
+              "cnf" : {
+                "COSE_Key" : {
+                  "kty" : 1,
+                  "kid" : h'3d027833fc6267ce',
+                    "k" : h'73657373696f6e6b6579'
                 }
+              }
    }
 ~~~~~~~~~~~
 {: #fig-example-AS-to-C-token-upload-failed title="Example of Access Token Request-Response Exchange. The Access Token Response includes the parameter \"token_upload\" together with the access token, which is bound to a symmetric key and which the AS failed to upload to the RS"}
@@ -339,10 +352,10 @@ This section defines the additional parameters "rs_cnf2" and "aud2" for an Acces
 
 ### Example
 
-{{fig-example-AS-to-C-rs_cnf2}} shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience composed of two RSs "rs1" and "rs2", and bound to C's public key as asymmetric PoP key. The Access Token Response includes the access token, as well as the parameters "rs_cnf2" and "aud2". These specify the public key of the two RSs as intended recipients of the access token and the identifiers of those two RSs, respectively.
+{{fig-example-AS-to-C-rs_cnf2}} shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience composed of two RSs "rs1" and "rs2", and bound to C's public key as asymmetric PoP key. The Access Token Response includes the access token, as well as the parameters "aud2" and "rs_cnf2". These specify the public key of the two RSs as intended recipients of the access token and the identifiers of those two RSs, respectively.
 
 ~~~~~~~~~~~
-   2.01 Created
+   Header: Created (Code=2.01)
    Content-Format: application/ace+cbor
    Max-Age: 3600
    Payload:
@@ -350,33 +363,33 @@ This section defines the additional parameters "rs_cnf2" and "aud2" for an Acces
      "access_token" : b64'SlAV32hk'/...
       (remainder of CWT omitted for brevity;
       CWT contains the client's RPK in the "cnf" claim)/,
-     "expires_in" : 3600,
-     "rs_cnf2" : [
-       {
-         "COSE_Key" : {
-           "kty" : 2,
-           "crv" : 1,
-           "x" : h'bbc34960526ea4d32e940cad2a234148
-                   ddc21791a12afbcbac93622046dd44f0',
-           "y" : h'4519e257236b2a0ce2023f0931f1f386
-                   ca7afda64fcde0108c224c51eabf6072'
-         }
-       },
-       {
-         "COSE_Key" : {
-           "kty" : 2,
-           "crv" : 1,
-           "x" : h'ac75e9ece3e50bfc8ed6039988952240
-                   5c47bf16df96660a41298cb4307f7eb6',
-           "y" : h'6e5de611388a4b8a8211334ac7d37ecb
-                   52a387d257e6db3c2a93df21ff3affc8'
-         }
-       }
-     ],
-     "aud2" : ["rs1", "rs2"]
+       "expires_in" : 3600,
+             "aud2" : ["rs1", "rs2"],
+          "rs_cnf2" : [
+            {
+              "COSE_Key" : {
+                "kty" : 2,
+                "crv" : 1,
+                  "x" : h'bbc34960526ea4d32e940cad2a234148
+                          ddc21791a12afbcbac93622046dd44f0',
+                  "y" : h'4519e257236b2a0ce2023f0931f1f386
+                          ca7afda64fcde0108c224c51eabf6072'
+              }
+            },
+            {
+              "COSE_Key" : {
+                "kty" : 2,
+                "crv" : 1,
+                  "x" : h'ac75e9ece3e50bfc8ed6039988952240
+                          5c47bf16df96660a41298cb4307f7eb6',
+                  "y" : h'6e5de611388a4b8a8211334ac7d37ecb
+                          52a387d257e6db3c2a93df21ff3affc8'
+              }
+            }
+          ]
    }
 ~~~~~~~~~~~
-{: #fig-example-AS-to-C-rs_cnf2 title="Example of Access Token Response with an access token bound to an asymmetric key, using the parameters \"rs_cnf2\" and \"aud2\""}
+{: #fig-example-AS-to-C-rs_cnf2 title="Example of Access Token Response with an access token bound to an asymmetric key, using the parameters \"aud2\" and \"rs_cnf2\""}
 
 ## anchor_cnf {#sec-anchor_cnf}
 
@@ -407,7 +420,7 @@ The identifier of the group-audience was specified by the "aud" parameter of the
 The Access Token Response includes the parameter "anchor_cnf". This specifies the public key of a trust anchor that C can use to validate the public keys of any RS with which the access token is going to be used. The public key of the trust anchor is here conveyed within an X.509 certificate used as public authentication credential for that trust anchor, by means of the CWT confirmation method "x5chain" defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
 ~~~~~~~~~~~
-   2.01 Created
+   Header: Created (Code=2.01)
    Content-Format: application/ace+cbor
    Max-Age: 3600
    Payload:
@@ -415,32 +428,33 @@ The Access Token Response includes the parameter "anchor_cnf". This specifies th
      "access_token" : b64'SlAV32hk'/...
       (remainder of CWT omitted for brevity;
       CWT contains the client's RPK in the "cnf" claim)/,
-     "expires_in" : 3600,
-     "anchor_cnf" : [
-       {
-         "x5chain" : h'308201363081dea003020102020301f50d30
-                       0a06082a8648ce3d04030230163114301206
-                       035504030c0b524643207465737420434130
-                       1e170d3230303130313030303030305a170d
-                       3231303230323030303030305a3022312030
-                       1e06035504030c1730312d32332d34352d46
-                       462d46452d36372d38392d41423059301306
-                       072a8648ce3d020106082a8648ce3d030107
-                       03420004b1216ab96e5b3b3340f5bdf02e69
-                       3f16213a04525ed44450b1019c2dfd3838ab
-                       ac4e14d86c0983ed5e9eef2448c6861cc406
-                       547177e6026030d051f7792ac206a30f300d
-                       300b0603551d0f040403020780300a06082a
-                       8648ce3d04030203470030440220445d798c
-                       90e7f500dc747a654cec6cfa6f037276e14e
-                       52ed07fc16294c84660d02205a33985dfbd4
-                       bfdd6d4acf3804c3d46ebf3b7fa62640674f
-                       c0354fa056dbaea6'
-       }
-     ]
+       "expires_in" : 3600,
+       "anchor_cnf" : [
+         {
+           "x5chain" : h'308201363081dea003020102020301f50d30
+                         0a06082a8648ce3d04030230163114301206
+                         035504030c0b524643207465737420434130
+                         1e170d3230303130313030303030305a170d
+                         3231303230323030303030305a3022312030
+                         1e06035504030c1730312d32332d34352d46
+                         462d46452d36372d38392d41423059301306
+                         072a8648ce3d020106082a8648ce3d030107
+                         03420004b1216ab96e5b3b3340f5bdf02e69
+                         3f16213a04525ed44450b1019c2dfd3838ab
+                         ac4e14d86c0983ed5e9eef2448c6861cc406
+                         547177e6026030d051f7792ac206a30f300d
+                         300b0603551d0f040403020780300a06082a
+                         8648ce3d04030203470030440220445d798c
+                         90e7f500dc747a654cec6cfa6f037276e14e
+                         52ed07fc16294c84660d02205a33985dfbd4
+                         bfdd6d4acf3804c3d46ebf3b7fa62640674f
+                         c0354fa056dbaea6'
+         }
+       ]
    }
 ~~~~~~~~~~~
 {: #fig-example-AS-to-C-anchor_cnf title="Example of Access Token Response with an access token bound to an asymmetric key, using the parameter \"anchor_cnf\""}
+
 
 # Updated Requirements on Profiles # {#sec-updated-requirements}
 
@@ -468,15 +482,77 @@ is replaced by the following text:
 
 At the time of writing, all the profiles of ACE that are published as RFC (i.e., {{RFC9202}}{{RFC9203}}{{RFC9431}}) already comply with the two updated requirements as formulated above.
 
+# Updated Payload Format of Error Responses # {#sec-updated-error-responses}
+
+This section deprecates the original payload format of error responses conveying an error code, when using CoAP and/or CBOR encoding in the ACE framework. That format is referred to, e.g., when defining the error responses of {{Sections 5.8.3 and 5.9.3 of RFC9200}}.
+
+Also, this section defines a new payload format that, when using CoAP and/or CBOR encoding, allows error responses to convey an error code together with further error-specific information, according to the problem-details format specified in {{RFC9290}}.
+
+Such error responses MUST have Content-Format set to application/concise-problem-details+cbor. The payload of these error responses MUST be a CBOR map specifying a Concise Problem Details data item (see {{Section 2 of RFC9290}}). The CBOR map is formatted as follows.
+
+* It MUST include the Custom Problem Detail entry "ace-error" registered in {{iana-problem-details}} of this document.
+
+   This entry is formatted as a CBOR map including only one field, namely "error-code". The map key for "error-code" is the CBOR unsigned integer with value 0. The value of "error-code" is a CBOR integer specifying the error code associated with the occurred error. This value is taken from the "CBOR Value" column of the "OAuth Error Code CBOR Mappings" registry {{ACE.OAuth.Error.Code.CBOR.Mappings}}.
+
+   The CDDL notation {{RFC8610}} of the "ace-error" entry is given below.
+
+~~~~~~~~~~~ CDDL
+   ace-error = {
+     &(error-code: 0) => int
+   }
+~~~~~~~~~~~
+
+   The new payload format MUST use the field "error-code" in order to convey the same information that the original payload format conveys through the "error" parameter (see, e.g., {{Sections 5.8.3 and 5.9.3 of RFC9200}}).
+
+* It MAY include further Standard Problem Detail entries or Custom Problem Detail entries (see {{RFC9290}}). The following Standard Problem Detail entries are of particular relevance for the ACE framework.
+
+   * "detail" (map key -2): its value is a CBOR text string that specifies a human-readable, diagnostic description of the occurred error (see {{Section 2 of RFC9290}}).
+
+      The diagnostic text is intended for software engineers as well as for device and network operators, in order to aid debugging and provide context for possible intervention. The diagnostic message SHOULD be logged by the sender of the error response. The entry "detail" is unlikely relevant in an unattended setup where human intervention is not expected.
+
+      The new payload format MUST use the Standard Problem Detail entry "detail" in order to convey the same information that the original payload format conveys through the "error_information" parameter (see, e.g., {{Sections 5.8.3 and 5.9.3 of RFC9200}}).
+
+   * "instance" (map key -3): its value is a URI reference identifying the specific occurrence of the error (see {{Section 2 of RFC9290}}).
+
+      The new payload format MUST use the Standard Problem Detail entry "instance" in order to convey the same information that the original payload format conveys through the "error_uri" parameter (see, e.g., {{Sections 5.8.3 and 5.9.3 of RFC9200}}).
+
+An example of error response using the problem-details format is shown in {{fig-example-error-response}}.
+
+~~~~~~~~~~~
+Header: Bad Request (Code=4.00)
+Content-Format: application/concise-problem-details+cbor
+Payload:
+{
+   / title /       -1: "Incompatible ACE profile",
+   / detail /      -2: "The RS supports only the OSCORE profile",
+   / ace-error/   TBD: {
+     / error_code /       0: 8 / incompatible_ace_profiles /
+   }
+}
+~~~~~~~~~~~
+{: #fig-example-error-response title="Example of Error Response with Problem Details"}
+
+Note to RFC Editor: In the figure above, please replace "TBD" with the unsigned integer assigned as key value to the Custom Problem Detail entry "ace-error" (see {{iana-problem-details}}). Then, please delete this paragraph.
+
+When using the ACE framework with CoAP and/or CBOR encoding, the following applies.
+
+* It is RECOMMENDED that Authorization Servers, Clients, and Resource Servers support the payload format defined in this section.
+
+* Authorization Servers, Clients, and Resource Servers that support the payload format defined in this section MUST use it when composing an outgoing error response that conveys an error code.
+
 # Security Considerations
 
 The same security considerations from the ACE framework for Authentication and Authorization {{RFC9200}} apply to this document, together with those from the specifically used transport profile of ACE, e.g., {{RFC9202}}{{RFC9203}}{{RFC9431}}{{I-D.ietf-ace-edhoc-oscore-profile}}{{I-D.ietf-ace-group-oscore-profile}}{{RFC9431}}.
+
+When using the problem-details format defined in {{RFC9290}} for error responses, then the privacy and security considerations from {{Sections 4 and 5 of RFC9290}} also apply.
 
 Editor's note: add more security considerations.
 
 # IANA Considerations
 
 This document has the following actions for IANA.
+
+Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC number of this specification and delete this paragraph.
 
 ## OAuth Parameters Registry ## {#iana-oauth-params}
 
@@ -537,6 +613,16 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 * CBOR Key: TBD
 * Value Type: array
 * Reference: {{&SELF}}
+
+## Custom Problem Detail Keys Registry  ## {#iana-problem-details}
+
+IANA is asked to register the following entry in the "Custom Problem Detail Keys" registry within the "Constrained RESTful Environments (CoRE) Parameters" registry group.
+
+* Key Value: TBD
+* Name: ace-error
+* Brief Description: Carry ACE {{RFC9200}} problem details in a Concise Problem Details data item.
+* Change Controller: IETF
+* Reference: {{sec-updated-error-responses}} of {{&SELF}}
 
 --- back
 
@@ -662,6 +748,8 @@ The following discusses possible, further new parameters that can be defined for
 * The Client has to opt-in for using the alternative workflow.
 
 * Parameter "token_uploaded" renamed to "token_upload".
+
+* Updated format of error response payload to use RFC 9290.
 
 * Security considerations inherited from other documents.
 
