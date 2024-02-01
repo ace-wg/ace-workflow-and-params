@@ -61,7 +61,7 @@ informative:
   RFC9202:
   RFC9203:
   I-D.ietf-ace-revoked-token-notification:
-  I-D.tiloca-ace-group-oscore-profile:
+  I-D.ietf-ace-group-oscore-profile:
   I-D.ietf-lake-edhoc:
 
 entity:
@@ -117,7 +117,7 @@ That is, the Client first sends an access token request to the token endpoint at
 
 Then, if the request has been successfully verified, authenticated, and authorized, the AS replies to the Client (step B), providing an access token and possibly additional parameters as access information including the actually granted permissions.
 
-Finally, the Client uploads the access token to the RS and, consistently with the permissions granted according to the access token, accesses a resource at the RS (step C), which replies with the result of the resource access (step F). Details about what protocol the Client and RS use to establish a secure association, mutually authenticate and secure their communications are defined in the specifically used profile of ACE, e.g., {{RFC9202}}{{RFC9203}}{{I-D.ietf-ace-edhoc-oscore-profile}}{{I-D.tiloca-ace-group-oscore-profile}}.
+Finally, the Client uploads the access token to the RS and, consistently with the permissions granted according to the access token, accesses a resource at the RS (step C), which replies with the result of the resource access (step F). Details about what protocol the Client and RS use to establish a secure association, mutually authenticate and secure their communications are defined in the specifically used profile of ACE, e.g., {{RFC9202}}{{RFC9203}}{{I-D.ietf-ace-edhoc-oscore-profile}}{{I-D.ietf-ace-group-oscore-profile}}.
 
 Further interactions are possible between the AS and RS, i.e., the exchange of an introspection request and response where the AS validates a previously issued access token for RS (steps D and E).
 
@@ -498,7 +498,7 @@ In the three cases above, the update of access rights is possible because there 
 
 Such a token series ID is required to have a unique value from a namespace/pool that the AS exclusively control. This is in fact what happens in the profiles of ACE above, where the AS is the entity creating the mentioned objects or COSE Key included in the first access token of a token series.
 
-However, this may generally not hold and it is not what happens in other known cases, i.e., the DTLS profile in RPK mode {{RFC9203}} and the Group OSCORE profile {{I-D.tiloca-ace-group-oscore-profile}}. At the moment, the dynamic update of access rights is not possible for those, _neither in the original nor in the new ACE workflow_.
+However, this may generally not hold and it is not what happens in other known cases, i.e., the DTLS profile in RPK mode {{RFC9203}} and the Group OSCORE profile {{I-D.ietf-ace-group-oscore-profile}}. At the moment, the dynamic update of access rights is not possible for those, _neither in the original nor in the new ACE workflow_.
 
 In order to make the update of access rights possible also for such cases, as well as both in the original and in the new ACE workflow, those cases can rely on a new parameter and claim "token_series_id" (see {{sec-more-parameters}}), which specifies a unique identifier of the token series which an access token belongs to.
 
