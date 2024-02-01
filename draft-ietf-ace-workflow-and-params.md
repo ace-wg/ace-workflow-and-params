@@ -117,9 +117,9 @@ That is, the Client first sends an access token request to the token endpoint at
 
 Then, if the request has been successfully verified, authenticated, and authorized, the AS replies to the Client (step B), providing an access token and possibly additional parameters as access information including the actually granted permissions.
 
-Finally, the Client uploads the access token to the RS and, consistently with the permissions granted according to the access token, accesses a resource at the RS (step C), which replies with the result of the resource access (step F). Details about what protocol the Client and RS use to establish a secure association, mutually authenticate and secure their communications are defined in the specifically used profile of ACE, e.g., {{RFC9202}}{{RFC9203}}{{I-D.ietf-ace-edhoc-oscore-profile}}{{I-D.ietf-ace-group-oscore-profile}}.
+Finally, the Client uploads the access token to the RS and, consistently with the permissions granted according to the access token, accesses a resource at the RS (step C), which replies with the result of the resource access (step F). Details about what protocol the Client and the RS use to establish a secure association, mutually authenticate and secure their communications are defined in the specifically used profile of ACE, e.g., {{RFC9202}}{{RFC9203}}{{I-D.ietf-ace-edhoc-oscore-profile}}{{I-D.ietf-ace-group-oscore-profile}}.
 
-Further interactions are possible between the AS and RS, i.e., the exchange of an introspection request and response where the AS validates a previously issued access token for RS (steps D and E).
+Further interactions are possible between the AS and the RS, i.e., the exchange of an introspection request and response where the AS validates a previously issued access token for the RS (steps D and E).
 
 ~~~~~~~~~~~
 +--------+                               +---------------+
@@ -480,7 +480,7 @@ A token series comprises all the access tokens issued by the same AS for the sam
 
 When using the original ACE workflow, C uploads the new access token to the RS by protecting the message exchange through the secure association with the RS. This allows the RS to determine that the upload of such access token is for updating the access rights of C.
 
-When using the new ACE workflow, the AS uploads the new access token to the RS also when an update of access rights for C is to be performed. This message exchange would be protected through the secure association between the AS and RS. However, this secure association does not help the RS retrieve the stored access token to supersede, as that is rather bound to the secure association with C.
+When using the new ACE workflow, the AS uploads the new access token to the RS also when an update of access rights for C is to be performed. This message exchange would be protected through the secure association between the AS and the RS. However, this secure association does not help the RS retrieve the stored access token to supersede, as that is rather bound to the secure association with C.
 
 In order for the new ACE workflow to also allow the dynamic update of access rights, it is required that the new access token updating the access rights of C includes an explicit indication for the RS. Such an indication can point the RS to the token series in question (hence to the current access token to supersede), irrespective of the secure association used to protect the token uploading.
 
@@ -520,15 +520,15 @@ If the RS still stores the access token in question, then the RS can identify it
 
 Some profiles of ACE require that C and the RS generate information to be exchanged when uploading the access token. For example:
 
-* In the OSCORE profile {{RFC9203}}, C and RS are required to exchange the nonces N1 and N2, when uploading to the RS the first access token of a token series, as well as when re-uploading any access token (e.g., in order to perform a key update).
+* In the OSCORE profile {{RFC9203}}, C and the RS are required to exchange the nonces N1 and N2, when uploading to the RS the first access token of a token series, as well as when re-uploading any access token (e.g., in order to perform a key update).
 
 * In the EDHOC and OSCORE profile {{I-D.ietf-ace-edhoc-oscore-profile}}, C and the RS are required to exchange the nonces N1 and N2, when re-uploading any access token in order to perform a key update through the function EDHOC_KeyUpdate (see {{Section I of I-D.ietf-lake-edhoc}}).
 
-Evidently, using the new ACE workflow prevents C and the RS from directly performing the required exchanges above, since the uploading of the access token does not rely on a direct interaction between C and RS like in the original ACE workflow. For some profiles of ACE, this may prevent the use of the new ACE workflow altogether.
+Evidently, using the new ACE workflow prevents C and the RS from directly performing the required exchanges above, since the uploading of the access token does not rely on a direct interaction between C and the RS like in the original ACE workflow. For some profiles of ACE, this may prevent the use of the new ACE workflow altogether.
 
 This issue can be solved by having the AS acting as intermediary also for the exchange of C- and RS-generated information, by relying on two new parameters "to_rs" and "from_rs" (see {{sec-more-parameters}}). In particular, C can use "to_rs" for providing the AS with C-generated information, to be relayed to the RS when uploading the access token. Also, the RS can use "from_rs" for providing the AS with RS-generated information when replying to the token uploading, and to be relayed to C.
 
-With reference to the two cases mentioned above, "to_rs" can specify the nonce N1 generated by C, while "from_rs" can specify the nonce N2 generated by RS.
+With reference to the two cases mentioned above, "to_rs" can specify the nonce N1 generated by C, while "from_rs" can specify the nonce N2 generated by the RS.
 
 ## New Parameters # {#sec-open-points-parameters}
 
