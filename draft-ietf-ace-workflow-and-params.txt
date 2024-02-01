@@ -204,7 +204,7 @@ Table of Contents
    the Client and RS use to establish a secure association, mutually
    authenticate and secure their communications are defined in the
    specifically used profile of ACE, e.g., [RFC9202][RFC9203][I-D.ietf-a
-   ce-edhoc-oscore-profile][I-D.tiloca-ace-group-oscore-profile].
+   ce-edhoc-oscore-profile][I-D.ietf-ace-group-oscore-profile].
 
    Further interactions are possible between the AS and RS, i.e., the
    exchange of an introspection request and response where the AS
@@ -784,6 +784,16 @@ Table of Contents
 
 6.2.  Informative References
 
+   [I-D.ietf-ace-group-oscore-profile]
+              Tiloca, M., Höglund, R., and F. Palombini, "The Group
+              Object Security for Constrained RESTful Environments
+              (Group OSCORE) Profile of the Authentication and
+              Authorization for Constrained Environments (ACE)
+              Framework", Work in Progress, Internet-Draft, draft-ietf-
+              ace-group-oscore-profile-00, 2 January 2024,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
+              group-oscore-profile-00>.
+
    [I-D.ietf-ace-revoked-token-notification]
               Tiloca, M., Palombini, F., Echeverria, S., and G. Lewis,
               "Notification of Revoked Access Tokens in the
@@ -799,16 +809,6 @@ Table of Contents
               Progress, Internet-Draft, draft-ietf-lake-edhoc-23, 22
               January 2024, <https://datatracker.ietf.org/doc/html/
               draft-ietf-lake-edhoc-23>.
-
-   [I-D.tiloca-ace-group-oscore-profile]
-              Tiloca, M., Höglund, R., Seitz, L., and F. Palombini, "The
-              Group Object Security for Constrained RESTful Environments
-              (Group OSCORE) Profile of the Authentication and
-              Authorization for Constrained Environments (ACE)
-              Framework", Work in Progress, Internet-Draft, draft-
-              tiloca-ace-group-oscore-profile-11, 10 July 2023,
-              <https://datatracker.ietf.org/doc/html/draft-tiloca-ace-
-              group-oscore-profile-11>.
 
    [RFC9202]  Gerdes, S., Bergmann, O., Bormann, C., Selander, G., and
               L. Seitz, "Datagram Transport Layer Security (DTLS)
@@ -930,8 +930,8 @@ B.1.1.  Allow the Dynamic Update of Access Rights
 
    However, this may generally not hold and it is not what happens in
    other known cases, i.e., the DTLS profile in RPK mode [RFC9203] and
-   the Group OSCORE profile [I-D.tiloca-ace-group-oscore-profile].  At
-   the moment, the dynamic update of access rights is not possible for
+   the Group OSCORE profile [I-D.ietf-ace-group-oscore-profile].  At the
+   moment, the dynamic update of access rights is not possible for
    those, _neither in the original nor in the new ACE workflow_.
 
    In order to make the update of access rights possible also for such
