@@ -383,7 +383,9 @@ The Access Token Response includes the parameter "anchor_cnf". This specifies th
 
 # Security Considerations
 
-TBD
+The same security considerations from the ACE framework for Authentication and Authorization {{RFC9200}} apply to this document, together with those from the specifically used transport profile of ACE, e.g., {{RFC9202}}{{RFC9203}}{{RFC9431}}{{I-D.ietf-ace-edhoc-oscore-profile}}{{I-D.ietf-ace-group-oscore-profile}}{{RFC9431}}.
+
+Editor's note: add more security considerations.
 
 # IANA Considerations
 
@@ -575,6 +577,8 @@ The following discusses possible, further new parameters that can be defined for
 ## Version -00 to -01 ## {#sec-00-01}
 
 * Clarifications and fixes on using parameters in messages.
+
+* Security considerations inherited from other documents.
 
 * Editorial fixes and improvements.
 
