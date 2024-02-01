@@ -79,7 +79,7 @@ entity:
 
 --- abstract
 
-This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines a new, alternative workflow that the Authorization Server can use for uploading an access token to a Resource Server on behalf of the Client. Second, it defines new parameters and encodings for the OAuth 2.0 token endpoint at the Authorization Server. Third, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses conveying an error code, when using the Constrained Application Protocol (CoAP) and/or CBOR encoding, and defines a new one according to the problem-details format specified in RFC 9290. In this respect, it also updates the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431.
+This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines a new, alternative workflow that the Authorization Server can use for uploading an access token to a Resource Server on behalf of the Client. Second, it defines new parameters and encodings for the OAuth 2.0 token endpoint at the Authorization Server. Third, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads. For such error responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431.
 
 --- middle
 
@@ -107,7 +107,7 @@ This document updates {{RFC9200}} as follows.
 
 * It amends two of the requirements on profiles of the ACE framework (see {{sec-updated-requirements}}).
 
-* It deprecates the original payload format of error responses conveying an error code, when using CoAP and/or CBOR encoding in the ACE framework. Also, it defines a new payload format according to the problem-details format specified in {{RFC9290}} (see {{sec-updated-error-responses}}).
+* It deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads in the ACE framework. For such error responses, it defines a new payload format according to the problem-details format specified in {{RFC9290}} (see {{sec-updated-error-responses}}).
 
    In this respect, it also updates the profiles of the ACE framework defined in {{RFC9202}}, {{RFC9203}}, and {{RFC9431}}.
 
@@ -484,9 +484,9 @@ At the time of writing, all the profiles of ACE that are published as RFC (i.e.,
 
 # Updated Payload Format of Error Responses # {#sec-updated-error-responses}
 
-This section deprecates the original payload format of error responses conveying an error code, when using CoAP and/or CBOR encoding in the ACE framework. That format is referred to, e.g., when defining the error responses of {{Sections 5.8.3 and 5.9.3 of RFC9200}}.
+This section deprecates the original payload format of error responses conveying an error code, when CBOR is used to encode message payloads in the ACE framework. That format is referred to, e.g., when defining the error responses of {{Sections 5.8.3 and 5.9.3 of RFC9200}}.
 
-Also, this section defines a new payload format that, when using CoAP and/or CBOR encoding, allows error responses to convey an error code together with further error-specific information, according to the problem-details format specified in {{RFC9290}}.
+Also, this section defines a new payload format that allows such error responses to convey an error code together with further error-specific information, according to the problem-details format specified in {{RFC9290}}.
 
 Such error responses MUST have Content-Format set to application/concise-problem-details+cbor. The payload of these error responses MUST be a CBOR map specifying a Concise Problem Details data item (see {{Section 2 of RFC9290}}). The CBOR map is formatted as follows.
 
@@ -534,7 +534,7 @@ Payload:
 
 Note to RFC Editor: In the figure above, please replace "TBD" with the unsigned integer assigned as key value to the Custom Problem Detail entry "ace-error" (see {{iana-problem-details}}). Then, please delete this paragraph.
 
-When using the ACE framework with CoAP and/or CBOR encoding, the following applies.
+When the ACE framework is used with CBOR for encoding message payloads, the following applies.
 
 * It is RECOMMENDED that Authorization Servers, Clients, and Resource Servers support the payload format defined in this section.
 
