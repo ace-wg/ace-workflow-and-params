@@ -494,6 +494,8 @@ Such error responses MUST have Content-Format set to application/concise-problem
 
    This entry is formatted as a CBOR map including only one field, namely "error-code". The map key for "error-code" is the CBOR unsigned integer with value 0. The value of "error-code" is a CBOR integer specifying the error code associated with the occurred error. This value is taken from the "CBOR Value" column of the "OAuth Error Code CBOR Mappings" registry {{ACE.OAuth.Error.Code.CBOR.Mappings}}.
 
+   The new payload format MUST use the field "error-code" in order to convey the same information that the original payload format conveys through the "error" parameter (see, e.g., {{Sections 5.8.3 and 5.9.3 of RFC9200}}).
+
    The CDDL notation {{RFC8610}} of the "ace-error" entry is given below.
 
 ~~~~~~~~~~~ CDDL
@@ -501,8 +503,6 @@ Such error responses MUST have Content-Format set to application/concise-problem
      &(error-code: 0) => int
    }
 ~~~~~~~~~~~
-
-   The new payload format MUST use the field "error-code" in order to convey the same information that the original payload format conveys through the "error" parameter (see, e.g., {{Sections 5.8.3 and 5.9.3 of RFC9200}}).
 
 * It MAY include further Standard Problem Detail entries or Custom Problem Detail entries (see {{RFC9290}}). The following Standard Problem Detail entries are of particular relevance for the ACE framework.
 
