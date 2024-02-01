@@ -21,7 +21,8 @@ Abstract
    Server can use for uploading an access token to a Resource Server on
    behalf of the Client.  Second, it defines new parameters and
    encodings for the OAuth 2.0 token endpoint at the Authorization
-   Server.
+   Server.  Third, it amends two of the requirements on profiles of the
+   framework.
 
 Discussion Venues
 
@@ -78,13 +79,14 @@ Table of Contents
        3.2.1.  Example
      3.3.  anchor_cnf
        3.3.1.  Example
-   4.  Security Considerations
-   5.  IANA Considerations
-     5.1.  OAuth Parameters Registry
-     5.2.  OAuth Parameters CBOR Mappings Registry
-   6.  References
-     6.1.  Normative References
-     6.2.  Informative References
+   4.  Updated Requirements on Profiles
+   5.  Security Considerations
+   6.  IANA Considerations
+     6.1.  OAuth Parameters Registry
+     6.2.  OAuth Parameters CBOR Mappings Registry
+   7.  References
+     7.1.  Normative References
+     7.2.  Informative References
    Appendix A.  Benefits for ACE Transport Profiles
      A.1.  DTLS Profile
      A.2.  EDHOC and OSCORE Profile
@@ -152,6 +154,9 @@ Table of Contents
          an RS (e.g., as provided in the parameter "rs_cnf" defined in
          [RFC9201] or in the parameter "rs_cnf2" defined in this
          document).
+
+   *  It amends two of the requirements on profiles of the ACE framework
+      (see Section 4).
 
 1.1.  Terminology
 
@@ -637,7 +642,46 @@ Table of Contents
       Figure 6: Example of Access Token Response with an access token
         bound to an asymmetric key, using the parameter "anchor_cnf"
 
-4.  Security Considerations
+4.  Updated Requirements on Profiles
+
+   Appendix C of [RFC9200] compiles a list of requirements on the
+   profiles of ACE.  This document amends two of those requirements as
+   follows.
+
+   The text of the fifth requirement
+
+   |  Specify the security protocol the client and RS must use to
+   |  protect their communication (e.g., OSCORE or DTLS).  This must
+   |  provide encryption and integrity and replay protection
+   |  (Section 5.8.4.3).
+
+   is replaced by the following text:
+
+   |  Specify the security protocol the client and RS must use to
+   |  protect their communication (e.g., OSCORE or DTLS).  In
+   |  combination with the used communication protocol, this must
+   |  provide encryption, integrity and replay protection, and a binding
+   |  between requests and responses (Section 5.8.4.3 and Section 6.5).
+
+   The text of the tenth requirement
+
+   |  Specify the communication and security protocol for interactions
+   |  between the client and AS.  This must provide encryption,
+   |  integrity protection, replay protection, and a binding between
+   |  requests and responses (Sections 5 and 5.8).
+
+   is replaced by the following text:
+
+   |  Specify the communication and security protocol for interactions
+   |  between the client and AS.  The combined use of those protocols
+   |  must provide encryption, integrity protection, replay protection,
+   |  and a binding between requests and responses (Sections 5 and 5.8).
+
+   At the time of writing, all the profiles of ACE that are published as
+   RFC (i.e., [RFC9202][RFC9203][RFC9431]) already comply with the two
+   updated requirements as formulated above.
+
+5.  Security Considerations
 
    The same security considerations from the ACE framework for
    Authentication and Authorization [RFC9200] apply to this document,
@@ -647,11 +691,11 @@ Table of Contents
 
    Editor's note: add more security considerations.
 
-5.  IANA Considerations
+6.  IANA Considerations
 
    This document has the following actions for IANA.
 
-5.1.  OAuth Parameters Registry
+6.1.  OAuth Parameters Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters"
    registry.
@@ -691,7 +735,7 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
-5.2.  OAuth Parameters CBOR Mappings Registry
+6.2.  OAuth Parameters CBOR Mappings Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters
    CBOR Mappings" following the procedure specified in [RFC9200].
@@ -731,9 +775,9 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
-6.  References
+7.  References
 
-6.1.  Normative References
+7.1.  Normative References
 
    [I-D.ietf-ace-edhoc-oscore-profile]
               Selander, G., Mattsson, J. P., Tiloca, M., and R. Höglund,
@@ -813,7 +857,7 @@ Table of Contents
               (TLS)", RFC 9430, DOI 10.17487/RFC9430, July 2023,
               <https://www.rfc-editor.org/rfc/rfc9430>.
 
-6.2.  Informative References
+7.2.  Informative References
 
    [I-D.ietf-ace-group-oscore-profile]
               Tiloca, M., Höglund, R., and F. Palombini, "The Group
@@ -1160,6 +1204,8 @@ C.1.  Version -00 to -01
       section.
 
    *  Clarifications and fixes on using parameters in messages.
+
+   *  Amendeded two of the requirements on profiles of the framework.
 
    *  Security considerations inherited from other documents.
 
