@@ -826,7 +826,7 @@ Table of Contents
 
          The new payload format MUST use the Standard Problem Detail
          entry "detail" in order to convey the same information that the
-         original payload format conveys through the "error_information"
+         original payload format conveys through the "error_description"
          parameter (see, e.g., Sections 5.8.3 and 5.9.3 of [RFC9200]).
 
       -  "instance" (map key -3): its value is a URI reference
