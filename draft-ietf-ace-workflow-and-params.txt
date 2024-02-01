@@ -555,8 +555,8 @@ Table of Contents
    validate those.
 
    The presence of this parameter does not require that the Access Token
-   Response also includes the parameter "req_cnf" defined in [RFC9201]
-   or the parameter "req_cnf2" defined in Section 3.2 of this document.
+   Response also includes the parameter "rs_cnf" defined in [RFC9201] or
+   the parameter "rs_cnf2" defined in Section 3.2 of this document.
    That is, C may be able to obtain the public keys of the RS/RSs for
    which the access token is issued through other means.
 
@@ -567,9 +567,9 @@ Table of Contents
    keys specified in "anchor_cnf" to validate PK_RS.
 
    When the Access Token Response includes the parameter "anchor_cnf"
-   but not the parameter "aud2", then C can use the issued access token
-   with any RS in the targeted audience for which "anchor_cnf" can be
-   used to validate PK_RS.  This allows C to use the access token with
+   but not the parameter "aud2", then C can use any of the public keys
+   specified in "anchor_cnf" to validate the public key PK_RS of any RS
+   in the targeted audience.  This allows C to use the access token with
    an RS that is deployed later on as part of the same audience, which
    is particularly useful in the case of a group-audience.
 
@@ -1121,6 +1121,8 @@ Appendix C.  Document Updates
    This section is to be removed before publishing as an RFC.
 
 C.1.  Version -00 to -01
+
+   *  Clarifications and fixes on using parameters in messages.
 
    *  Editorial fixes and improvements.
 
