@@ -96,6 +96,8 @@ Table of Contents
      B.2.  New Parameters
        B.2.1.  token_uploaded
        B.2.2.  Further New Parameters to Consider
+   Appendix C.  Document Updates
+     C.1.  Version -00 to -01
    Acknowledgments
    Authors' Addresses
 
@@ -190,7 +192,7 @@ Table of Contents
    That is, the Client first sends an access token request to the token
    endpoint at the AS (step A), specifying permissions that it seeks to
    obtain for accessing protected resources at the RS, possibly together
-   with information on its own credentials.
+   with information on its own public authentication credentials.
 
    Then, if the request has been successfully verified, authenticated,
    and authorized, the AS replies to the Client (step B), providing an
@@ -202,9 +204,10 @@ Table of Contents
    token, accesses a resource at the RS (step C), which replies with the
    result of the resource access (step F).  Details about what protocol
    the Client and the RS use to establish a secure association, mutually
-   authenticate and secure their communications are defined in the
-   specifically used profile of ACE, e.g., [RFC9202][RFC9203][I-D.ietf-a
-   ce-edhoc-oscore-profile][I-D.ietf-ace-group-oscore-profile].
+   authenticate, and secure their communications are defined in the
+   specifically used profile of ACE, e.g., [RFC9202][RFC9203][RFC9431][I
+   -D.ietf-ace-edhoc-oscore-profile][I-D.ietf-ace-group-oscore-profile][
+   RFC9431].
 
    Further interactions are possible between the AS and the RS, i.e.,
    the exchange of an introspection request and response where the AS
@@ -283,10 +286,11 @@ Table of Contents
       specifying the outcome of the token uploading based on the reply
       received from the RS at step A2.
 
-      As defined in Section 3.1, this information is conveyed by the
-      "token_uploaded" parameter.  If the token uploading has succeeded,
-      the AS does not provide the Client with the access token.
-      Otherwise, the AS provides the Client with the access token.
+      As defined in Section 3.1, this information is conveyed to the
+      Client by means of the "token_uploaded" parameter.  If the token
+      uploading has succeeded, the AS does not provide the Client with
+      the access token.  Otherwise, the AS provides the Client with the
+      access token.
 
    *  Step C1 - This step occurs only if the token uploading from the AS
       has failed, and the AS has provided the Client with the access
@@ -297,7 +301,7 @@ Table of Contents
       the RS, according to the permissions granted per the access token
       and specified by the AS as access information at step B.
 
-   *  Steps D, E and F are as in the original workflow.
+   *  Steps D, E, and F are as in the original workflow.
 
    The new workflow has no ambition to replace the original workflow
    defined in [RFC9200].  The AS can use one workflow or the other
@@ -451,15 +455,15 @@ Table of Contents
       The element of the CBOR array referring to an RS in the group-
       audience SHOULD have the same value that would be used to identify
       that RS through the parameter "aud" of an Access Token Request to
-      the AS (see Section 5.8.2 of [RFC9200]) and an Access Token
+      the AS (see Section 5.8.2 of [RFC9200]) and of an Access Token
       Response from the AS (see Section 5.8.2 of [RFC9200]), when
       requesting and issuing an access token for that individual RS.
 
       The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is
-      present.  The i-th element of the CBOR array in the "aud2"
-      parameter MUST be the identifier of the RS whose public key is
-      specified as the i-th element of the CBOR array in the "rs_cnf2"
-      parameter.
+      present.  In such a case, the i-th element of the CBOR array in
+      the "aud2" parameter MUST be the identifier of the RS whose public
+      key is specified as the i-th element of the CBOR array in the
+      "rs_cnf2" parameter.
 
 3.2.1.  Example
 
@@ -584,9 +588,9 @@ Table of Contents
    specifies the public key of a trust anchor that C can use to validate
    the public keys of any RS with which the access token is going to be
    used.  The public key of the trust anchor is here conveyed within an
-   X.509 certificate used as authentication credential for that trust
-   anchor, by means of the CWT confirmation method "x5chain" defined in
-   [I-D.ietf-ace-edhoc-oscore-profile].
+   X.509 certificate used as public authentication credential for that
+   trust anchor, by means of the CWT confirmation method "x5chain"
+   defined in [I-D.ietf-ace-edhoc-oscore-profile].
 
       2.01 Created
       Content-Format: application/ace+cbor
@@ -825,6 +829,13 @@ Table of Contents
               DOI 10.17487/RFC9203, August 2022,
               <https://www.rfc-editor.org/rfc/rfc9203>.
 
+   [RFC9431]  Sengul, C. and A. Kirby, "Message Queuing Telemetry
+              Transport (MQTT) and Transport Layer Security (TLS)
+              Profile of Authentication and Authorization for
+              Constrained Environments (ACE) Framework", RFC 9431,
+              DOI 10.17487/RFC9431, July 2023,
+              <https://www.rfc-editor.org/rfc/rfc9431>.
+
 Appendix A.  Benefits for ACE Transport Profiles
 
    For any transport profile of ACE, the following holds.
@@ -913,10 +924,6 @@ B.1.1.  Allow the Dynamic Update of Access Rights
       EDHOC_Information object within the claim "cnf" from the first
       access token of the token series.
 
-      Note: version -01 of the EDHOC and OSCORE profile says that an
-      update of access rights is not possible when using the new
-      workflow.  However, it is actually possible as discussed above.
-
    In the three cases above, the update of access rights is possible
    because there is a value used as de facto "token series ID".  This
    value does not change throughout the lifetime of a token series, and
@@ -924,8 +931,8 @@ B.1.1.  Allow the Dynamic Update of Access Rights
    the same series to be superseded.
 
    Such a token series ID is required to have a unique value from a
-   namespace/pool that the AS exclusively control.  This is in fact what
-   happens in the profiles of ACE above, where the AS is the entity
+   namespace/pool that the AS exclusively controls.  This is in fact
+   what happens in the profiles of ACE above, where the AS is the entity
    creating the mentioned objects or COSE Key included in the first
    access token of a token series.
 
@@ -1108,6 +1115,14 @@ B.2.2.  Further New Parameters to Consider
       Response to C, by simply relaying the value received from the RS.
       The used profile of ACE has to define the detailed content and
       semantics of the information specified in the parameter value.
+
+Appendix C.  Document Updates
+
+   This section is to be removed before publishing as an RFC.
+
+C.1.  Version -00 to -01
+
+   *  Editorial fixes and improvements.
 
 Acknowledgments
 
