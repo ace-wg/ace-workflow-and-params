@@ -181,6 +181,15 @@ Table of Contents
    document does not use the CoAP definition of "endpoint", which is "An
    entity participating in the CoAP protocol."
 
+   Furthermore, this document uses the following term.
+
+   *  Token series: the set comprising all the access tokens issued by
+      the same AS for the same pair (Client, Resource Server).
+
+      Profiles of ACE can provide their extended and specialized
+      definition, e.g., by further taking into account the public
+      authentication credentials of C and the RS.
+
    Examples throughout this document are expressed in CBOR diagnostic
    notation without the tag and value abbreviations.
 
@@ -898,12 +907,7 @@ B.1.1.  Allow the Dynamic Update of Access Rights
    In some profiles of ACE, C can request a new access token to update
    its access rights, while preserving the same secure association with
    the RS.  The new access token supersedes the current one stored at
-   the RS, as they are both part of the same "token series".
-
-   A token series comprises all the access tokens issued by the same AS
-   for the same pair (Client, Resource Server).  Specific profiles can
-   provide a more specialized definition, e.g., by further taking into
-   account the public authentication credentials of C and the RS.
+   the RS, as they are both part of the same token series.
 
    When using the original ACE workflow, C uploads the new access token
    to the RS by protecting the message exchange through the secure
@@ -1151,6 +1155,9 @@ Appendix C.  Document Updates
    This section is to be removed before publishing as an RFC.
 
 C.1.  Version -00 to -01
+
+   *  Definition of the "token series" moved to the "Terminology"
+      section.
 
    *  Clarifications and fixes on using parameters in messages.
 
