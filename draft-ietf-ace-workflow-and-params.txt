@@ -6,7 +6,7 @@ ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Updates: 9200 (if approved)                                  G. Selander
 Intended status: Standards Track                             Ericsson AB
-Expires: 24 June 2024                                   22 December 2023
+Expires: 4 August 2024                                   1 February 2024
 
 
   Alternative Workflow and OAuth Parameters for the Authentication and
@@ -50,11 +50,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 June 2024.
+   This Internet-Draft will expire on 4 August 2024.
 
 Copyright Notice
 
-   Copyright (c) 2023 IETF Trust and the persons identified as the
+   Copyright (c) 2024 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -796,9 +796,9 @@ Table of Contents
    [I-D.ietf-lake-edhoc]
               Selander, G., Mattsson, J. P., and F. Palombini,
               "Ephemeral Diffie-Hellman Over COSE (EDHOC)", Work in
-              Progress, Internet-Draft, draft-ietf-lake-edhoc-22, 25
-              August 2023, <https://datatracker.ietf.org/doc/html/draft-
-              ietf-lake-edhoc-22>.
+              Progress, Internet-Draft, draft-ietf-lake-edhoc-23, 22
+              January 2024, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-lake-edhoc-23>.
 
    [I-D.tiloca-ace-group-oscore-profile]
               Tiloca, M., Höglund, R., Seitz, L., and F. Palombini, "The
@@ -1110,10 +1110,10 @@ B.2.2.  Further New Parameters to Consider
 
 Acknowledgments
 
-   The author sincerely thanks Christian Amsüss and Rikard Höglund for
-   their comments and feedback.  The work on this document has been
-   partly supported by the H2020 project SIFIS-Home (Grant agreement
-   952652).
+   The authors sincerely thank Christian Amsüss, Rikard Höglund, and
+   Dave Robin for their comments and feedback.  The work on this
+   document has been partly supported by the H2020 project SIFIS-Home
+   (Grant agreement 952652).
 
 Authors' Addresses
 
