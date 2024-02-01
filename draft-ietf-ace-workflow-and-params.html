@@ -1821,6 +1821,10 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
         <dd>
 <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Wahlstroem, E.</span>, <span class="refAuthor">Erdtman, S.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"CBOR Web Token (CWT)"</span>, <span class="seriesInfo">RFC 8392</span>, <span class="seriesInfo">DOI 10.17487/RFC8392</span>, <time datetime="2018-05" class="refDate">May 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8392">https://www.rfc-editor.org/rfc/rfc8392</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC8446">[RFC8446]</dt>
+        <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8446">https://www.rfc-editor.org/rfc/rfc8446</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC8747">[RFC8747]</dt>
         <dd>
 <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Seitz, L.</span>, <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Erdtman, S.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"Proof-of-Possession Key Semantics for CBOR Web Tokens (CWTs)"</span>, <span class="seriesInfo">RFC 8747</span>, <span class="seriesInfo">DOI 10.17487/RFC8747</span>, <time datetime="2020-03" class="refDate">March 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8747">https://www.rfc-editor.org/rfc/rfc8747</a>&gt;</span>. </dd>
@@ -1842,8 +1846,12 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
 <span class="refAuthor">Seitz, L.</span>, <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Wahlstroem, E.</span>, <span class="refAuthor">Erdtman, S.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"Authentication and Authorization for Constrained Environments Using the OAuth 2.0 Framework (ACE-OAuth)"</span>, <span class="seriesInfo">RFC 9200</span>, <span class="seriesInfo">DOI 10.17487/RFC9200</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9200">https://www.rfc-editor.org/rfc/rfc9200</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC9201">[RFC9201]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Seitz, L.</span>, <span class="refTitle">"Additional OAuth Parameters for Authentication and Authorization for Constrained Environments (ACE)"</span>, <span class="seriesInfo">RFC 9201</span>, <span class="seriesInfo">DOI 10.17487/RFC9201</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9201">https://www.rfc-editor.org/rfc/rfc9201</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9430">[RFC9430]</dt>
+      <dd>
+<span class="refAuthor">Bergmann, O.</span>, <span class="refAuthor">Preuß Mattsson, J.</span>, and <span class="refAuthor">G. Selander</span>, <span class="refTitle">"Extension of the Datagram Transport Layer Security (DTLS) Profile for Authentication and Authorization for Constrained Environments (ACE) to Transport Layer Security (TLS)"</span>, <span class="seriesInfo">RFC 9430</span>, <span class="seriesInfo">DOI 10.17487/RFC9430</span>, <time datetime="2023-07" class="refDate">July 2023</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9430">https://www.rfc-editor.org/rfc/rfc9430</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -1901,7 +1909,7 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
         <h3 id="name-dtls-profile">
 <a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-dtls-profile" class="section-name selfRef">DTLS Profile</a>
         </h3>
-<p id="appendix-A.1-1">When the RPK mode of the DTLS profile is used (see <span><a href="https://rfc-editor.org/rfc/rfc9202#section-3.2" class="relref">Section 3.2</a> of [<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>), the parameters "rs_cnf2" and "aud2" defined in <a href="#sec-rs_cnf2-aud2" class="auto internal xref">Section 3.2</a> enable the effective issue of an access token intended to an audience that includes multiple RSs.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-1">When the RPK mode of the DTLS profile is used (see <span><a href="https://rfc-editor.org/rfc/rfc9202#section-3.2" class="relref">Section 3.2</a> of [<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>), it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs. This is enabled by the parameters "rs_cnf2" and "aud2" defined in <a href="#sec-rs_cnf2-aud2" class="auto internal xref">Section 3.2</a>, as well as by the parameter "anchor_cnf" defined in <a href="#sec-anchor_cnf" class="auto internal xref">Section 3.3</a>. This seamlessly applies also if the profile uses Transport Layer Security (TLS) <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, as defined in <span>[<a href="#RFC9430" class="cite xref">RFC9430</a>]</span>.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="edhoc-and-oscore-profile">
@@ -1909,7 +1917,7 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
         <h3 id="name-edhoc-and-oscore-profile">
 <a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-edhoc-and-oscore-profile" class="section-name selfRef">EDHOC and OSCORE Profile</a>
         </h3>
-<p id="appendix-A.2-1">When the EDHOC and OSCORE profile is used <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, the parameters "rs_cnf2" and "aud2" defined in <a href="#sec-rs_cnf2-aud2" class="auto internal xref">Section 3.2</a> enable the effective issue of an access token intended to an audience that includes multiple RSs.<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.2-1">When the EDHOC and OSCORE profile is used <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs. This is enabled by the parameters "rs_cnf2" and "aud2" defined in <a href="#sec-rs_cnf2-aud2" class="auto internal xref">Section 3.2</a>, as well as by the parameter "anchor_cnf" defined in <a href="#sec-anchor_cnf" class="auto internal xref">Section 3.3</a>.<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1952,7 +1960,7 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
 <p id="appendix-B.1.1-10">However, this may generally not hold and it is not what happens in other known cases, i.e., the DTLS profile in RPK mode <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span> and the Group OSCORE profile <span>[<a href="#I-D.ietf-ace-group-oscore-profile" class="cite xref">I-D.ietf-ace-group-oscore-profile</a>]</span>. At the moment, the dynamic update of access rights is not possible for those, <em>neither in the original nor in the new ACE workflow</em>.<a href="#appendix-B.1.1-10" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-11">In order to make the update of access rights possible also for such cases, as well as both in the original and in the new ACE workflow, those cases can rely on a new parameter and claim "token_series_id" (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2.2</a>), which specifies a unique identifier of the token series which an access token belongs to.<a href="#appendix-B.1.1-11" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-12">As to existing profiles of ACE, the above has no intention to change the current behavior when the update of access rights occurs, irrespective of the used ACE workflow and especially when using the original workflow.<a href="#appendix-B.1.1-12" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-13">If future profiles rely on a construction where the AS creates the object or key included in the claim "cnf" of the first access token in a token series, and a unique ID generated by the AS is included in such object or key, then that ID must be used as de facto "token series ID", rather than the new parameter "token_series_id".<a href="#appendix-B.1.1-13" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-13">If future profiles rely on a construction where the AS creates the object or the key included in the claim "cnf" of the first access token in a token series, and a unique ID generated by the AS is included in such object or key, then that ID must be used as de facto "token series ID", rather than the new parameter "token_series_id".<a href="#appendix-B.1.1-13" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-open-points-workflow-token-re-uploading">
@@ -1971,15 +1979,8 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
           <h4 id="name-ensure-applicability-to-any">
 <a href="#appendix-B.1.3" class="section-number selfRef">B.1.3. </a><a href="#name-ensure-applicability-to-any" class="section-name selfRef">Ensure Applicability to Any ACE Profile</a>
           </h4>
-<p id="appendix-B.1.3-1">Some profiles of ACE require that C and the RS generate information to be exchanged when uploading the access token. For example:<a href="#appendix-B.1.3-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="appendix-B.1.3-2.1">
-              <p id="appendix-B.1.3-2.1.1">In the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, C and the RS are required to exchange the nonces N1 and N2, when uploading to the RS the first access token of a token series, as well as when re-uploading any access token (e.g., in order to perform a key update).<a href="#appendix-B.1.3-2.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="appendix-B.1.3-2.2">
-              <p id="appendix-B.1.3-2.2.1">In the EDHOC and OSCORE profile <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, C and the RS are required to exchange the nonces N1 and N2, when re-uploading any access token in order to perform a key update through the function EDHOC_KeyUpdate (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-lake-edhoc-23#appendix-I" class="relref">Appendix I</a> of [<a href="#I-D.ietf-lake-edhoc" class="cite xref">I-D.ietf-lake-edhoc</a>]</span>).<a href="#appendix-B.1.3-2.2.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
+<p id="appendix-B.1.3-1">Some profiles of ACE require that C and the RS generate information to be exchanged when uploading the access token.<a href="#appendix-B.1.3-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.3-2">For example, in the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, C and the RS exchange the nonces N1 and N2 together with their OSCORE Recipient IDs ID1 and ID2, when uploading to the RS the first access token of a token series, as well as when re-uploading any access token (e.g., in order to perform a key update).<a href="#appendix-B.1.3-2" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.3-3">Evidently, using the new ACE workflow prevents C and the RS from directly performing the required exchanges above, since the uploading of the access token does not rely on a direct interaction between C and the RS like in the original ACE workflow. For some profiles of ACE, this may prevent the use of the new ACE workflow altogether.<a href="#appendix-B.1.3-3" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.3-4">This issue can be solved by having the AS acting as intermediary also for the exchange of C- and RS-generated information, by relying on two new parameters "to_rs" and "from_rs" (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2.2</a>). In particular, C can use "to_rs" for providing the AS with C-generated information, to be relayed to the RS when uploading the access token. Also, the RS can use "from_rs" for providing the AS with RS-generated information when replying to the token uploading, and to be relayed to C.<a href="#appendix-B.1.3-4" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.3-5">With reference to the two cases mentioned above, "to_rs" can specify the nonce N1 generated by C, while "from_rs" can specify the nonce N2 generated by the RS.<a href="#appendix-B.1.3-5" class="pilcrow">¶</a></p>
@@ -2016,7 +2017,11 @@ The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such 
 <p id="appendix-B.2.2-2.1.2">
 When issuing the first access token of a token series, the AS specifies this parameter in the Access Token Response to C, with value TS_ID. Also, the AS includes a claim "token_series_id" with the same value in the access token.<a href="#appendix-B.2.2-2.1.2" class="pilcrow">¶</a></p>
 <p id="appendix-B.2.2-2.1.3">
-When C requests a new access token in the same tokes series for dynamically updating its access rights, C specifies the value TS_ID as "kid" within the parameter "req_cnf" of the Access Token Request (see <span><a href="https://rfc-editor.org/rfc/rfc9201#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC9201" class="cite xref">RFC9201</a>]</span>). The AS specifies the same value as "kid" within the claim "cnf" of the new access token.<a href="#appendix-B.2.2-2.1.3" class="pilcrow">¶</a></p>
+When C requests a new access token in the same tokes series for dynamically updating its access rights, C specifies TS_ID as value of the parameter "token_series_id" of the Access Token Request, which MUST omit the parameter "req_cnf" (see <span><a href="https://rfc-editor.org/rfc/rfc9201#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC9201" class="cite xref">RFC9201</a>]</span>). The AS specifies the same value within the claim "token_series_id" of the new access token.<a href="#appendix-B.2.2-2.1.3" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.2-2.1.4">
+When this parameter is used, the information about the token series in question has to be specified in that parameter and in the corresponding token claim. Instead, the "req_cnf" parameter and the "cnf" claim are used for their main purpose, i.e., for specifying the public authentication credential of the Client, by value or by reference.<a href="#appendix-B.2.2-2.1.4" class="pilcrow">¶</a></p>
+<p id="appendix-B.2.2-2.1.5">
+If a profile of ACE can use or is already using a different parameter/claim as de-facto identifier of the token series, then that profile will continue to do so, and will not use this new parameter "token_series_id".<a href="#appendix-B.2.2-2.1.5" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="appendix-B.2.2-2.2">
               <p id="appendix-B.2.2-2.2.1">"token_hash" - This parameter specifies the hash of an access token that the AS has successfully issued and uploaded to the RS as per the new ACE workflow, and thus that the AS does not provide to C (see <a href="#sec-open-points-workflow-dynamic-access-rights" class="auto internal xref">Appendix B.1.1</a>).<a href="#appendix-B.2.2-2.2.1" class="pilcrow">¶</a></p>
