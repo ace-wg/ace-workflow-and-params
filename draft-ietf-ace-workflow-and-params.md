@@ -573,5 +573,5 @@ The following discusses possible, further new parameters that can be defined for
 # Acknowledgments # {#acknowledgments}
 {: numbered="no"}
 
-The author sincerely thanks {{{Christian Amsüss}}} and {{{Rikard Höglund}}} for their comments and feedback. The work on this document has been partly supported by the H2020 project SIFIS-Home (Grant agreement 952652).
+The authors sincerely thank {{{Christian Amsüss}}}, {{{Rikard Höglund}}}, and {{{Dave Robin}}} for their comments and feedback. The work on this document has been partly supported by the H2020 project SIFIS-Home (Grant agreement 952652).
 
