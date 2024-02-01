@@ -331,11 +331,11 @@ If present, this parameter MUST encode a non-empty CBOR array that MUST be treat
 
 Each of the public keys specified in the parameter "anchor_cnf" may contain parameters specifying information such as the public key algorithm and use (e.g., by means of the parameters "alg" or "key_ops" in a COSE_Key structure). If such information is specified, a Client MUST NOT use a public key that is incompatible with the profile, or with the public keys to validate and the way to validate those.
 
-The presence of this parameter does not require that the Access Token Response also includes the parameter "req_cnf" defined in {{RFC9201}} or the parameter "req_cnf2" defined in {{sec-rs_cnf2-aud2}} of this document. That is, C may be able to obtain the public keys of the RS/RSs for which the access token is issued through other means.
+The presence of this parameter does not require that the Access Token Response also includes the parameter "rs_cnf" defined in {{RFC9201}} or the parameter "rs_cnf2" defined in {{sec-rs_cnf2-aud2}} of this document. That is, C may be able to obtain the public keys of the RS/RSs for which the access token is issued through other means.
 
 When the Access Token Response includes both the parameter "anchor_cnf" and the parameter "aud2" defined in {{sec-rs_cnf2-aud2}}, then C MUST make sure that a public key PK_RS is associated with an RS identified by an element of "aud2", before using any of the public keys specified in "anchor_cnf" to validate PK_RS.
 
-When the Access Token Response includes the parameter "anchor_cnf" but not the parameter "aud2", then C can use the issued access token with any RS in the targeted audience for which "anchor_cnf" can be used to validate PK_RS. This allows C to use the access token with an RS that is deployed later on as part of the same audience, which is particularly useful in the case of a group-audience.
+When the Access Token Response includes the parameter "anchor_cnf" but not the parameter "aud2", then C can use any of the public keys specified in "anchor_cnf" to validate the public key PK_RS of any RS in the targeted audience. This allows C to use the access token with an RS that is deployed later on as part of the same audience, which is particularly useful in the case of a group-audience.
 
 ### Example
 
@@ -573,6 +573,8 @@ The following discusses possible, further new parameters that can be defined for
 {:removeinrfc}
 
 ## Version -00 to -01 ## {#sec-00-01}
+
+* Clarifications and fixes on using parameters in messages.
 
 * Editorial fixes and improvements.
 
