@@ -110,6 +110,12 @@ Readers are also expected to be familiar with the terms and concepts related to 
 
 Note that, unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."
 
+Furthermore, this document uses the following term.
+
+* Token series: the set comprising all the access tokens issued by the same AS for the same pair (Client, Resource Server).
+
+   Profiles of ACE can provide their extended and specialized definition, e.g., by further taking into account the public authentication credentials of C and the RS.
+
 Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.
 
 # New ACE Workflow # {#sec-workflow}
@@ -479,9 +485,7 @@ The following discusses open points related to the use of the new ACE workflow d
 
 ### Allow the Dynamic Update of Access Rights # {#sec-open-points-workflow-dynamic-access-rights}
 
-In some profiles of ACE, C can request a new access token to update its access rights, while preserving the same secure association with the RS. The new access token supersedes the current one stored at the RS, as they are both part of the same "token series".
-
-A token series comprises all the access tokens issued by the same AS for the same pair (Client, Resource Server). Specific profiles can provide a more specialized definition, e.g., by further taking into account the public authentication credentials of C and the RS.
+In some profiles of ACE, C can request a new access token to update its access rights, while preserving the same secure association with the RS. The new access token supersedes the current one stored at the RS, as they are both part of the same token series.
 
 When using the original ACE workflow, C uploads the new access token to the RS by protecting the message exchange through the secure association with the RS. This allows the RS to determine that the upload of such access token is for updating the access rights of C.
 
@@ -579,6 +583,8 @@ The following discusses possible, further new parameters that can be defined for
 {:removeinrfc}
 
 ## Version -00 to -01 ## {#sec-00-01}
+
+* Definition of the "token series" moved to the "Terminology" section.
 
 * Clarifications and fixes on using parameters in messages.
 
