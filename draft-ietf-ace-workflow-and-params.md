@@ -60,6 +60,7 @@ normative:
 informative:
   RFC9202:
   RFC9203:
+  RFC9431:
   I-D.ietf-ace-revoked-token-notification:
   I-D.ietf-ace-group-oscore-profile:
   I-D.ietf-lake-edhoc:
@@ -113,11 +114,11 @@ Examples throughout this document are expressed in CBOR diagnostic notation with
 
 As defined in {{Section 4 of RFC9200}}, the ACE framework considers what is shown in {{fig-old-workflow}} as its basic protocol workflow.
 
-That is, the Client first sends an access token request to the token endpoint at the AS (step A), specifying permissions that it seeks to obtain for accessing protected resources at the RS, possibly together with information on its own credentials.
+That is, the Client first sends an access token request to the token endpoint at the AS (step A), specifying permissions that it seeks to obtain for accessing protected resources at the RS, possibly together with information on its own public authentication credentials.
 
 Then, if the request has been successfully verified, authenticated, and authorized, the AS replies to the Client (step B), providing an access token and possibly additional parameters as access information including the actually granted permissions.
 
-Finally, the Client uploads the access token to the RS and, consistently with the permissions granted according to the access token, accesses a resource at the RS (step C), which replies with the result of the resource access (step F). Details about what protocol the Client and the RS use to establish a secure association, mutually authenticate and secure their communications are defined in the specifically used profile of ACE, e.g., {{RFC9202}}{{RFC9203}}{{I-D.ietf-ace-edhoc-oscore-profile}}{{I-D.ietf-ace-group-oscore-profile}}.
+Finally, the Client uploads the access token to the RS and, consistently with the permissions granted according to the access token, accesses a resource at the RS (step C), which replies with the result of the resource access (step F). Details about what protocol the Client and the RS use to establish a secure association, mutually authenticate, and secure their communications are defined in the specifically used profile of ACE, e.g., {{RFC9202}}{{RFC9203}}{{RFC9431}}{{I-D.ietf-ace-edhoc-oscore-profile}}{{I-D.ietf-ace-group-oscore-profile}}{{RFC9431}}.
 
 Further interactions are possible between the AS and the RS, i.e., the exchange of an introspection request and response where the AS validates a previously issued access token for the RS (steps D and E).
 
@@ -180,13 +181,13 @@ More specifically, the new workflow consists of the following steps.
 
 * Step B - In the Access Token Response, the AS tells the Client that it has attempted to upload the access token to the RS, specifying the outcome of the token uploading based on the reply received from the RS at step A2.
 
-   As defined in {{sec-token_uploaded}}, this information is conveyed by the "token_uploaded" parameter. If the token uploading has succeeded, the AS does not provide the Client with the access token. Otherwise, the AS provides the Client with the access token.
+   As defined in {{sec-token_uploaded}}, this information is conveyed to the Client by means of the "token_uploaded" parameter. If the token uploading has succeeded, the AS does not provide the Client with the access token. Otherwise, the AS provides the Client with the access token.
 
 * Step C1 - This step occurs only if the token uploading from the AS has failed, and the AS has provided the Client with the access token at step B. In such a case, the Client uploads the access token to the RS just like at step C of the original workflow.
 
 * Step C2 - The Client attempts to access a protected resource at the RS, according to the permissions granted per the access token and specified by the AS as access information at step B.
 
-* Steps D, E and F are as in the original workflow.
+* Steps D, E, and F are as in the original workflow.
 
 The new workflow has no ambition to replace the original workflow defined in {{RFC9200}}. The AS can use one workflow or the other depending, for example, on the specific RS for which the access token has been issued and the nature of the communication leg with that RS.
 
@@ -271,9 +272,9 @@ This section defines the additional parameters "rs_cnf2" and "aud2" for an Acces
 
    If present, this parameter MUST encode a non-empty CBOR array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. Each element of the CBOR array in the "aud2" parameter MUST be a CBOR text string, with value the identifier of one RS in the group-audience.
 
-   The element of the CBOR array referring to an RS in the group-audience SHOULD have the same value that would be used to identify that RS through the parameter "aud" of an Access Token Request to the AS (see {{Section 5.8.2 of RFC9200}}) and an Access Token Response from the AS (see {{Section 5.8.2 of RFC9200}}), when requesting and issuing an access token for that individual RS.
+   The element of the CBOR array referring to an RS in the group-audience SHOULD have the same value that would be used to identify that RS through the parameter "aud" of an Access Token Request to the AS (see {{Section 5.8.2 of RFC9200}}) and of an Access Token Response from the AS (see {{Section 5.8.2 of RFC9200}}), when requesting and issuing an access token for that individual RS.
 
-   The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. The i-th element of the CBOR array in the "aud2" parameter MUST be the identifier of the RS whose public key is specified as the i-th element of the CBOR array in the "rs_cnf2" parameter.
+   The parameter "aud2" is REQUIRED if the parameter "rs_cnf2" is present. In such a case, the i-th element of the CBOR array in the "aud2" parameter MUST be the identifier of the RS whose public key is specified as the i-th element of the CBOR array in the "rs_cnf2" parameter.
 
 ### Example
 
@@ -342,7 +343,7 @@ When the Access Token Response includes the parameter "anchor_cnf" but not the p
 
 The identifier of the group-audience was specified by the "aud" parameter of the Access Token Request to the AS and is specified by the "aud" claim of the issued access token, and is not repeated in the Access Token Response from the AS.
 
-The Access Token Response includes the parameter "anchor_cnf". This specifies the public key of a trust anchor that C can use to validate the public keys of any RS with which the access token is going to be used. The public key of the trust anchor is here conveyed within an X.509 certificate used as authentication credential for that trust anchor, by means of the CWT confirmation method "x5chain" defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
+The Access Token Response includes the parameter "anchor_cnf". This specifies the public key of a trust anchor that C can use to validate the public keys of any RS with which the access token is going to be used. The public key of the trust anchor is here conveyed within an X.509 certificate used as public authentication credential for that trust anchor, by means of the CWT confirmation method "x5chain" defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
 ~~~~~~~~~~~
    2.01 Created
@@ -492,11 +493,9 @@ In some profiles of ACE, such an indication is in fact already present in issued
 
 * In the EDHOC and OSCORE profile {{I-D.ietf-ace-edhoc-oscore-profile}}, the token series is indicated by the parameter "kid" within the claim "cnf" of the new access token. This has the same value of the parameter "id" in the EDHOC_Information object within the claim "cnf" from the first access token of the token series.
 
-   Note: version -01 of the EDHOC and OSCORE profile says that an update of access rights is not possible when using the new workflow. However, it is actually possible as discussed above.
-
 In the three cases above, the update of access rights is possible because there is a value used as de facto "token series ID". This value does not change throughout the lifetime of a token series, and it is used to associate the new access token with the previous one in the same series to be superseded.
 
-Such a token series ID is required to have a unique value from a namespace/pool that the AS exclusively control. This is in fact what happens in the profiles of ACE above, where the AS is the entity creating the mentioned objects or COSE Key included in the first access token of a token series.
+Such a token series ID is required to have a unique value from a namespace/pool that the AS exclusively controls. This is in fact what happens in the profiles of ACE above, where the AS is the entity creating the mentioned objects or COSE Key included in the first access token of a token series.
 
 However, this may generally not hold and it is not what happens in other known cases, i.e., the DTLS profile in RPK mode {{RFC9203}} and the Group OSCORE profile {{I-D.ietf-ace-group-oscore-profile}}. At the moment, the dynamic update of access rights is not possible for those, _neither in the original nor in the new ACE workflow_.
 
@@ -569,6 +568,13 @@ The following discusses possible, further new parameters that can be defined for
 * "from_rs" - When using the new ACE workflow, this parameter specifies RS-generated information that, according to the used profile of ACE, the RS has to provide to C after the uploading of an access token if using the original ACE workflow. This allows the AS to relay such information to C after having uploaded the access token on behalf of C (see {{sec-open-points-workflow-applicability}}).
 
    First, the RS specifies this parameter in the response sent to the AS, after the upload of an access token through a request from the AS. Then, the AS specifies this parameter in the Access Token Response to C, by simply relaying the value received from the RS. The used profile of ACE has to define the detailed content and semantics of the information specified in the parameter value.
+
+# Document Updates # {#sec-document-updates}
+{:removeinrfc}
+
+## Version -00 to -01 ## {#sec-00-01}
+
+* Editorial fixes and improvements.
 
 # Acknowledgments # {#acknowledgments}
 {: numbered="no"}
