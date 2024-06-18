@@ -1241,21 +1241,24 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-document-updates" class="internal xref">Document Updates</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1">
-                <p id="section-toc.1-1.11.2.1.1"><a href="#appendix-C.1" class="auto internal xref">C.1</a>.  <a href="#name-version-01-to-02" class="internal xref">Version -01 to -02</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#appendix-C" class="auto internal xref">Appendix C</a>.  <a href="#name-cddl-model" class="internal xref">CDDL Model</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.2">
-                <p id="section-toc.1-1.11.2.2.1"><a href="#appendix-C.2" class="auto internal xref">C.2</a>.  <a href="#name-version-00-to-01" class="internal xref">Version -00 to -01</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#appendix-D" class="auto internal xref">Appendix D</a>.  <a href="#name-document-updates" class="internal xref">Document Updates</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
+                <p id="section-toc.1-1.12.2.1.1"><a href="#appendix-D.1" class="auto internal xref">D.1</a>.  <a href="#name-version-01-to-02" class="internal xref">Version -01 to -02</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
+                <p id="section-toc.1-1.12.2.2.1"><a href="#appendix-D.2" class="auto internal xref">D.2</a>.  <a href="#name-version-00-to-01" class="internal xref">Version -00 to -01</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-D" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
-</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-E" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.13.1"><a href="#appendix-E" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#appendix-F" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1322,7 +1325,10 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
 Profiles of ACE can provide their extended and specialized definition, e.g., by further taking into account the public authentication credentials of C and the RS.<a href="#section-1.1-7.1.2" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-1.1-8">Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
+<p id="section-1.1-8">Concise Binary Object Representation (CBOR) <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> and Concise Data Definition Language (CDDL) <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> are used in this document. CDDL predefined type names, especially bstr for CBOR byte strings and tstr for CBOR text strings, are used extensively in this document.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
+<p id="section-1.1-9">Examples throughout this document are expressed in CBOR diagnostic notation as defined in <span><a href="https://rfc-editor.org/rfc/rfc8949#section-8" class="relref">Section 8</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>. Diagnostic notation comments are often used to provide a textual representation of the numeric parameter names and values.<a href="#section-1.1-9" class="pilcrow">¶</a></p>
+<p id="section-1.1-10">In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 8</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. For example, {e'aud_2' : ["rs1", "rs2"]} stands for {49 : ["rs1", "rs2"]}.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
+<p id="section-1.1-11">Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 8</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. Finally, please delete this note.<a href="#section-1.1-11" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1491,9 +1497,9 @@ When the parameter "token_upload" is present in the Access Token Response, the f
    Content-Format: application/ace+cbor
    Payload:
    {
-         "audience" : "tempSensor4711",
-            "scope" : "read",
-     "token_upload" : true
+     / audience /  5 : "tempSensor4711",
+     / scope /     9 : "read",
+     e'token_upload' : true
    }
 
 
@@ -1504,15 +1510,15 @@ When the parameter "token_upload" is present in the Access Token Response, the f
    Max-Age: 3560
    Payload:
    {
-     "token_upload" : true,
-       "expires_in" : 3600,
-              "cnf" : {
-                "COSE_Key" : {
-                  "kty" : 1,
-                  "kid" : h'3d027833fc6267ce',
-                    "k" : h'73657373696f6e6b6579'
-                }
-              }
+     e'token_upload' : true,
+     / expires_in / 2 : 3600,
+     / cnf /        8 : {
+       / COSE_Key / 1 : {
+         / kty / 1 : 4 / Symmetric /,
+         / kid / 2 : h'3d027833fc6267ce',
+         / k /  -1 : h'73657373696f6e6b6579'
+       }
+     }
    }
 </pre>
 </div>
@@ -1535,9 +1541,9 @@ When the parameter "token_upload" is present in the Access Token Response, the f
    Content-Format: application/ace+cbor
    Payload:
    {
-         "audience" : "tempSensor4711",
-            "scope" : "read",
-     "token_upload" : true
+     / audience /  5 : "tempSensor4711",
+     / scope /     9 : "read",
+     e'token_upload' : true
    }
 
 
@@ -1548,18 +1554,18 @@ When the parameter "token_upload" is present in the Access Token Response, the f
    Max-Age: 3560
    Payload:
    {
-     "access_token" : h'd08343a1'/...
+     / access_token / 1 : h'd08343a1'/...
       (remainder of CWT omitted for brevity;
       CWT contains the symmetric PoP key in the "cnf" claim)/,
-     "token_upload" : false,
-       "expires_in" : 3600,
-              "cnf" : {
-                "COSE_Key" : {
-                  "kty" : 1,
-                  "kid" : h'3d027833fc6267ce',
-                    "k" : h'73657373696f6e6b6579'
-                }
-              }
+        e'token_upload' : false,
+     / expires_in /   2 : 3600,
+     / cnf /          8 : {
+       / COSE_Key / 1 : {
+         / kty / 1 : 4 / Symmetric /,
+         / kid / 2 : h'3d027833fc6267ce',
+         / k /  -1 : h'73657373696f6e6b6579'
+       }
+     }
    }
 </pre>
 </div>
@@ -1612,33 +1618,33 @@ The parameter "aud2" is <span class="bcp14">REQUIRED</span> if the parameter "rs
    Max-Age: 3600
    Payload:
    {
-     "access_token" : b64'SlAV32hk'/...
+     / access_token / 1 : b64'SlAV32hk'/...
       (remainder of CWT omitted for brevity;
       CWT contains the client's RPK in the "cnf" claim)/,
-       "expires_in" : 3600,
-             "aud2" : ["rs1", "rs2"],
-          "rs_cnf2" : [
-            {
-              "COSE_Key" : {
-                "kty" : 2,
-                "crv" : 1,
-                  "x" : h'bbc34960526ea4d32e940cad2a234148
-                          ddc21791a12afbcbac93622046dd44f0',
-                  "y" : h'4519e257236b2a0ce2023f0931f1f386
-                          ca7afda64fcde0108c224c51eabf6072'
-              }
-            },
-            {
-              "COSE_Key" : {
-                "kty" : 2,
-                "crv" : 1,
-                  "x" : h'ac75e9ece3e50bfc8ed6039988952240
-                          5c47bf16df96660a41298cb4307f7eb6',
-                  "y" : h'6e5de611388a4b8a8211334ac7d37ecb
-                          52a387d257e6db3c2a93df21ff3affc8'
-              }
-            }
-          ]
+     / expires_in /   2 : 3600,
+                e'aud2' : ["rs1", "rs2"],
+             e'rs_cnf2' : [
+               {
+                 / COSE_Key / 1 : {
+                   / kty /  1 : 2 / EC2 /,
+                   / crv / -1 : 1 / P-256 /,
+                   / x /   -2 : h'bbc34960526ea4d32e940cad2a234148
+                                  ddc21791a12afbcbac93622046dd44f0',
+                   / y /   -3 : h'4519e257236b2a0ce2023f0931f1f386
+                                  ca7afda64fcde0108c224c51eabf6072'
+                 }
+               },
+               {
+                 / COSE_Key / 1 : {
+                   / kty /  1 : 2 / EC2 /,
+                   / crv / -1 : 1 / P-256 /,
+                   / x /   -2 : h'ac75e9ece3e50bfc8ed6039988952240
+                                  5c47bf16df96660a41298cb4307f7eb6',
+                   / y /   -3 : h'6e5de611388a4b8a8211334ac7d37ecb
+                                  52a387d257e6db3c2a93df21ff3affc8'
+                 }
+               }
+             ]
    }
 </pre>
 </div>
@@ -1681,32 +1687,32 @@ The parameter "aud2" is <span class="bcp14">REQUIRED</span> if the parameter "rs
    Max-Age: 3600
    Payload:
    {
-     "access_token" : b64'SlAV32hk'/...
+     / access_token / 1 : b64'SlAV32hk'/...
       (remainder of CWT omitted for brevity;
       CWT contains the client's RPK in the "cnf" claim)/,
-       "expires_in" : 3600,
-       "anchor_cnf" : [
-         {
-           "x5chain" : h'308201363081dea003020102020301f50d30
-                         0a06082a8648ce3d04030230163114301206
-                         035504030c0b524643207465737420434130
-                         1e170d3230303130313030303030305a170d
-                         3231303230323030303030305a3022312030
-                         1e06035504030c1730312d32332d34352d46
-                         462d46452d36372d38392d41423059301306
-                         072a8648ce3d020106082a8648ce3d030107
-                         03420004b1216ab96e5b3b3340f5bdf02e69
-                         3f16213a04525ed44450b1019c2dfd3838ab
-                         ac4e14d86c0983ed5e9eef2448c6861cc406
-                         547177e6026030d051f7792ac206a30f300d
-                         300b0603551d0f040403020780300a06082a
-                         8648ce3d04030203470030440220445d798c
-                         90e7f500dc747a654cec6cfa6f037276e14e
-                         52ed07fc16294c84660d02205a33985dfbd4
-                         bfdd6d4acf3804c3d46ebf3b7fa62640674f
-                         c0354fa056dbaea6'
-         }
-       ]
+     / expires_in /   2 : 3600,
+          e'anchor_cnf' : [
+            {
+              e'x5chain' : h'308201363081dea003020102020301f50d30
+                             0a06082a8648ce3d04030230163114301206
+                             035504030c0b524643207465737420434130
+                             1e170d3230303130313030303030305a170d
+                             3231303230323030303030305a3022312030
+                             1e06035504030c1730312d32332d34352d46
+                             462d46452d36372d38392d41423059301306
+                             072a8648ce3d020106082a8648ce3d030107
+                             03420004b1216ab96e5b3b3340f5bdf02e69
+                             3f16213a04525ed44450b1019c2dfd3838ab
+                             ac4e14d86c0983ed5e9eef2448c6861cc406
+                             547177e6026030d051f7792ac206a30f300d
+                             300b0603551d0f040403020780300a06082a
+                             8648ce3d04030203470030440220445d798c
+                             90e7f500dc747a654cec6cfa6f037276e14e
+                             52ed07fc16294c84660d02205a33985dfbd4
+                             bfdd6d4acf3804c3d46ebf3b7fa62640674f
+                             c0354fa056dbaea6'
+            }
+          ]
    }
 </pre>
 </div>
@@ -1799,11 +1805,11 @@ Header: Bad Request (Code=4.00)
 Content-Format: application/concise-problem-details+cbor
 Payload:
 {
-   / title /       -1: "Incompatible ACE profile",
-   / detail /      -2: "The RS supports only the OSCORE profile",
-   / ace-error/   TBD: {
-     / error_code /       0: 8 / incompatible_ace_profiles /
-   }
+  / title /  -1 : "Incompatible ACE profile",
+  / detail / -2 : "The RS supports only the OSCORE profile",
+    e'ace-error': {
+      / error_code / 0: 8 / incompatible_ace_profiles /
+    }
 }
 </pre>
 </div>
@@ -1921,7 +1927,7 @@ Payload:
             <p id="section-7.2-2.2.1">CBOR Key: TBD<a href="#section-7.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-2.3">
-            <p id="section-7.2-2.3.1">Value Type: simple value <code>true</code> / simple value <code>false</code><a href="#section-7.2-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-7.2-2.3.1">Value Type: True or False<a href="#section-7.2-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-2.4">
             <p id="section-7.2-2.4.1">Reference: [RFC-XXXX]<a href="#section-7.2-2.4.1" class="pilcrow">¶</a></p>
@@ -2263,53 +2269,85 @@ First, the RS specifies this parameter in the response sent to the AS, after the
 </div>
 </section>
 </div>
-<div id="sec-document-updates">
+<div id="sec-cddl-model">
 <section id="appendix-C">
-      <h2 id="name-document-updates">
-<a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-document-updates" class="section-name selfRef">Document Updates</a>
+      <h2 id="name-cddl-model">
+<a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-cddl-model" class="section-name selfRef">CDDL Model</a>
       </h2>
 <p id="appendix-C-1">This section is to be removed before publishing as an RFC.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
+<span id="name-cddl-model-2"></span><div id="fig-cddl-model">
+<figure id="figure-8">
+        <div class="alignLeft art-CDDL art-text artwork" id="appendix-C-2.1">
+<pre>
+; OAuth Parameters CBOR Mappings
+token_upload = 48
+aud_2 = 49
+rs_cnf_2 = 50
+anchor_cnf = 51
+
+; CWT Confirmation Methods
+x5chain = 5
+
+; Custom Problem Detail Keys Registry
+ace-error = 2
+</pre>
+</div>
+<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
+<a href="#name-cddl-model-2" class="selfRef">CDDL model</a>
+        </figcaption></figure>
+</div>
+</section>
+</div>
+<div id="sec-document-updates">
+<section id="appendix-D">
+      <h2 id="name-document-updates">
+<a href="#appendix-D" class="section-number selfRef">Appendix D. </a><a href="#name-document-updates" class="section-name selfRef">Document Updates</a>
+      </h2>
+<p id="appendix-D-1">This section is to be removed before publishing as an RFC.<a href="#appendix-D-1" class="pilcrow">¶</a></p>
 <div id="sec-01-02">
-<section id="appendix-C.1">
+<section id="appendix-D.1">
         <h3 id="name-version-01-to-02">
-<a href="#appendix-C.1" class="section-number selfRef">C.1. </a><a href="#name-version-01-to-02" class="section-name selfRef">Version -01 to -02</a>
+<a href="#appendix-D.1" class="section-number selfRef">D.1. </a><a href="#name-version-01-to-02" class="section-name selfRef">Version -01 to -02</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-C.1-1.1">
-            <p id="appendix-C.1-1.1.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-D.1-1.1">
+            <p id="appendix-D.1-1.1.1">CBOR diagnostic notation uses placeholders from a CDDL model.<a href="#appendix-D.1-1.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-D.1-1.2">
+            <p id="appendix-D.1-1.2.1">Editorial fixes and improvements.<a href="#appendix-D.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="sec-00-01">
-<section id="appendix-C.2">
+<section id="appendix-D.2">
         <h3 id="name-version-00-to-01">
-<a href="#appendix-C.2" class="section-number selfRef">C.2. </a><a href="#name-version-00-to-01" class="section-name selfRef">Version -00 to -01</a>
+<a href="#appendix-D.2" class="section-number selfRef">D.2. </a><a href="#name-version-00-to-01" class="section-name selfRef">Version -00 to -01</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-C.2-1.1">
-            <p id="appendix-C.2-1.1.1">Definition of the "token series" moved to the "Terminology" section.<a href="#appendix-C.2-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="appendix-D.2-1.1">
+            <p id="appendix-D.2-1.1.1">Definition of the "token series" moved to the "Terminology" section.<a href="#appendix-D.2-1.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.2-1.2">
-            <p id="appendix-C.2-1.2.1">Clarifications and fixes on using parameters in messages.<a href="#appendix-C.2-1.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-D.2-1.2">
+            <p id="appendix-D.2-1.2.1">Clarifications and fixes on using parameters in messages.<a href="#appendix-D.2-1.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.2-1.3">
-            <p id="appendix-C.2-1.3.1">Amendeded two of the requirements on profiles of the framework.<a href="#appendix-C.2-1.3.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-D.2-1.3">
+            <p id="appendix-D.2-1.3.1">Amendeded two of the requirements on profiles of the framework.<a href="#appendix-D.2-1.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.2-1.4">
-            <p id="appendix-C.2-1.4.1">The Client has to opt-in for using the alternative workflow.<a href="#appendix-C.2-1.4.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-D.2-1.4">
+            <p id="appendix-D.2-1.4.1">The Client has to opt-in for using the alternative workflow.<a href="#appendix-D.2-1.4.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.2-1.5">
-            <p id="appendix-C.2-1.5.1">Parameter "token_uploaded" renamed to "token_upload".<a href="#appendix-C.2-1.5.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-D.2-1.5">
+            <p id="appendix-D.2-1.5.1">Parameter "token_uploaded" renamed to "token_upload".<a href="#appendix-D.2-1.5.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.2-1.6">
-            <p id="appendix-C.2-1.6.1">Updated format of error response payload to use RFC 9290.<a href="#appendix-C.2-1.6.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-D.2-1.6">
+            <p id="appendix-D.2-1.6.1">Updated format of error response payload to use RFC 9290.<a href="#appendix-D.2-1.6.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.2-1.7">
-            <p id="appendix-C.2-1.7.1">Security considerations inherited from other documents.<a href="#appendix-C.2-1.7.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-D.2-1.7">
+            <p id="appendix-D.2-1.7.1">Security considerations inherited from other documents.<a href="#appendix-D.2-1.7.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="appendix-C.2-1.8">
-            <p id="appendix-C.2-1.8.1">Editorial fixes and improvements.<a href="#appendix-C.2-1.8.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-D.2-1.8">
+            <p id="appendix-D.2-1.8.1">Editorial fixes and improvements.<a href="#appendix-D.2-1.8.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -2317,16 +2355,16 @@ First, the RS specifies this parameter in the response sent to the AS, after the
 </section>
 </div>
 <div id="acknowledgments">
-<section id="appendix-D">
+<section id="appendix-E">
       <h2 id="name-acknowledgments">
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
-<p id="appendix-D-1">The authors sincerely thank <span class="contact-name">Christian Amsüss</span>, <span class="contact-name">Rikard Höglund</span>, and <span class="contact-name">Dave Robin</span> for their comments and feedback.<a href="#appendix-D-1" class="pilcrow">¶</a></p>
-<p id="appendix-D-2">This work was supported by the Sweden's Innovation Agency VINNOVA within the EUREKA CELTIC-NEXT project CYPRESS; and by the H2020 project SIFIS-Home (Grant agreement 952652).<a href="#appendix-D-2" class="pilcrow">¶</a></p>
+<p id="appendix-E-1">The authors sincerely thank <span class="contact-name">Christian Amsüss</span>, <span class="contact-name">Rikard Höglund</span>, and <span class="contact-name">Dave Robin</span> for their comments and feedback.<a href="#appendix-E-1" class="pilcrow">¶</a></p>
+<p id="appendix-E-2">This work was supported by the Sweden's Innovation Agency VINNOVA within the EUREKA CELTIC-NEXT project CYPRESS; and by the H2020 project SIFIS-Home (Grant agreement 952652).<a href="#appendix-E-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
-<section id="appendix-E">
+<section id="appendix-F">
       <h2 id="name-authors-addresses">
 <a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
