@@ -737,6 +737,10 @@ The following discusses possible, further new parameters that can be defined for
 # Document Updates # {#sec-document-updates}
 {:removeinrfc}
 
+## Version -01 to -02 ## {#sec-01-02}
+
+* Editorial fixes and improvements.
+
 ## Version -00 to -01 ## {#sec-00-01}
 
 * Definition of the "token series" moved to the "Terminology" section.
