@@ -15,12 +15,12 @@ cat: std
 submissiontype: IETF
 updates: 9200, 9202, 9203, 9431
 
-coding: utf-8
-pi:    # can use array (if all yes) or hash here
+venue:
+  group: Authentication and Authorization for Constrained Environments (ace)
+  mail: ace@ietf.org
+  github: ace-wg/ace-workflow-and-params
 
-  toc: yes
-  sortrefs:   # defaults to yes
-  symrefs: yes
+coding: utf-8
 
 author:
       -
@@ -114,7 +114,7 @@ This document updates {{RFC9200}} as follows.
 
 ## Terminology ## {#terminology}
 
-{::boilerplate bcp14}
+{::boilerplate bcp14-tagged}
 
 Readers are expected to be familiar with the terms and concepts described in the ACE framework for Authentication and Authorization {{RFC9200}}{{RFC9201}}, as well as with terms and concepts related to CBOR Web Tokens (CWTs) {{RFC8392}} and CWT Confirmation Methods {{RFC8747}}.
 
@@ -756,7 +756,6 @@ The following discusses possible, further new parameters that can be defined for
 * Editorial fixes and improvements.
 
 # Acknowledgments # {#acknowledgments}
-{: numbered="no"}
+{:numbered="false"}
 
 The authors sincerely thank {{{Christian Amsüss}}}, {{{Rikard Höglund}}}, and {{{Dave Robin}}} for their comments and feedback. The work on this document has been partly supported by the H2020 project SIFIS-Home (Grant agreement 952652).
-
