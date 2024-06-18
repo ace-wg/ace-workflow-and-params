@@ -130,7 +130,13 @@ Furthermore, this document uses the following term.
 
    Profiles of ACE can provide their extended and specialized definition, e.g., by further taking into account the public authentication credentials of C and the RS.
 
-Examples throughout this document are expressed in CBOR diagnostic notation without the tag and value abbreviations.
+Concise Binary Object Representation (CBOR) {{RFC8949}} and Concise Data Definition Language (CDDL) {{RFC8610}} are used in this document. CDDL predefined type names, especially bstr for CBOR byte strings and tstr for CBOR text strings, are used extensively in this document.
+
+Examples throughout this document are expressed in CBOR diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Appendix G of RFC8610}}. Diagnostic notation comments are often used to provide a textual representation of the numeric parameter names and values.
+
+In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. For example, {e'aud_2' : \["rs1", "rs2"\]} stands for {49 : \["rs1", "rs2"\]}.
+
+Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. Finally, please delete this note.
 
 # New ACE Workflow # {#sec-workflow}
 
@@ -260,9 +266,9 @@ Consistently, the Access Token Response does not include the access token, while
    Content-Format: application/ace+cbor
    Payload:
    {
-         "audience" : "tempSensor4711",
-            "scope" : "read",
-     "token_upload" : true
+     / audience /  5 : "tempSensor4711",
+     / scope /     9 : "read",
+     e'token_upload' : true
    }
 
 
@@ -273,15 +279,15 @@ Consistently, the Access Token Response does not include the access token, while
    Max-Age: 3560
    Payload:
    {
-     "token_upload" : true,
-       "expires_in" : 3600,
-              "cnf" : {
-                "COSE_Key" : {
-                  "kty" : 1,
-                  "kid" : h'3d027833fc6267ce',
-                    "k" : h'73657373696f6e6b6579'
-                }
-              }
+     e'token_upload' : true,
+     / expires_in / 2 : 3600,
+     / cnf /        8 : {
+       / COSE_Key / 1 : {
+         / kty / 1 : 4 / Symmetric /,
+         / kid / 2 : h'3d027833fc6267ce',
+         / k /  -1 : h'73657373696f6e6b6579'
+       }
+     }
    }
 ~~~~~~~~~~~
 {: #fig-example-AS-to-C-token-upload title="Example of Access Token Request-Response Exchange. The Access Token Response includes the parameter \"token_upload\" but not the access token, which is bound to a symmetric key and was uploaded to the RS by the AS"}
@@ -301,9 +307,9 @@ Note that, even though the AS has failed to upload the access token to the RS, t
    Content-Format: application/ace+cbor
    Payload:
    {
-         "audience" : "tempSensor4711",
-            "scope" : "read",
-     "token_upload" : true
+     / audience /  5 : "tempSensor4711",
+     / scope /     9 : "read",
+     e'token_upload' : true
    }
 
 
@@ -314,18 +320,18 @@ Note that, even though the AS has failed to upload the access token to the RS, t
    Max-Age: 3560
    Payload:
    {
-     "access_token" : h'd08343a1'/...
+     / access_token / 1 : h'd08343a1'/...
       (remainder of CWT omitted for brevity;
       CWT contains the symmetric PoP key in the "cnf" claim)/,
-     "token_upload" : false,
-       "expires_in" : 3600,
-              "cnf" : {
-                "COSE_Key" : {
-                  "kty" : 1,
-                  "kid" : h'3d027833fc6267ce',
-                    "k" : h'73657373696f6e6b6579'
-                }
-              }
+        e'token_upload' : false,
+     / expires_in /   2 : 3600,
+     / cnf /          8 : {
+       / COSE_Key / 1 : {
+         / kty / 1 : 4 / Symmetric /,
+         / kid / 2 : h'3d027833fc6267ce',
+         / k /  -1 : h'73657373696f6e6b6579'
+       }
+     }
    }
 ~~~~~~~~~~~
 {: #fig-example-AS-to-C-token-upload-failed title="Example of Access Token Request-Response Exchange. The Access Token Response includes the parameter \"token_upload\" together with the access token, which is bound to a symmetric key and which the AS failed to upload to the RS"}
@@ -360,33 +366,33 @@ This section defines the additional parameters "rs_cnf2" and "aud2" for an Acces
    Max-Age: 3600
    Payload:
    {
-     "access_token" : b64'SlAV32hk'/...
+     / access_token / 1 : b64'SlAV32hk'/...
       (remainder of CWT omitted for brevity;
       CWT contains the client's RPK in the "cnf" claim)/,
-       "expires_in" : 3600,
-             "aud2" : ["rs1", "rs2"],
-          "rs_cnf2" : [
-            {
-              "COSE_Key" : {
-                "kty" : 2,
-                "crv" : 1,
-                  "x" : h'bbc34960526ea4d32e940cad2a234148
-                          ddc21791a12afbcbac93622046dd44f0',
-                  "y" : h'4519e257236b2a0ce2023f0931f1f386
-                          ca7afda64fcde0108c224c51eabf6072'
-              }
-            },
-            {
-              "COSE_Key" : {
-                "kty" : 2,
-                "crv" : 1,
-                  "x" : h'ac75e9ece3e50bfc8ed6039988952240
-                          5c47bf16df96660a41298cb4307f7eb6',
-                  "y" : h'6e5de611388a4b8a8211334ac7d37ecb
-                          52a387d257e6db3c2a93df21ff3affc8'
-              }
-            }
-          ]
+     / expires_in /   2 : 3600,
+                e'aud2' : ["rs1", "rs2"],
+             e'rs_cnf2' : [
+               {
+                 / COSE_Key / 1 : {
+                   / kty /  1 : 2 / EC2 /,
+                   / crv / -1 : 1 / P-256 /,
+                   / x /   -2 : h'bbc34960526ea4d32e940cad2a234148
+                                  ddc21791a12afbcbac93622046dd44f0',
+                   / y /   -3 : h'4519e257236b2a0ce2023f0931f1f386
+                                  ca7afda64fcde0108c224c51eabf6072'
+                 }
+               },
+               {
+                 / COSE_Key / 1 : {
+                   / kty /  1 : 2 / EC2 /,
+                   / crv / -1 : 1 / P-256 /,
+                   / x /   -2 : h'ac75e9ece3e50bfc8ed6039988952240
+                                  5c47bf16df96660a41298cb4307f7eb6',
+                   / y /   -3 : h'6e5de611388a4b8a8211334ac7d37ecb
+                                  52a387d257e6db3c2a93df21ff3affc8'
+                 }
+               }
+             ]
    }
 ~~~~~~~~~~~
 {: #fig-example-AS-to-C-rs_cnf2 title="Example of Access Token Response with an access token bound to an asymmetric key, using the parameters \"aud2\" and \"rs_cnf2\""}
@@ -425,32 +431,32 @@ The Access Token Response includes the parameter "anchor_cnf". This specifies th
    Max-Age: 3600
    Payload:
    {
-     "access_token" : b64'SlAV32hk'/...
+     / access_token / 1 : b64'SlAV32hk'/...
       (remainder of CWT omitted for brevity;
       CWT contains the client's RPK in the "cnf" claim)/,
-       "expires_in" : 3600,
-       "anchor_cnf" : [
-         {
-           "x5chain" : h'308201363081dea003020102020301f50d30
-                         0a06082a8648ce3d04030230163114301206
-                         035504030c0b524643207465737420434130
-                         1e170d3230303130313030303030305a170d
-                         3231303230323030303030305a3022312030
-                         1e06035504030c1730312d32332d34352d46
-                         462d46452d36372d38392d41423059301306
-                         072a8648ce3d020106082a8648ce3d030107
-                         03420004b1216ab96e5b3b3340f5bdf02e69
-                         3f16213a04525ed44450b1019c2dfd3838ab
-                         ac4e14d86c0983ed5e9eef2448c6861cc406
-                         547177e6026030d051f7792ac206a30f300d
-                         300b0603551d0f040403020780300a06082a
-                         8648ce3d04030203470030440220445d798c
-                         90e7f500dc747a654cec6cfa6f037276e14e
-                         52ed07fc16294c84660d02205a33985dfbd4
-                         bfdd6d4acf3804c3d46ebf3b7fa62640674f
-                         c0354fa056dbaea6'
-         }
-       ]
+     / expires_in /   2 : 3600,
+          e'anchor_cnf' : [
+            {
+              e'x5chain' : h'308201363081dea003020102020301f50d30
+                             0a06082a8648ce3d04030230163114301206
+                             035504030c0b524643207465737420434130
+                             1e170d3230303130313030303030305a170d
+                             3231303230323030303030305a3022312030
+                             1e06035504030c1730312d32332d34352d46
+                             462d46452d36372d38392d41423059301306
+                             072a8648ce3d020106082a8648ce3d030107
+                             03420004b1216ab96e5b3b3340f5bdf02e69
+                             3f16213a04525ed44450b1019c2dfd3838ab
+                             ac4e14d86c0983ed5e9eef2448c6861cc406
+                             547177e6026030d051f7792ac206a30f300d
+                             300b0603551d0f040403020780300a06082a
+                             8648ce3d04030203470030440220445d798c
+                             90e7f500dc747a654cec6cfa6f037276e14e
+                             52ed07fc16294c84660d02205a33985dfbd4
+                             bfdd6d4acf3804c3d46ebf3b7fa62640674f
+                             c0354fa056dbaea6'
+            }
+          ]
    }
 ~~~~~~~~~~~
 {: #fig-example-AS-to-C-anchor_cnf title="Example of Access Token Response with an access token bound to an asymmetric key, using the parameter \"anchor_cnf\""}
@@ -523,11 +529,11 @@ Header: Bad Request (Code=4.00)
 Content-Format: application/concise-problem-details+cbor
 Payload:
 {
-   / title /       -1: "Incompatible ACE profile",
-   / detail /      -2: "The RS supports only the OSCORE profile",
-   / ace-error/   TBD: {
-     / error_code /       0: 8 / incompatible_ace_profiles /
-   }
+  / title /  -1 : "Incompatible ACE profile",
+  / detail / -2 : "The RS supports only the OSCORE profile",
+    e'ace-error': {
+      / error_code / 0: 8 / incompatible_ace_profiles /
+    }
 }
 ~~~~~~~~~~~
 {: #fig-example-error-response title="Example of Error Response with Problem Details"}
@@ -590,7 +596,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 * Name: "token_upload"
 * CBOR Key: TBD
-* Value Type: simple value `true` / simple value `false`
+* Value Type: True or False
 * Reference: {{&SELF}}
 
 <br>
@@ -734,10 +740,30 @@ The following discusses possible, further new parameters that can be defined for
 
    First, the RS specifies this parameter in the response sent to the AS, after the upload of an access token through a request from the AS. Then, the AS specifies this parameter in the Access Token Response to C, by simply relaying the value received from the RS. The used profile of ACE has to define the detailed content and semantics of the information specified in the parameter value.
 
+# CDDL Model # {#sec-cddl-model}
+{:removeinrfc}
+
+~~~~~~~~~~~~~~~~~~~~ CDDL
+; OAuth Parameters CBOR Mappings
+token_upload = 48
+aud_2 = 49
+rs_cnf_2 = 50
+anchor_cnf = 51
+
+; CWT Confirmation Methods
+x5chain = 5
+
+; Custom Problem Detail Keys Registry
+ace-error = 2
+~~~~~~~~~~~~~~~~~~~~
+{: #fig-cddl-model title="CDDL model" artwork-align="left"}
+
 # Document Updates # {#sec-document-updates}
 {:removeinrfc}
 
 ## Version -01 to -02 ## {#sec-01-02}
+
+* CBOR diagnostic notation uses placeholders from a CDDL model.
 
 * Editorial fixes and improvements.
 
