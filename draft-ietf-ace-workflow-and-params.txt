@@ -6,7 +6,7 @@ ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Updates: 9200, 9202, 9203, 9431 (if approved)                G. Selander
 Intended status: Standards Track                             Ericsson AB
-Expires: 29 August 2024                                 26 February 2024
+Expires: 20 December 2024                                   18 June 2024
 
 
   Alternative Workflow and OAuth Parameters for the Authentication and
@@ -28,14 +28,18 @@ Abstract
    payload format aligned with RFC 9290, thus updating in this respect
    also the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431.
 
-Discussion Venues
+About This Document
 
    This note is to be removed before publishing as an RFC.
 
+   Status information for this document may be found at
+   https://datatracker.ietf.org/doc/draft-ietf-ace-workflow-and-params/.
+
    Discussion of this document takes place on the Authentication and
-   Authorization for Constrained Environments Working Group mailing list
-   (ace@ietf.org), which is archived at
-   https://mailarchive.ietf.org/arch/browse/ace/.
+   Authorization for Constrained Environments (ace) Working Group
+   mailing list (mailto:ace@ietf.org), which is archived at
+   https://mailarchive.ietf.org/arch/browse/ace/.  Subscribe at
+   https://www.ietf.org/mailman/listinfo/ace/.
 
    Source for this draft and an issue tracker can be found at
    https://github.com/ace-wg/ace-workflow-and-params.
@@ -55,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 August 2024.
+   This Internet-Draft will expire on 20 December 2024.
 
 Copyright Notice
 
@@ -1002,9 +1006,9 @@ Table of Contents
               Security for Constrained Environments (OSCORE) Profile for
               Authentication and Authorization for Constrained
               Environments (ACE)", Work in Progress, Internet-Draft,
-              draft-ietf-ace-edhoc-oscore-profile-03, 23 October 2023,
+              draft-ietf-ace-edhoc-oscore-profile-04, 4 March 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              edhoc-oscore-profile-03>.
+              edhoc-oscore-profile-04>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -1114,18 +1118,18 @@ Table of Contents
               (Group OSCORE) Profile of the Authentication and
               Authorization for Constrained Environments (ACE)
               Framework", Work in Progress, Internet-Draft, draft-ietf-
-              ace-group-oscore-profile-00, 2 January 2024,
+              ace-group-oscore-profile-01, 4 March 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              group-oscore-profile-00>.
+              group-oscore-profile-01>.
 
    [I-D.ietf-ace-revoked-token-notification]
               Tiloca, M., Palombini, F., Echeverria, S., and G. Lewis,
               "Notification of Revoked Access Tokens in the
               Authentication and Authorization for Constrained
               Environments (ACE) Framework", Work in Progress, Internet-
-              Draft, draft-ietf-ace-revoked-token-notification-06, 2
-              June 2023, <https://datatracker.ietf.org/doc/html/draft-
-              ietf-ace-revoked-token-notification-06>.
+              Draft, draft-ietf-ace-revoked-token-notification-07, 27
+              May 2024, <https://datatracker.ietf.org/doc/html/draft-
+              ietf-ace-revoked-token-notification-07>.
 
 Appendix A.  Benefits for ACE Transport Profiles
 
