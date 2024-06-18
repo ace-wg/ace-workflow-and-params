@@ -909,6 +909,7 @@ Table of Contents
    *  Reference: [RFC-XXXX]
 
 
+
    *  Name: "rs_cnf2"
 
    *  Parameter Usage Location: token response
@@ -918,6 +919,7 @@ Table of Contents
    *  Reference: [RFC-XXXX]
 
 
+
    *  Name: "aud2"
 
    *  Parameter Usage Location: token response
@@ -925,6 +927,7 @@ Table of Contents
    *  Change Controller: IESG
 
    *  Reference: [RFC-XXXX]
+
 
 
    *  Name: "anchor_cnf"
@@ -938,7 +941,8 @@ Table of Contents
 7.2.  OAuth Parameters CBOR Mappings Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters
-   CBOR Mappings" following the procedure specified in [RFC9200].
+   CBOR Mappings" registry, following the procedure specified in
+   [RFC9200].
 
    *  Name: "token_upload"
 
@@ -947,6 +951,7 @@ Table of Contents
    *  Value Type: simple value true / simple value false
 
    *  Reference: [RFC-XXXX]
+
 
 
    *  Name: "rs_cnf2"
@@ -958,6 +963,7 @@ Table of Contents
    *  Reference: [RFC-XXXX]
 
 
+
    *  Name: "aud2"
 
    *  CBOR Key: TBD
@@ -965,6 +971,7 @@ Table of Contents
    *  Value Type: array
 
    *  Reference: [RFC-XXXX]
+
 
 
    *  Name: "anchor_cnf"
