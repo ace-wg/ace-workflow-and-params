@@ -563,21 +563,21 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 * Change Controller: IESG
 * Reference: {{&SELF}}
 
-&nbsp;
+<br>
 
 * Name: "rs_cnf2"
 * Parameter Usage Location: token response
 * Change Controller: IESG
 * Reference: {{&SELF}}
 
-&nbsp;
+<br>
 
 * Name: "aud2"
 * Parameter Usage Location: token response
 * Change Controller: IESG
 * Reference: {{&SELF}}
 
-&nbsp;
+<br>
 
 * Name: "anchor_cnf"
 * Parameter Usage Location: token response
@@ -586,28 +586,28 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 
 ## OAuth Parameters CBOR Mappings Registry ## {#iana-oauth-cbor-mappings}
 
-IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" following the procedure specified in {{RFC9200}}.
+IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry, following the procedure specified in {{RFC9200}}.
 
 * Name: "token_upload"
 * CBOR Key: TBD
 * Value Type: simple value `true` / simple value `false`
 * Reference: {{&SELF}}
 
-&nbsp;
+<br>
 
 * Name: "rs_cnf2"
 * CBOR Key: TBD
 * Value Type: array
 * Reference: {{&SELF}}
 
-&nbsp;
+<br>
 
 * Name: "aud2"
 * CBOR Key: TBD
 * Value Type: array
 * Reference: {{&SELF}}
 
-&nbsp;
+<br>
 
 * Name: "anchor_cnf"
 * CBOR Key: TBD
