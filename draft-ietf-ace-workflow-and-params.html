@@ -1445,6 +1445,7 @@ As defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1
 </li>
       </ul>
 <p id="section-2-12">The new workflow has no ambition to replace the original workflow defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>. The AS can use one workflow or the other depending, for example, on the specific RS for which the access token has been issued and the nature of the communication leg with that RS.<a href="#section-2-12" class="pilcrow">¶</a></p>
+<p id="section-2-13">When using the new workflow, all the communications between the AS and the RS <span class="bcp14">MUST</span> be protected, consistent with Sections <a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.4.3" class="relref">5.8.4.3</a> and <a href="https://rfc-editor.org/rfc/rfc9200#section-6.5" class="relref">6.5</a> of <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>. Unlike in the original workflow, this results in protecting also the uploading of the first access token in a token series, i.e., in addition to the uploading of the following access tokens in the token series for dynamically updating the access rights of the Client.<a href="#section-2-13" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-parameters">
@@ -2570,7 +2571,7 @@ ace-error = 2
             <p id="appendix-D.1-1.4.1">Revised and extended considerations and next steps in appendices.<a href="#appendix-D.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.5">
-            <p id="appendix-D.1-1.5.1">Editorial fixes and improvements.<a href="#appendix-D.1-1.5.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.5.1">Clarifications and editorial improvements.<a href="#appendix-D.1-1.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
