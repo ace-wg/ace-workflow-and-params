@@ -1157,12 +1157,20 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
                 <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-token_hash" class="internal xref">token_hash</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.1">
+                    <p id="section-toc.1-1.3.2.2.2.1.1"><a href="#section-3.2.1" class="auto internal xref">3.2.1</a>.  <a href="#name-computing-the-token-hash" class="internal xref">Computing the Token Hash</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2.2.2">
+                    <p id="section-toc.1-1.3.2.2.2.2.1"><a href="#section-3.2.2" class="auto internal xref">3.2.2</a>.  <a href="#name-example" class="internal xref">Example</a></p>
+</li>
+                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
                 <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-rs_cnf2-and-aud2" class="internal xref">rs_cnf2 and aud2</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.1">
-                    <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="auto internal xref">3.3.1</a>.  <a href="#name-example" class="internal xref">Example</a></p>
+                    <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="auto internal xref">3.3.1</a>.  <a href="#name-example-2" class="internal xref">Example</a></p>
 </li>
                 </ul>
 </li>
@@ -1170,7 +1178,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-anchor_cnf" class="internal xref">anchor_cnf</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4.2.1">
-                    <p id="section-toc.1-1.3.2.4.2.1.1"><a href="#section-3.4.1" class="auto internal xref">3.4.1</a>.  <a href="#name-example-2" class="internal xref">Example</a></p>
+                    <p id="section-toc.1-1.3.2.4.2.1.1"><a href="#section-3.4.1" class="auto internal xref">3.4.1</a>.  <a href="#name-example-3" class="internal xref">Example</a></p>
 </li>
                 </ul>
 </li>
@@ -1285,13 +1293,16 @@ The new workflow has no ambition to replace the original workflow. The AS can us
               <p id="section-1-4.2.2.1.1">"token_upload", used by C to inform the AS that it opts in to use the new ACE workflow, and by the AS to inform C about the outcome of the token uploading to the RS per the new workflow.<a href="#section-1-4.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.2">
-              <p id="section-1-4.2.2.2.1">"rs_cnf2", used by the AS to provide C with the public keys of the RSs in the group-audience for which the access token is issued (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-6.9" class="relref">Section 6.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>).<a href="#section-1-4.2.2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-1-4.2.2.2.1">"token_hash", used by the AS to provide C with a token hash, corresponding to an access token that the AS has issued for C and has successfully uploaded to the RS on behalf of C per the new ACE workflow.<a href="#section-1-4.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.3">
-              <p id="section-1-4.2.2.3.1">"aud2", used by the AS to provide C with the identifiers of the RSs in the group-audience for which the access token is issued.<a href="#section-1-4.2.2.3.1" class="pilcrow">¶</a></p>
+              <p id="section-1-4.2.2.3.1">"rs_cnf2", used by the AS to provide C with the public keys of the RSs in the group-audience for which the access token is issued (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-6.9" class="relref">Section 6.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>).<a href="#section-1-4.2.2.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.4">
-              <p id="section-1-4.2.2.4.1">"anchor_cnf", used by the AS to provide C with the public keys of trust anchors, which C can use to validate the public key of an RS (e.g., as provided in the parameter "rs_cnf" defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> or in the parameter "rs_cnf2" defined in this document).<a href="#section-1-4.2.2.4.1" class="pilcrow">¶</a></p>
+              <p id="section-1-4.2.2.4.1">"aud2", used by the AS to provide C with the identifiers of the RSs in the group-audience for which the access token is issued.<a href="#section-1-4.2.2.4.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-1-4.2.2.5">
+              <p id="section-1-4.2.2.5.1">"anchor_cnf", used by the AS to provide C with the public keys of trust anchors, which C can use to validate the public key of an RS (e.g., as provided in the parameter "rs_cnf" defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> or in the parameter "rs_cnf2" defined in this document).<a href="#section-1-4.2.2.5.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </li>
@@ -1315,8 +1326,8 @@ described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</s
 appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 <p id="section-1.1-2">Readers are expected to be familiar with the terms and concepts described in the ACE framework for Authentication and Authorization <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span><span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span>, as well as with terms and concepts related to CBOR Web Tokens (CWTs) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span> and CWT Confirmation Methods <span>[<a href="#RFC8747" class="cite xref">RFC8747</a>]</span>.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
 <p id="section-1.1-3">The terminology for entities in the considered architecture is defined in OAuth 2.0 <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>. In particular, this includes Client (C), Resource Server (RS), and Authorization Server (AS).<a href="#section-1.1-3" class="pilcrow">¶</a></p>
-<p id="section-1.1-4">Readers are also expected to be familiar with the terms and concepts related to the CoAP protocol <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>, CDDL <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>, CBOR <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>, and COSE <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span><span>[<a href="#RFC9053" class="cite xref">RFC9053</a>]</span>.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
-<p id="section-1.1-5">Note that, unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."<a href="#section-1.1-5" class="pilcrow">¶</a></p>
+<p id="section-1.1-4">Readers are also expected to be familiar with the terms and concepts related to CoAP <span>[<a href="#RFC7252" class="cite xref">RFC7252</a>]</span>, CDDL <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>, CBOR <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>, JSON <span>[<a href="#RFC8259" class="cite xref">RFC8259</a>]</span>, and COSE <span>[<a href="#RFC9052" class="cite xref">RFC9052</a>]</span><span>[<a href="#RFC9053" class="cite xref">RFC9053</a>]</span>.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+<p id="section-1.1-5">Note that the term "endpoint" is used here following its OAuth definition <span>[<a href="#RFC6749" class="cite xref">RFC6749</a>]</span>, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."<a href="#section-1.1-5" class="pilcrow">¶</a></p>
 <p id="section-1.1-6">Furthermore, this document uses the following term.<a href="#section-1.1-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1.1-7.1">
@@ -1324,11 +1335,14 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
 <p id="section-1.1-7.1.2">
 Profiles of ACE can provide their extended and specialized definition, e.g., by further taking into account the public authentication credentials of C and the RS.<a href="#section-1.1-7.1.2" class="pilcrow">¶</a></p>
 </li>
+          <li class="normal" id="section-1.1-7.2">
+            <p id="section-1.1-7.2.1">Token hash: identifier of an access token, in binary format encoding. The token hash has no relation to other possibly used token identifiers, such as the 'cti' (CWT ID) claim of CBOR Web Tokens (CWTs) <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>.<a href="#section-1.1-7.2.1" class="pilcrow">¶</a></p>
+</li>
         </ul>
 <p id="section-1.1-8">Concise Binary Object Representation (CBOR) <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> and Concise Data Definition Language (CDDL) <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> are used in this document. CDDL predefined type names, especially bstr for CBOR byte strings and tstr for CBOR text strings, are used extensively in this document.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
 <p id="section-1.1-9">Examples throughout this document are expressed in CBOR diagnostic notation as defined in <span><a href="https://rfc-editor.org/rfc/rfc8949#section-8" class="relref">Section 8</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>. Diagnostic notation comments are often used to provide a textual representation of the numeric parameter names and values.<a href="#section-1.1-9" class="pilcrow">¶</a></p>
-<p id="section-1.1-10">In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 9</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. For example, {e'aud_2' : ["rs1", "rs2"]} stands for {49 : ["rs1", "rs2"]}.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
-<p id="section-1.1-11">Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 9</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. Finally, please delete this note.<a href="#section-1.1-11" class="pilcrow">¶</a></p>
+<p id="section-1.1-10">In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 10</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. For example, {e'aud_2' : ["rs1", "rs2"]} stands for {49 : ["rs1", "rs2"]}.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
+<p id="section-1.1-11">Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 10</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. Finally, please delete this note.<a href="#section-1.1-11" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1367,7 +1381,7 @@ Profiles of ACE can provide their extended and specialized definition, e.g., by 
 </pre>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-ace-basic-protocol-workflow" class="selfRef">ACE Basic Protocol Workflow</a>
+<a href="#name-ace-basic-protocol-workflow" class="selfRef">ACE Basic Protocol Workflow.</a>
         </figcaption></figure>
 </div>
 <p id="section-2-7">This section defines a new, alternative protocol workflow shown in <a href="#fig-new-workflow" class="auto internal xref">Figure 2</a>, which <span class="bcp14">MAY</span> be supported by the AS. Unlike in the original protocol workflow, the AS uploads the access token to the RS on behalf of the Client, and then informs the Client about the outcome.<a href="#section-2-7" class="pilcrow">¶</a></p>
@@ -1399,7 +1413,7 @@ Profiles of ACE can provide their extended and specialized definition, e.g., by 
 </pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
-<a href="#name-ace-alternative-protocol-wo" class="selfRef">ACE Alternative Protocol Workflow</a>
+<a href="#name-ace-alternative-protocol-wo" class="selfRef">ACE Alternative Protocol Workflow.</a>
         </figcaption></figure>
 </div>
 <p id="section-2-10">More specifically, the new workflow consists of the following steps.<a href="#section-2-10" class="pilcrow">¶</a></p>
@@ -1449,7 +1463,7 @@ As defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1
 <li class="normal" id="section-3.1-2.1">
             <p id="section-3.1-2.1.1">The parameter "token_upload" is <span class="bcp14">OPTIONAL</span> in an Access Token Request. The presence of this parameter indicates that C opts in to use the new, alternative ACE workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>, whose actual use for uploading the issued access token to the RS is an exclusive prerogative of the AS.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2.1.2">
-This parameter can take one of the following integer values. When using CBOR, those values are encoded as CBOR unsigned integers. The value of the parameter determines whether the follow-up successful Access Token Response will have to include certain information, in case the AS has successfully uploaded the access token to the RS.<a href="#section-3.1-2.1.2" class="pilcrow">¶</a></p>
+This parameter can take one of the following integer values. When the Access Token Request is encoded in CBOR, those values are encoded as CBOR unsigned integers. The value of the parameter determines whether the follow-up successful Access Token Response will have to include certain information, in case the AS has successfully uploaded the access token to the RS.<a href="#section-3.1-2.1.2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1-2.1.3.1">
                 <p id="section-3.1-2.1.3.1.1">0: The Access Token Response will have to include neither the access token nor its corresponding token hash.<a href="#section-3.1-2.1.3.1.1" class="pilcrow">¶</a></p>
@@ -1475,7 +1489,7 @@ If the AS supports the new ACE workflow and the Access Token Request includes th
 </li>
             </ul>
 <p id="section-3.1-2.2.3">
-When the parameter "token_upload" is present in the Access Token Response, it can take one of the following integer values. When using CBOR, those values are encoded as CBOR unsigned integers.<a href="#section-3.1-2.2.3" class="pilcrow">¶</a></p>
+When the parameter "token_upload" is present in the Access Token Response, it can take one of the following integer values. When the Access Token Response is encoded in CBOR, those values are encoded as CBOR unsigned integers.<a href="#section-3.1-2.2.3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1-2.2.4.1">
                 <p id="section-3.1-2.2.4.1.1">If the token upload to the RS was not successful, then the parameter "token_upload" <span class="bcp14">MUST</span> specify the value 1.<a href="#section-3.1-2.2.4.1.1" class="pilcrow">¶</a></p>
@@ -1509,7 +1523,7 @@ In this case, the Access Token Response can include additional parameters as def
 <p id="section-3.1.1-1"><a href="#fig-example-AS-to-C-token-upload" class="auto internal xref">Figure 3</a> shows an example with first an Access Token Request from C to the AS, and then an Access Token Response from the AS to C, following the issue of an access token bound to a symmetric PoP key.<a href="#section-3.1.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-2">The Access Token Request specifies the parameter "token_upload" with value 0. That is, C indicates that it requires neither the access token nor the corresponding token hash from the AS, in case the AS successfully uploads the access token to the RS.<a href="#section-3.1.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-3">The Access Token Response specifies the parameter "token_upload" with value 0, which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.<a href="#section-3.1.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.1.1-4">Consistent with the value of the "token_upload" parameter in the Access Token Request, the Access Token Response includes neither the access token nor its corresponding token hash, while it still includes the parameter "cnf" specifying the symmetric PoP key bound to the access token.<a href="#section-3.1.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-4">Consistent with the value of the "token_upload" parameter in the Access Token Request, the Access Token Response includes neither the access token nor its corresponding token hash. The Access Token Response also includes the parameter "cnf" specifying the symmetric PoP key bound to the access token.<a href="#section-3.1.1-4" class="pilcrow">¶</a></p>
 <span id="name-example-of-access-token-req"></span><div id="fig-example-AS-to-C-token-upload">
 <figure id="figure-3">
             <div class="alignLeft art-text artwork" id="section-3.1.1-5.1">
@@ -1548,13 +1562,13 @@ In this case, the Access Token Response can include additional parameters as def
 </pre>
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
-<a href="#name-example-of-access-token-req" class="selfRef">Example of Access Token Request-Response Exchange. Following a successful uploading of the access token from the AS to the RS, the Access Token Response includes the parameter "token_upload" but not the access token, which is bound to a symmetric key and was uploaded to the RS by the AS</a>
+<a href="#name-example-of-access-token-req" class="selfRef">Example of Access Token Request-Response Exchange. Following a successful uploading of the access token from the AS to the RS, the Access Token Response includes the parameter "token_upload" but not the access token, which is bound to a symmetric key and was uploaded to the RS by the AS.</a>
             </figcaption></figure>
 </div>
 <p id="section-3.1.1-6"><a href="#fig-example-AS-to-C-token-upload-success-ret-token" class="auto internal xref">Figure 4</a> shows another example with first an Access Token Request from C to the AS, and then an Access Token Response from the AS to C, following the issue of an access token bound to a symmetric PoP key.<a href="#section-3.1.1-6" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-7">The Access Token Request specifies the parameter "token_upload" with value 2. That is, C indicates that it requires the access token from the AS, even in case the AS successfully uploads the access token to the RS.<a href="#section-3.1.1-7" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-8">The Access Token Response specifies the parameter "token_upload" with value 0, which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.<a href="#section-3.1.1-8" class="pilcrow">¶</a></p>
-<p id="section-3.1.1-9">Consistent with the value of the "token_upload" parameter in the Access Token Request, the Access Token Response includes the parameter "access_token" specifying the issued access token, together with the parameter "cnf" specifying the symmetric PoP key bound to the access token.<a href="#section-3.1.1-9" class="pilcrow">¶</a></p>
+<p id="section-3.1.1-9">Consistent with the value of the "token_upload" parameter in the Access Token Request, the Access Token Response includes the parameter "access_token" specifying the issued access token. The Access Token Response also includes the parameter "cnf" specifying the symmetric PoP key bound to the access token.<a href="#section-3.1.1-9" class="pilcrow">¶</a></p>
 <span id="name-example-of-access-token-requ"></span><div id="fig-example-AS-to-C-token-upload-success-ret-token">
 <figure id="figure-4">
             <div class="alignLeft art-text artwork" id="section-3.1.1-10.1">
@@ -1596,7 +1610,7 @@ In this case, the Access Token Response can include additional parameters as def
 </pre>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
-<a href="#name-example-of-access-token-requ" class="selfRef">Example of Access Token Request-Response Exchange. Following a successful uploading of the access token from the AS to the RS, the Access Token Response includes the parameter "token_upload" as well as the parameter "access_token" conveying the access token, which is bound to a symmetric key and was uploaded to the RS by the AS</a>
+<a href="#name-example-of-access-token-requ" class="selfRef">Example of Access Token Request-Response Exchange. Following a successful uploading of the access token from the AS to the RS, the Access Token Response includes the parameter "token_upload" as well as the parameter "access_token" conveying the access token, which is bound to a symmetric key and was uploaded to the RS by the AS.</a>
             </figcaption></figure>
 </div>
 <p id="section-3.1.1-11"><a href="#fig-example-AS-to-C-token-upload-failed" class="auto internal xref">Figure 5</a> shows another example with first an Access Token Request from C to the AS, and then an Access Token Response from the AS to C, also following the issue of an access token bound to a symmetric PoP key.<a href="#section-3.1.1-11" class="pilcrow">¶</a></p>
@@ -1644,7 +1658,7 @@ In this case, the Access Token Response can include additional parameters as def
 </pre>
 </div>
 <figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
-<a href="#name-example-of-access-token-reque" class="selfRef">Example of Access Token Request-Response Exchange. Following a failed uploading of the access token from the AS to the RS, the Access Token Response includes the parameter "token_upload" with value 1 as well the parameter "access_token" conveying the access token bound to a symmetric key</a>
+<a href="#name-example-of-access-token-reque" class="selfRef">Example of Access Token Request-Response Exchange. Following a failed uploading of the access token from the AS to the RS, the Access Token Response includes the parameter "token_upload" with value 1 as well the parameter "access_token" conveying the access token bound to a symmetric key.</a>
             </figcaption></figure>
 </div>
 </section>
@@ -1656,7 +1670,113 @@ In this case, the Access Token Response can include additional parameters as def
         <h3 id="name-token_hash">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-token_hash" class="section-name selfRef">token_hash</a>
         </h3>
-<p id="section-3.2-1">TBD<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-1">This section defines the additional parameter "token_hash". The parameter can be used in a successful Access Token Response sent as reply by the AS to C.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">The following refers to the base64url encoding without padding (see <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>), and denotes as "binary representation" of a text string the corresponding UTF-8 encoding <span>[<a href="#RFC3629" class="cite xref">RFC3629</a>]</span>, which is the implied charset used in JSON (see <span><a href="https://rfc-editor.org/rfc/rfc8259#section-8.1" class="relref">Section 8.1</a> of [<a href="#RFC8259" class="cite xref">RFC8259</a>]</span>).<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">The parameter "token_hash" is <span class="bcp14">REQUIRED</span> in a successful Access Token Response with response code 2.01 (Created), if both the following conditions apply. Otherwise, the parameter "token_hash" <span class="bcp14">MUST NOT</span> be present.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.2-4.1">
+            <p id="section-3.2-4.1.1">The corresponding Access Token Request included the parameter "token_upload" with value 1.<a href="#section-3.2-4.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.2-4.2">
+            <p id="section-3.2-4.2.1">The Access Token Response includes the parameter "token_upload" with value 0. That is, the AS has successfully uploaded the issued access token to the RS, as per the new ACE workflow.<a href="#section-3.2-4.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.2-5">This parameter specifies the token hash corresponding to the access token issued by the AS and successfully uploaded to the RS on behalf of C. In particular:<a href="#section-3.2-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.2-6.1">
+            <p id="section-3.2-6.1.1">If the Access Token Response is encoded in CBOR, then the parameter "token_hash" is a CBOR byte string, with value the token hash.<a href="#section-3.2-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.2-6.2">
+            <p id="section-3.2-6.2.1">If the Access Token Response is encoded in JSON, then the parameter "token_hash" has as value the binary representation of the base64url-encoded text string that encodes the token hash.<a href="#section-3.2-6.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.2-7">The AS computes the token hash as defined in <a href="#sec-token-hash-output" class="auto internal xref">Section 3.2.1</a>.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
+<div id="sec-token-hash-output">
+<section id="section-3.2.1">
+          <h4 id="name-computing-the-token-hash">
+<a href="#section-3.2.1" class="section-number selfRef">3.2.1. </a><a href="#name-computing-the-token-hash" class="section-name selfRef">Computing the Token Hash</a>
+          </h4>
+<p id="section-3.2.1-1">The AS computes the token hash over the value that the parameter "access_token" would have had in the same Access Token Response, if it was included therein and specifying the access token.<a href="#section-3.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-2">In particular, the input HASH_INPUT over which the token hash is computed is determined as follows.<a href="#section-3.2.1-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.2.1-3.1">
+              <p id="section-3.2.1-3.1.1">If the Access Token Response is encoded in CBOR, then:<a href="#section-3.2.1-3.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.2.1-3.1.2.1">
+                  <p id="section-3.2.1-3.1.2.1.1">BYTES denotes the value of the CBOR byte string that would be conveyed by the parameter "access_token", if this was included in the Access Token Response.<a href="#section-3.2.1-3.1.2.1.1" class="pilcrow">¶</a></p>
+</li>
+                <li class="normal" id="section-3.2.1-3.1.2.2">
+                  <p id="section-3.2.1-3.1.2.2.1">HASH_INPUT_TEXT is the base64url-encoded text string that encodes BYTES.<a href="#section-3.2.1-3.1.2.2.1" class="pilcrow">¶</a></p>
+</li>
+                <li class="normal" id="section-3.2.1-3.1.2.3">
+                  <p id="section-3.2.1-3.1.2.3.1">HASH_INPUT is the binary representation of HASH_INPUT_TEXT.<a href="#section-3.2.1-3.1.2.3.1" class="pilcrow">¶</a></p>
+</li>
+              </ul>
+</li>
+            <li class="normal" id="section-3.2.1-3.2">
+              <p id="section-3.2.1-3.2.1">If the Access Token Response is encoded in JSON, then HASH_INPUT is the binary representation of the text string conveyed by the parameter "access_token", if this was included in the Access Token Response.<a href="#section-3.2.1-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.2.1-4">Once determined HASH_INPUT as defined above, a hash value of HASH_INPUT is generated as per <span><a href="https://rfc-editor.org/rfc/rfc6920#section-6" class="relref">Section 6</a> of [<a href="#RFC6920" class="cite xref">RFC6920</a>]</span>. The resulting output in binary format is used as the token hash. Note that the used binary format embeds the identifier of the used hash function, in the first byte of the computed token hash.<a href="#section-3.2.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-5">The specifically used hash function <span class="bcp14">MUST</span> be collision-resistant on byte-strings, and <span class="bcp14">MUST</span> be selected from the "Named Information Hash Algorithm" Registry <span>[<a href="#Named.Information.Hash.Algorithm" class="cite xref">Named.Information.Hash.Algorithm</a>]</span>.<a href="#section-3.2.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-6">The computation of token hashes defined above is aligned with that specified for the computation of token hashes in <span>[<a href="#I-D.ietf-ace-revoked-token-notification" class="cite xref">I-D.ietf-ace-revoked-token-notification</a>]</span>, where they are used as identifiers of revoked access tokens. Therefore, given a hash algorithm and an access token, the AS computes the same corresponding token hash in either case.<a href="#section-3.2.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-7">If the AS supports the method specified in <span>[<a href="#I-D.ietf-ace-revoked-token-notification" class="cite xref">I-D.ietf-ace-revoked-token-notification</a>]</span>, then the AS <span class="bcp14">MUST</span> use the same hash algorithm for computing both the token hashes to include in the parameter "token_hash" and the token hashes computed per such a method to identify revoked access tokens.<a href="#section-3.2.1-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="example">
+<section id="section-3.2.2">
+          <h4 id="name-example">
+<a href="#section-3.2.2" class="section-number selfRef">3.2.2. </a><a href="#name-example" class="section-name selfRef">Example</a>
+          </h4>
+<p id="section-3.2.2-1"><a href="#fig-example-AS-to-C-token-hash" class="auto internal xref">Figure 6</a> shows an example with first an Access Token Request from C to the AS, and then an Access Token Response from the AS to C, following the issue of an access token bound to a symmetric PoP key.<a href="#section-3.2.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-2">The Access Token Request specifies the parameter "token_upload" with value 1. That is, C indicates that it requires the token hash corresponding to the access token from the AS, in case the AS successfully uploads the access token to the RS.<a href="#section-3.2.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-3">The Access Token Response specifies the parameter "token_upload" with value 0, which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.<a href="#section-3.2.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2.2-4">Consistent with the value of the "token_upload" parameter in the Access Token Request, the Access Token Response includes the parameter "token_hash", which specifies the token hash corresponding to the issued access token. The Access Token Response also includes the parameter "cnf" specifying the symmetric PoP key bound to the access token.<a href="#section-3.2.2-4" class="pilcrow">¶</a></p>
+<span id="name-example-of-access-token-reques"></span><div id="fig-example-AS-to-C-token-hash">
+<figure id="figure-6">
+            <div class="alignLeft art-text artwork" id="section-3.2.2-5.1">
+<pre>
+   / Access Token Request /
+
+   Header: POST (Code=0.02)
+   Uri-Host: "as.example.com"
+   Uri-Path: "token"
+   Content-Format: application/ace+cbor
+   Payload:
+   {
+     / audience /  5 : "tempSensor4711",
+     / scope /     9 : "read",
+     e'token_upload' : 1
+   }
+
+
+   / Access Token Response /
+
+   Header: Created (Code=2.01)
+   Content-Format: application/ace+cbor
+   Max-Age: 3560
+   Payload:
+   {
+      e'token_upload' : 0,
+        e'token_hash' : h'0153269057e12fe2b74ba07c892560a2d7
+                          53877eb62ff44d5a19002530ed97ffe4',
+     / expires_in / 2 : 3600,
+     / cnf /        8 : {
+       / COSE_Key / 1 : {
+         / kty / 1 : 4 / Symmetric /,
+         / kid / 2 : h'3d027833fc6267ce',
+         / k /  -1 : h'73657373696f6e6b6579'
+       }
+     }
+   }
+</pre>
+</div>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-example-of-access-token-reques" class="selfRef">Example of Access Token Request-Response Exchange. Following a successful uploading of the access token from the AS to the RS, the Access Token Response includes the parameter "token_upload" as well as the parameter "token_hash". The parameter "token_hash" conveys the token hash corresponding to the issued access token, which is bound to a symmetric key and was uploaded to the RS by the AS.</a>
+            </figcaption></figure>
+</div>
+</section>
+</div>
 </section>
 </div>
 <div id="sec-rs_cnf2-aud2">
@@ -1685,14 +1805,14 @@ The element of the CBOR array referring to an RS in the group-audience <span cla
 The parameter "aud2" is <span class="bcp14">REQUIRED</span> if the parameter "rs_cnf2" is present. In such a case, the i-th element of the CBOR array in the "aud2" parameter <span class="bcp14">MUST</span> be the identifier of the RS whose public key is specified as the i-th element of the CBOR array in the "rs_cnf2" parameter.<a href="#section-3.3-2.2.4" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<div id="example">
+<div id="example-1">
 <section id="section-3.3.1">
-          <h4 id="name-example">
-<a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-example" class="section-name selfRef">Example</a>
+          <h4 id="name-example-2">
+<a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-example-2" class="section-name selfRef">Example</a>
           </h4>
-<p id="section-3.3.1-1"><a href="#fig-example-AS-to-C-rs_cnf2" class="auto internal xref">Figure 6</a> shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience composed of two RSs "rs1" and "rs2", and bound to C's public key as asymmetric PoP key. The Access Token Response includes the access token, as well as the parameters "aud2" and "rs_cnf2". These specify the public key of the two RSs as intended recipients of the access token and the identifiers of those two RSs, respectively.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-1"><a href="#fig-example-AS-to-C-rs_cnf2" class="auto internal xref">Figure 7</a> shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience composed of two RSs "rs1" and "rs2", and bound to C's public key as asymmetric PoP key. The Access Token Response includes the access token, as well as the parameters "aud2" and "rs_cnf2". These specify the public key of the two RSs as intended recipients of the access token and the identifiers of those two RSs, respectively.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
 <span id="name-example-of-access-token-res"></span><div id="fig-example-AS-to-C-rs_cnf2">
-<figure id="figure-6">
+<figure id="figure-7">
             <div class="alignLeft art-text artwork" id="section-3.3.1-2.1">
 <pre>
    Header: Created (Code=2.01)
@@ -1730,8 +1850,8 @@ The parameter "aud2" is <span class="bcp14">REQUIRED</span> if the parameter "rs
    }
 </pre>
 </div>
-<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
-<a href="#name-example-of-access-token-res" class="selfRef">Example of Access Token Response with an access token bound to an asymmetric key, using the parameters "aud2" and "rs_cnf2"</a>
+<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
+<a href="#name-example-of-access-token-res" class="selfRef">Example of Access Token Response with an access token bound to an asymmetric key, using the parameters "aud2" and "rs_cnf2".</a>
             </figcaption></figure>
 </div>
 </section>
@@ -1752,16 +1872,16 @@ The parameter "aud2" is <span class="bcp14">REQUIRED</span> if the parameter "rs
 <p id="section-3.4-7">The presence of this parameter does not require that the Access Token Response also includes the parameter "rs_cnf" defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> or the parameter "rs_cnf2" defined in <a href="#sec-rs_cnf2-aud2" class="auto internal xref">Section 3.3</a> of this document. That is, C may be able to obtain the public keys of the RS/RSs for which the access token is issued through other means.<a href="#section-3.4-7" class="pilcrow">¶</a></p>
 <p id="section-3.4-8">When the Access Token Response includes both the parameter "anchor_cnf" and the parameter "aud2" defined in <a href="#sec-rs_cnf2-aud2" class="auto internal xref">Section 3.3</a>, then C <span class="bcp14">MUST</span> make sure that a public key PK_RS is associated with an RS identified by an element of "aud2", before using any of the public keys specified in "anchor_cnf" to validate PK_RS.<a href="#section-3.4-8" class="pilcrow">¶</a></p>
 <p id="section-3.4-9">When the Access Token Response includes the parameter "anchor_cnf" but not the parameter "aud2", then C can use any of the public keys specified in "anchor_cnf" to validate the public key PK_RS of any RS in the targeted audience. This allows C to use the access token with an RS that is deployed later on as part of the same audience, which is particularly useful in the case of a group-audience.<a href="#section-3.4-9" class="pilcrow">¶</a></p>
-<div id="example-1">
+<div id="example-2">
 <section id="section-3.4.1">
-          <h4 id="name-example-2">
-<a href="#section-3.4.1" class="section-number selfRef">3.4.1. </a><a href="#name-example-2" class="section-name selfRef">Example</a>
+          <h4 id="name-example-3">
+<a href="#section-3.4.1" class="section-number selfRef">3.4.1. </a><a href="#name-example-3" class="section-name selfRef">Example</a>
           </h4>
-<p id="section-3.4.1-1"><a href="#fig-example-AS-to-C-anchor_cnf" class="auto internal xref">Figure 7</a> shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience, and bound to C's public key as asymmetric PoP key.<a href="#section-3.4.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.4.1-1"><a href="#fig-example-AS-to-C-anchor_cnf" class="auto internal xref">Figure 8</a> shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience, and bound to C's public key as asymmetric PoP key.<a href="#section-3.4.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.4.1-2">The identifier of the group-audience was specified by the "aud" parameter of the Access Token Request to the AS and is specified by the "aud" claim of the issued access token, and is not repeated in the Access Token Response from the AS.<a href="#section-3.4.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.4.1-3">The Access Token Response includes the parameter "anchor_cnf". This specifies the public key of a trust anchor that C can use to validate the public keys of any RS with which the access token is going to be used. The public key of the trust anchor is here conveyed within an X.509 certificate used as public authentication credential for that trust anchor, by means of the CWT confirmation method "x5chain" defined in <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>.<a href="#section-3.4.1-3" class="pilcrow">¶</a></p>
 <span id="name-example-of-access-token-resp"></span><div id="fig-example-AS-to-C-anchor_cnf">
-<figure id="figure-7">
+<figure id="figure-8">
             <div class="alignLeft art-text artwork" id="section-3.4.1-4.1">
 <pre>
    Header: Created (Code=2.01)
@@ -1798,8 +1918,8 @@ The parameter "aud2" is <span class="bcp14">REQUIRED</span> if the parameter "rs
    }
 </pre>
 </div>
-<figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
-<a href="#name-example-of-access-token-resp" class="selfRef">Example of Access Token Response with an access token bound to an asymmetric key, using the parameter "anchor_cnf"</a>
+<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
+<a href="#name-example-of-access-token-resp" class="selfRef">Example of Access Token Response with an access token bound to an asymmetric key, using the parameter "anchor_cnf".</a>
             </figcaption></figure>
 </div>
 </section>
@@ -1878,9 +1998,9 @@ The new payload format <span class="bcp14">MUST</span> use the Standard Problem 
           </ul>
 </li>
       </ul>
-<p id="section-5-7">An example of error response using the problem-details format is shown in <a href="#fig-example-error-response" class="auto internal xref">Figure 8</a>.<a href="#section-5-7" class="pilcrow">¶</a></p>
+<p id="section-5-7">An example of error response using the problem-details format is shown in <a href="#fig-example-error-response" class="auto internal xref">Figure 9</a>.<a href="#section-5-7" class="pilcrow">¶</a></p>
 <span id="name-example-of-error-response-w"></span><div id="fig-example-error-response">
-<figure id="figure-8">
+<figure id="figure-9">
         <div class="alignLeft art-text artwork" id="section-5-8.1">
 <pre>
 Header: Bad Request (Code=4.00)
@@ -1895,8 +2015,8 @@ Payload:
 }
 </pre>
 </div>
-<figcaption><a href="#figure-8" class="selfRef">Figure 8</a>:
-<a href="#name-example-of-error-response-w" class="selfRef">Example of Error Response with Problem Details</a>
+<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
+<a href="#name-example-of-error-response-w" class="selfRef">Example of Error Response with Problem Details.</a>
         </figcaption></figure>
 </div>
 <p id="section-5-9">Note to RFC Editor: In the figure above, please replace "TBD" with the unsigned integer assigned as key value to the Custom Problem Detail entry "ace-error" (see <a href="#iana-problem-details" class="auto internal xref">Section 7.3</a>). Then, please delete this paragraph.<a href="#section-5-9" class="pilcrow">¶</a></p>
@@ -1951,7 +2071,7 @@ Payload:
 <p id="section-7.1-3"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.1-4.1">
-            <p id="section-7.1-4.1.1">Name: "rs_cnf2"<a href="#section-7.1-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.1-4.1.1">Name: "token_hash"<a href="#section-7.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.1-4.2">
             <p id="section-7.1-4.2.1">Parameter Usage Location: token response<a href="#section-7.1-4.2.1" class="pilcrow">¶</a></p>
@@ -1966,7 +2086,7 @@ Payload:
 <p id="section-7.1-5"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.1-6.1">
-            <p id="section-7.1-6.1.1">Name: "aud2"<a href="#section-7.1-6.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.1-6.1.1">Name: "rs_cnf2"<a href="#section-7.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.1-6.2">
             <p id="section-7.1-6.2.1">Parameter Usage Location: token response<a href="#section-7.1-6.2.1" class="pilcrow">¶</a></p>
@@ -1981,7 +2101,7 @@ Payload:
 <p id="section-7.1-7"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.1-8.1">
-            <p id="section-7.1-8.1.1">Name: "anchor_cnf"<a href="#section-7.1-8.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.1-8.1.1">Name: "aud2"<a href="#section-7.1-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.1-8.2">
             <p id="section-7.1-8.2.1">Parameter Usage Location: token response<a href="#section-7.1-8.2.1" class="pilcrow">¶</a></p>
@@ -1991,6 +2111,21 @@ Payload:
 </li>
           <li class="normal" id="section-7.1-8.4">
             <p id="section-7.1-8.4.1">Reference: [RFC-XXXX]<a href="#section-7.1-8.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-7.1-9"><br></p>
+<ul class="normal">
+<li class="normal" id="section-7.1-10.1">
+            <p id="section-7.1-10.1.1">Name: "anchor_cnf"<a href="#section-7.1-10.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.1-10.2">
+            <p id="section-7.1-10.2.1">Parameter Usage Location: token response<a href="#section-7.1-10.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.1-10.3">
+            <p id="section-7.1-10.3.1">Change Controller: IESG<a href="#section-7.1-10.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.1-10.4">
+            <p id="section-7.1-10.4.1">Reference: [RFC-XXXX]<a href="#section-7.1-10.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -2018,13 +2153,13 @@ Payload:
 <p id="section-7.2-3"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.2-4.1">
-            <p id="section-7.2-4.1.1">Name: "rs_cnf2"<a href="#section-7.2-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.2-4.1.1">Name: "token_hash"<a href="#section-7.2-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-4.2">
             <p id="section-7.2-4.2.1">CBOR Key: TBD<a href="#section-7.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-4.3">
-            <p id="section-7.2-4.3.1">Value Type: array<a href="#section-7.2-4.3.1" class="pilcrow">¶</a></p>
+            <p id="section-7.2-4.3.1">Value Type: unsigned integer<a href="#section-7.2-4.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-4.4">
             <p id="section-7.2-4.4.1">Reference: [RFC-XXXX]<a href="#section-7.2-4.4.1" class="pilcrow">¶</a></p>
@@ -2033,7 +2168,7 @@ Payload:
 <p id="section-7.2-5"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.2-6.1">
-            <p id="section-7.2-6.1.1">Name: "aud2"<a href="#section-7.2-6.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.2-6.1.1">Name: "rs_cnf2"<a href="#section-7.2-6.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-6.2">
             <p id="section-7.2-6.2.1">CBOR Key: TBD<a href="#section-7.2-6.2.1" class="pilcrow">¶</a></p>
@@ -2048,7 +2183,7 @@ Payload:
 <p id="section-7.2-7"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.2-8.1">
-            <p id="section-7.2-8.1.1">Name: "anchor_cnf"<a href="#section-7.2-8.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.2-8.1.1">Name: "aud2"<a href="#section-7.2-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-8.2">
             <p id="section-7.2-8.2.1">CBOR Key: TBD<a href="#section-7.2-8.2.1" class="pilcrow">¶</a></p>
@@ -2058,6 +2193,21 @@ Payload:
 </li>
           <li class="normal" id="section-7.2-8.4">
             <p id="section-7.2-8.4.1">Reference: [RFC-XXXX]<a href="#section-7.2-8.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-7.2-9"><br></p>
+<ul class="normal">
+<li class="normal" id="section-7.2-10.1">
+            <p id="section-7.2-10.1.1">Name: "anchor_cnf"<a href="#section-7.2-10.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.2-10.2">
+            <p id="section-7.2-10.2.1">CBOR Key: TBD<a href="#section-7.2-10.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.2-10.3">
+            <p id="section-7.2-10.3.1">Value Type: array<a href="#section-7.2-10.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-7.2-10.4">
+            <p id="section-7.2-10.4.1">Reference: [RFC-XXXX]<a href="#section-7.2-10.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -2107,13 +2257,33 @@ Payload:
         <dd>
 <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Tiloca, M.</span>, and <span class="refAuthor">R. Höglund</span>, <span class="refTitle">"Ephemeral Diffie-Hellman Over COSE (EDHOC) and Object Security for Constrained Environments (OSCORE) Profile for Authentication and Authorization for Constrained Environments (ACE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-edhoc-oscore-profile-04</span>, <time datetime="2024-03-04" class="refDate">4 March 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-04">https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-04</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="I-D.ietf-ace-revoked-token-notification">[I-D.ietf-ace-revoked-token-notification]</dt>
+        <dd>
+<span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Palombini, F.</span>, <span class="refAuthor">Echeverria, S.</span>, and <span class="refAuthor">G. Lewis</span>, <span class="refTitle">"Notification of Revoked Access Tokens in the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-revoked-token-notification-07</span>, <time datetime="2024-05-27" class="refDate">27 May 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-revoked-token-notification-07">https://datatracker.ietf.org/doc/html/draft-ietf-ace-revoked-token-notification-07</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Named.Information.Hash.Algorithm">[Named.Information.Hash.Algorithm]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"Named Information Hash Algorithm"</span>, <span>&lt;<a href="https://www.iana.org/assignments/named-information/named-information.xhtml">https://www.iana.org/assignments/named-information/named-information.xhtml</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
 <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC3629">[RFC3629]</dt>
+        <dd>
+<span class="refAuthor">Yergeau, F.</span>, <span class="refTitle">"UTF-8, a transformation format of ISO 10646"</span>, <span class="seriesInfo">STD 63</span>, <span class="seriesInfo">RFC 3629</span>, <span class="seriesInfo">DOI 10.17487/RFC3629</span>, <time datetime="2003-11" class="refDate">November 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc3629">https://www.rfc-editor.org/rfc/rfc3629</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4648">[RFC4648]</dt>
+        <dd>
+<span class="refAuthor">Josefsson, S.</span>, <span class="refTitle">"The Base16, Base32, and Base64 Data Encodings"</span>, <span class="seriesInfo">RFC 4648</span>, <span class="seriesInfo">DOI 10.17487/RFC4648</span>, <time datetime="2006-10" class="refDate">October 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc4648">https://www.rfc-editor.org/rfc/rfc4648</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC6749">[RFC6749]</dt>
         <dd>
 <span class="refAuthor">Hardt, D., Ed.</span>, <span class="refTitle">"The OAuth 2.0 Authorization Framework"</span>, <span class="seriesInfo">RFC 6749</span>, <span class="seriesInfo">DOI 10.17487/RFC6749</span>, <time datetime="2012-10" class="refDate">October 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6749">https://www.rfc-editor.org/rfc/rfc6749</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6920">[RFC6920]</dt>
+        <dd>
+<span class="refAuthor">Farrell, S.</span>, <span class="refAuthor">Kutscher, D.</span>, <span class="refAuthor">Dannewitz, C.</span>, <span class="refAuthor">Ohlman, B.</span>, <span class="refAuthor">Keranen, A.</span>, and <span class="refAuthor">P. Hallam-Baker</span>, <span class="refTitle">"Naming Things with Hashes"</span>, <span class="seriesInfo">RFC 6920</span>, <span class="seriesInfo">DOI 10.17487/RFC6920</span>, <time datetime="2013-04" class="refDate">April 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6920">https://www.rfc-editor.org/rfc/rfc6920</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7252">[RFC7252]</dt>
         <dd>
@@ -2126,6 +2296,10 @@ Payload:
 <dt id="RFC8174">[RFC8174]</dt>
         <dd>
 <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8259">[RFC8259]</dt>
+        <dd>
+<span class="refAuthor">Bray, T., Ed.</span>, <span class="refTitle">"The JavaScript Object Notation (JSON) Data Interchange Format"</span>, <span class="seriesInfo">STD 90</span>, <span class="seriesInfo">RFC 8259</span>, <span class="seriesInfo">DOI 10.17487/RFC8259</span>, <time datetime="2017-12" class="refDate">December 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8259">https://www.rfc-editor.org/rfc/rfc8259</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8392">[RFC8392]</dt>
         <dd>
@@ -2193,12 +2367,8 @@ Payload:
         </h3>
 <dl class="references">
 <dt id="I-D.ietf-ace-group-oscore-profile">[I-D.ietf-ace-group-oscore-profile]</dt>
-        <dd>
-<span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Höglund, R.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"The Group Object Security for Constrained RESTful Environments (Group OSCORE) Profile of the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-group-oscore-profile-01</span>, <time datetime="2024-03-04" class="refDate">4 March 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-group-oscore-profile-01">https://datatracker.ietf.org/doc/html/draft-ietf-ace-group-oscore-profile-01</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ietf-ace-revoked-token-notification">[I-D.ietf-ace-revoked-token-notification]</dt>
       <dd>
-<span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Palombini, F.</span>, <span class="refAuthor">Echeverria, S.</span>, and <span class="refAuthor">G. Lewis</span>, <span class="refTitle">"Notification of Revoked Access Tokens in the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-revoked-token-notification-07</span>, <time datetime="2024-05-27" class="refDate">27 May 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-revoked-token-notification-07">https://datatracker.ietf.org/doc/html/draft-ietf-ace-revoked-token-notification-07</a>&gt;</span>. </dd>
+<span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Höglund, R.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"The Group Object Security for Constrained RESTful Environments (Group OSCORE) Profile of the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-group-oscore-profile-01</span>, <time datetime="2024-03-04" class="refDate">4 March 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-group-oscore-profile-01">https://datatracker.ietf.org/doc/html/draft-ietf-ace-group-oscore-profile-01</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -2348,12 +2518,12 @@ First, the RS specifies this parameter in the response sent to the AS, after the
       </h2>
 <p id="appendix-C-1">This section is to be removed before publishing as an RFC.<a href="#appendix-C-1" class="pilcrow">¶</a></p>
 <span id="name-cddl-model-2"></span><div id="fig-cddl-model">
-<figure id="figure-9">
+<figure id="figure-10">
         <div class="alignLeft art-CDDL art-text artwork" id="appendix-C-2.1">
 <pre>
 ; OAuth Parameters CBOR Mappings
 token_upload = 48
-token_hash  =49
+token_hash = 49
 aud_2 = 50
 rs_cnf_2 = 51
 anchor_cnf = 52
@@ -2365,7 +2535,7 @@ x5chain = 5
 ace-error = 2
 </pre>
 </div>
-<figcaption><a href="#figure-9" class="selfRef">Figure 9</a>:
+<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
 <a href="#name-cddl-model-2" class="selfRef">CDDL model</a>
         </figcaption></figure>
 </div>
@@ -2390,10 +2560,13 @@ ace-error = 2
             <p id="appendix-D.1-1.2.1">Revised semantics of the "token_upload" parameter.<a href="#appendix-D.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.3">
-            <p id="appendix-D.1-1.3.1">Revised high-level considerations and next steps in appendices.<a href="#appendix-D.1-1.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.3.1">Defined the new parameter "token_hash".<a href="#appendix-D.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.4">
-            <p id="appendix-D.1-1.4.1">Editorial fixes and improvements.<a href="#appendix-D.1-1.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.4.1">Revised high-level considerations and next steps in appendices.<a href="#appendix-D.1-1.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-D.1-1.5">
+            <p id="appendix-D.1-1.5.1">Editorial fixes and improvements.<a href="#appendix-D.1-1.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
