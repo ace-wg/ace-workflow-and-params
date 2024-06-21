@@ -104,8 +104,7 @@ Table of Contents
    Appendix B.  Open Points
      B.1.  New Workflow
        B.1.1.  Allow the Dynamic Update of Access Rights
-       B.1.2.  Allow the Re-uploading of the Access Token
-       B.1.3.  Ensure Applicability to Any ACE Profile
+       B.1.2.  Ensure Applicability to Any ACE Profile
      B.2.  Further New Parameters to Consider
    Appendix C.  CDDL Model
    Appendix D.  Document Updates
@@ -1301,6 +1300,19 @@ Appendix A.  Benefits for ACE Transport Profiles
          access token to the RS, specifying whether the uploading has
          succeeded or failed.
 
+   *  When the new ACE workflow is used, it remains possible for C to
+      always obtain the issued access token from the AS.
+
+      That is, by specifying the value 2 for the "token_upload"
+      parameter in the Access Token Request, C will ensure to receive
+      the access token from the AS, even in case the AS successfully
+      uploads the access token to the RS on behalf of C.
+
+      This is useful in transport profiles of ACE where C can re-upload
+      the same Access Token to the RS by itself, e.g., in order to
+      perform a key update like defined for the OSCORE profile
+      [RFC9203].
+
 A.1.  DTLS Profile
 
    When the RPK mode of the DTLS profile is used (see Section 3.2 of
@@ -1410,30 +1422,7 @@ B.1.1.  Allow the Dynamic Update of Access Rights
    included in such object or key, then that ID must be used as de facto
    "token series ID", rather than the new parameter "token_series_id".
 
-B.1.2.  Allow the Re-uploading of the Access Token
-
-   After the AS has successfully uploaded the access token to the RS
-   when using the new ACE workflow, C does not obtain the access token
-   altogether.  It follows that C cannot re-upload the Access Token to
-   the RS by itself, e.g., in order to perform a key update like defined
-   for the OSCORE profile [RFC9203].
-
-   Even in such a case, the token re-uploading can be allowed by relying
-   on a new parameter "token_hash", which the AS provides to C and
-   specifies the hash of the access token (see Appendix B.2).
-
-   Then, C can practically "re-upload" the access token to the RS, by
-   sending a request to the authz-info endpoint that includes the
-   parameter "token_hash" instead of the parameter "access_token".  Such
-   a request may include further parameters, depending on what is
-   defined for the used transport profile.
-
-   If the RS still stores the access token in question, then the RS can
-   identify it by means of the received token hash, and take the same
-   actions that would have been taken in case the full access token was
-   re-uploaded to the authz-info endpoint.
-
-B.1.3.  Ensure Applicability to Any ACE Profile
+B.1.2.  Ensure Applicability to Any ACE Profile
 
    Some profiles of ACE require that C and the RS generate information
    to be exchanged when uploading the access token.
@@ -1497,34 +1486,12 @@ B.2.  Further New Parameters to Consider
       that profile will continue to do so, and will not use this new
       parameter "token_series_id".
 
-   *  "token_hash" - This parameter specifies the hash of an access
-      token that the AS has successfully issued and uploaded to the RS
-      as per the new ACE workflow, and thus that the AS does not provide
-      to C (see Appendix B.1.1).
-
-      The AS specifies this parameter in a successful Access Token
-      Response, if and only if both the following conditions hold: i)
-      the parameter "token_upload" in the Access Token Request has value
-      1, and the parameter "token_upload" in the Access Token Response
-      has value 0 (see Section 3.1).
-
-      The parameter value is the hash computed over the value that the
-      parameter "access_token" would have had in that same Access Token
-      Response, if it was included therein and specifying the access
-      token (see Section 3.2).
-
-      This parameter allows C to seamlessly use the method defined in
-      [I-D.ietf-ace-revoked-token-notification] for learning of revoked
-      access tokens, even when the new ACE workflow is used and C has no
-      reason to obtain specifically the access token from the AS, other
-      than for computing the token hash by itself.
-
    *  "to_rs" - When using the new ACE workflow, this parameter
       specifies C-generated information that, according to the used
       profile of ACE, C has to provide to the RS together with the
       access token if using the original ACE workflow.  This allows the
       AS to relay such information to the RS upon uploading the access
-      token on behalf of C (see Appendix B.1.3).
+      token on behalf of C (see Appendix B.1.2).
 
       First, C specifies this parameter in the Access Token Request sent
       to the AS.  Then, the AS specifies this parameter in the request
@@ -1538,7 +1505,7 @@ B.2.  Further New Parameters to Consider
       profile of ACE, the RS has to provide to C after the uploading of
       an access token if using the original ACE workflow.  This allows
       the AS to relay such information to C after having uploaded the
-      access token on behalf of C (see Appendix B.1.3).
+      access token on behalf of C (see Appendix B.1.2).
 
       First, the RS specifies this parameter in the response sent to the
       AS, after the upload of an access token through a request from the
@@ -1553,9 +1520,10 @@ Appendix C.  CDDL Model
 
    ; OAuth Parameters CBOR Mappings
    token_upload = 48
-   aud_2 = 49
-   rs_cnf_2 = 50
-   anchor_cnf = 51
+   token_hash  =49
+   aud_2 = 50
+   rs_cnf_2 = 51
+   anchor_cnf = 52
 
    ; CWT Confirmation Methods
    x5chain = 5
@@ -1574,6 +1542,8 @@ D.1.  Version -01 to -02
    *  CBOR diagnostic notation uses placeholders from a CDDL model.
 
    *  Revised semantics of the "token_upload" parameter.
+
+   *  Revised high-level considerations and next steps in appendices.
 
    *  Editorial fixes and improvements.
 
