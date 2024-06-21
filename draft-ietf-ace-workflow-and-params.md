@@ -203,7 +203,7 @@ More specifically, the new workflow consists of the following steps.
 
 * Step A - Like in the original workflow, the Client sends an Access Token Request to the token endpoint at the AS, with the additional indication that it opts in to use the alternative workflow.
 
-   As defined in {{sec-token_upload}}, this information is conveyed to the AS by means of the "token_upload" parameter.
+   As defined in {{sec-token_upload}}, this information is conveyed to the AS by means of the "token_upload" parameter. The parameter also specifies what the AS has to return in the Token Response at step B, following a successful uploading of the access token from the AS to the RS.
 
 * Step A1 - This new step consists of the AS uploading the access token to the RS, typically at the authz-info endpoint, just like the Client does in the original workflow.
 
@@ -211,7 +211,7 @@ More specifically, the new workflow consists of the following steps.
 
 * Step B - In the Access Token Response, the AS tells the Client that it has attempted to upload the access token to the RS, specifying the outcome of the token uploading based on the reply received from the RS at step A2.
 
-   As defined in {{sec-token_upload}}, this information is conveyed to the Client by means of the "token_upload" parameter. If the token uploading has succeeded, the AS does not provide the Client with the access token. Otherwise, the AS provides the Client with the access token.
+   As defined in {{sec-token_upload}}, this information is conveyed to the Client by means of the "token_upload" parameter included in the Access Token Response. If the token uploading has failed, the Access Token Response also includes the access token. Otherwise, the Access Token Response includes information consistent with what was specified by the "token_upload" parameter of the Access Token Request at Step A.
 
 * Step C1 - This step occurs only if the token uploading from the AS has failed, and the AS has provided the Client with the access token at step B. In such a case, the Client uploads the access token to the RS just like at step C of the original workflow.
 
@@ -229,33 +229,49 @@ The rest of this section defines a number of additional parameters and encodings
 
 This section defines the additional parameter "token_upload". The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.
 
-* In an Access Token Request
+* The parameter "token_upload" is OPTIONAL in an Access Token Request. The presence of this parameter indicates that C opts in to use the new, alternative ACE workflow defined in {{sec-workflow}}, whose actual use for uploading the issued access token to the RS is an exclusive prerogative of the AS.
 
-   The parameter "token_upload" is OPTIONAL in an Access Token Request. If present, this parameter MUST encode the CBOR simple value `true` (0xf5). The presence of the parameter indicates that C opts in to use the new, alternative ACE workflow defined in {{sec-workflow}}, whose actual use for uploading the issued access token to the RS is an exclusive prerogative of the AS.
+  This parameter can take one of the following integer values. When using CBOR, those values are encoded as CBOR unsigned integers. The value of the parameter determines whether the follow-up successful Access Token Response will have to include certain information, in case the AS has successfully uploaded the access token to the RS.
 
-   If the AS supports the new ACE workflow and the Access Token Request includes the parameter "token_upload" with value the CBOR simple value `true` (0xf5), then the AS MAY use the new ACE workflow to upload the access token to the RS on behalf of C. Otherwise, the AS MUST NOT use the new ACE workflow.
+  - 0: The Access Token Response will have to include neither the access token nor its corresponding token hash.
 
-* In an Access Token Response
+  - 1: The Access Token Response will have to include the token hash corresponding to the access token, but not the access token.
 
-   The parameter "token_upload" is REQUIRED in a successful Access Token Response with response code 2.01 (Created), if both the following conditions apply. Otherwise, the parameter "token_upload" MUST NOT be present.
+  - 2: The Access Token Response will have to include the access token, but not the corresponding token hash.
 
-   - The corresponding Access Token Request included the parameter "token_upload", with value the CBOR simple value `true` (0xf5).
+  If the AS supports the new ACE workflow and the Access Token Request includes the parameter "token_upload" with value 0, 1, or 2, then the AS MAY use the new ACE workflow to upload the access token to the RS on behalf of C. Otherwise, the AS MUST NOT use the new ACE workflow.
 
-   - The AS has attempted to upload the issued access token at the RS as per the new ACE workflow, irrespective of the result of the token upload.
+* The parameter "token_upload" is REQUIRED in a successful Access Token Response with response code 2.01 (Created), if both the following conditions apply. Otherwise, the parameter "token_upload" MUST NOT be present.
 
-   When the parameter "token_upload" is present in the Access Token Response, the following applies.
+   - The corresponding Access Token Request included the parameter "token_upload", with value 0, 1, or 2.
 
-   - If the token upload at the RS was successful, then the parameter "token_upload" MUST encode the CBOR simple value `true` (0xf5), and the access token MUST NOT be included in the Access Token Response.
+   - The AS has attempted to upload the issued access token to the RS as per the new ACE workflow, irrespective of the result of the token upload.
 
-   - If the token upload at the RS was not successful, then the parameter "token_upload" MUST encode the CBOR simple value `false` (0xf4), and the access token MUST be included in the Access Token Response.
+   When the parameter "token_upload" is present in the Access Token Response, it can take one of the following integer values. When using CBOR, those values are encoded as CBOR unsigned integers.
+
+   - If the token upload to the RS was not successful, then the parameter "token_upload" MUST specify the value 1.
+
+     In this case, the Access Token Response MUST include the parameter "access_token" specifying the issued access token.
+
+   - If the token upload at the RS was successful, then the parameter "token_upload" MUST specify the value 0.
+
+     In this case, the Access Token Response can include additional parameters as defined below, depending on the value of the "token_upload" parameter in the corresponding Access Token Request.
+
+     - If the parameter "token_upload" in the Access Token Request specified the value 0, then the Access Token Response MUST NOT include the parameter "access_token" and MUST NOT include the parameter "token_hash" defined in {{sec-token_hash}}.
+
+     - If the parameter "token_upload" in the Access Token Request specified the value 1, then the Access Token Response MUST NOT include the parameter "access_token" and MUST include the parameter "token_hash" defined in {{sec-token_hash}}, specifying the hash corresponding to the issued access token and computed as defined in {{sec-token_hash}}.
+
+     - If the parameter "token_upload" in the Access Token Request specified the value 2, then the Access Token Response MUST include the parameter "access_token" specifying the issued access token and MUST NOT include the parameter "token_hash" defined in {{sec-token_hash}}.
 
 ### Examples
 
 {{fig-example-AS-to-C-token-upload}} shows an example with first an Access Token Request from C to the AS, and then an Access Token Response from the AS to C, following the issue of an access token bound to a symmetric PoP key.
 
-The Access Token Response specifies the parameter "token_upload" with value the CBOR simple value `true` (0xf5), which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.
+The Access Token Request specifies the parameter "token_upload" with value 0. That is, C indicates that it requires neither the access token nor the corresponding token hash from the AS, in case the AS successfully uploads the access token to the RS.
 
-Consistently, the Access Token Response does not include the access token, while it still includes the parameter "cnf" specifying the symmetric PoP key bound to the access token.
+The Access Token Response specifies the parameter "token_upload" with value 0, which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.
+
+Consistent with the value of the "token_upload" parameter in the Access Token Request, the Access Token Response includes neither the access token nor its corresponding token hash, while it still includes the parameter "cnf" specifying the symmetric PoP key bound to the access token.
 
 ~~~~~~~~~~~
    / Access Token Request /
@@ -268,7 +284,7 @@ Consistently, the Access Token Response does not include the access token, while
    {
      / audience /  5 : "tempSensor4711",
      / scope /     9 : "read",
-     e'token_upload' : true
+     e'token_upload' : 0
    }
 
 
@@ -279,7 +295,7 @@ Consistently, the Access Token Response does not include the access token, while
    Max-Age: 3560
    Payload:
    {
-     e'token_upload' : true,
+     e'token_upload' : 0,
      / expires_in / 2 : 3600,
      / cnf /        8 : {
        / COSE_Key / 1 : {
@@ -290,11 +306,59 @@ Consistently, the Access Token Response does not include the access token, while
      }
    }
 ~~~~~~~~~~~
-{: #fig-example-AS-to-C-token-upload title="Example of Access Token Request-Response Exchange. The Access Token Response includes the parameter \"token_upload\" but not the access token, which is bound to a symmetric key and was uploaded to the RS by the AS"}
+{: #fig-example-AS-to-C-token-upload title="Example of Access Token Request-Response Exchange. Following a successful uploading of the access token from the AS to the RS, the Access Token Response includes the parameter \"token_upload\" but not the access token, which is bound to a symmetric key and was uploaded to the RS by the AS"}
+
+{{fig-example-AS-to-C-token-upload-success-ret-token}} shows another example with first an Access Token Request from C to the AS, and then an Access Token Response from the AS to C, following the issue of an access token bound to a symmetric PoP key.
+
+The Access Token Request specifies the parameter "token_upload" with value 2. That is, C indicates that it requires the access token from the AS, even in case the AS successfully uploads the access token to the RS.
+
+The Access Token Response specifies the parameter "token_upload" with value 0, which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.
+
+Consistent with the value of the "token_upload" parameter in the Access Token Request, the Access Token Response includes the parameter "access_token" specifying the issued access token, together with the parameter "cnf" specifying the symmetric PoP key bound to the access token.
+
+~~~~~~~~~~~
+   / Access Token Request /
+
+   Header: POST (Code=0.02)
+   Uri-Host: "as.example.com"
+   Uri-Path: "token"
+   Content-Format: application/ace+cbor
+   Payload:
+   {
+     / audience /  5 : "tempSensor4711",
+     / scope /     9 : "read",
+     e'token_upload' : 2
+   }
+
+
+   / Access Token Response /
+
+   Header: Created (Code=2.01)
+   Content-Format: application/ace+cbor
+   Max-Age: 3560
+   Payload:
+   {
+        e'token_upload' : 0,
+     / access_token / 1 : h'd08343a1'/...
+      (remainder of CWT omitted for brevity;
+      CWT contains the symmetric PoP key in the "cnf" claim)/,
+     / expires_in /   2 : 3600,
+     / cnf /          8 : {
+       / COSE_Key / 1 : {
+         / kty / 1 : 4 / Symmetric /,
+         / kid / 2 : h'3d027833fc6267ce',
+         / k /  -1 : h'73657373696f6e6b6579'
+       }
+     }
+   }
+~~~~~~~~~~~
+{: #fig-example-AS-to-C-token-upload-success-ret-token title="Example of Access Token Request-Response Exchange. Following a successful uploading of the access token from the AS to the RS, the Access Token Response includes the parameter \"token_upload\" as well as the parameter \"access_token\" conveying the access token, which is bound to a symmetric key and was uploaded to the RS by the AS"}
 
 {{fig-example-AS-to-C-token-upload-failed}} shows another example with first an Access Token Request from C to the AS, and then an Access Token Response from the AS to C, also following the issue of an access token bound to a symmetric PoP key.
 
-In this example, the Access Token Response includes the parameter "token_upload" with value the CBOR simple value `false` (0xf4), which indicates that the AS has failed to upload the access token to the RS on behalf of C. The Access Token Response also includes the access token and the parameter "cnf" specifying the symmetric PoP key bound to the access token.
+The Access Token Request specifies the parameter "token_upload" with value 0. That is, C indicates that it requires neither the access token nor the corresponding token hash from the AS, in case the AS successfully uploads the access token to the RS.
+
+In this example, the Access Token Response includes the parameter "token_upload" with value 1, which indicates that the AS has attempted and failed to upload the access token to the RS on behalf of C. The Access Token Response also includes the parameter "access_token" specifying the issued access token, together with the parameter "cnf" specifying the symmetric PoP key bound to the access token.
 
 Note that, even though the AS has failed to upload the access token to the RS, the response code 2.01 (Created) is used when replying to C, since the Access Token Request as such has been successfully processed at the AS, with the following issue of the access token.
 
@@ -309,7 +373,7 @@ Note that, even though the AS has failed to upload the access token to the RS, t
    {
      / audience /  5 : "tempSensor4711",
      / scope /     9 : "read",
-     e'token_upload' : true
+     e'token_upload' : 0
    }
 
 
@@ -320,10 +384,10 @@ Note that, even though the AS has failed to upload the access token to the RS, t
    Max-Age: 3560
    Payload:
    {
+        e'token_upload' : 1,
      / access_token / 1 : h'd08343a1'/...
       (remainder of CWT omitted for brevity;
       CWT contains the symmetric PoP key in the "cnf" claim)/,
-        e'token_upload' : false,
      / expires_in /   2 : 3600,
      / cnf /          8 : {
        / COSE_Key / 1 : {
@@ -334,7 +398,11 @@ Note that, even though the AS has failed to upload the access token to the RS, t
      }
    }
 ~~~~~~~~~~~
-{: #fig-example-AS-to-C-token-upload-failed title="Example of Access Token Request-Response Exchange. The Access Token Response includes the parameter \"token_upload\" together with the access token, which is bound to a symmetric key and which the AS failed to upload to the RS"}
+{: #fig-example-AS-to-C-token-upload-failed title="Example of Access Token Request-Response Exchange. Following a failed uploading of the access token from the AS to the RS, the Access Token Response includes the parameter \"token_upload\" with value 1 as well the parameter \"access_token\" conveying the access token bound to a symmetric key"}
+
+## token_hash {#sec-token_hash}
+
+TBD
 
 ## rs_cnf2 and aud2 {#sec-rs_cnf2-aud2}
 
@@ -596,7 +664,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 * Name: "token_upload"
 * CBOR Key: TBD
-* Value Type: True or False
+* Value Type: unsigned integer
 * Reference: {{&SELF}}
 
 <br>
@@ -640,7 +708,9 @@ For any transport profile of ACE, the following holds.
 
 * When the new ACE workflow is used, the parameter "token_upload" defined in {{sec-token_upload}} is used:
 
-   - To inform the AS that C opts in to use the new ACE workflow; and
+   - To inform the AS about C opting in to use the new ACE workflow.
+
+   - To request the AS that the follow-up successful Access Token Response will have to include certain information, in case the AS has successfully uploaded the access token to the RS.
 
    - To inform C that the AS has attempted to upload the issued access token to the RS, specifying whether the uploading has succeeded or failed.
 
@@ -726,11 +796,11 @@ The following discusses possible, further new parameters that can be defined for
 
 * "token_hash" - This parameter specifies the hash of an access token that the AS has successfully issued and uploaded to the RS as per the new ACE workflow, and thus that the AS does not provide to C (see {{sec-open-points-workflow-dynamic-access-rights}}).
 
-   The AS specifies this parameter in a successful Access Token Response, in case the parameter "token_upload" is also specified as encoding the CBOR simple value `true` (0xf5) (see {{sec-token_upload}}). The parameter value is the hash computed over the value that the parameter "access_token" would have had in that same response message, if it was included therein specifying the access token.
+   The AS specifies this parameter in a successful Access Token Response, if and only if both the following conditions hold: i) the parameter "token_upload" in the Access Token Request has value 1, and the parameter "token_upload" in the Access Token Response has value 0 (see {{sec-token_upload}}).
 
-   C specifies this parameter in the request sent to the authz-info endpoint at the RS for "re-uploading" the same access token, e.g., in order to perform a key update (see {{sec-open-points-workflow-token-re-uploading}}).
+   The parameter value is the hash computed over the value that the parameter "access_token" would have had in that same Access Token Response, if it was included therein and specifying the access token (see {{sec-token_hash}}).
 
-   This parameter also allows C to seamlessly use the method defined in {{I-D.ietf-ace-revoked-token-notification}} for learning of revoked access tokens, even when the new ACE workflow is used and C does not obtain the access token, which makes it impossible for C to compute the token hash by itself.
+   This parameter allows C to seamlessly use the method defined in {{I-D.ietf-ace-revoked-token-notification}} for learning of revoked access tokens, even when the new ACE workflow is used and C has no reason to obtain specifically the access token from the AS, other than for computing the token hash by itself.
 
 * "to_rs" - When using the new ACE workflow, this parameter specifies C-generated information that, according to the used profile of ACE, C has to provide to the RS together with the access token if using the original ACE workflow. This allows the AS to relay such information to the RS upon uploading the access token on behalf of C (see {{sec-open-points-workflow-applicability}}).
 
@@ -764,6 +834,8 @@ ace-error = 2
 ## Version -01 to -02 ## {#sec-01-02}
 
 * CBOR diagnostic notation uses placeholders from a CDDL model.
+
+* Revised semantics of the "token_upload" parameter.
 
 * Editorial fixes and improvements.
 
