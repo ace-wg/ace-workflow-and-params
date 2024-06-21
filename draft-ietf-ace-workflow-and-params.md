@@ -44,10 +44,14 @@ author:
 
 normative:
   RFC2119:
+  RFC3629:
+  RFC4648:
   RFC6749:
+  RFC6920:
   RFC7252:
   RFC7800:
   RFC8174:
+  RFC8259:
   RFC8392:
   RFC8446:
   RFC8610:
@@ -63,15 +67,21 @@ normative:
   RFC9430:
   RFC9431:
   I-D.ietf-ace-edhoc-oscore-profile:
+  I-D.ietf-ace-revoked-token-notification:
   ACE.OAuth.Error.Code.CBOR.Mappings:
     author:
       org: IANA
     date: false
     title: OAuth Error Code CBOR Mappings
     target: https://www.iana.org/assignments/ace/ace.xhtml#oauth-error-code-cbor-mappings
+  Named.Information.Hash.Algorithm:
+    author:
+      org: IANA
+    date: false
+    title: Named Information Hash Algorithm
+    target: https://www.iana.org/assignments/named-information/named-information.xhtml
 
 informative:
-  I-D.ietf-ace-revoked-token-notification:
   I-D.ietf-ace-group-oscore-profile:
 
 entity:
@@ -99,6 +109,8 @@ This document updates {{RFC9200}} as follows.
 
    - "token_upload", used by C to inform the AS that it opts in to use the new ACE workflow, and by the AS to inform C about the outcome of the token uploading to the RS per the new workflow.
 
+   - "token_hash", used by the AS to provide C with a token hash, corresponding to an access token that the AS has issued for C and has successfully uploaded to the RS on behalf of C per the new ACE workflow.
+
    - "rs_cnf2", used by the AS to provide C with the public keys of the RSs in the group-audience for which the access token is issued (see {{Section 6.9 of RFC9200}}).
 
    - "aud2", used by the AS to provide C with the identifiers of the RSs in the group-audience for which the access token is issued.
@@ -120,15 +132,17 @@ Readers are expected to be familiar with the terms and concepts described in the
 
 The terminology for entities in the considered architecture is defined in OAuth 2.0 {{RFC6749}}. In particular, this includes Client (C), Resource Server (RS), and Authorization Server (AS).
 
-Readers are also expected to be familiar with the terms and concepts related to the CoAP protocol {{RFC7252}}, CDDL {{RFC8610}}, CBOR {{RFC8949}}, and COSE {{RFC9052}}{{RFC9053}}.
+Readers are also expected to be familiar with the terms and concepts related to CoAP {{RFC7252}}, CDDL {{RFC8610}}, CBOR {{RFC8949}}, JSON {{RFC8259}}, and COSE {{RFC9052}}{{RFC9053}}.
 
-Note that, unless otherwise indicated, the term "endpoint" is used here following its OAuth definition, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."
+Note that the term "endpoint" is used here following its OAuth definition {{RFC6749}}, aimed at denoting resources such as /token and /introspect at the AS, and /authz-info at the RS. This document does not use the CoAP definition of "endpoint", which is "An entity participating in the CoAP protocol."
 
 Furthermore, this document uses the following term.
 
 * Token series: the set comprising all the access tokens issued by the same AS for the same pair (Client, Resource Server).
 
    Profiles of ACE can provide their extended and specialized definition, e.g., by further taking into account the public authentication credentials of C and the RS.
+
+* Token hash: identifier of an access token, in binary format encoding. The token hash has no relation to other possibly used token identifiers, such as the 'cti' (CWT ID) claim of CBOR Web Tokens (CWTs) {{RFC8392}}.
 
 Concise Binary Object Representation (CBOR) {{RFC8949}} and Concise Data Definition Language (CDDL) {{RFC8610}} are used in this document. CDDL predefined type names, especially bstr for CBOR byte strings and tstr for CBOR text strings, are used extensively in this document.
 
@@ -169,7 +183,7 @@ Further interactions are possible between the AS and the RS, i.e., the exchange 
 |        |                               |              |
 +--------+                               +--------------+
 ~~~~~~~~~~~
-{: #fig-old-workflow title="ACE Basic Protocol Workflow"}
+{: #fig-old-workflow title="ACE Basic Protocol Workflow."}
 
 This section defines a new, alternative protocol workflow shown in {{fig-new-workflow}}, which MAY be supported by the AS. Unlike in the original protocol workflow, the AS uploads the access token to the RS on behalf of the Client, and then informs the Client about the outcome.
 
@@ -197,7 +211,7 @@ If the token uploading has been successfully completed, the AS does not provide 
 |        |                               |                            |
 +--------+                               +----------------------------+
 ~~~~~~~~~~~
-{: #fig-new-workflow title="ACE Alternative Protocol Workflow"}
+{: #fig-new-workflow title="ACE Alternative Protocol Workflow."}
 
 More specifically, the new workflow consists of the following steps.
 
@@ -231,7 +245,7 @@ This section defines the additional parameter "token_upload". The parameter can 
 
 * The parameter "token_upload" is OPTIONAL in an Access Token Request. The presence of this parameter indicates that C opts in to use the new, alternative ACE workflow defined in {{sec-workflow}}, whose actual use for uploading the issued access token to the RS is an exclusive prerogative of the AS.
 
-  This parameter can take one of the following integer values. When using CBOR, those values are encoded as CBOR unsigned integers. The value of the parameter determines whether the follow-up successful Access Token Response will have to include certain information, in case the AS has successfully uploaded the access token to the RS.
+  This parameter can take one of the following integer values. When the Access Token Request is encoded in CBOR, those values are encoded as CBOR unsigned integers. The value of the parameter determines whether the follow-up successful Access Token Response will have to include certain information, in case the AS has successfully uploaded the access token to the RS.
 
   - 0: The Access Token Response will have to include neither the access token nor its corresponding token hash.
 
@@ -247,7 +261,7 @@ This section defines the additional parameter "token_upload". The parameter can 
 
    - The AS has attempted to upload the issued access token to the RS as per the new ACE workflow, irrespective of the result of the token upload.
 
-   When the parameter "token_upload" is present in the Access Token Response, it can take one of the following integer values. When using CBOR, those values are encoded as CBOR unsigned integers.
+   When the parameter "token_upload" is present in the Access Token Response, it can take one of the following integer values. When the Access Token Response is encoded in CBOR, those values are encoded as CBOR unsigned integers.
 
    - If the token upload to the RS was not successful, then the parameter "token_upload" MUST specify the value 1.
 
@@ -271,7 +285,7 @@ The Access Token Request specifies the parameter "token_upload" with value 0. Th
 
 The Access Token Response specifies the parameter "token_upload" with value 0, which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.
 
-Consistent with the value of the "token_upload" parameter in the Access Token Request, the Access Token Response includes neither the access token nor its corresponding token hash, while it still includes the parameter "cnf" specifying the symmetric PoP key bound to the access token.
+Consistent with the value of the "token_upload" parameter in the Access Token Request, the Access Token Response includes neither the access token nor its corresponding token hash. The Access Token Response also includes the parameter "cnf" specifying the symmetric PoP key bound to the access token.
 
 ~~~~~~~~~~~
    / Access Token Request /
@@ -306,7 +320,7 @@ Consistent with the value of the "token_upload" parameter in the Access Token Re
      }
    }
 ~~~~~~~~~~~
-{: #fig-example-AS-to-C-token-upload title="Example of Access Token Request-Response Exchange. Following a successful uploading of the access token from the AS to the RS, the Access Token Response includes the parameter \"token_upload\" but not the access token, which is bound to a symmetric key and was uploaded to the RS by the AS"}
+{: #fig-example-AS-to-C-token-upload title="Example of Access Token Request-Response Exchange. Following a successful uploading of the access token from the AS to the RS, the Access Token Response includes the parameter \"token_upload\" but not the access token, which is bound to a symmetric key and was uploaded to the RS by the AS."}
 
 {{fig-example-AS-to-C-token-upload-success-ret-token}} shows another example with first an Access Token Request from C to the AS, and then an Access Token Response from the AS to C, following the issue of an access token bound to a symmetric PoP key.
 
@@ -314,7 +328,7 @@ The Access Token Request specifies the parameter "token_upload" with value 2. Th
 
 The Access Token Response specifies the parameter "token_upload" with value 0, which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.
 
-Consistent with the value of the "token_upload" parameter in the Access Token Request, the Access Token Response includes the parameter "access_token" specifying the issued access token, together with the parameter "cnf" specifying the symmetric PoP key bound to the access token.
+Consistent with the value of the "token_upload" parameter in the Access Token Request, the Access Token Response includes the parameter "access_token" specifying the issued access token. The Access Token Response also includes the parameter "cnf" specifying the symmetric PoP key bound to the access token.
 
 ~~~~~~~~~~~
    / Access Token Request /
@@ -352,7 +366,7 @@ Consistent with the value of the "token_upload" parameter in the Access Token Re
      }
    }
 ~~~~~~~~~~~
-{: #fig-example-AS-to-C-token-upload-success-ret-token title="Example of Access Token Request-Response Exchange. Following a successful uploading of the access token from the AS to the RS, the Access Token Response includes the parameter \"token_upload\" as well as the parameter \"access_token\" conveying the access token, which is bound to a symmetric key and was uploaded to the RS by the AS"}
+{: #fig-example-AS-to-C-token-upload-success-ret-token title="Example of Access Token Request-Response Exchange. Following a successful uploading of the access token from the AS to the RS, the Access Token Response includes the parameter \"token_upload\" as well as the parameter \"access_token\" conveying the access token, which is bound to a symmetric key and was uploaded to the RS by the AS."}
 
 {{fig-example-AS-to-C-token-upload-failed}} shows another example with first an Access Token Request from C to the AS, and then an Access Token Response from the AS to C, also following the issue of an access token bound to a symmetric PoP key.
 
@@ -398,11 +412,98 @@ Note that, even though the AS has failed to upload the access token to the RS, t
      }
    }
 ~~~~~~~~~~~
-{: #fig-example-AS-to-C-token-upload-failed title="Example of Access Token Request-Response Exchange. Following a failed uploading of the access token from the AS to the RS, the Access Token Response includes the parameter \"token_upload\" with value 1 as well the parameter \"access_token\" conveying the access token bound to a symmetric key"}
+{: #fig-example-AS-to-C-token-upload-failed title="Example of Access Token Request-Response Exchange. Following a failed uploading of the access token from the AS to the RS, the Access Token Response includes the parameter \"token_upload\" with value 1 as well the parameter \"access_token\" conveying the access token bound to a symmetric key."}
 
 ## token_hash {#sec-token_hash}
 
-TBD
+This section defines the additional parameter "token_hash". The parameter can be used in a successful Access Token Response sent as reply by the AS to C.
+
+The following refers to the base64url encoding without padding (see {{Section 5 of RFC4648}}), and denotes as "binary representation" of a text string the corresponding UTF-8 encoding {{RFC3629}}, which is the implied charset used in JSON (see {{Section 8.1 of RFC8259}}).
+
+The parameter "token_hash" is REQUIRED in a successful Access Token Response with response code 2.01 (Created), if both the following conditions apply. Otherwise, the parameter "token_hash" MUST NOT be present.
+
+* The corresponding Access Token Request included the parameter "token_upload" with value 1.
+
+* The Access Token Response includes the parameter "token_upload" with value 0. That is, the AS has successfully uploaded the issued access token to the RS, as per the new ACE workflow.
+
+This parameter specifies the token hash corresponding to the access token issued by the AS and successfully uploaded to the RS on behalf of C. In particular:
+
+* If the Access Token Response is encoded in CBOR, then the parameter "token_hash" is a CBOR byte string, with value the token hash.
+
+* If the Access Token Response is encoded in JSON, then the parameter "token_hash" has as value the binary representation of the base64url-encoded text string that encodes the token hash.
+
+The AS computes the token hash as defined in {{sec-token-hash-output}}.
+
+### Computing the Token Hash # {#sec-token-hash-output}
+
+The AS computes the token hash over the value that the parameter "access_token" would have had in the same Access Token Response, if it was included therein and specifying the access token.
+
+In particular, the input HASH_INPUT over which the token hash is computed is determined as follows.
+
+* If the Access Token Response is encoded in CBOR, then:
+
+  - BYTES denotes the value of the CBOR byte string that would be conveyed by the parameter "access_token", if this was included in the Access Token Response.
+
+  - HASH_INPUT_TEXT is the base64url-encoded text string that encodes BYTES.
+
+  - HASH_INPUT is the binary representation of HASH_INPUT_TEXT.
+
+* If the Access Token Response is encoded in JSON, then HASH_INPUT is the binary representation of the text string conveyed by the parameter "access_token", if this was included in the Access Token Response.
+
+Once determined HASH_INPUT as defined above, a hash value of HASH_INPUT is generated as per {{Section 6 of RFC6920}}. The resulting output in binary format is used as the token hash. Note that the used binary format embeds the identifier of the used hash function, in the first byte of the computed token hash.
+
+The specifically used hash function MUST be collision-resistant on byte-strings, and MUST be selected from the "Named Information Hash Algorithm" Registry {{Named.Information.Hash.Algorithm}}.
+
+The computation of token hashes defined above is aligned with that specified for the computation of token hashes in {{I-D.ietf-ace-revoked-token-notification}}, where they are used as identifiers of revoked access tokens. Therefore, given a hash algorithm and an access token, the AS computes the same corresponding token hash in either case.
+
+If the AS supports the method specified in {{I-D.ietf-ace-revoked-token-notification}}, then the AS MUST use the same hash algorithm for computing both the token hashes to include in the parameter "token_hash" and the token hashes computed per such a method to identify revoked access tokens.
+
+### Example
+
+{{fig-example-AS-to-C-token-hash}} shows an example with first an Access Token Request from C to the AS, and then an Access Token Response from the AS to C, following the issue of an access token bound to a symmetric PoP key.
+
+The Access Token Request specifies the parameter "token_upload" with value 1. That is, C indicates that it requires the token hash corresponding to the access token from the AS, in case the AS successfully uploads the access token to the RS.
+
+The Access Token Response specifies the parameter "token_upload" with value 0, which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.
+
+Consistent with the value of the "token_upload" parameter in the Access Token Request, the Access Token Response includes the parameter "token_hash", which specifies the token hash corresponding to the issued access token. The Access Token Response also includes the parameter "cnf" specifying the symmetric PoP key bound to the access token.
+
+~~~~~~~~~~~
+   / Access Token Request /
+
+   Header: POST (Code=0.02)
+   Uri-Host: "as.example.com"
+   Uri-Path: "token"
+   Content-Format: application/ace+cbor
+   Payload:
+   {
+     / audience /  5 : "tempSensor4711",
+     / scope /     9 : "read",
+     e'token_upload' : 1
+   }
+
+
+   / Access Token Response /
+
+   Header: Created (Code=2.01)
+   Content-Format: application/ace+cbor
+   Max-Age: 3560
+   Payload:
+   {
+      e'token_upload' : 0,
+        e'token_hash' : h'0153269057e12fe2b74ba07c892560a2d7
+                          53877eb62ff44d5a19002530ed97ffe4',
+     / expires_in / 2 : 3600,
+     / cnf /        8 : {
+       / COSE_Key / 1 : {
+         / kty / 1 : 4 / Symmetric /,
+         / kid / 2 : h'3d027833fc6267ce',
+         / k /  -1 : h'73657373696f6e6b6579'
+       }
+     }
+   }
+~~~~~~~~~~~
+{: #fig-example-AS-to-C-token-hash title="Example of Access Token Request-Response Exchange. Following a successful uploading of the access token from the AS to the RS, the Access Token Response includes the parameter \"token_upload\" as well as the parameter \"token_hash\". The parameter \"token_hash\" conveys the token hash corresponding to the issued access token, which is bound to a symmetric key and was uploaded to the RS by the AS."}
 
 ## rs_cnf2 and aud2 {#sec-rs_cnf2-aud2}
 
@@ -463,7 +564,7 @@ This section defines the additional parameters "rs_cnf2" and "aud2" for an Acces
              ]
    }
 ~~~~~~~~~~~
-{: #fig-example-AS-to-C-rs_cnf2 title="Example of Access Token Response with an access token bound to an asymmetric key, using the parameters \"aud2\" and \"rs_cnf2\""}
+{: #fig-example-AS-to-C-rs_cnf2 title="Example of Access Token Response with an access token bound to an asymmetric key, using the parameters \"aud2\" and \"rs_cnf2\"."}
 
 ## anchor_cnf {#sec-anchor_cnf}
 
@@ -527,7 +628,7 @@ The Access Token Response includes the parameter "anchor_cnf". This specifies th
           ]
    }
 ~~~~~~~~~~~
-{: #fig-example-AS-to-C-anchor_cnf title="Example of Access Token Response with an access token bound to an asymmetric key, using the parameter \"anchor_cnf\""}
+{: #fig-example-AS-to-C-anchor_cnf title="Example of Access Token Response with an access token bound to an asymmetric key, using the parameter \"anchor_cnf\"."}
 
 
 # Updated Requirements on Profiles # {#sec-updated-requirements}
@@ -604,7 +705,7 @@ Payload:
     }
 }
 ~~~~~~~~~~~
-{: #fig-example-error-response title="Example of Error Response with Problem Details"}
+{: #fig-example-error-response title="Example of Error Response with Problem Details."}
 
 Note to RFC Editor: In the figure above, please replace "TBD" with the unsigned integer assigned as key value to the Custom Problem Detail entry "ace-error" (see {{iana-problem-details}}). Then, please delete this paragraph.
 
@@ -639,6 +740,13 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 
 <br>
 
+* Name: "token_hash"
+* Parameter Usage Location: token response
+* Change Controller: IESG
+* Reference: {{&SELF}}
+
+<br>
+
 * Name: "rs_cnf2"
 * Parameter Usage Location: token response
 * Change Controller: IESG
@@ -663,6 +771,13 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry, following the procedure specified in {{RFC9200}}.
 
 * Name: "token_upload"
+* CBOR Key: TBD
+* Value Type: unsigned integer
+* Reference: {{&SELF}}
+
+<br>
+
+* Name: "token_hash"
 * CBOR Key: TBD
 * Value Type: unsigned integer
 * Reference: {{&SELF}}
@@ -804,7 +919,7 @@ The following discusses possible, further new parameters that can be defined for
 ~~~~~~~~~~~~~~~~~~~~ CDDL
 ; OAuth Parameters CBOR Mappings
 token_upload = 48
-token_hash  =49
+token_hash = 49
 aud_2 = 50
 rs_cnf_2 = 51
 anchor_cnf = 52
@@ -825,6 +940,8 @@ ace-error = 2
 * CBOR diagnostic notation uses placeholders from a CDDL model.
 
 * Revised semantics of the "token_upload" parameter.
+
+* Defined the new parameter "token_hash".
 
 * Revised high-level considerations and next steps in appendices.
 
