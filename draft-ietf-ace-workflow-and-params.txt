@@ -1624,6 +1624,20 @@ B.1.1.  Allow the Dynamic Update of Access Rights
    included in such object or key, then that ID must be used as de facto
    "token series ID", rather than the new "token_series_id" parameter.
 
+   Even though a "token series ID" provides an explicit indication for
+   recognizing a stored access token as belonging to an ongoing token
+   series, such a process might still be prone to ambiguities.  For
+   example, the RS might have deleted a stored access token due to
+   memory limitations.  This effectively terminates the corresponding
+   token series, which is however impractical for the RS to remember
+   indefinitely.  Consequently, if the AS uploads to the RS a new access
+   token belonging to the same token series, the RS would erroneously
+   interpret it to be the first access token of a new series.  This can
+   be avoided by relying on a new "updated_rights" parameter, which the
+   AS can include in a POST request to the /authz-info endpoint when
+   uploading to the RS an access token for dynamically updating the
+   access rights of C (see Appendix B.2).
+
 B.1.2.  Ensure Applicability to Any ACE Profile
 
    Some profiles of ACE require that C and the RS generate information
@@ -1688,6 +1702,12 @@ B.2.  Further New Parameters to Consider
       that profile will continue to do so, and will not use this new
       "token_series_id" parameter.
 
+   *  "updated_rights" - When using the new ACE workflow and issuing an
+      access token for dynamically updating the acess rights of C, the
+      AS specifies this parameter in the request sent to the RS for
+      uploading the access token on behalf of C (see Appendix B.1.1).
+      This parameter encodes the CBOR simple value true (0xf5).
+
    *  "to_rs" - When using the new ACE workflow, this parameter
       specifies C-generated information that, according to the used
       profile of ACE, C has to provide to the RS together with the
@@ -1747,7 +1767,7 @@ D.1.  Version -01 to -02
 
    *  Defined the new "token_hash" parameter.
 
-   *  Revised high-level considerations and next steps in appendices.
+   *  Revised and extended considerations and next steps in appendices.
 
    *  Editorial fixes and improvements.
 
