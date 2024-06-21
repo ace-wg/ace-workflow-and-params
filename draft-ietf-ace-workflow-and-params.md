@@ -235,6 +235,8 @@ More specifically, the new workflow consists of the following steps.
 
 The new workflow has no ambition to replace the original workflow defined in {{RFC9200}}. The AS can use one workflow or the other depending, for example, on the specific RS for which the access token has been issued and the nature of the communication leg with that RS.
 
+When using the new workflow, all the communications between the AS and the RS MUST be protected, consistent with {{Sections 5.8.4.3 and 6.5 of RFC9200}}. Unlike in the original workflow, this results in protecting also the uploading of the first access token in a token series, i.e., in addition to the uploading of the following access tokens in the token series for dynamically updating the access rights of the Client.
+
 # New ACE Parameters # {#sec-parameters}
 
 The rest of this section defines a number of additional parameters and encodings for the OAuth 2.0 token endpoint at the AS.
@@ -949,7 +951,7 @@ ace-error = 2
 
 * Revised and extended considerations and next steps in appendices.
 
-* Editorial fixes and improvements.
+* Clarifications and editorial improvements.
 
 ## Version -00 to -01 ## {#sec-00-01}
 
