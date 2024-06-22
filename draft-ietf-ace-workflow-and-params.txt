@@ -6,7 +6,7 @@ ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Updates: 9200, 9202, 9203, 9431 (if approved)                G. Selander
 Intended status: Standards Track                             Ericsson AB
-Expires: 23 December 2024                                   21 June 2024
+Expires: 24 December 2024                                   22 June 2024
 
 
   Alternative Workflow and OAuth Parameters for the Authentication and
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 December 2024.
+   This Internet-Draft will expire on 24 December 2024.
 
 Copyright Notice
 
@@ -388,6 +388,17 @@ Table of Contents
    series, i.e., in addition to the uploading of the following access
    tokens in the token series for dynamically updating the access rights
    of the Client.
+
+   Note that the new workflow is also suitable for deployments where
+   devices meant to access protected resources at the RS are not
+   required to be actual ACE Clients.  That is, consistent with intended
+   access policies, the AS can be configured to automatically issue
+   access tokens for such devices and upload those access tokens to the
+   RS.  This means that those devices do not have to request for an
+   access token to be issued in the first place, and instead can
+   immediately send requests to the RS for accessing its protected
+   resources, in accordance to the access tokens already issued and
+   uploaded by the AS.
 
 3.  New ACE Parameters
 
@@ -1770,6 +1781,8 @@ Appendix D.  Document Updates
 D.1.  Version -01 to -02
 
    *  CBOR diagnostic notation uses placeholders from a CDDL model.
+
+   *  Note on the new workflow supporting also non-ACE Clients.
 
    *  Revised semantics of the "token_upload" parameter.
 
