@@ -237,6 +237,8 @@ The new workflow has no ambition to replace the original workflow defined in {{R
 
 When using the new workflow, all the communications between the AS and the RS MUST be protected, consistent with {{Sections 5.8.4.3 and 6.5 of RFC9200}}. Unlike in the original workflow, this results in protecting also the uploading of the first access token in a token series, i.e., in addition to the uploading of the following access tokens in the token series for dynamically updating the access rights of the Client.
 
+Note that the new workflow is also suitable for deployments where devices meant to access protected resources at the RS are not required to be actual ACE Clients. That is, consistent with intended access policies, the AS can be configured to automatically issue access tokens for such devices and upload those access tokens to the RS. This means that those devices do not have to request for an access token to be issued in the first place, and instead can immediately send requests to the RS for accessing its protected resources, in accordance to the access tokens already issued and uploaded by the AS.
+
 # New ACE Parameters # {#sec-parameters}
 
 The rest of this section defines a number of additional parameters and encodings for the OAuth 2.0 token endpoint at the AS.
@@ -944,6 +946,8 @@ ace-error = 2
 ## Version -01 to -02 ## {#sec-01-02}
 
 * CBOR diagnostic notation uses placeholders from a CDDL model.
+
+* Note on the new workflow supporting also non-ACE Clients.
 
 * Revised semantics of the "token_upload" parameter.
 
