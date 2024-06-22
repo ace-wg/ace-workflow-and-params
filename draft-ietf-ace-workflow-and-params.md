@@ -49,6 +49,7 @@ normative:
   RFC6749:
   RFC6920:
   RFC7252:
+  RFC7519:
   RFC7800:
   RFC8174:
   RFC8259:
@@ -89,7 +90,7 @@ entity:
 
 --- abstract
 
-This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines a new, alternative workflow that the Authorization Server can use for uploading an access token to a Resource Server on behalf of the Client. Second, it defines new parameters and encodings for the OAuth 2.0 token endpoint at the Authorization Server. Third, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads. For such error responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431.
+This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines a new, alternative workflow that the Authorization Server can use for uploading an access token to a Resource Server on behalf of the Client. Second, it defines new parameters and encodings for the OAuth 2.0 token endpoint at the Authorization Server. Third, it defines a method for the ACE framework to enforce bidirectional access control by means of a single access token. Fourth, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads. For such error responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431.
 
 --- middle
 
@@ -116,6 +117,12 @@ This document updates {{RFC9200}} as follows.
   - "aud2", used by the AS to provide C with the identifiers of the RSs in the group-audience for which the access token is issued.
 
   - "anchor_cnf", used by the AS to provide C with the public keys of trust anchors, which C can use to validate the public key of an RS (e.g., as provided in the "rs_cnf" parameter defined in {{RFC9201}} or in the "rs_cnf2" parameter defined in this document).
+
+  - "rev_aud", used by C to provide the AS with an identifier of itself as a reverse audience, and by the AS to possibly confirm that identifier in a response to C. A corresponding access token claim, namely "rev_aud", is also defined.
+
+  - "rev_scope", used by C to ask the AS that the requested access token specifies additional access rights as a reverse scope, allowing the access token's audience to accordingly access protected resources at C. This parameter is also used by the AS to provide C with the access rights that are actually granted as reverse scope to the access token's audience. A corresponding access token claim, namely "rev_scope", is also defined.
+
+* It defines a method for the ACE framework to enforce bidirectional access control by means of a single access token (see {{sec-bidirectional-access-control}}), building on the two new parameters "rev_scope" and "rev_aud" as well as the corresponding access token claims.
 
 * It amends two of the requirements on profiles of the ACE framework (see {{sec-updated-requirements}}).
 
@@ -634,6 +641,37 @@ The Access Token Response includes the "anchor_cnf" parameter. This specifies th
 ~~~~~~~~~~~
 {: #fig-example-AS-to-C-anchor_cnf title="Example of Access Token Response with an access token bound to an asymmetric key, using the \"anchor_cnf\" parameter."}
 
+## rev_aud {#sec-rev_aud}
+
+This section defines the additional "rev_aud" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.
+
+* The "rev_aud" parameter is OPTIONAL in an Access Token Request. The presence of this parameter indicates that C wishes the requested access token to specify additional access rights. These are intended for the access token's audience to access protected resources at C as the access token's reverse audience.
+
+  This parameter specifies such a reverse audience as a text string identifier of C. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR text string.
+
+* The "rev_aud" parameter is OPTIONAL in an Access Token Response. If present, it has the same meaning and encoding that it has in the Access Token Request.
+
+Fundamentally, this parameter has the same semantics of the "aud" parameter used in the ACE framework, with the difference that it conveys an identifier of C as a host of protected resources to access, according to the access rights granted as reverse scope to the audience of the access token issued by the AS.
+
+The use of this parameter is further detailed in {{sec-bidirectional-access-control}}.
+
+## rev_scope {#sec-rev_scope}
+
+This section defines the additional "rev_scope" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.
+
+* The "rev_scope" parameter is OPTIONAL in an Access Token Request. The presence of this parameter indicates that C wishes the requested access token to specify additional access rights. These are intended for the access token's audience to access protected resources at C as the access token's reverse audience.
+
+  This parameter specifies such access rights as a reverse scope. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR text string or a CBOR byte string.
+
+* The "rev_scope" parameter is OPTIONAL in an Access Token Response. If present, this parameter specifies the access rights that the AS has actually granted as a reverse scope to the access token's audience, for accessing protected resources at C as the access token's reverse audience.
+
+Fundamentally, this parameter has the same semantics of the "scope" parameter used in ACE framework, with the difference that it conveys an identifier of C as a host of protected resources to access, according to the access rights granted as reverse scope to the audience of the access token issued by the AS.
+
+The use of this parameter is further detailed in {{sec-bidirectional-access-control}}.
+
+# Bidirectional Access Control # {#sec-bidirectional-access-control}
+
+TBD
 
 # Updated Requirements on Profiles # {#sec-updated-requirements}
 
@@ -770,6 +808,20 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 * Change Controller: IESG
 * Reference: {{&SELF}}
 
+<br>
+
+* Name: "rev_aud"
+* Parameter Usage Location: token request and token response
+* Change Controller: IESG
+* Reference: {{&SELF}}
+
+<br>
+
+* Name: "rev_scope"
+* Parameter Usage Location: token request and token response
+* Change Controller: IESG
+* Reference: {{&SELF}}
+
 ## OAuth Parameters CBOR Mappings Registry ## {#iana-oauth-cbor-mappings}
 
 IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry, following the procedure specified in {{RFC9200}}.
@@ -807,6 +859,58 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 * Value Type: array
 * Reference: {{&SELF}}
 
+<br>
+
+* Name: "rev_aud"
+* CBOR Key: TBD
+* Value Type: text string
+* Reference: {{&SELF}}
+
+<br>
+
+* Name: "rev_scope"
+* CBOR Key: TBD
+* Value Type: text string or byte string
+* Reference: {{&SELF}}
+
+## JSON Web Token Claims Registry ## {#iana-token-json-claims}
+
+IANA is asked to add the following entries to the "JSON Web Token Claims" registry, following the procedure specified in {{RFC7519}}.
+
+*  Claim Name: "rev_aud"
+*  Claim Description: The reverse audience of an access token
+*  Change Controller: IETF
+*  Reference: {{&SELF}}
+
+<br>
+
+*  Claim Name: "rev_scope"
+*  Claim Description: The reverse scope of an access token
+*  Change Controller: IETF
+*  Reference: {{&SELF}}
+
+## CBOR Web Token (CWT) Claims Registry ## {#iana-token-cwt-claims}
+
+IANA is asked to add the following entries to the "CBOR Web Token (CWT) Claims" registry, following the procedure specified in {{RFC8392}}.
+
+* Claim Name: "rev_aud"
+* Claim Description: The reverse audience of an access token
+* JWT Claim Name: "rev_aud"
+* Claim Key: TBD
+* Claim Value Type(s): text string
+* Change Controller: IESG
+* Specification Document(s): {{sec-bidirectional-access-control}} of {{&SELF}}
+
+<br>
+
+* Claim Name: "rev_scope"
+* Claim Description: The reverse scope of an access token
+* JWT Claim Name: "rev_scope"
+* Claim Key: TBD
+* Claim Value Type(s): text string or byte string
+* Change Controller: IESG
+* Specification Document(s): {{sec-bidirectional-access-control}} of {{&SELF}}
+
 ## Custom Problem Detail Keys Registry  ## {#iana-problem-details}
 
 IANA is asked to register the following entry in the "Custom Problem Detail Keys" registry within the "Constrained RESTful Environments (CoRE) Parameters" registry group.
@@ -816,6 +920,7 @@ IANA is asked to register the following entry in the "Custom Problem Detail Keys
 * Brief Description: Carry ACE {{RFC9200}} problem details in a Concise Problem Details data item.
 * Change Controller: IETF
 * Reference: {{sec-updated-error-responses}} of {{&SELF}}
+
 
 --- back
 
@@ -931,6 +1036,12 @@ token_hash = 49
 aud_2 = 50
 rs_cnf_2 = 51
 anchor_cnf = 52
+rev_aud_param = 53
+rev_scope_param = 54
+
+; CBOR Web Token (CWT) Claims
+rev_aud_claim = 42
+rev_scope_claim = 43
 
 ; CWT Confirmation Methods
 x5chain = 5
@@ -952,6 +1063,8 @@ ace-error = 2
 * Revised semantics of the "token_upload" parameter.
 
 * Defined the new "token_hash" parameter.
+
+* First definition of bidirectional access control through a single access token.
 
 * Revised and extended considerations and next steps in appendices.
 
