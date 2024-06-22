@@ -122,7 +122,7 @@ This document updates {{RFC9200}} as follows.
 
   - "rev_scope", used by C to ask the AS that the requested access token specifies additional access rights as a reverse scope, allowing the access token's audience to accordingly access protected resources at C. This parameter is also used by the AS to provide C with the access rights that are actually granted as reverse scope to the access token's audience. A corresponding access token claim, namely "rev_scope", is also defined.
 
-* It defines a method for the ACE framework to enforce bidirectional access control by means of a single access token (see {{sec-bidirectional-access-control}}), building on the two new parameters "rev_scope" and "rev_aud" as well as the corresponding access token claims.
+* It defines a method for the ACE framework to enforce bidirectional access control by means of a single access token (see {{sec-bidirectional-access-control}}), building on the two new parameters "rev_aud" and "rev_scope" as well as on the corresponding access token claims.
 
 * It amends two of the requirements on profiles of the ACE framework (see {{sec-updated-requirements}}).
 
