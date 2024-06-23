@@ -1594,7 +1594,7 @@ Table of Contents
 
    *  Parameter Usage Location: token request and token response
 
-   *  Change Controller: IESG
+   *  Change Controller: IETF
 
    *  Reference: [RFC-XXXX]
 
@@ -1604,7 +1604,7 @@ Table of Contents
 
    *  Parameter Usage Location: token response
 
-   *  Change Controller: IESG
+   *  Change Controller: IETF
 
    *  Reference: [RFC-XXXX]
 
@@ -1614,7 +1614,7 @@ Table of Contents
 
    *  Parameter Usage Location: token response
 
-   *  Change Controller: IESG
+   *  Change Controller: IETF
 
    *  Reference: [RFC-XXXX]
 
@@ -1624,7 +1624,7 @@ Table of Contents
 
    *  Parameter Usage Location: token response
 
-   *  Change Controller: IESG
+   *  Change Controller: IETF
 
    *  Reference: [RFC-XXXX]
 
@@ -1634,7 +1634,7 @@ Table of Contents
 
    *  Parameter Usage Location: token response
 
-   *  Change Controller: IESG
+   *  Change Controller: IETF
 
    *  Reference: [RFC-XXXX]
 
@@ -1644,7 +1644,7 @@ Table of Contents
 
    *  Parameter Usage Location: token request and token response
 
-   *  Change Controller: IESG
+   *  Change Controller: IETF
 
    *  Reference: [RFC-XXXX]
 
@@ -1654,7 +1654,7 @@ Table of Contents
 
    *  Parameter Usage Location: token request and token response
 
-   *  Change Controller: IESG
+   *  Change Controller: IETF
 
    *  Reference: [RFC-XXXX]
 
@@ -1771,7 +1771,7 @@ Table of Contents
 
    *  Claim Value Type(s): text string
 
-   *  Change Controller: IESG
+   *  Change Controller: IETF
 
    *  Specification Document(s): Section 4 of [RFC-XXXX]
 
@@ -1787,7 +1787,7 @@ Table of Contents
 
    *  Claim Value Type(s): text string or byte string
 
-   *  Change Controller: IESG
+   *  Change Controller: IETF
 
    *  Specification Document(s): Section 4 of [RFC-XXXX]
 
