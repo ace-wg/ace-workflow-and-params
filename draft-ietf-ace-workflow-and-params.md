@@ -1045,9 +1045,9 @@ IANA is asked to add the following entries to the "CBOR Web Token (CWT) Claims" 
 * Claim Description: The reverse audience of an access token
 * JWT Claim Name: "rev_aud"
 * Claim Key: TBD
-* Claim Value Type(s): text string
+* Claim Value Type: text string
 * Change Controller: IETF
-* Specification Document(s): {{sec-bidirectional-access-control}} of {{&SELF}}
+* Reference: {{sec-bidirectional-access-control}} of {{&SELF}}
 
 <br>
 
@@ -1055,9 +1055,9 @@ IANA is asked to add the following entries to the "CBOR Web Token (CWT) Claims" 
 * Claim Description: The reverse scope of an access token
 * JWT Claim Name: "rev_scope"
 * Claim Key: TBD
-* Claim Value Type(s): text string or byte string
+* Claim Value Type: text string or byte string
 * Change Controller: IETF
-* Specification Document(s): {{sec-bidirectional-access-control}} of {{&SELF}}
+* Reference: {{sec-bidirectional-access-control}} of {{&SELF}}
 
 ## Custom Problem Detail Keys Registry  ## {#iana-problem-details}
 
