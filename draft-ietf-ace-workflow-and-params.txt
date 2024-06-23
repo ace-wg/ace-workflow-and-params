@@ -1295,7 +1295,7 @@ Table of Contents
       issue an access token and reply to DEV1 with a successful Access
       Token Response.
 
-   As to the successul Access Token Response that AS sends to DEV1, the
+   As to the successful Access Token Response that AS sends to DEV1, the
    following applies.
 
    *  The "aud" and "scope" parameters are used as defined in [RFC9200],
