@@ -759,7 +759,7 @@ When receiving an Access Token Request that includes at least one of the two par
 
   It is REQUIRED that such evaluation succeeds, in order for AS to issue an access token and reply to DEV1 with a successful Access Token Response.
 
-As to the successul Access Token Response that AS sends to DEV1, the following applies.
+As to the successful Access Token Response that AS sends to DEV1, the following applies.
 
 * The "aud" and "scope" parameters are used as defined in {{RFC9200}}, and according to the transport profile of ACE used by DEV1 and DEV2.
 
