@@ -163,7 +163,7 @@ Note to RFC Editor: Please delete the paragraph immediately preceding this note.
 
 As defined in {{Section 4 of RFC9200}}, the ACE framework considers what is shown in {{fig-old-workflow}} as its basic protocol workflow.
 
-That is, the Client first sends an access token request to the token endpoint at the AS (step A), specifying permissions that it seeks to obtain for accessing protected resources at the RS, possibly together with information on its own public authentication credentials.
+That is, the Client first sends an Access Token Request to the token endpoint at the AS (step A), specifying permissions that it seeks to obtain for accessing protected resources at the RS, possibly together with information on its own public authentication credentials.
 
 Then, if the request has been successfully verified, authenticated, and authorized, the AS replies to the Client (step B), providing an access token and possibly additional parameters as access information including the actually granted permissions.
 
@@ -671,7 +671,155 @@ The use of this parameter is further detailed in {{sec-bidirectional-access-cont
 
 # Bidirectional Access Control # {#sec-bidirectional-access-control}
 
+In some deployments, two devices DEV1 and DEV2 might wish to access each other's protected resources. This can clearly be achieved by means of two separate access tokens, each of which is used to enforce access control in one direction. That is:
+
+* A first access token is requested by and issued to DEV1, for accessing protected resources at DEV2. With respect to this access token, DEV1 is an ACE Client, while DEV2 is an ACE RS.
+
+* A second access token is requested by and issued to DEV2, for accessing protected resources at DEV1. With respect to this access token, DEV2 is an ACE Client, while DEV1 is an ACE RS.
+
+This section defines how to enforce such a bidirectional access control by means of a single access token, which is requested by and issued to a device DEV1 acting as ACE Client. In particular:
+
+* The access token expresses access rights according to which the requesting ACE Client DEV1 can access protected resources hosted at the ACE RS DEV2.
+
+  For this first direction of access control, the target DEV2 is specified by means of the "aud" parameter and the corresponding access token claim, while the access rights are specified by means of the "scope" parameter and the corresponding access token claim.
+
+  This is the original, primary direction of access control, where the ACE Client DEV1 that requests the access token wishes access rights to access protected resources at the ACE RS DEV2.
+
+* The same access token additionally expresses access rights according to which the ACE RS DEV2 can access protected resources hosted at the ACE Client DEV1.
+
+  For this second direction of access control, the target DEV1 is specified by means of the "rev_aud" parameter defined in {{sec-rev_aud}} and the corresponding access token claim defined in this section, while the access rights are specified by means of the "rev_scope" parameter defined in {{sec-rev_scope}} and the corresponding access token claim defined in this section.
+
+  This is the new, secondary direction of access control, where the ACE Client DEV1 that requests the access token also wishes access rights for the ACE RS DEV2 to access resources at DEV1.
+
+  Clearly, this requires the ACE Client DEV1 to also act as CoAP server, and the ACE RS DEV2 to also act as CoAP client.
+
+Like for the original case with a single access control direction, the access token is uploaded to the ACE RS DEV2, which processes the access token as per {{Section 5.10 of RFC9200}} and according to the transport profile of ACE used by DEV1 and DEV2.
+
+The protocol workflow is detailed in the following {{sec-bidirectional-access-control-one-as}} and {{sec-bidirectional-access-control-two-as}}, in case only one Authorization Server or two Authorization Servers are involved, respectively.
+
+## Scenario with One Authorization Server # {#sec-bidirectional-access-control-one-as}
+
+As shown in {{fig-bidirectional-one-as}}, this section considers a scenario with a single Authorization Server AS. Both devices DEV1 and DEV2 are registered at AS, and each of them with permissions to access protected resources at the other device. In the following, DEV1 acts as ACE Client by requesting an access token from AS.
+
+~~~~~~~~~~~ aasvg
+- DEV1 is registered as:                       +----+
+  - Device authorized to access DEV2; and      |    |
+  - Device that can be accessed by DEV2        |    |
+                                               |    |
+- DEV2 is registered as:                       | AS |
+  - Device that can be accessed by DEV1; and   |    |
+  - Device authorized to access DEV1           |    |
+                                               |    |
+                                               +----+
+
+                                                  ^
+                                                  |
+                                                  |
+                                                  |
+                                                  v
+
+ DEV2                                           DEV1
++----+                                          +---+
+| RS | <--------------------------------------> | C |
++----+                                          +---+
+~~~~~~~~~~~
+{: #fig-bidirectional-one-as title="Bidirectional access control with one Authorization Server."}
+
+### Access Token Request # {#sec-bidirectional-access-control-one-as-req}
+
+As to the Access Token Request that DEV1 sends to AS, the following applies.
+
+* The "aud" and "scope" parameters are used as defined in {{RFC9200}}, and according to the transport profile of ACE used by DEV1 and DEV2.
+
+  In particular, "aud" specifies an identifier of DEV2, while "scope" specifies access rights that DEV1 wishes to obtain for accessing protecting resources at DEV2.
+
+  That is, the two parameters pertain to the primary direction of access control.
+
+* The "req_cnf" parameter defined in {{RFC9201}} can be included. When present, it specifies the key that DEV1 wishes to bind to the requested access token.
+
+* The "rev_aud" and "rev_scope" parameters defined in {{sec-rev_aud}} and {{sec-rev_scope}} can be included.
+
+  In particular, "rev_aud" specifies an identifier of DEV1, while "rev_scope" specifies access rights that DEV1 wishes for DEV2 to obtain for accessing protecting resources at DEV1.
+
+  That is, the two parameters pertain to the secondary direction of access control.
+
+If DEV1 wishes that the requested access token also provides DEV2 with access rights pertaining to the secondary direction of access control, then the Access Token Request has to include at least one of the two parameters "rev_aud" and "rev_scope".
+
+### Access Token Response # {#sec-bidirectional-access-control-one-as-resp}
+
+When receiving an Access Token Request that includes at least one of the two parameters "rev_aud" and "rev_scope", AS processes it as defined in {{Section 5.2 of RFC9200}}, with the following additions:
+
+* If the Access Token Request includes the "rev_scope" parameter but not the "rev_aud" parameter, then AS assumes the identifier of DEV1 to be the default one, if any is defined.
+
+* If the Access Token Request includes the "rev_aud" parameter but not the "rev_scope" parameter, then AS assumes the access rights requested for DEV2 to access DEV1 to be the default ones, if any are defined.
+
+* AS checks whether the access rights requested for DEV2 as reverse scope can be at least partially granted, in accordance with the installed access policies pertaining to the access to protected resources at DEV1 from DEV2.
+
+  That is, AS performs the same evaluation that it would perform if DEV2 sent an Access Token Request as an ACE Client, with the intent to access protected resources at DEV1 as an ACE RS.
+
+  It is REQUIRED that such evaluation succeeds, in order for AS to issue an access token and reply to DEV1 with a successful Access Token Response.
+
+As to the successul Access Token Response that AS sends to DEV1, the following applies.
+
+* The "aud" and "scope" parameters are used as defined in {{RFC9200}}, and according to the transport profile of ACE used by DEV1 and DEV2.
+
+  In particular, "aud" specifies an identifier of DEV2, while "scope" specifies the access rights that AS has granted to DEV1 for accessing protecting resources at DEV2.
+
+  The "scope" parameter has to be present if: i) it was present in the Access Token Request, and the access rights granted to DEV1 are different from the requested ones; or ii) it was not present in the Access Token Request, and the access rights granted to DEV1 are different from the default ones.
+
+  If the "scope" parameter is not present, then the granted access rights are the same as those requested by the "scope" parameter in the Access Token Request if present therein, or the default access rights otherwise.
+
+* The "rs_cnf" parameter defined in {{RFC9201}} can be included. When present, it specifies information about the public key that DEV2 uses to authenticate.
+
+* The "rev_aud" parameter defined in {{sec-rev_aud}} can be included, and specifies an identifier of DEV1.
+
+  If the "rev_aud" parameter is present in the Access Token Response and it was also present in the Access Token Request, then the parameter in the Access Token Response MUST have the same value specified by the parameter in the Access Token Request.
+
+* The "rev_scope" parameter defined in {{sec-rev_scope}} can be included, and specifies access rights that AS has granted to DEV2 for accessing protecting resources at DEV1.
+
+  The "rev_scope" parameter MUST be present if: i) it was present in the Access Token Request, and the access rights granted to DEV2 are different from the requested ones; or ii) it was not present in the Access Token Request, and the access rights granted to DEV2 are different from the default ones.
+
+  If the "rev_scope" parameter is not present, then the access rights granted to DEV2 are the same as those requested by the "rev_scope" parameter in the Access Token Request if present therein, or the default access rights otherwise.
+
+The issued access token MUST include information about the reverse audience and reverse scope pertaining to the secondary access control direction. In particular:
+
+* The access token MUST contain a claim specifying the identifier of DEV1.
+
+  If the Access Token Response includes the "rev_aud" parameter, then the claim specifies the same information conveyed by that parameter.
+
+  If this is not the case, then the claim specifies the same information conveyed by the "rev_aud" parameter of the Access Token Request, if included therein, or the default identifier of DEV1 otherwise.
+
+  When CWTs are used as access tokens, this information MUST be transported in the "rev_aud" claim defined in {{iana-token-cwt-claims}}.
+
+* The access token MUST contain a claim specifying the access rights that AS has granted to DEV2 for accessing protecting resources at DEV1.
+
+  If the Access Token Response includes the "rev_scope" parameter, then the claim specifies the same information conveyed by that parameter.
+
+  If this is not the case, then the claim specifies the same information conveyed by the "rev_scope" parameter of the Access Token Request, if included therein, or the default access rights for DEV2 to access DEV1 otherwise.
+
+  When CWTs are used as access tokens, this information MUST be transported in the "rev_scope" claim, defined in {{iana-token-cwt-claims}}.
+
+### Access to Protected Resources # {#sec-bidirectional-access-control-one-as-comm}
+
+As to the secure communication association between DEV1 and DEV2, its establishment and maintenance does not deviate from what is defined in the transport profile of ACE used by DEV1 and DEV2.
+
+Furthermore, communications between DEV1 and DEV2 MUST rely on such secure communication association for both directions of access control, i.e., when DEV1 accesses protected resources at DEV2 and vice versa.
+
+After having received a successful Access Token Response from AS, DEV1 MUST maintain and enforce the information about the access rights granted to DEV2 and pertaining the secondary access control direction.
+
+In particular, DEV1 MUST prevent DEV2 from accessing protected resources at DEV1, in case access requests from DEV2 are not authorized as per the reverse scope specified by the issued access token, or after having purged the issued access token (e.g., following its expiration of revocation).
+
+## Scenario with Two Authorization Servers # {#sec-bidirectional-access-control-two-as}
+
 TBD
+
+## Practical Considerations
+
+When enforcing bidirectional access control by means of a single access token, the following considerations hold.
+
+* The access token can be uploaded to the ACE RS DEV2 by the ACE Client per the original ACE workflow, or by the AS that has issued the access token per the new ACE workflow defined in {{sec-workflow}}.
+
+* Since the access token is requested by the ACE Client DEV1, only DEV1 can request for a new access token in the same token series, in order to dynamically update the access rights concerning its own access to protected resources hosted by DEV2 (on the primary access control direction) and/or the access rights concerning the access of DEV2 to access protected resources hosted by DEV1 (on the secondary access control direction).
 
 # Updated Requirements on Profiles # {#sec-updated-requirements}
 
