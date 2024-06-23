@@ -2199,7 +2199,7 @@ B.2.  Further New Parameters to Consider
       "token_series_id" parameter.
 
    *  "updated_rights" - When using the new ACE workflow and issuing an
-      access token for dynamically updating the acess rights of C, the
+      access token for dynamically updating the access rights of C, the
       AS specifies this parameter in the request sent to the RS for
       uploading the access token on behalf of C (see Appendix B.1.1).
       This parameter encodes the CBOR simple value true (0xf5).
@@ -2285,7 +2285,7 @@ D.2.  Version -00 to -01
 
    *  Clarifications and fixes on using parameters in messages.
 
-   *  Amendeded two of the requirements on profiles of the framework.
+   *  Amended two of the requirements on profiles of the framework.
 
    *  The Client has to opt-in for using the alternative workflow.
 
