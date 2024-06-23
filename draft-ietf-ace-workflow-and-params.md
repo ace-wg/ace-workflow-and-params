@@ -1164,7 +1164,7 @@ The following discusses possible, further new parameters that can be defined for
 
   If a profile of ACE can use or is already using a different parameter/claim as de-facto identifier of the token series, then that profile will continue to do so, and will not use this new "token_series_id" parameter.
 
-* "updated_rights" - When using the new ACE workflow and issuing an access token for dynamically updating the acess rights of C, the AS specifies this parameter in the request sent to the RS for uploading the access token on behalf of C (see {{sec-open-points-workflow-dynamic-access-rights}}). This parameter encodes the CBOR simple value `true` (0xf5).
+* "updated_rights" - When using the new ACE workflow and issuing an access token for dynamically updating the access rights of C, the AS specifies this parameter in the request sent to the RS for uploading the access token on behalf of C (see {{sec-open-points-workflow-dynamic-access-rights}}). This parameter encodes the CBOR simple value `true` (0xf5).
 
 * "to_rs" - When using the new ACE workflow, this parameter specifies C-generated information that, according to the used profile of ACE, C has to provide to the RS together with the access token if using the original ACE workflow. This allows the AS to relay such information to the RS upon uploading the access token on behalf of C (see {{sec-open-points-workflow-applicability}}).
 
@@ -1224,7 +1224,7 @@ ace-error = 2
 
 * Clarifications and fixes on using parameters in messages.
 
-* Amendeded two of the requirements on profiles of the framework.
+* Amended two of the requirements on profiles of the framework.
 
 * The Client has to opt-in for using the alternative workflow.
 
