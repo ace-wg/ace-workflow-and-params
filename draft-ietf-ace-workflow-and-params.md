@@ -925,49 +925,49 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 
 * Name: "token_upload"
 * Parameter Usage Location: token request and token response
-* Change Controller: IESG
+* Change Controller: IETF
 * Reference: {{&SELF}}
 
 <br>
 
 * Name: "token_hash"
 * Parameter Usage Location: token response
-* Change Controller: IESG
+* Change Controller: IETF
 * Reference: {{&SELF}}
 
 <br>
 
 * Name: "rs_cnf2"
 * Parameter Usage Location: token response
-* Change Controller: IESG
+* Change Controller: IETF
 * Reference: {{&SELF}}
 
 <br>
 
 * Name: "aud2"
 * Parameter Usage Location: token response
-* Change Controller: IESG
+* Change Controller: IETF
 * Reference: {{&SELF}}
 
 <br>
 
 * Name: "anchor_cnf"
 * Parameter Usage Location: token response
-* Change Controller: IESG
+* Change Controller: IETF
 * Reference: {{&SELF}}
 
 <br>
 
 * Name: "rev_aud"
 * Parameter Usage Location: token request and token response
-* Change Controller: IESG
+* Change Controller: IETF
 * Reference: {{&SELF}}
 
 <br>
 
 * Name: "rev_scope"
 * Parameter Usage Location: token request and token response
-* Change Controller: IESG
+* Change Controller: IETF
 * Reference: {{&SELF}}
 
 ## OAuth Parameters CBOR Mappings Registry ## {#iana-oauth-cbor-mappings}
@@ -1046,7 +1046,7 @@ IANA is asked to add the following entries to the "CBOR Web Token (CWT) Claims" 
 * JWT Claim Name: "rev_aud"
 * Claim Key: TBD
 * Claim Value Type(s): text string
-* Change Controller: IESG
+* Change Controller: IETF
 * Specification Document(s): {{sec-bidirectional-access-control}} of {{&SELF}}
 
 <br>
@@ -1056,7 +1056,7 @@ IANA is asked to add the following entries to the "CBOR Web Token (CWT) Claims" 
 * JWT Claim Name: "rev_scope"
 * Claim Key: TBD
 * Claim Value Type(s): text string or byte string
-* Change Controller: IESG
+* Change Controller: IETF
 * Specification Document(s): {{sec-bidirectional-access-control}} of {{&SELF}}
 
 ## Custom Problem Detail Keys Registry  ## {#iana-problem-details}
