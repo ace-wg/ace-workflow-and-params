@@ -1769,11 +1769,11 @@ Table of Contents
 
    *  Claim Key: TBD
 
-   *  Claim Value Type(s): text string
+   *  Claim Value Type: text string
 
    *  Change Controller: IETF
 
-   *  Specification Document(s): Section 4 of [RFC-XXXX]
+   *  Reference: Section 4 of [RFC-XXXX]
 
 
 
@@ -1785,11 +1785,11 @@ Table of Contents
 
    *  Claim Key: TBD
 
-   *  Claim Value Type(s): text string or byte string
+   *  Claim Value Type: text string or byte string
 
    *  Change Controller: IETF
 
-   *  Specification Document(s): Section 4 of [RFC-XXXX]
+   *  Reference: Section 4 of [RFC-XXXX]
 
 8.5.  Custom Problem Detail Keys Registry
 
