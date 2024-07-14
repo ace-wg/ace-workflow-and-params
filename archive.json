@@ -1,0 +1,95 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2024-07-14T01:06:14.550975+00:00",
+  "repo": "ace-wg/ace-workflow-and-params",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDOK8tnic6C1qzJ",
+      "title": "Expressing role reversal in ACE",
+      "url": "https://github.com/ace-wg/ace-workflow-and-params/issues/1",
+      "state": "OPEN",
+      "author": "chrysn",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "(I've lost track where we've discussed this before, let's link resources into here as we find them, because I think that this is the maturest we've ever got this)\r\n\r\nCoAP and OSCORE are really good at using a single channel for bidirectional requests; also EDHOC is quite flexible there (https://github.com/ace-wg/ace-edhoc-oscore-profile/issues/8 is rather easy, https://github.com/lake-wg/authz/issues/21 is harder but probably still possible). ACE, on the other hand, has a rather fixed mind set on who is the client and who is the server.\r\n\r\nA starting point for illustrating ACE's trouble are [RD extensions](https://www.ietf.org/archive/id/draft-amsuess-core-resource-directory-extensions-10.html#name-combining-simple-registrati): Depending on who is the ACE client in the initial EDHOC handshake between the RD and the EP, the same set of authorizations that should be expressed for that connection is phrased in either of two ways:\r\n* If the EP is the ACE client, the token conveys the authorization to POST to /register?ep=endpoint-name, assures the client that the RD is really an AS recognized server, and implies that the RD is authorized to GET the unfiltered /.well-known/core of the EP in role reversal (assuring the RD that it indeed is the very EP that may provide the information for endpoint-name).\r\n* If the RS is the ACE client, the token conveys the authorization to GET the unfiltered /.well-known/core of the EP, assuring the RS that the EP's identity (expressed as an audience) is that which may be consumed into endpoint-name's links. It implies that the EP may POST to the registration URI, and that the server it POSTs to is really the RD recognized by the AS.\r\n\r\nWhile symmetrical in concept, the claims in the tokens for those directions don't look anything like symmetry, and the inference is sketchy at best.\r\n\r\n### Easy alternatives\r\n\r\nThe easiest way to address this is to not address it at all. In a role reversal situation, both parties take a token, both POST (or EAD3) it to their peer, they create and maintain two separate OSCORE connections, and at least share a CoAP context.\r\n\r\nThis works (albeit at the cost of a few more communication hops, possibly enabled by one of the parties acting as a proxy), but it should at least satisfy most security requirements. (It doesn't reveal anything new about who is sending requests: that information is plain in OSCORE and usually apparent in transport layer security).\r\n\r\n### There has to be a better way\r\n\r\nA sketched solution.\r\n\r\n![diagram-export-19-03-2024-21_09_39](https://github.com/ace-wg/ace-workflow-and-params/assets/442326/35995885-47a1-4977-8311-0a894cae7486)\r\n\r\n(sorry for the image quality, the eraser.io board on the IETF tables is a major lock-in trap, free to play but pay to properly save).\r\n\r\nLet's introduce two new parameters, which can show up in the claims inside a token as well as in the token response:\r\n* rev_scope: When the C receives requests from the RS (in role *rev*ersed mode), that peer is authorized to act with the indicated *scope*. This is part of the token response C receives from the AS.\r\n  The AS may pack them in for the C as a surprise (like broadening a scope, because it knows that the they are authorized), or C may request that rev_scope and rev_aud explicitly.\r\n* rev_aud: When RS sends requests to C as part of role *rev*ersal, C is authenticated to be (in) the described *aud*ience. This is part of the token that the RS decrypts or otherwise verifies.\r\n\r\nCombined, these describe which actions are allowed in role reversed mode.\r\n\r\nIn the motivating example, these restore the symmetry between the two matchings between RD and ACE roles: What is the scope and rev_aud that the a party receives when acting as ACE RS is the rev_scope and aud which the it receives when acting as ACE Client.\r\n\r\n#### Further application\r\n\r\n* rs_cnf is really a bit like rev_cnf -- that was one of the first times this whole thing surfaced. We won't retroactively rename it, but could treat it as an honorary rev_*.\r\n* If someone ever wanted to build a workflow where party C asks a token of the AS, uses the alternative flow described in the document to have the token pushed down to the RS, and the RS should be the one that sends a Session ID to the RS, they could legitimately register a rev_session_id. (We will probably not do this here, because EDHOC is by far flexible enough to just leave it the regular way \u2013 but for symmetry, we could).\r\n\r\n#### Remaining asymmetries\r\n\r\nThe one asymmetry left is that any token renewal (eg. when it is about to expire) is still with the original C.\r\nThere may be ways to do this (possibly by giving C access to the token series on the AS), but those are not well thought through, and at least for the cases considered so far, this is not needed anyway.\r\n\r\n### Explaining it to anyone who points out that just because one direction's C can play C towards an AS doesn't mean that its resources as an RS take orders from that AS\r\n\r\nThe easy answer:\r\n\r\nThe application has just requested a token for some scope, and is hopefully aware that role reversal is about to happen. It better grant access to the resources described there, even though it's not coming from the responsible AS, but it's coming from the application itself that has just authorized the an operation that will necessitate allowing this access, and by being covered by the ACE token it at least can be sure that the resource access is only available to the right peer.\r\n\r\nThe elaborate answer:\r\n\r\nThere may be a game of two tokens somewhere in there, where as a part of the token response C receives from the AS where it requests a token it also receives an actual token from the AS responsible for it as an RS, and the token encrypted for the RS contains an additional encapsulated token response which its own responsible AS packed in there for the other AS.\r\n\r\nIf that becomes the canonical explanation (and it'd need someone to flesh it out), rev_aud can be retconned as a shorthand for \"imagine there is an encapsulated token response you have here, and it contains this aud\", and rev_scope would be \"imagine this token response had a token encapsulated in there, and this is its scope\" \u2013 but it is all shorthand because so far it's all just managed by a single AS.",
+      "createdAt": "2024-03-19T14:18:23Z",
+      "updatedAt": "2024-03-19T15:51:46Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "chrysn",
+          "authorAssociation": "NONE",
+          "body": "There is one more bit on the topic of groups: When a token is issued for a group, the C gets no `aud` in the token response but an `aud2`. Depending on how scopes are phrased in the system, such a response could either\r\n* contain a `rev_scope2` that has a scope per peer. (Like, one may access `/conf/for/device1` and the other `/conf/for/device7`)\r\n* contain a `rev_scope` that applies just the same to all peers, and may be influenced by other parameters (such as the precise `aud2` value).\r\n\r\nThe latter is probably preferable from an efficiency point of view.",
+          "createdAt": "2024-03-19T15:51:45Z",
+          "updatedAt": "2024-03-19T15:51:45Z"
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "id": "I_kwDOK8tnic6Ogf2M",
+      "title": "anchor_cnf: Tools or guidance against group mixup",
+      "url": "https://github.com/ace-wg/ace-workflow-and-params/issues/2",
+      "state": "OPEN",
+      "author": "chrysn",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "anchor_cnf is particularly useful when working with group audiences \u2013 say, there are 100 air quality and 100 temperature sensors.\r\n\r\n(I'm assuming EDHOC and CWTs here because those are what I know, and anchor_cnf is described generally so it should work for those)\r\n\r\nA smart phone that warns a user of dangerous levels of fumes around it may obtain from the AS a token that grants the user read access to the air quality sensors, and (by virtue of the mutual authentication usually afforded by a token) will also authenticate the sensor.\r\n\r\nTrouble is: Any temperature sensor can impersonate an air quality sensor. One of the reasons why group audiences would be used is if the client can not enumerate the group members ahead of time, so it asks for a token that'll grant it read access on \"all air quality sensors\" by requesting a token with the group audience. But if it can't enumerate them, it may also not know how to assess group membership.\r\n\r\nThere are some mitigations I can imagine:\r\n* There could be an explicit requirement that unless there is some credential-type specific way of indicating group membership, an anchor_cnf must be unique to the group (eg. by having a signing key per group, and the CWTs are countersigned by all the group private keys that thing is a member of).\r\n* The credentials can always encode the group (which was requested in the \"audience\" of the token request) in their \"subject\" \u2013 but then the \"subject\" field is unavailable for a detailed subject identification, and the server may not even know as which group to present when being contacted, or may not want to keep a signed credential for every single group it is in.\r\n* There could be some rules encoded along the anchor_cnf, whose shape is specific to the type of confirmation. That's rather complex, though.\r\n* There could be a stated requirement that the application has to ship such a rule. For a simple demo case, that could mean that group names contain wildcards, and the \"subject\" in the server's CWT has to match that wildcard pattern (in whichever precise wildcard rules that application uses).\r\n\r\n(And BTW, I think I understand anchor_cnf better now, and eventually it should mesh well with #1, at least if the authentication-vs-authorization assignments line up well \u2013 especially if there is a way to upgrade tokens).",
+      "createdAt": "2024-07-04T13:29:12Z",
+      "updatedAt": "2024-07-04T13:36:47Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
+  "pulls": []
+}
