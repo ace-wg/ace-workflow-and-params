@@ -113,7 +113,7 @@ Table of Contents
    9.  References
      9.1.  Normative References
      9.2.  Informative References
-   Appendix A.  Benefits for ACE Transport Profiles
+   Appendix A.  Benefits for ACE Profiles
      A.1.  DTLS Profile
      A.2.  EDHOC and OSCORE Profile
    Appendix B.  Open Points
@@ -290,7 +290,7 @@ Table of Contents
    That is, the client first sends an Access Token Request to the token
    endpoint at the AS (step A), specifying permissions that it seeks to
    obtain for accessing protected resources at the RS, possibly together
-   with information on its own public authentication credentials.
+   with information on its own public authentication credential.
 
    Then, if the request has been successfully verified, authenticated,
    and authorized, the AS replies to the client (step B), providing an
@@ -303,9 +303,9 @@ Table of Contents
    result of the resource access (step F).  Details about what protocol
    the client and the RS use to establish a secure association, mutually
    authenticate, and secure their communications are defined in the
-   specifically used profile of ACE, e.g., [RFC9202][RFC9203][RFC9431][I
-   -D.ietf-ace-edhoc-oscore-profile][I-D.ietf-ace-group-oscore-profile][
-   RFC9431].
+   specific profile of ACE used, e.g., [RFC9202][RFC9203][RFC9431][I-D.i
+   etf-ace-edhoc-oscore-profile][I-D.ietf-ace-group-oscore-profile][RFC9
+   431].
 
    Further interactions are possible between the AS and the RS, i.e.,
    the exchange of an introspection request and response where the AS
@@ -337,12 +337,13 @@ Table of Contents
    protocol workflow, the AS uploads the access token to the RS on
    behalf of the client, and then informs the client about the outcome.
 
-   If the token uploading has been successfully completed, the AS does
-   not provide the access token to the client altogether.  Instead, the
-   client simply establishes a secure association with the RS (if that
-   has not happened already), and then accesses protected resources at
-   the RS according to the permissions granted per the access token and
-   specified by the AS as access information.
+   If the token uploading has been successfully completed, the client
+   typically does not need to obtain the access token from the AS
+   altogether.  Instead, the client simply establishes a secure
+   association with the RS (if that has not happened already), and then
+   accesses protected resources at the RS according to the permissions
+   granted per the access token and specified by the AS as access
+   information.
 
  +--------+                               +----------------------------+
  |        |---(A)-- Token Request ------->|                            |
@@ -375,9 +376,9 @@ Table of Contents
 
       As defined in Section 3.1, this information is conveyed to the AS
       by means of the "token_upload" parameter.  The parameter also
-      specifies what the AS has to return in the Token Response at step
-      B, following a successful uploading of the access token from the
-      AS to the RS.
+      specifies what the AS has to return in the Access Token Response
+      at step B, following a successful uploading of the access token
+      from the AS to the RS.
 
    *  Step A1 - This new step consists of the AS uploading the access
       token to the RS, typically at the authz-info endpoint, just like
@@ -425,14 +426,14 @@ Table of Contents
 
    Note that the new workflow is also suitable for deployments where
    devices meant to access protected resources at the RS are not
-   required to be actual ACE clients.  That is, consistent with intended
-   access policies, the AS can be configured to automatically issue
-   access tokens for such devices and upload those access tokens to the
-   RS.  This means that those devices do not have to request for an
-   access token to be issued in the first place, and instead can
-   immediately send requests to the RS for accessing its protected
-   resources, in accordance to the access tokens already issued and
-   uploaded by the AS.
+   required or expected to be actual ACE clients.  That is, consistent
+   with the intended access policies, the AS can be configured to
+   automatically issue access tokens for such devices and upload those
+   access tokens to the RS.  This means that those devices do not have
+   to request for an access token to be issued in the first place, and
+   instead can immediately send requests to the RS for accessing its
+   protected resources, in accordance with the access tokens already
+   issued and uploaded by the AS.
 
 3.  New ACE Parameters
 
@@ -472,8 +473,8 @@ Table of Contents
       If the AS supports the new ACE workflow and the Access Token
       Request includes the "token_upload" parameter with value 0, 1, or
       2, then the AS MAY use the new ACE workflow to upload the access
-      token to the RS on behalf of C.  Otherwise, the AS MUST NOT use
-      the new ACE workflow.
+      token to the RS on behalf of C.  Otherwise, following that Access
+      Token Request, the AS MUST NOT use the new ACE workflow.
 
    *  The "token_upload" parameter is REQUIRED in a successful Access
       Token Response with response code 2.01 (Created), if both the
@@ -545,12 +546,12 @@ Table of Contents
    Response also includes the "cnf" parameter specifying the symmetric
    PoP key bound to the access token.
 
-      / Access Token Request /
+      Access Token Request
 
       Header: POST (Code=0.02)
       Uri-Host: "as.example.com"
       Uri-Path: "token"
-      Content-Format: application/ace+cbor
+      Content-Format: 19 (application/ace+cbor)
       Payload:
       {
         / audience /  5 : "tempSensor4711",
@@ -559,10 +560,10 @@ Table of Contents
       }
 
 
-      / Access Token Response /
+      Access Token Response
 
       Header: Created (Code=2.01)
-      Content-Format: application/ace+cbor
+      Content-Format: 19 (application/ace+cbor)
       Max-Age: 3560
       Payload:
       {
@@ -602,12 +603,12 @@ Table of Contents
    Access Token Response also includes the "cnf" parameter specifying
    the symmetric PoP key bound to the access token.
 
-      / Access Token Request /
+      Access Token Request
 
       Header: POST (Code=0.02)
       Uri-Host: "as.example.com"
       Uri-Path: "token"
-      Content-Format: application/ace+cbor
+      Content-Format: 19 (application/ace+cbor)
       Payload:
       {
         / audience /  5 : "tempSensor4711",
@@ -616,17 +617,17 @@ Table of Contents
       }
 
 
-      / Access Token Response /
+      Access Token Response
 
       Header: Created (Code=2.01)
-      Content-Format: application/ace+cbor
+      Content-Format: 19 (application/ace+cbor)
       Max-Age: 3560
       Payload:
       {
            e'token_upload' : 0,
-        / access_token / 1 : h'd08343a1'/...
-         (remainder of CWT omitted for brevity;
-         CWT contains the symmetric PoP key in the "cnf" claim)/,
+        / access_token / 1 : h'd08343a1...4819',
+          / (full CWT elided for brevity;
+             CWT contains the symmetric PoP key in the "cnf" claim) /
         / expires_in /   2 : 3600,
         / cnf /          8 : {
           / COSE_Key / 1 : {
@@ -667,12 +668,12 @@ Table of Contents
    C, since the Access Token Request as such has been successfully
    processed at the AS, with the following issue of the access token.
 
-      / Access Token Request /
+      Access Token Request
 
       Header: POST (Code=0.02)
       Uri-Host: "as.example.com"
       Uri-Path: "token"
-      Content-Format: application/ace+cbor
+      Content-Format: 19 (application/ace+cbor)
       Payload:
       {
         / audience /  5 : "tempSensor4711",
@@ -681,17 +682,17 @@ Table of Contents
       }
 
 
-      / Access Token Response /
+      Access Token Response
 
       Header: Created (Code=2.01)
-      Content-Format: application/ace+cbor
+      Content-Format: 19 (application/ace+cbor)
       Max-Age: 3560
       Payload:
       {
            e'token_upload' : 1,
-        / access_token / 1 : h'd08343a1'/...
-         (remainder of CWT omitted for brevity;
-         CWT contains the symmetric PoP key in the "cnf" claim)/,
+        / access_token / 1 : h'd08343a1...4819',
+          / (full CWT elided for brevity;
+             CWT contains the symmetric PoP key in the "cnf" claim) /
         / expires_in /   2 : 3600,
         / cnf /          8 : {
           / COSE_Key / 1 : {
@@ -740,8 +741,8 @@ Table of Contents
       hash.
 
    *  If the Access Token Response is encoded in JSON, then the
-      "token_hash" parameter has as value the binary representation of
-      the base64url-encoded text string that encodes the token hash.
+      "token_hash" parameter has as value the base64url-encoded text
+      string that encodes the token hash.
 
    The AS computes the token hash as defined in Section 3.2.1.
 
@@ -778,7 +779,9 @@ Table of Contents
 
    The specifically used hash function MUST be collision-resistant on
    byte-strings, and MUST be selected from the "Named Information Hash
-   Algorithm" Registry [Named.Information.Hash.Algorithm].
+   Algorithm" Registry [Named.Information.Hash.Algorithm].  Consistent
+   with the compliance requirements in Section 2 of [RFC6920], the hash
+   function sha-256 as specified in [SHA-256] is mandatory to implement.
 
    The computation of token hashes defined above is aligned with that
    specified for the computation of token hashes in
@@ -815,12 +818,12 @@ Table of Contents
    the "cnf" parameter specifying the symmetric PoP key bound to the
    access token.
 
-      / Access Token Request /
+      Access Token Request
 
       Header: POST (Code=0.02)
       Uri-Host: "as.example.com"
       Uri-Path: "token"
-      Content-Format: application/ace+cbor
+      Content-Format: 19 (application/ace+cbor)
       Payload:
       {
         / audience /  5 : "tempSensor4711",
@@ -829,10 +832,10 @@ Table of Contents
       }
 
 
-      / Access Token Response /
+      Access Token Response
 
       Header: Created (Code=2.01)
-      Content-Format: application/ace+cbor
+      Content-Format: 19 (application/ace+cbor)
       Max-Age: 3560
       Payload:
       {
@@ -891,10 +894,11 @@ Table of Contents
       information such as the public key algorithm and use (e.g., by
       means of the parameters "alg" or "key_ops" in a COSE_Key
       structure).  If such information is specified, a client MUST NOT
-      use a public key that is incompatible with the profile or PoP
-      algorithm according to that information.  An RS MUST reject a
-      proof of possession using such a key with a response code
-      equivalent to the CoAP code 4.00 (Bad Request).
+      use a public key that is incompatible with the profile of ACE used
+      or with the PoP algorithm according to that information.  An RS
+      MUST reject a proof-of-possession that relies on such a key, and
+      reply with a response code equivalent to the CoAP code 4.00 (Bad
+      Request).
 
    *  The "aud2" parameter is OPTIONAL and specifies the identifiers of
       the RSs in the group-audience for which the access token is
@@ -909,7 +913,7 @@ Table of Contents
       The element of the CBOR array referring to an RS in the group-
       audience SHOULD have the same value that would be used to identify
       that RS through the "aud" parameter of an Access Token Request to
-      the AS (see Section 5.8.2 of [RFC9200]) and of an Access Token
+      the AS (see Section 5.8.1 of [RFC9200]) and of an Access Token
       Response from the AS (see Section 5.8.2 of [RFC9200]), when
       requesting and issuing an access token for that individual RS.
 
@@ -929,14 +933,16 @@ Table of Contents
    public key of the two RSs as intended recipients of the access token
    and the identifiers of those two RSs, respectively.
 
+      Access Token Response
+
       Header: Created (Code=2.01)
-      Content-Format: application/ace+cbor
+      Content-Format: 19 (application/ace+cbor)
       Max-Age: 3600
       Payload:
       {
-        / access_token / 1 : b64'SlAV32hk'/...
-         (remainder of CWT omitted for brevity;
-         CWT contains the client's RPK in the "cnf" claim)/,
+        / access_token / 1 : b64'SlAV32hk...12',
+          / (full CWT elided for brevity;
+             CWT contains the client's RPK in the "cnf" claim) /
         / expires_in /   2 : 3600,
                    e'aud2' : ["rs1", "rs2"],
                 e'rs_cnf2' : [
@@ -1005,8 +1011,8 @@ Table of Contents
    algorithm and use (e.g., by means of the parameters "alg" or
    "key_ops" in a COSE_Key structure).  If such information is
    specified, a client MUST NOT use a public key that is incompatible
-   with the profile, or with the public keys to validate and the way to
-   validate those.
+   with the profile of ACE used, or with the public keys to validate and
+   the way to validate those.
 
    The presence of this parameter does not require that the Access Token
    Response also includes the "rs_cnf" parameter defined in [RFC9201] or
@@ -1034,9 +1040,9 @@ Table of Contents
    bound to C's public key as asymmetric PoP key.
 
    The identifier of the group-audience was specified by the "aud"
-   parameter of the Access Token Request to the AS and is specified by
-   the "aud" claim of the issued access token, and is not repeated in
-   the Access Token Response from the AS.
+   parameter of the Access Token Request to the AS, is specified by the
+   "aud" claim of the issued access token, and is not repeated in the
+   Access Token Response from the AS.
 
    The Access Token Response includes the "anchor_cnf" parameter.  This
    specifies the public key of a trust anchor that C can use to validate
@@ -1046,14 +1052,16 @@ Table of Contents
    trust anchor, by means of the CWT confirmation method "x5chain"
    defined in [I-D.ietf-ace-edhoc-oscore-profile].
 
+      Access Token Response
+
       Header: Created (Code=2.01)
-      Content-Format: application/ace+cbor
+      Content-Format: 19 (application/ace+cbor)
       Max-Age: 3600
       Payload:
       {
-        / access_token / 1 : b64'SlAV32hk'/...
-         (remainder of CWT omitted for brevity;
-         CWT contains the client's RPK in the "cnf" claim)/,
+        / access_token / 1 : b64'SlAV32hk...12',
+          / (full CWT elided for brevity;
+             CWT contains the client's RPK in the "cnf" claim) /
         / expires_in /   2 : 3600,
              e'anchor_cnf' : [
                {
@@ -1137,10 +1145,9 @@ Table of Contents
       token's reverse audience.
 
    Fundamentally, this parameter has the same semantics of the "scope"
-   parameter used in ACE framework, with the difference that it conveys
-   an identifier of C as a host of protected resources to access,
-   according to the access rights granted as reverse scope to the
-   audience of the access token issued by the AS.
+   parameter used in the ACE framework, with the difference that it
+   conveys the access rights requested/granted as reverse scope for/to
+   the audience of the access token issued by the AS.
 
    The use of this parameter is further detailed in Section 4.
 
@@ -1169,8 +1176,9 @@ Table of Contents
 
       For this first direction of access control, the target DEV2 is
       specified by means of the "aud" parameter and the corresponding
-      access token claim, while the access rights are specified by means
-      of the "scope" parameter and the corresponding access token claim.
+      access token claim "aud", while the access rights are specified by
+      means of the "scope" parameter and the corresponding access token
+      claim "scope".
 
       This is the original, primary direction of access control, where
       the ACE client DEV1 that requests the access token wishes access
@@ -1182,10 +1190,11 @@ Table of Contents
 
       For this second direction of access control, the target DEV1 is
       specified by means of the "rev_aud" parameter defined in
-      Section 3.5 and the corresponding access token claim defined in
-      this section, while the access rights are specified by means of
-      the "rev_scope" parameter defined in Section 3.6 and the
-      corresponding access token claim defined in this section.
+      Section 3.5 and the corresponding access token claim "rev_aud"
+      defined in this section, while the access rights are specified by
+      means of the "rev_scope" parameter defined in Section 3.6 and the
+      corresponding access token claim "rev_scope" defined in this
+      section.
 
       This is the new, secondary direction of access control, where the
       ACE client DEV1 that requests the access token also wishes access
@@ -1197,7 +1206,7 @@ Table of Contents
    Like for the original case with a single access control direction,
    the access token is uploaded to the ACE RS DEV2, which processes the
    access token as per Section 5.10 of [RFC9200] and according to the
-   transport profile of ACE used by DEV1 and DEV2.
+   profile of ACE used by DEV1 and DEV2.
 
    The protocol workflow is detailed in the following Section 4.1 and
    Section 4.2, in case only one authorization server or two
@@ -1240,8 +1249,7 @@ Table of Contents
    applies.
 
    *  The "aud" and "scope" parameters are used as defined in [RFC9200],
-      and according to the transport profile of ACE used by DEV1 and
-      DEV2.
+      and according to the profile of ACE used by DEV1 and DEV2.
 
       In particular, "aud" specifies an identifier of DEV2, while
       "scope" specifies access rights that DEV1 wishes to obtain for
@@ -1301,8 +1309,7 @@ Table of Contents
    following applies.
 
    *  The "aud" and "scope" parameters are used as defined in [RFC9200],
-      and according to the transport profile of ACE used by DEV1 and
-      DEV2.
+      and according to the profile of ACE used by DEV1 and DEV2.
 
       In particular, "aud" specifies an identifier of DEV2, while
       "scope" specifies the access rights that AS has granted to DEV1
@@ -1385,7 +1392,7 @@ Table of Contents
 
    As to the secure communication association between DEV1 and DEV2, its
    establishment and maintenance does not deviate from what is defined
-   in the transport profile of ACE used by DEV1 and DEV2.
+   in the profile of ACE used by DEV1 and DEV2.
 
    Furthermore, communications between DEV1 and DEV2 MUST rely on such
    secure communication association for both directions of access
@@ -1394,7 +1401,7 @@ Table of Contents
 
    After having received a successful Access Token Response from AS,
    DEV1 MUST maintain and enforce the information about the access
-   rights granted to DEV2 and pertaining the secondary access control
+   rights granted to DEV2 and pertaining to the secondary access control
    direction.
 
    In particular, DEV1 MUST prevent DEV2 from accessing protected
@@ -1538,7 +1545,7 @@ Table of Contents
    shown in Figure 10.
 
    Header: Bad Request (Code=4.00)
-   Content-Format: application/concise-problem-details+cbor
+   Content-Format: 257 (application/concise-problem-details+cbor)
    Payload:
    {
      / title /  -1 : "Incompatible ACE profile",
@@ -1549,11 +1556,6 @@ Table of Contents
    }
 
          Figure 10: Example of Error Response with Problem Details.
-
-   Note to RFC Editor: In the figure above, please replace "TBD" with
-   the unsigned integer assigned as key value to the Custom Problem
-   Detail entry "ace-error" (see Section 8.5).  Then, please delete this
-   paragraph.
 
    When the ACE framework is used with CBOR for encoding message
    payloads, the following applies.
@@ -1570,9 +1572,9 @@ Table of Contents
 
    The same security considerations from the ACE framework for
    Authentication and Authorization [RFC9200] apply to this document,
-   together with those from the specifically used transport profile of
-   ACE, e.g., [RFC9202][RFC9203][RFC9431][I-D.ietf-ace-edhoc-oscore-prof
-   ile][I-D.ietf-ace-group-oscore-profile][RFC9431].
+   together with those from the specific profile of ACE used, e.g., [RFC
+   9202][RFC9203][RFC9431][I-D.ietf-ace-edhoc-oscore-profile][I-D.ietf-a
+   ce-group-oscore-profile][RFC9431].
 
    When using the problem-details format defined in [RFC9290] for error
    responses, then the privacy and security considerations from Sections
@@ -1965,6 +1967,10 @@ Table of Contents
               DOI 10.17487/RFC9431, July 2023,
               <https://www.rfc-editor.org/rfc/rfc9431>.
 
+   [SHA-256]  NIST, "Secure Hash Standard", FIPS 180-3 , October 2008,
+              <http://csrc.nist.gov/publications/fips/fips180-3/
+              fips180-3_final.pdf>.
+
 9.2.  Informative References
 
    [I-D.ietf-ace-group-oscore-profile]
@@ -1977,9 +1983,9 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
               group-oscore-profile-02>.
 
-Appendix A.  Benefits for ACE Transport Profiles
+Appendix A.  Benefits for ACE Profiles
 
-   For any transport profile of ACE, the following holds.
+   For any profile of ACE, the following holds.
 
    *  The new ACE workflow defined in Section 2 is effectively possible
       to use.  This is beneficial for deployments where the
@@ -2007,10 +2013,9 @@ Appendix A.  Benefits for ACE Transport Profiles
       the access token from the AS, even in case the AS successfully
       uploads the access token to the RS on behalf of C.
 
-      This is useful in transport profiles of ACE where C can re-upload
-      the same Access Token to the RS by itself, e.g., in order to
-      perform a key update like defined for the OSCORE profile
-      [RFC9203].
+      This is useful in profiles of ACE where C can re-upload the same
+      Access Token to the RS by itself, e.g., in order to perform a key
+      update like defined for the OSCORE profile [RFC9203].
 
 A.1.  DTLS Profile
 
@@ -2267,6 +2272,11 @@ D.1.  Version -02 to -03
 
    *  Lowercase use of "client", "resource server", and "authorization
       server".
+
+   *  Split elision and comments in the examples in CBOR Diagnostic
+      Notation.
+
+   *  SHA-256 is mandatory to implement for computing token hashes.
 
    *  Clarifications and editorial improvements.
 
