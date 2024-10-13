@@ -1106,7 +1106,7 @@ For any profile of ACE, the following holds.
 
   That is, by specifying the value 2 for the "token_upload" parameter in the Access Token Request, C will ensure to receive the access token from the AS, even in case the AS successfully uploads the access token to the RS on behalf of C.
 
-  This is useful in profiles of ACE where C can re-upload the same Access Token to the RS by itself, e.g., in order to perform a key update like defined for the OSCORE profile {{RFC9203}}.
+  This is useful in profiles of ACE where C can re-upload the same access token to the RS by itself, e.g., in order to perform a key update like defined for the OSCORE profile {{RFC9203}}.
 
 ## DTLS Profile
 
