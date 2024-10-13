@@ -1676,6 +1676,8 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
+   *  Original Specification: [RFC-XXXX]
+
 
 
    *  Name: "token_hash"
@@ -1685,6 +1687,8 @@ Table of Contents
    *  Value Type: unsigned integer
 
    *  Reference: [RFC-XXXX]
+
+   *  Original Specification: [RFC-XXXX]
 
 
 
@@ -1696,6 +1700,8 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
+   *  Original Specification: [RFC-XXXX]
+
 
 
    *  Name: "aud2"
@@ -1705,6 +1711,8 @@ Table of Contents
    *  Value Type: array
 
    *  Reference: [RFC-XXXX]
+
+   *  Original Specification: [RFC-XXXX]
 
 
 
@@ -1716,6 +1724,8 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
+   *  Original Specification: [RFC-XXXX]
+
 
 
    *  Name: "rev_aud"
@@ -1726,6 +1736,8 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
+   *  Original Specification: [RFC-XXXX]
+
 
 
    *  Name: "rev_scope"
@@ -1735,6 +1747,8 @@ Table of Contents
    *  Value Type: text string or byte string
 
    *  Reference: [RFC-XXXX]
+
+   *  Original Specification: [RFC-XXXX]
 
 8.3.  JSON Web Token Claims Registry
 
@@ -2277,6 +2291,8 @@ D.1.  Version -02 to -03
       Notation.
 
    *  SHA-256 is mandatory to implement for computing token hashes.
+
+   *  Fixes in the IANA considerations.
 
    *  Clarifications and editorial improvements.
 
