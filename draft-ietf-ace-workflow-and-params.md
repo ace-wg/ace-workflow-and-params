@@ -121,15 +121,15 @@ This document updates {{RFC9200}} as follows.
 
   - "rs_cnf2", used by the AS to provide C with the public keys of the RSs in the group-audience for which the access token is issued (see {{Section 6.9 of RFC9200}}).
 
-  - "aud2", used by the AS to provide C with the identifiers of the RSs in the group-audience for which the access token is issued.
+  - "audience2", used by the AS to provide C with the identifiers of the RSs in the group-audience for which the access token is issued.
 
   - "anchor_cnf", used by the AS to provide C with the public keys of trust anchors, which C can use to validate the public key of an RS (e.g., as provided in the "rs_cnf" parameter defined in {{RFC9201}} or in the "rs_cnf2" parameter defined in this document).
 
-  - "rev_aud", used by C to provide the AS with an identifier of itself as a reverse audience, and by the AS to possibly confirm that identifier in a response to C. A corresponding access token claim, namely "rev_aud", is also defined.
+  - "rev_audience", used by C to provide the AS with an identifier of itself as a reverse audience, and by the AS to possibly confirm that identifier in a response to C. A corresponding access token claim, namely "rev_aud", is also defined.
 
   - "rev_scope", used by C to ask the AS that the requested access token specifies additional access rights as a reverse scope, allowing the access token's audience to accordingly access protected resources at C. This parameter is also used by the AS to provide C with the access rights that are actually granted as reverse scope to the access token's audience. A corresponding access token claim, namely "rev_scope", is also defined.
 
-* It defines a method for the ACE framework to enforce bidirectional access control by means of a single access token (see {{sec-bidirectional-access-control}}), building on the two new parameters "rev_aud" and "rev_scope" as well as on the corresponding access token claims.
+* It defines a method for the ACE framework to enforce bidirectional access control by means of a single access token (see {{sec-bidirectional-access-control}}), building on the two new parameters "rev_audience" and "rev_scope" as well as on the corresponding access token claims "rev_aud" and "rev_scope".
 
 * It amends two of the requirements on profiles of the ACE framework (see {{sec-updated-requirements}}).
 
@@ -162,7 +162,7 @@ CBOR {{RFC8949}} and CDDL {{RFC8610}} are used in this document. CDDL predefined
 
 Examples throughout this document are expressed in CBOR diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Appendix G of RFC8610}}. Diagnostic notation comments are often used to provide a textual representation of the parameters' keys and values.
 
-In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. For example, {e'aud_2' : \["rs1", "rs2"\]} stands for {50 : \["rs1", "rs2"\]}.
+In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. For example, {e'audience2' : \["rs1", "rs2"\]} stands for {50 : \["rs1", "rs2"\]}.
 
 Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. Finally, please delete this note.
 
@@ -523,9 +523,9 @@ Consistent with the value of the "token_upload" parameter in the Access Token Re
 ~~~~~~~~~~~
 {: #fig-example-AS-to-C-token-hash title="Example of Access Token Request-Response Exchange. Following a successful uploading of the access token from the AS to the RS, the Access Token Response includes the \"token_upload\" parameter as well as the \"token_hash\" parameter. The \"token_hash\" parameter conveys the token hash corresponding to the issued access token, which is bound to a symmetric key and was uploaded to the RS by the AS."}
 
-## rs_cnf2 and aud2 {#sec-rs_cnf2-aud2}
+## rs_cnf2 and audience2 {#sec-rs_cnf2-audience2}
 
-This section defines the additional parameters "rs_cnf2" and "aud2" for an Access Token Response, sent by the AS in reply to a request to the token endpoint from C.
+This section defines the additional parameters "rs_cnf2" and "audience2" for an Access Token Response, sent by the AS in reply to a request to the token endpoint from C.
 
 * The "rs_cnf2" parameter is OPTIONAL if the token type is "pop", asymmetric keys are used, and the access token is issued for an audience that includes multiple RSs (i.e., a group-audience, see {{Section 6.9 of RFC9200}}). Otherwise, the "rs_cnf2" parameter MUST NOT be present.
 
@@ -535,17 +535,17 @@ This section defines the additional parameters "rs_cnf2" and "aud2" for an Acces
 
   Each of the public keys may contain parameters specifying information such as the public key algorithm and use (e.g., by means of the parameters "alg" or "key_ops" in a COSE_Key structure). If such information is specified, a client MUST NOT use a public key that is incompatible with the profile of ACE used or with the PoP algorithm according to that information. An RS MUST reject a proof-of-possession that relies on such a key, and reply with a response code equivalent to the CoAP code 4.00 (Bad Request).
 
-* The "aud2" parameter is OPTIONAL and specifies the identifiers of the RSs in the group-audience for which the access token is issued.
+* The "audience2" parameter is OPTIONAL and specifies the identifiers of the RSs in the group-audience for which the access token is issued.
 
-  If present, this parameter MUST encode a non-empty CBOR array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. Each element of the CBOR array in the "aud2" parameter MUST be a CBOR text string, with value the identifier of one RS in the group-audience.
+  If present, this parameter MUST encode a non-empty CBOR array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. Each element of the CBOR array in the "audience2" parameter MUST be a CBOR text string, with value the identifier of one RS in the group-audience.
 
-  The element of the CBOR array referring to an RS in the group-audience SHOULD have the same value that would be used to identify that RS through the "aud" parameter of an Access Token Request to the AS (see {{Section 5.8.1 of RFC9200}}) and of an Access Token Response from the AS (see {{Section 5.8.2 of RFC9200}}), when requesting and issuing an access token for that individual RS.
+  The element of the CBOR array referring to an RS in the group-audience SHOULD have the same value that would be used to identify that RS through the "audience" parameter of an Access Token Request to the AS (see {{Section 5.8.1 of RFC9200}}) and of an Access Token Response from the AS (see {{Section 5.8.2 of RFC9200}}), when requesting and issuing an access token for that individual RS.
 
-  The "aud2" parameter is REQUIRED if the "rs_cnf2" parameter is present. In such a case, the i-th element of the CBOR array in the "aud2" parameter MUST be the identifier of the RS whose public key is specified as the i-th element of the CBOR array in the "rs_cnf2" parameter.
+  The "audience2" parameter is REQUIRED if the "rs_cnf2" parameter is present. In such a case, the i-th element of the CBOR array in the "audience2" parameter MUST be the identifier of the RS whose public key is specified as the i-th element of the CBOR array in the "rs_cnf2" parameter.
 
 ### Example
 
-{{fig-example-AS-to-C-rs_cnf2}} shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience composed of two RSs "rs1" and "rs2", and bound to C's public key as asymmetric PoP key. The Access Token Response includes the access token, as well as the parameters "aud2" and "rs_cnf2". These specify the public key of the two RSs as intended recipients of the access token and the identifiers of those two RSs, respectively.
+{{fig-example-AS-to-C-rs_cnf2}} shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience composed of two RSs "rs1" and "rs2", and bound to C's public key as asymmetric PoP key. The Access Token Response includes the access token, as well as the parameters "audience2" and "rs_cnf2". These specify the public key of the two RSs as intended recipients of the access token and the identifiers of those two RSs, respectively.
 
 ~~~~~~~~~~~
    Access Token Response
@@ -559,7 +559,7 @@ This section defines the additional parameters "rs_cnf2" and "aud2" for an Acces
        / (full CWT elided for brevity;
           CWT contains the client's RPK in the "cnf" claim) /
      / expires_in /   2 : 3600,
-                e'aud2' : ["rs1", "rs2"],
+           e'audience2' : ["rs1", "rs2"],
              e'rs_cnf2' : [
                {
                  / COSE_Key / 1 : {
@@ -584,7 +584,7 @@ This section defines the additional parameters "rs_cnf2" and "aud2" for an Acces
              ]
    }
 ~~~~~~~~~~~
-{: #fig-example-AS-to-C-rs_cnf2 title="Example of Access Token Response with an access token bound to an asymmetric key, using the parameters \"aud2\" and \"rs_cnf2\"."}
+{: #fig-example-AS-to-C-rs_cnf2 title="Example of Access Token Response with an access token bound to an asymmetric key, using the parameters \"audience2\" and \"rs_cnf2\"."}
 
 ## anchor_cnf {#sec-anchor_cnf}
 
@@ -600,17 +600,17 @@ If present, this parameter MUST encode a non-empty CBOR array that MUST be treat
 
 Each of the public keys specified in the "anchor_cnf" parameter may contain parameters specifying information such as the public key algorithm and use (e.g., by means of the parameters "alg" or "key_ops" in a COSE_Key structure). If such information is specified, a client MUST NOT use a public key that is incompatible with the profile of ACE used, or with the public keys to validate and the way to validate those.
 
-The presence of this parameter does not require that the Access Token Response also includes the "rs_cnf" parameter defined in {{RFC9201}} or the "rs_cnf2" parameter defined in {{sec-rs_cnf2-aud2}} of this document. That is, C may be able to obtain the public keys of the RS/RSs for which the access token is issued through other means.
+The presence of this parameter does not require that the Access Token Response also includes the "rs_cnf" parameter defined in {{RFC9201}} or the "rs_cnf2" parameter defined in {{sec-rs_cnf2-audience2}} of this document. That is, C may be able to obtain the public keys of the RS/RSs for which the access token is issued through other means.
 
-When the Access Token Response includes both the "anchor_cnf" parameter and the "aud2" parameter defined in {{sec-rs_cnf2-aud2}}, then C MUST make sure that a public key PK_RS is associated with an RS identified by an element of "aud2", before using any of the public keys specified in "anchor_cnf" to validate PK_RS.
+When the Access Token Response includes both the "anchor_cnf" parameter and the "audience2" parameter defined in {{sec-rs_cnf2-audience2}}, then C MUST make sure that a public key PK_RS is associated with an RS identified by an element of "audience2", before using any of the public keys specified in "anchor_cnf" to validate PK_RS.
 
-When the Access Token Response includes the "anchor_cnf" parameter but not the "aud2" parameter, then C can use any of the public keys specified in "anchor_cnf" to validate the public key PK_RS of any RS in the targeted audience. This allows C to use the access token with an RS that is deployed later on as part of the same audience, which is particularly useful in the case of a group-audience.
+When the Access Token Response includes the "anchor_cnf" parameter but not the "audience2" parameter, then C can use any of the public keys specified in "anchor_cnf" to validate the public key PK_RS of any RS in the targeted audience. This allows C to use the access token with an RS that is deployed later on as part of the same audience, which is particularly useful in the case of a group-audience.
 
 ### Example
 
 {{fig-example-AS-to-C-anchor_cnf}} shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience, and bound to C's public key as asymmetric PoP key.
 
-The identifier of the group-audience was specified by the "aud" parameter of the Access Token Request to the AS, is specified by the "aud" claim of the issued access token, and is not repeated in the Access Token Response from the AS.
+The identifier of the group-audience was specified by the "audience" parameter of the Access Token Request to the AS, is specified by the "aud" claim of the issued access token, and is not repeated in the Access Token Response from the AS.
 
 The Access Token Response includes the "anchor_cnf" parameter. This specifies the public key of a trust anchor that C can use to validate the public keys of any RS with which the access token is going to be used. The public key of the trust anchor is here conveyed within an X.509 certificate used as public authentication credential for that trust anchor, by means of the CWT confirmation method "x5chain" defined in {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
@@ -652,17 +652,17 @@ The Access Token Response includes the "anchor_cnf" parameter. This specifies th
 ~~~~~~~~~~~
 {: #fig-example-AS-to-C-anchor_cnf title="Example of Access Token Response with an access token bound to an asymmetric key, using the \"anchor_cnf\" parameter."}
 
-## rev_aud {#sec-rev_aud}
+## rev_audience {#sec-rev_audience}
 
-This section defines the additional "rev_aud" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.
+This section defines the additional "rev_audience" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.
 
-* The "rev_aud" parameter is OPTIONAL in an Access Token Request. The presence of this parameter indicates that C wishes the requested access token to specify additional access rights. These are intended for the access token's audience to access protected resources at C as the access token's reverse audience.
+* The "rev_audience" parameter is OPTIONAL in an Access Token Request. The presence of this parameter indicates that C wishes the requested access token to specify additional access rights. These are intended for the access token's audience to access protected resources at C as the access token's reverse audience.
 
   This parameter specifies such a reverse audience as a text string identifier of C. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR text string.
 
-* The "rev_aud" parameter is OPTIONAL in an Access Token Response. If present, it has the same meaning and encoding that it has in the Access Token Request.
+* The "rev_audience" parameter is OPTIONAL in an Access Token Response. If present, it has the same meaning and encoding that it has in the Access Token Request.
 
-Fundamentally, this parameter has the same semantics of the "aud" parameter used in the ACE framework, with the difference that it conveys an identifier of C as a host of protected resources to access, according to the access rights granted as reverse scope to the audience of the access token issued by the AS.
+Fundamentally, this parameter has the same semantics of the "audience" parameter used in the ACE framework, with the difference that it conveys an identifier of C as a host of protected resources to access, according to the access rights granted as reverse scope to the audience of the access token issued by the AS.
 
 The use of this parameter is further detailed in {{sec-bidirectional-access-control}}.
 
@@ -692,13 +692,13 @@ This section defines how to enforce such a bidirectional access control by means
 
 * The access token expresses access rights according to which the requesting ACE client DEV1 can access protected resources hosted at the ACE RS DEV2.
 
-  For this first direction of access control, the target DEV2 is specified by means of the "aud" parameter and the corresponding access token claim "aud", while the access rights are specified by means of the "scope" parameter and the corresponding access token claim "scope".
+  For this first direction of access control, the target DEV2 is specified by means of the "audience" parameter and the corresponding access token claim "aud", while the access rights are specified by means of the "scope" parameter and the corresponding access token claim "scope".
 
   This is the original, primary direction of access control, where the ACE client DEV1 that requests the access token wishes access rights to access protected resources at the ACE RS DEV2.
 
 * The same access token additionally expresses access rights according to which the ACE RS DEV2 can access protected resources hosted at the ACE client DEV1.
 
-  For this second direction of access control, the target DEV1 is specified by means of the "rev_aud" parameter defined in {{sec-rev_aud}} and the corresponding access token claim "rev_aud" defined in this section, while the access rights are specified by means of the "rev_scope" parameter defined in {{sec-rev_scope}} and the corresponding access token claim "rev_scope" defined in this section.
+  For this second direction of access control, the target DEV1 is specified by means of the "rev_audience" parameter defined in {{sec-rev_audience}} and the corresponding access token claim "rev_aud" defined in this section, while the access rights are specified by means of the "rev_scope" parameter defined in {{sec-rev_scope}} and the corresponding access token claim "rev_scope" defined in this section.
 
   This is the new, secondary direction of access control, where the ACE client DEV1 that requests the access token also wishes access rights for the ACE RS DEV2 to access resources at DEV1.
 
@@ -740,29 +740,29 @@ As shown in {{fig-bidirectional-one-as}}, this section considers a scenario with
 
 As to the Access Token Request that DEV1 sends to AS, the following applies.
 
-* The "aud" and "scope" parameters are used as defined in {{RFC9200}}, and according to the profile of ACE used by DEV1 and DEV2.
+* The "audience" and "scope" parameters are used as defined in {{RFC9200}}, and according to the profile of ACE used by DEV1 and DEV2.
 
-  In particular, "aud" specifies an identifier of DEV2, while "scope" specifies access rights that DEV1 wishes to obtain for accessing protecting resources at DEV2.
+  In particular, "audience" specifies an identifier of DEV2, while "scope" specifies access rights that DEV1 wishes to obtain for accessing protecting resources at DEV2.
 
   That is, the two parameters pertain to the primary direction of access control.
 
 * The "req_cnf" parameter defined in {{RFC9201}} can be included. When present, it specifies the key that DEV1 wishes to bind to the requested access token.
 
-* The "rev_aud" and "rev_scope" parameters defined in {{sec-rev_aud}} and {{sec-rev_scope}} can be included.
+* The "rev_audience" and "rev_scope" parameters defined in {{sec-rev_audience}} and {{sec-rev_scope}} can be included.
 
-  In particular, "rev_aud" specifies an identifier of DEV1, while "rev_scope" specifies access rights that DEV1 wishes for DEV2 to obtain for accessing protecting resources at DEV1.
+  In particular, "rev_audience" specifies an identifier of DEV1, while "rev_scope" specifies access rights that DEV1 wishes for DEV2 to obtain for accessing protecting resources at DEV1.
 
   That is, the two parameters pertain to the secondary direction of access control.
 
-If DEV1 wishes that the requested access token also provides DEV2 with access rights pertaining to the secondary direction of access control, then the Access Token Request has to include at least one of the two parameters "rev_aud" and "rev_scope".
+If DEV1 wishes that the requested access token also provides DEV2 with access rights pertaining to the secondary direction of access control, then the Access Token Request has to include at least one of the two parameters "rev_audience" and "rev_scope".
 
 ### Access Token Response # {#sec-bidirectional-access-control-one-as-resp}
 
-When receiving an Access Token Request that includes at least one of the two parameters "rev_aud" and "rev_scope", AS processes it as defined in {{Section 5.2 of RFC9200}}, with the following additions:
+When receiving an Access Token Request that includes at least one of the two parameters "rev_audience" and "rev_scope", AS processes it as defined in {{Section 5.2 of RFC9200}}, with the following additions:
 
-* If the Access Token Request includes the "rev_scope" parameter but not the "rev_aud" parameter, then AS assumes the identifier of DEV1 to be the default one, if any is defined.
+* If the Access Token Request includes the "rev_scope" parameter but not the "rev_audience" parameter, then AS assumes the identifier of DEV1 to be the default one, if any is defined.
 
-* If the Access Token Request includes the "rev_aud" parameter but not the "rev_scope" parameter, then AS assumes the access rights requested for DEV2 to access DEV1 to be the default ones, if any are defined.
+* If the Access Token Request includes the "rev_audience" parameter but not the "rev_scope" parameter, then AS assumes the access rights requested for DEV2 to access DEV1 to be the default ones, if any are defined.
 
 * AS checks whether the access rights requested for DEV2 as reverse scope can be at least partially granted, in accordance with the installed access policies pertaining to the access to protected resources at DEV1 from DEV2.
 
@@ -772,9 +772,9 @@ When receiving an Access Token Request that includes at least one of the two par
 
 As to the successful Access Token Response that AS sends to DEV1, the following applies.
 
-* The "aud" and "scope" parameters are used as defined in {{RFC9200}}, and according to the profile of ACE used by DEV1 and DEV2.
+* The "audience" and "scope" parameters are used as defined in {{RFC9200}}, and according to the profile of ACE used by DEV1 and DEV2.
 
-  In particular, "aud" specifies an identifier of DEV2, while "scope" specifies the access rights that AS has granted to DEV1 for accessing protecting resources at DEV2.
+  In particular, "audience" specifies an identifier of DEV2, while "scope" specifies the access rights that AS has granted to DEV1 for accessing protecting resources at DEV2.
 
   The "scope" parameter has to be present if: i) it was present in the Access Token Request, and the access rights granted to DEV1 are different from the requested ones; or ii) it was not present in the Access Token Request, and the access rights granted to DEV1 are different from the default ones.
 
@@ -782,9 +782,9 @@ As to the successful Access Token Response that AS sends to DEV1, the following 
 
 * The "rs_cnf" parameter defined in {{RFC9201}} can be included. When present, it specifies information about the public key that DEV2 uses to authenticate.
 
-* The "rev_aud" parameter defined in {{sec-rev_aud}} can be included, and specifies an identifier of DEV1.
+* The "rev_audience" parameter defined in {{sec-rev_audience}} can be included, and specifies an identifier of DEV1.
 
-  If the "rev_aud" parameter is present in the Access Token Response and it was also present in the Access Token Request, then the parameter in the Access Token Response MUST have the same value specified by the parameter in the Access Token Request.
+  If the "rev_audience" parameter is present in the Access Token Response and it was also present in the Access Token Request, then the parameter in the Access Token Response MUST have the same value specified by the parameter in the Access Token Request.
 
 * The "rev_scope" parameter defined in {{sec-rev_scope}} can be included, and specifies access rights that AS has granted to DEV2 for accessing protecting resources at DEV1.
 
@@ -796,9 +796,9 @@ The issued access token MUST include information about the reverse audience and 
 
 * The access token MUST contain a claim specifying the identifier of DEV1.
 
-  If the Access Token Response includes the "rev_aud" parameter, then the claim specifies the same information conveyed by that parameter.
+  If the Access Token Response includes the "rev_audience" parameter, then the claim specifies the same information conveyed by that parameter.
 
-  If this is not the case, then the claim specifies the same information conveyed by the "rev_aud" parameter of the Access Token Request, if included therein, or the default identifier of DEV1 otherwise.
+  If this is not the case, then the claim specifies the same information conveyed by the "rev_audience" parameter of the Access Token Request, if included therein, or the default identifier of DEV1 otherwise.
 
   When CWTs are used as access tokens, this information MUST be transported in the "rev_aud" claim defined in {{iana-token-cwt-claims}}.
 
@@ -953,7 +953,7 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 
 <br>
 
-* Name: "aud2"
+* Name: "audience2"
 * Parameter Usage Location: token response
 * Change Controller: IETF
 * Reference: {{&SELF}}
@@ -967,7 +967,7 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 
 <br>
 
-* Name: "rev_aud"
+* Name: "rev_audience"
 * Parameter Usage Location: token request and token response
 * Change Controller: IETF
 * Reference: {{&SELF}}
@@ -1007,7 +1007,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 <br>
 
-* Name: "aud2"
+* Name: "audience2"
 * CBOR Key: TBD
 * Value Type: array
 * Reference: {{&SELF}}
@@ -1023,7 +1023,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 <br>
 
-* Name: "rev_aud"
+* Name: "rev_audience"
 * CBOR Key: TBD
 * Value Type: text string
 * Reference: {{&SELF}}
@@ -1110,11 +1110,11 @@ For any profile of ACE, the following holds.
 
 ## DTLS Profile
 
-When the RPK mode of the DTLS profile is used (see {{Section 3.2 of RFC9202}}), it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs. This is enabled by the parameters "rs_cnf2" and "aud2" defined in {{sec-rs_cnf2-aud2}}, as well as by the "anchor_cnf" parameter defined in {{sec-anchor_cnf}}. This seamlessly applies also if the profile uses Transport Layer Security (TLS) {{RFC8446}}, as defined in {{RFC9430}}.
+When the RPK mode of the DTLS profile is used (see {{Section 3.2 of RFC9202}}), it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs. This is enabled by the parameters "rs_cnf2" and "audience2" defined in {{sec-rs_cnf2-audience2}}, as well as by the "anchor_cnf" parameter defined in {{sec-anchor_cnf}}. This seamlessly applies also if the profile uses Transport Layer Security (TLS) {{RFC8446}}, as defined in {{RFC9430}}.
 
 ## EDHOC and OSCORE Profile
 
-When the EDHOC and OSCORE profile is used {{I-D.ietf-ace-edhoc-oscore-profile}}, it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs. This is enabled by the parameters "rs_cnf2" and "aud2" defined in {{sec-rs_cnf2-aud2}}, as well as by the "anchor_cnf" parameter defined in {{sec-anchor_cnf}}.
+When the EDHOC and OSCORE profile is used {{I-D.ietf-ace-edhoc-oscore-profile}}, it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs. This is enabled by the parameters "rs_cnf2" and "audience2" defined in {{sec-rs_cnf2-audience2}}, as well as by the "anchor_cnf" parameter defined in {{sec-anchor_cnf}}.
 
 # Open Points # {#sec-open-points}
 
@@ -1197,14 +1197,14 @@ The following discusses possible, further new parameters that can be defined for
 ; OAuth Parameters CBOR Mappings
 token_upload = 48
 token_hash = 49
-aud_2 = 50
+audience2 = 50
 rs_cnf_2 = 51
 anchor_cnf = 52
-rev_aud_param = 53
+rev_audience = 53
 rev_scope_param = 54
 
 ; CBOR Web Token (CWT) Claims
-rev_aud_claim = 42
+rev_aud = 42
 rev_scope_claim = 43
 
 ; CWT Confirmation Methods
@@ -1221,6 +1221,8 @@ ace-error = 2
 ## Version -02 to -03 ## {#sec-02-03}
 
 * Lowercase use of "client", "resource server", and "authorization server".
+
+* Fixed naming of parameters/claims for audience.
 
 * Split elision and comments in the examples in CBOR Diagnostic Notation.
 
