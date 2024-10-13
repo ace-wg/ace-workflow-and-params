@@ -6,7 +6,7 @@ ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Updates: 9200, 9202, 9203, 9431 (if approved)                G. Selander
 Intended status: Standards Track                             Ericsson AB
-Expires: 25 December 2024                                   23 June 2024
+Expires: 16 April 2025                                   13 October 2024
 
 
   Alternative Workflow and OAuth Parameters for the Authentication and
@@ -17,11 +17,11 @@ Abstract
 
    This document updates the Authentication and Authorization for
    Constrained Environments Framework (ACE, RFC 9200) as follows.
-   First, it defines a new, alternative workflow that the Authorization
-   Server can use for uploading an access token to a Resource Server on
-   behalf of the Client.  Second, it defines new parameters and
-   encodings for the OAuth 2.0 token endpoint at the Authorization
-   Server.  Third, it defines a method for the ACE framework to enforce
+   First, it defines a new, alternative workflow that the authorization
+   server can use for uploading an access token to a resource server on
+   behalf of the client.  Second, it defines new parameters and
+   encodings for the OAuth 2.0 token endpoint at the authorization
+   server.  Third, it defines a method for the ACE framework to enforce
    bidirectional access control by means of a single access token.
    Fourth, it amends two of the requirements on profiles of the
    framework.  Finally, it deprecates the original payload format of
@@ -61,7 +61,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 December 2024.
+   This Internet-Draft will expire on 16 April 2025.
 
 Copyright Notice
 
@@ -123,8 +123,9 @@ Table of Contents
      B.2.  Further New Parameters to Consider
    Appendix C.  CDDL Model
    Appendix D.  Document Updates
-     D.1.  Version -01 to -02
-     D.2.  Version -00 to -01
+     D.1.  Version -02 to -03
+     D.2.  Version -01 to -02
+     D.3.  Version -00 to -01
    Acknowledgments
    Authors' Addresses
 
@@ -132,10 +133,10 @@ Table of Contents
 
    The Authentication and Authorization for Constrained Environments
    (ACE) framework [RFC9200] defines an architecture to enforce access
-   control for constrained devices.  A Client (C) requests an assertion
-   of granted permissions from an Authorization Server (AS) in the form
+   control for constrained devices.  A client (C) requests an assertion
+   of granted permissions from an authorization server (AS) in the form
    of an access token, then uploads the access token to the target
-   Resource Server (RS), and finally accesses protected resources at the
+   resource server (RS), and finally accesses protected resources at the
    RS according to the permissions specified in the access token.
 
    The framework has as main building blocks the OAuth 2.0 framework
@@ -232,8 +233,8 @@ Table of Contents
    [RFC8747].
 
    The terminology for entities in the considered architecture is
-   defined in OAuth 2.0 [RFC6749].  In particular, this includes Client
-   (C), Resource Server (RS), and Authorization Server (AS).
+   defined in OAuth 2.0 [RFC6749].  In particular, this includes client
+   (C), resource server (RS), and authorization server (AS).
 
    Readers are also expected to be familiar with the terms and concepts
    related to CoAP [RFC7252], CDDL [RFC8610], CBOR [RFC8949], JSON
@@ -248,7 +249,7 @@ Table of Contents
    Furthermore, this document uses the following term.
 
    *  Token series: the set comprising all the access tokens issued by
-      the same AS for the same pair (Client, Resource Server).
+      the same AS for the same pair (client, resource server).
 
       Profiles of ACE can provide their extended and specialized
       definition, e.g., by further taking into account the public
@@ -285,21 +286,21 @@ Table of Contents
    As defined in Section 4 of [RFC9200], the ACE framework considers
    what is shown in Figure 1 as its basic protocol workflow.
 
-   That is, the Client first sends an Access Token Request to the token
+   That is, the client first sends an Access Token Request to the token
    endpoint at the AS (step A), specifying permissions that it seeks to
    obtain for accessing protected resources at the RS, possibly together
    with information on its own public authentication credentials.
 
    Then, if the request has been successfully verified, authenticated,
-   and authorized, the AS replies to the Client (step B), providing an
+   and authorized, the AS replies to the client (step B), providing an
    access token and possibly additional parameters as access information
    including the actually granted permissions.
 
-   Finally, the Client uploads the access token to the RS and,
+   Finally, the client uploads the access token to the RS and,
    consistently with the permissions granted according to the access
    token, accesses a resource at the RS (step C), which replies with the
    result of the resource access (step F).  Details about what protocol
-   the Client and the RS use to establish a secure association, mutually
+   the client and the RS use to establish a secure association, mutually
    authenticate, and secure their communications are defined in the
    specifically used profile of ACE, e.g., [RFC9202][RFC9203][RFC9431][I
    -D.ietf-ace-edhoc-oscore-profile][I-D.ietf-ace-group-oscore-profile][
@@ -333,11 +334,11 @@ Table of Contents
    This section defines a new, alternative protocol workflow shown in
    Figure 2, which MAY be supported by the AS.  Unlike in the original
    protocol workflow, the AS uploads the access token to the RS on
-   behalf of the Client, and then informs the Client about the outcome.
+   behalf of the client, and then informs the client about the outcome.
 
    If the token uploading has been successfully completed, the AS does
-   not provide the access token to the Client altogether.  Instead, the
-   Client simply establishes a secure association with the RS (if that
+   not provide the access token to the client altogether.  Instead, the
+   client simply establishes a secure association with the RS (if that
    has not happened already), and then accesses protected resources at
    the RS according to the permissions granted per the access token and
    specified by the AS as access information.
@@ -367,7 +368,7 @@ Table of Contents
 
    More specifically, the new workflow consists of the following steps.
 
-   *  Step A - Like in the original workflow, the Client sends an Access
+   *  Step A - Like in the original workflow, the client sends an Access
       Token Request to the token endpoint at the AS, with the additional
       indication that it opts in to use the alternative workflow.
 
@@ -379,18 +380,18 @@ Table of Contents
 
    *  Step A1 - This new step consists of the AS uploading the access
       token to the RS, typically at the authz-info endpoint, just like
-      the Client does in the original workflow.
+      the client does in the original workflow.
 
    *  Step A2 - This new step consists of the RS replying to the AS,
       following the uploading of the access token at step A1.
 
-   *  Step B - In the Access Token Response, the AS tells the Client
+   *  Step B - In the Access Token Response, the AS tells the client
       that it has attempted to upload the access token to the RS,
       specifying the outcome of the token uploading based on the reply
       received from the RS at step A2.
 
       As defined in Section 3.1, this information is conveyed to the
-      Client by means of the "token_upload" parameter included in the
+      client by means of the "token_upload" parameter included in the
       Access Token Response.  If the token uploading has failed, the
       Access Token Response also includes the access token.  Otherwise,
       the Access Token Response includes information consistent with
@@ -398,11 +399,11 @@ Table of Contents
       Token Request at Step A.
 
    *  Step C1 - This step occurs only if the token uploading from the AS
-      has failed, and the AS has provided the Client with the access
-      token at step B.  In such a case, the Client uploads the access
+      has failed, and the AS has provided the client with the access
+      token at step B.  In such a case, the client uploads the access
       token to the RS just like at step C of the original workflow.
 
-   *  Step C2 - The Client attempts to access a protected resource at
+   *  Step C2 - The client attempts to access a protected resource at
       the RS, according to the permissions granted per the access token
       and specified by the AS as access information at step B.
 
@@ -419,11 +420,11 @@ Table of Contents
    protecting also the uploading of the first access token in a token
    series, i.e., in addition to the uploading of the following access
    tokens in the token series for dynamically updating the access rights
-   of the Client.
+   of the client.
 
    Note that the new workflow is also suitable for deployments where
    devices meant to access protected resources at the RS are not
-   required to be actual ACE Clients.  That is, consistent with intended
+   required to be actual ACE clients.  That is, consistent with intended
    access policies, the AS can be configured to automatically issue
    access tokens for such devices and upload those access tokens to the
    RS.  This means that those devices do not have to request for an
@@ -888,7 +889,7 @@ Table of Contents
       Each of the public keys may contain parameters specifying
       information such as the public key algorithm and use (e.g., by
       means of the parameters "alg" or "key_ops" in a COSE_Key
-      structure).  If such information is specified, a Client MUST NOT
+      structure).  If such information is specified, a client MUST NOT
       use a public key that is incompatible with the profile or PoP
       algorithm according to that information.  An RS MUST reject a
       proof of possession using such a key with a response code
@@ -1002,7 +1003,7 @@ Table of Contents
    contain parameters specifying information such as the public key
    algorithm and use (e.g., by means of the parameters "alg" or
    "key_ops" in a COSE_Key structure).  If such information is
-   specified, a Client MUST NOT use a public key that is incompatible
+   specified, a client MUST NOT use a public key that is incompatible
    with the profile, or with the public keys to validate and the way to
    validate those.
 
@@ -1151,18 +1152,18 @@ Table of Contents
 
    *  A first access token is requested by and issued to DEV1, for
       accessing protected resources at DEV2.  With respect to this
-      access token, DEV1 is an ACE Client, while DEV2 is an ACE RS.
+      access token, DEV1 is an ACE client, while DEV2 is an ACE RS.
 
    *  A second access token is requested by and issued to DEV2, for
       accessing protected resources at DEV1.  With respect to this
-      access token, DEV2 is an ACE Client, while DEV1 is an ACE RS.
+      access token, DEV2 is an ACE client, while DEV1 is an ACE RS.
 
    This section defines how to enforce such a bidirectional access
    control by means of a single access token, which is requested by and
-   issued to a device DEV1 acting as ACE Client.  In particular:
+   issued to a device DEV1 acting as ACE client.  In particular:
 
    *  The access token expresses access rights according to which the
-      requesting ACE Client DEV1 can access protected resources hosted
+      requesting ACE client DEV1 can access protected resources hosted
       at the ACE RS DEV2.
 
       For this first direction of access control, the target DEV2 is
@@ -1171,12 +1172,12 @@ Table of Contents
       of the "scope" parameter and the corresponding access token claim.
 
       This is the original, primary direction of access control, where
-      the ACE Client DEV1 that requests the access token wishes access
+      the ACE client DEV1 that requests the access token wishes access
       rights to access protected resources at the ACE RS DEV2.
 
    *  The same access token additionally expresses access rights
       according to which the ACE RS DEV2 can access protected resources
-      hosted at the ACE Client DEV1.
+      hosted at the ACE client DEV1.
 
       For this second direction of access control, the target DEV1 is
       specified by means of the "rev_aud" parameter defined in
@@ -1186,10 +1187,10 @@ Table of Contents
       corresponding access token claim defined in this section.
 
       This is the new, secondary direction of access control, where the
-      ACE Client DEV1 that requests the access token also wishes access
+      ACE client DEV1 that requests the access token also wishes access
       rights for the ACE RS DEV2 to access resources at DEV1.
 
-      Clearly, this requires the ACE Client DEV1 to also act as CoAP
+      Clearly, this requires the ACE client DEV1 to also act as CoAP
       server, and the ACE RS DEV2 to also act as CoAP client.
 
    Like for the original case with a single access control direction,
@@ -1198,16 +1199,16 @@ Table of Contents
    transport profile of ACE used by DEV1 and DEV2.
 
    The protocol workflow is detailed in the following Section 4.1 and
-   Section 4.2, in case only one Authorization Server or two
-   Authorization Servers are involved, respectively.
+   Section 4.2, in case only one authorization server or two
+   authorization servers are involved, respectively.
 
 4.1.  Scenario with One Authorization Server
 
    As shown in Figure 9, this section considers a scenario with a single
-   Authorization Server AS.  Both devices DEV1 and DEV2 are registered
+   authorization server AS.  Both devices DEV1 and DEV2 are registered
    at AS, and each of them with permissions to access protected
    resources at the other device.  In the following, DEV1 acts as ACE
-   Client by requesting an access token from AS.
+   client by requesting an access token from AS.
 
    - DEV1 is registered as:                       +----+
      - Device authorized to access DEV2; and      |    |
@@ -1288,7 +1289,7 @@ Table of Contents
       resources at DEV1 from DEV2.
 
       That is, AS performs the same evaluation that it would perform if
-      DEV2 sent an Access Token Request as an ACE Client, with the
+      DEV2 sent an Access Token Request as an ACE client, with the
       intent to access protected resources at DEV1 as an ACE RS.
 
       It is REQUIRED that such evaluation succeeds, in order for AS to
@@ -1411,10 +1412,10 @@ Table of Contents
    access token, the following considerations hold.
 
    *  The access token can be uploaded to the ACE RS DEV2 by the ACE
-      Client per the original ACE workflow, or by the AS that has issued
+      client per the original ACE workflow, or by the AS that has issued
       the access token per the new ACE workflow defined in Section 2.
 
-   *  Since the access token is requested by the ACE Client DEV1, only
+   *  Since the access token is requested by the ACE client DEV1, only
       DEV1 can request for a new access token in the same token series,
       in order to dynamically update the access rights concerning its
       own access to protected resources hosted by DEV2 (on the primary
@@ -1556,11 +1557,11 @@ Table of Contents
    When the ACE framework is used with CBOR for encoding message
    payloads, the following applies.
 
-   *  It is RECOMMENDED that Authorization Servers, Clients, and
-      Resource Servers support the payload format defined in this
+   *  It is RECOMMENDED that authorization servers, clients, and
+      resource servers support the payload format defined in this
       section.
 
-   *  Authorization Servers, Clients, and Resource Servers that support
+   *  Authorization servers, clients, and resource servers that support
       the payload format defined in this section MUST use it when
       composing an outgoing error response that conveys an error code.
 
@@ -1823,18 +1824,18 @@ Table of Contents
               Security for Constrained Environments (OSCORE) Profile for
               Authentication and Authorization for Constrained
               Environments (ACE)", Work in Progress, Internet-Draft,
-              draft-ietf-ace-edhoc-oscore-profile-04, 4 March 2024,
+              draft-ietf-ace-edhoc-oscore-profile-05, 8 July 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              edhoc-oscore-profile-04>.
+              edhoc-oscore-profile-05>.
 
    [I-D.ietf-ace-revoked-token-notification]
               Tiloca, M., Palombini, F., Echeverria, S., and G. Lewis,
               "Notification of Revoked Access Tokens in the
               Authentication and Authorization for Constrained
               Environments (ACE) Framework", Work in Progress, Internet-
-              Draft, draft-ietf-ace-revoked-token-notification-07, 27
-              May 2024, <https://datatracker.ietf.org/doc/html/draft-
-              ietf-ace-revoked-token-notification-07>.
+              Draft, draft-ietf-ace-revoked-token-notification-09, 22
+              September 2024, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-ace-revoked-token-notification-09>.
 
    [Named.Information.Hash.Algorithm]
               IANA, "Named Information Hash Algorithm",
@@ -1971,9 +1972,9 @@ Table of Contents
               (Group OSCORE) Profile of the Authentication and
               Authorization for Constrained Environments (ACE)
               Framework", Work in Progress, Internet-Draft, draft-ietf-
-              ace-group-oscore-profile-01, 4 March 2024,
+              ace-group-oscore-profile-02, 8 July 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              group-oscore-profile-01>.
+              group-oscore-profile-02>.
 
 Appendix A.  Benefits for ACE Transport Profiles
 
@@ -2190,7 +2191,7 @@ B.2.  Further New Parameters to Consider
       series in question has to be specified in that parameter and in
       the corresponding token claim.  Instead, the "req_cnf" parameter
       and the "cnf" claim are used for their main purpose, i.e., for
-      specifying the public authentication credential of the Client, by
+      specifying the public authentication credential of the client, by
       value or by reference.
 
       If a profile of ACE can use or is already using a different
@@ -2261,11 +2262,18 @@ Appendix D.  Document Updates
 
    This section is to be removed before publishing as an RFC.
 
-D.1.  Version -01 to -02
+D.1.  Version -02 to -03
+
+   *  Lowercase use of "client", "resource server", and "authorization
+      server".
+
+   *  Clarifications and editorial improvements.
+
+D.2.  Version -01 to -02
 
    *  CBOR diagnostic notation uses placeholders from a CDDL model.
 
-   *  Note on the new workflow supporting also non-ACE Clients.
+   *  Note on the new workflow supporting also non-ACE clients.
 
    *  Revised semantics of the "token_upload" parameter.
 
@@ -2278,7 +2286,7 @@ D.1.  Version -01 to -02
 
    *  Clarifications and editorial improvements.
 
-D.2.  Version -00 to -01
+D.3.  Version -00 to -01
 
    *  Definition of the "token series" moved to the "Terminology"
       section.
@@ -2287,7 +2295,7 @@ D.2.  Version -00 to -01
 
    *  Amended two of the requirements on profiles of the framework.
 
-   *  The Client has to opt-in for using the alternative workflow.
+   *  The client has to opt-in for using the alternative workflow.
 
    *  Parameter "token_uploaded" renamed to "token_upload".
 
