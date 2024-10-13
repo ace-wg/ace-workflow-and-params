@@ -987,6 +987,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 * CBOR Key: TBD
 * Value Type: unsigned integer
 * Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
 
 <br>
 
@@ -994,6 +995,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 * CBOR Key: TBD
 * Value Type: unsigned integer
 * Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
 
 <br>
 
@@ -1001,6 +1003,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 * CBOR Key: TBD
 * Value Type: array
 * Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
 
 <br>
 
@@ -1008,6 +1011,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 * CBOR Key: TBD
 * Value Type: array
 * Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
 
 <br>
 
@@ -1015,6 +1019,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 * CBOR Key: TBD
 * Value Type: array
 * Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
 
 <br>
 
@@ -1022,6 +1027,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 * CBOR Key: TBD
 * Value Type: text string
 * Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
 
 <br>
 
@@ -1029,6 +1035,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 * CBOR Key: TBD
 * Value Type: text string or byte string
 * Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
 
 ## JSON Web Token Claims Registry ## {#iana-token-json-claims}
 
@@ -1218,6 +1225,8 @@ ace-error = 2
 * Split elision and comments in the examples in CBOR Diagnostic Notation.
 
 * SHA-256 is mandatory to implement for computing token hashes.
+
+* Fixes in the IANA considerations.
 
 * Clarifications and editorial improvements.
 
