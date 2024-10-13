@@ -2,7 +2,7 @@
 <html lang="en" class="Internet-Draft">
 <head>
 <meta charset="utf-8">
-<meta content="Common,Inherited,Latin" name="scripts">
+<meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
 <title>Alternative Workflow and OAuth Parameters for the Authentication and Authorization for Constrained Environments (ACE) Framework</title>
 <meta content="Marco Tiloca" name="author">
@@ -1187,6 +1187,9 @@ svg :is([fill="white"], [fill^="#fff"]) {
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6">
                 <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-rev_scope" class="internal xref">rev_scope</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7">
+                <p id="section-toc.1-1.3.2.7.1"><a href="#section-3.7" class="auto internal xref">3.7</a>.  <a href="#name-token_series_id" class="internal xref">token_series_id</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
@@ -1272,7 +1275,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.11.2.1.1"><a href="#appendix-B.1" class="auto internal xref">B.1</a>.  <a href="#name-new-workflow" class="internal xref">New Workflow</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1.2.1">
-                    <p id="section-toc.1-1.11.2.1.2.1.1"><a href="#appendix-B.1.1" class="auto internal xref">B.1.1</a>.  <a href="#name-allow-the-dynamic-update-of" class="internal xref">Allow the Dynamic Update of Access Rights</a></p>
+                    <p id="section-toc.1-1.11.2.1.2.1.1"><a href="#appendix-B.1.1" class="auto internal xref">B.1.1</a>.  <a href="#name-prevent-ambiguities-in-the-" class="internal xref">Prevent Ambiguities in the Dynamic Update of Access Rights</a></p>
 </li>
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11.2.1.2.2">
                     <p id="section-toc.1-1.11.2.1.2.2.1"><a href="#appendix-B.1.2" class="auto internal xref">B.1.2</a>.  <a href="#name-ensure-applicability-to-any" class="internal xref">Ensure Applicability to Any ACE Profile</a></p>
@@ -1349,6 +1352,9 @@ The new workflow has no ambition to replace the original workflow. The AS can us
             <li class="normal" id="section-1-4.2.2.7">
               <p id="section-1-4.2.2.7.1">"rev_scope", used by C to ask the AS that the requested access token specifies additional access rights as a reverse scope, allowing the access token's audience to accordingly access protected resources at C. This parameter is also used by the AS to provide C with the access rights that are actually granted as reverse scope to the access token's audience. A corresponding access token claim, namely "rev_scope", is also defined.<a href="#section-1-4.2.2.7.1" class="pilcrow">¶</a></p>
 </li>
+            <li class="normal" id="section-1-4.2.2.8">
+              <p id="section-1-4.2.2.8.1">"token_series_id", used by the AS to provide C with the identifier of a token series, and by C to ask the AS for a new acces token in the same token series that dynamically updates access rights. A corresponding access token claim, namely "token_series_id", is also defined.<a href="#section-1-4.2.2.8.1" class="pilcrow">¶</a></p>
+</li>
           </ul>
 </li>
         <li class="normal" id="section-1-4.3">
@@ -1379,7 +1385,7 @@ appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">�
 <p id="section-1.1-6">Furthermore, this document uses the following terms.<a href="#section-1.1-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1.1-7.1">
-            <p id="section-1.1-7.1.1">Token series: the set comprising all the access tokens issued by the same AS for the same pair (client, resource server).<a href="#section-1.1-7.1.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-7.1.1">Token series: the set comprising all the access tokens issued by the same AS for the same pair (client, resource server). A token series ends when the latest access token of that token series becomes invalid (e.g., when it expires or gets revoked).<a href="#section-1.1-7.1.1" class="pilcrow">¶</a></p>
 <p id="section-1.1-7.1.2">
 Profiles of ACE can provide their extended and specialized definition, e.g., by further taking into account the public authentication credentials of C and the RS.<a href="#section-1.1-7.1.2" class="pilcrow">¶</a></p>
 </li>
@@ -2020,6 +2026,39 @@ This parameter specifies such access rights as a reverse scope. When the Access 
 <p id="section-3.6-4">The use of this parameter is further detailed in <a href="#sec-bidirectional-access-control" class="auto internal xref">Section 4</a>.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="sec-token_series_id">
+<section id="section-3.7">
+        <h3 id="name-token_series_id">
+<a href="#section-3.7" class="section-number selfRef">3.7. </a><a href="#name-token_series_id" class="section-name selfRef">token_series_id</a>
+        </h3>
+<p id="section-3.7-1">This section defines the additional "token_series_id" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.<a href="#section-3.7-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.7-2.1">
+            <p id="section-3.7-2.1.1">The "token_series_id" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Request. The presence of this parameter indicates that C wishes to obtain a new access token for dynamically updating its access rights. That is, the new access token is intended to be the next one in an active token series and to supersede the latest access token in that token series. This parameter <span class="bcp14">MUST NOT</span> be present if the requested access token is the first one of a new token series.<a href="#section-3.7-2.1.1" class="pilcrow">¶</a></p>
+<p id="section-3.7-2.1.2">
+If present, this parameter specifies the identifier of the token series that the new access token is intended to extend. The identifier does not change throughout the lifetime of the token series, and was provided to C in the successful Access Token Response that the AS sent when issuing the first access token in that token series. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.<a href="#section-3.7-2.1.2" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.7-2.2">
+            <p id="section-3.7-2.2.1">The "token_series_id" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Response. This parameter <span class="bcp14">MUST NOT</span> be present if the issued access token is not the first one of the token series it belongs to.<a href="#section-3.7-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.7-2.2.2">
+If present, this parameter specifies the identifier of the token series to which the issued access token belongs. When the Access Token Response is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.<a href="#section-3.7-2.2.2" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.7-3">If the AS relies on the "token_series_id" parameter to exchange the identifier of token series with clients, then the following applies.<a href="#section-3.7-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.7-4.1">
+            <p id="section-3.7-4.1.1">The value assigned to the identifier of a token series <span class="bcp14">MUST</span> be uniquely associated with the access tokens issued by the AS for that token series, and <span class="bcp14">MUST</span> be selected from a pool that the AS exclusively controls.<a href="#section-3.7-4.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.7-4.2">
+            <p id="section-3.7-4.2.1">An issued access token that belongs to a token series <span class="bcp14">MUST</span> include the identifier of that token series. This allows the RS to identify the latest access token in the token series to be superseded by the issued access token.<a href="#section-3.7-4.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.7-4.2.2">
+In particular, each of such access tokens <span class="bcp14">MUST</span> include a claim specifying the identifier of the token series to which the access token belongs. When CWTs are used as access tokens, this information <span class="bcp14">MUST</span> be transported in the "token_series_id" claim registered in <a href="#iana-token-cwt-claims" class="auto internal xref">Section 8.4</a>.<a href="#section-3.7-4.2.2" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.7-5">If a profile of ACE relies on a construct that uses different parameters/claims to transport the identifier of a token series, then the new "token_series_id" parameter and "token_series_id" claim <span class="bcp14">MUST NOT</span> be used when using that profile.<a href="#section-3.7-5" class="pilcrow">¶</a></p>
+<p id="section-3.7-6">For example, a number of parameters/claims are already used to transport information that acts de facto as identifier of token series, in the PSK mode of the DTLS profile <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>, in the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, and in the EDHOC and OSCORE profile <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>.<a href="#section-3.7-6" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="sec-bidirectional-access-control">
@@ -2225,7 +2264,7 @@ If the Access Token Response includes the "rev_audience" parameter, then the cla
 <p id="section-4.1.2-6.1.3">
 If this is not the case, then the claim specifies the same information conveyed by the "rev_audience" parameter of the Access Token Request, if included therein, or the default identifier of DEV1 otherwise.<a href="#section-4.1.2-6.1.3" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-6.1.4">
-When CWTs are used as access tokens, this information <span class="bcp14">MUST</span> be transported in the "rev_aud" claim defined in <a href="#iana-token-cwt-claims" class="auto internal xref">Section 8.4</a>.<a href="#section-4.1.2-6.1.4" class="pilcrow">¶</a></p>
+When CWTs are used as access tokens, this information <span class="bcp14">MUST</span> be transported in the "rev_aud" claim registered in <a href="#iana-token-cwt-claims" class="auto internal xref">Section 8.4</a>.<a href="#section-4.1.2-6.1.4" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.1.2-6.2">
               <p id="section-4.1.2-6.2.1">The access token <span class="bcp14">MUST</span> contain a claim specifying the access rights that AS has granted to DEV2 for accessing protecting resources at DEV1.<a href="#section-4.1.2-6.2.1" class="pilcrow">¶</a></p>
@@ -2234,7 +2273,7 @@ If the Access Token Response includes the "rev_scope" parameter, then the claim 
 <p id="section-4.1.2-6.2.3">
 If this is not the case, then the claim specifies the same information conveyed by the "rev_scope" parameter of the Access Token Request, if included therein, or the default access rights for DEV2 to access DEV1 otherwise.<a href="#section-4.1.2-6.2.3" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-6.2.4">
-When CWTs are used as access tokens, this information <span class="bcp14">MUST</span> be transported in the "rev_scope" claim, defined in <a href="#iana-token-cwt-claims" class="auto internal xref">Section 8.4</a>.<a href="#section-4.1.2-6.2.4" class="pilcrow">¶</a></p>
+When CWTs are used as access tokens, this information <span class="bcp14">MUST</span> be transported in the "rev_scope" claim, registered in <a href="#iana-token-cwt-claims" class="auto internal xref">Section 8.4</a>.<a href="#section-4.1.2-6.2.4" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
@@ -2507,6 +2546,21 @@ Payload:
             <p id="section-8.1-14.4.1">Reference: [RFC-XXXX]<a href="#section-8.1-14.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
+<p id="section-8.1-15"><br></p>
+<ul class="normal">
+<li class="normal" id="section-8.1-16.1">
+            <p id="section-8.1-16.1.1">Name: "token_series_id"<a href="#section-8.1-16.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.1-16.2">
+            <p id="section-8.1-16.2.1">Parameter Usage Location: token request and token response<a href="#section-8.1-16.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.1-16.3">
+            <p id="section-8.1-16.3.1">Change Controller: IETF<a href="#section-8.1-16.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.1-16.4">
+            <p id="section-8.1-16.4.1">Reference: [RFC-XXXX]<a href="#section-8.1-16.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
 </section>
 </div>
 <div id="iana-oauth-cbor-mappings">
@@ -2640,6 +2694,24 @@ Payload:
             <p id="section-8.2-14.5.1">Original Specification: [RFC-XXXX]<a href="#section-8.2-14.5.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
+<p id="section-8.2-15"><br></p>
+<ul class="normal">
+<li class="normal" id="section-8.2-16.1">
+            <p id="section-8.2-16.1.1">Name: "token_series_id"<a href="#section-8.2-16.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.2-16.2">
+            <p id="section-8.2-16.2.1">CBOR Key: TBD<a href="#section-8.2-16.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.2-16.3">
+            <p id="section-8.2-16.3.1">Value Type: byte string<a href="#section-8.2-16.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.2-16.4">
+            <p id="section-8.2-16.4.1">Reference: [RFC-XXXX]<a href="#section-8.2-16.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.2-16.5">
+            <p id="section-8.2-16.5.1">Original Specification: [RFC-XXXX]<a href="#section-8.2-16.5.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
 </section>
 </div>
 <div id="iana-token-json-claims">
@@ -2675,6 +2747,21 @@ Payload:
 </li>
           <li class="normal" id="section-8.3-4.4">
             <p id="section-8.3-4.4.1">Reference: [RFC-XXXX]<a href="#section-8.3-4.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-8.3-5"><br></p>
+<ul class="normal">
+<li class="normal" id="section-8.3-6.1">
+            <p id="section-8.3-6.1.1">Claim Name: "token_series_id"<a href="#section-8.3-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.3-6.2">
+            <p id="section-8.3-6.2.1">Claim Description: The identifier of a token series<a href="#section-8.3-6.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.3-6.3">
+            <p id="section-8.3-6.3.1">Change Controller: IETF<a href="#section-8.3-6.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.3-6.4">
+            <p id="section-8.3-6.4.1">Reference: [RFC-XXXX]<a href="#section-8.3-6.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -2730,6 +2817,30 @@ Payload:
 </li>
           <li class="normal" id="section-8.4-4.7">
             <p id="section-8.4-4.7.1">Reference: <a href="#sec-bidirectional-access-control" class="auto internal xref">Section 4</a> of [RFC-XXXX]<a href="#section-8.4-4.7.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-8.4-5"><br></p>
+<ul class="normal">
+<li class="normal" id="section-8.4-6.1">
+            <p id="section-8.4-6.1.1">Claim Name: "token_series_id"<a href="#section-8.4-6.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.4-6.2">
+            <p id="section-8.4-6.2.1">Claim Description: The identifier of a token series<a href="#section-8.4-6.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.4-6.3">
+            <p id="section-8.4-6.3.1">JWT Claim Name: "token_series_id"<a href="#section-8.4-6.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.4-6.4">
+            <p id="section-8.4-6.4.1">Claim Key: TBD<a href="#section-8.4-6.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.4-6.5">
+            <p id="section-8.4-6.5.1">Claim Value Type: byte string<a href="#section-8.4-6.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.4-6.6">
+            <p id="section-8.4-6.6.1">Change Controller: IETF<a href="#section-8.4-6.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-8.4-6.7">
+            <p id="section-8.4-6.7.1">Reference: <a href="#sec-bidirectional-access-control" class="auto internal xref">Section 4</a> of [RFC-XXXX]<a href="#section-8.4-6.7.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -2969,32 +3080,15 @@ This is useful in profiles of ACE where C can re-upload the same access token to
 <p id="appendix-B.1-1">The following discusses open points related to the use of the new ACE workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>.<a href="#appendix-B.1-1" class="pilcrow">¶</a></p>
 <div id="sec-open-points-workflow-dynamic-access-rights">
 <section id="appendix-B.1.1">
-          <h4 id="name-allow-the-dynamic-update-of">
-<a href="#appendix-B.1.1" class="section-number selfRef">B.1.1. </a><a href="#name-allow-the-dynamic-update-of" class="section-name selfRef">Allow the Dynamic Update of Access Rights</a>
+          <h4 id="name-prevent-ambiguities-in-the-">
+<a href="#appendix-B.1.1" class="section-number selfRef">B.1.1. </a><a href="#name-prevent-ambiguities-in-the-" class="section-name selfRef">Prevent Ambiguities in the Dynamic Update of Access Rights</a>
           </h4>
 <p id="appendix-B.1.1-1">In some profiles of ACE, C can request a new access token to update its access rights, while preserving the same secure association with the RS. The new access token supersedes the current one stored at the RS, as they are both part of the same token series.<a href="#appendix-B.1.1-1" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-2">When using the original ACE workflow, C uploads the new access token to the RS by protecting the message exchange through the secure association with the RS. This allows the RS to determine that the upload of such access token is for updating the access rights of C.<a href="#appendix-B.1.1-2" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-3">When using the new ACE workflow, the AS uploads the new access token to the RS also when an update of access rights for C is to be performed. This message exchange would be protected through the secure association between the AS and the RS. However, this secure association does not help the RS retrieve the stored access token to supersede, as that is rather bound to the secure association with C.<a href="#appendix-B.1.1-3" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-4">In order for the new ACE workflow to also allow the dynamic update of access rights, it is required that the new access token updating the access rights of C includes an explicit indication for the RS. Such an indication can point the RS to the token series in question (hence to the current access token to supersede), irrespective of the secure association used to protect the token uploading.<a href="#appendix-B.1.1-4" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-5">In some profiles of ACE, such an indication is in fact already present in access tokens that are issued after the first one in the same token series:<a href="#appendix-B.1.1-5" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="appendix-B.1.1-6.1">
-              <p id="appendix-B.1.1-6.1.1">In the PSK mode of the DTLS profile <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>, the token series is indicated by the "kid" parameter within the "cnf" claim of the new access token. This has the same value of the "kid" parameter in the COSE_Key object within the "cnf" claim from the first access token of the token series.<a href="#appendix-B.1.1-6.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="appendix-B.1.1-6.2">
-              <p id="appendix-B.1.1-6.2.1">In the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, the token series is indicated by the "kid" parameter within the "cnf" claim of the new access token. This has the same value of the "id" parameter in the OSCORE_Input_Material object within the "cnf" claim from the first access token of the token series.<a href="#appendix-B.1.1-6.2.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="appendix-B.1.1-6.3">
-              <p id="appendix-B.1.1-6.3.1">In the EDHOC and OSCORE profile <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, the token series is indicated by the "session_id" parameter in the EDHOC_Information object conveyed by the "edhoc_info" claim of the new access token. This has the same value of the "session_id" parameter in the EDHOC_Information object conveyed by the "edhoc_info" claim from the first access token of the token series.<a href="#appendix-B.1.1-6.3.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-<p id="appendix-B.1.1-7">̈́In the three cases above, the update of access rights is possible because there is a value used as de facto "token series ID". This value does not change throughout the lifetime of a token series, and it is used to associate the new access token with the previous one in the same series to be superseded.<a href="#appendix-B.1.1-7" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-8">Such a token series ID is required to have a unique value from a namespace/pool that the AS exclusively controls. This is in fact what happens in the profiles of ACE above, where the AS is the entity creating the mentioned objects or COSE Key included in the first access token of a token series.<a href="#appendix-B.1.1-8" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-9">However, this may generally not hold and it is not what happens in other known cases, i.e., the DTLS profile in RPK mode <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span> and the Group OSCORE profile <span>[<a href="#I-D.ietf-ace-group-oscore-profile" class="cite xref">I-D.ietf-ace-group-oscore-profile</a>]</span>. At the moment, the dynamic update of access rights is not possible for those, <em>neither in the original nor in the new ACE workflow</em>.<a href="#appendix-B.1.1-9" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-10">In order to make the update of access rights possible also for such cases, as well as both in the original and in the new ACE workflow, those cases can rely on a new "token_series_id" parameter and corresponding "token_series_id" claim (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2</a>), which specify a unique identifier of the token series which an access token belongs to.<a href="#appendix-B.1.1-10" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-11">As to existing profiles of ACE, the above has no intention to change the current behavior when the update of access rights occurs, irrespective of the used ACE workflow and especially when using the original workflow.<a href="#appendix-B.1.1-11" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-12">Future profiles may rely on a construction where the AS creates the object or the key included in the "cnf" claim of the first access token in a token series, and a unique ID generated by the AS is included in such object or key. As "token series ID", those profiles must use that unique ID generated by the AS, and must not use the new "token_series_id" parameter.<a href="#appendix-B.1.1-12" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-13">Even though a "token series ID" provides an explicit indication for recognizing a stored access token as belonging to an ongoing token series, such a process might still be prone to ambiguities. For example, the RS might have deleted a stored access token due to memory limitations. This effectively terminates the corresponding token series, which is however impractical for the RS to remember indefinitely. Consequently, if the AS uploads to the RS a new access token belonging to the same token series, the RS would erroneously interpret it to be the first access token of a new series. This can be avoided by relying on a new "updated_rights" parameter, which the AS can include in a POST request to the /authz-info endpoint when uploading to the RS an access token for dynamically updating the access rights of C (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2</a>).<a href="#appendix-B.1.1-13" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-3">When using the new ACE workflow, the AS uploads the new access token to the RS also when an update of access rights for C is to be performed. This message exchange is protected through the secure association between the AS and the RS.<a href="#appendix-B.1.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-4">In this latter case, even though the access token claim "token_series_id" defined in <a href="#sec-token_series_id" class="auto internal xref">Section 3.7</a> provides the RS with an explicit indication for recognizing a stored access token as belonging to an ongoing token series, such a process might still lead to ambiguities.<a href="#appendix-B.1.1-4" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-5">For example, the RS might have deleted a stored access token due to memory limitations. This effectively terminates the corresponding token series, which is however impractical for the RS to remember indefinitely. Consequently, if the AS uploads to the RS a new access token belonging to the same token series, the RS would erroneously interpret it to be the first access token of a new series.<a href="#appendix-B.1.1-5" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-6">This can be avoided by relying on a new "updated_rights" parameter, which the AS can include in a POST request to the /authz-info endpoint when uploading to the RS an access token for dynamically updating the access rights of C (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2</a>).<a href="#appendix-B.1.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-open-points-workflow-applicability">
@@ -3019,28 +3113,17 @@ This is useful in profiles of ACE where C can re-upload the same access token to
 <p id="appendix-B.2-1">The following discusses possible, further new parameters that can be defined for addressing the open points raised earlier in <a href="#sec-open-points" class="auto internal xref">Appendix B</a>.<a href="#appendix-B.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-B.2-2.1">
-            <p id="appendix-B.2-2.1.1">"token_series_id" - This parameter specifies the unique identifier of a token series, thus ensuring that C can dynamically update its access rights, irrespective of the used ACE workflow (see <a href="#sec-open-points-workflow-dynamic-access-rights" class="auto internal xref">Appendix B.1.1</a>).<a href="#appendix-B.2-2.1.1" class="pilcrow">¶</a></p>
-<p id="appendix-B.2-2.1.2">
-When issuing the first access token of a token series, the AS specifies this parameter in the Access Token Response to C, with value TS_ID. Also, the AS includes a "token_series_id" claim with the same value in the access token.<a href="#appendix-B.2-2.1.2" class="pilcrow">¶</a></p>
-<p id="appendix-B.2-2.1.3">
-When C requests a new access token in the same token series for dynamically updating its access rights, C specifies TS_ID as value of the "token_series_id" parameter of the Access Token Request, which <span class="bcp14">MUST</span> omit the "req_cnf" parameter (see <span><a href="https://rfc-editor.org/rfc/rfc9201#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC9201" class="cite xref">RFC9201</a>]</span>). The AS specifies the same value within the "token_series_id" claim of the new access token.<a href="#appendix-B.2-2.1.3" class="pilcrow">¶</a></p>
-<p id="appendix-B.2-2.1.4">
-When this parameter is used, the information about the token series in question has to be specified in that parameter and in the corresponding token claim. Instead, the "req_cnf" parameter and the "cnf" claim are used for their main purpose. That is, the "req_cnf" parameter specifies the public authentication credential of the client, while the "cnf" claim specifies the PoP key bound to the access token..<a href="#appendix-B.2-2.1.4" class="pilcrow">¶</a></p>
-<p id="appendix-B.2-2.1.5">
-If a profile of ACE can use or is already using a different parameter/claim as de-facto identifier of the token series, then that profile must continue to do so, and must not use the new "token_series_id" parameter.<a href="#appendix-B.2-2.1.5" class="pilcrow">¶</a></p>
+            <p id="appendix-B.2-2.1.1">"updated_rights" - When using the new ACE workflow and issuing an access token for dynamically updating the access rights of C, the AS specifies this parameter in the request sent to the RS for uploading the access token on behalf of C (see <a href="#sec-open-points-workflow-dynamic-access-rights" class="auto internal xref">Appendix B.1.1</a>). This parameter encodes the CBOR simple value <code>true</code> (0xf5).<a href="#appendix-B.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-B.2-2.2">
-            <p id="appendix-B.2-2.2.1">"updated_rights" - When using the new ACE workflow and issuing an access token for dynamically updating the access rights of C, the AS specifies this parameter in the request sent to the RS for uploading the access token on behalf of C (see <a href="#sec-open-points-workflow-dynamic-access-rights" class="auto internal xref">Appendix B.1.1</a>). This parameter encodes the CBOR simple value <code>true</code> (0xf5).<a href="#appendix-B.2-2.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.2-2.2.1">"to_rs" - When using the new ACE workflow, this parameter specifies C-generated information that, according to the profile of ACE used, C has to provide to the RS together with the access token if using the original ACE workflow. This allows the AS to relay such information to the RS upon uploading the access token on behalf of C (see <a href="#sec-open-points-workflow-applicability" class="auto internal xref">Appendix B.1.2</a>).<a href="#appendix-B.2-2.2.1" class="pilcrow">¶</a></p>
+<p id="appendix-B.2-2.2.2">
+First, C specifies this parameter in the Access Token Request sent to the AS. Then, the AS specifies the conveyed information in the request to the RS sent for uploading the access token on behalf of C. The profile of ACE used has to define the detailed content and semantics of the information specified in the parameter value, and how the AS relays that information to the RS within the request sent to the RS for uploading the access token.<a href="#appendix-B.2-2.2.2" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-B.2-2.3">
-            <p id="appendix-B.2-2.3.1">"to_rs" - When using the new ACE workflow, this parameter specifies C-generated information that, according to the profile of ACE used, C has to provide to the RS together with the access token if using the original ACE workflow. This allows the AS to relay such information to the RS upon uploading the access token on behalf of C (see <a href="#sec-open-points-workflow-applicability" class="auto internal xref">Appendix B.1.2</a>).<a href="#appendix-B.2-2.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.2-2.3.1">"from_rs" - When using the new ACE workflow, this parameter specifies RS-generated information that, according to the profile of ACE used, the RS has to provide to C after the uploading of an access token if using the original ACE workflow. This allows the AS to relay such information to C after having uploaded the access token to the RS on behalf of C (see <a href="#sec-open-points-workflow-applicability" class="auto internal xref">Appendix B.1.2</a>).<a href="#appendix-B.2-2.3.1" class="pilcrow">¶</a></p>
 <p id="appendix-B.2-2.3.2">
-First, C specifies this parameter in the Access Token Request sent to the AS. Then, the AS specifies the conveyed information in the request to the RS sent for uploading the access token on behalf of C. The profile of ACE used has to define the detailed content and semantics of the information specified in the parameter value, and how the AS relays that information to the RS within the request sent to the RS for uploading the access token.<a href="#appendix-B.2-2.3.2" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="appendix-B.2-2.4">
-            <p id="appendix-B.2-2.4.1">"from_rs" - When using the new ACE workflow, this parameter specifies RS-generated information that, according to the profile of ACE used, the RS has to provide to C after the uploading of an access token if using the original ACE workflow. This allows the AS to relay such information to C after having uploaded the access token to the RS on behalf of C (see <a href="#sec-open-points-workflow-applicability" class="auto internal xref">Appendix B.1.2</a>).<a href="#appendix-B.2-2.4.1" class="pilcrow">¶</a></p>
-<p id="appendix-B.2-2.4.2">
-First, the AS receives the RS-generated information in the response from the RS to the request sent for uploading the access token. Then, the AS specifies this parameter in the Access Token Response to C, thereby relaying the information received from the RS. The profile of ACE used has to define the detailed content and semantics of the information specified in the parameter value.<a href="#appendix-B.2-2.4.2" class="pilcrow">¶</a></p>
+First, the AS receives the RS-generated information in the response from the RS to the request sent for uploading the access token. Then, the AS specifies this parameter in the Access Token Response to C, thereby relaying the information received from the RS. The profile of ACE used has to define the detailed content and semantics of the information specified in the parameter value.<a href="#appendix-B.2-2.3.2" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -3065,10 +3148,12 @@ rs_cnf_2 = 51
 anchor_cnf = 52
 rev_audience = 53
 rev_scope_param = 54
+token_series_id_param = 55
 
 ; CBOR Web Token (CWT) Claims
 rev_aud = 42
 rev_scope_claim = 43
+token_series_id_claim = 44
 
 ; CWT Confirmation Methods
 x5chain = 5
@@ -3096,22 +3181,25 @@ ace-error = 2
         </h3>
 <ul class="normal">
 <li class="normal" id="appendix-D.1-1.1">
-            <p id="appendix-D.1-1.1.1">Lowercase use of "client", "resource server", and "authorization server".<a href="#appendix-D.1-1.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.1.1">Defined parameter and claim "token_series_id".<a href="#appendix-D.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.2">
-            <p id="appendix-D.1-1.2.1">Fixed naming of parameters/claims for audience.<a href="#appendix-D.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.2.1">Lowercase use of "client", "resource server", and "authorization server".<a href="#appendix-D.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.3">
-            <p id="appendix-D.1-1.3.1">Split elision and comments in the examples in CBOR Diagnostic Notation.<a href="#appendix-D.1-1.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.3.1">Fixed naming of parameters/claims for audience.<a href="#appendix-D.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.4">
-            <p id="appendix-D.1-1.4.1">SHA-256 is mandatory to implement for computing token hashes.<a href="#appendix-D.1-1.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.4.1">Split elision and comments in the examples in CBOR Diagnostic Notation.<a href="#appendix-D.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.5">
-            <p id="appendix-D.1-1.5.1">Fixes in the IANA considerations.<a href="#appendix-D.1-1.5.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.5.1">SHA-256 is mandatory to implement for computing token hashes.<a href="#appendix-D.1-1.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.6">
-            <p id="appendix-D.1-1.6.1">Clarifications and editorial improvements.<a href="#appendix-D.1-1.6.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.6.1">Fixes in the IANA considerations.<a href="#appendix-D.1-1.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-D.1-1.7">
+            <p id="appendix-D.1-1.7.1">Clarifications and editorial improvements.<a href="#appendix-D.1-1.7.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
