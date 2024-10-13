@@ -2034,7 +2034,7 @@ Appendix A.  Benefits for ACE Profiles
       uploads the access token to the RS on behalf of C.
 
       This is useful in profiles of ACE where C can re-upload the same
-      Access Token to the RS by itself, e.g., in order to perform a key
+      access token to the RS by itself, e.g., in order to perform a key
       update like defined for the OSCORE profile [RFC9203].
 
 A.1.  DTLS Profile
