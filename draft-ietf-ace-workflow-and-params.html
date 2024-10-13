@@ -1166,7 +1166,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
-                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-rs_cnf2-and-aud2" class="internal xref">rs_cnf2 and aud2</a></p>
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-rs_cnf2-and-audience2" class="internal xref">rs_cnf2 and audience2</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.1">
                     <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="auto internal xref">3.3.1</a>.  <a href="#name-example-2" class="internal xref">Example</a></p>
@@ -1182,7 +1182,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5">
-                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-rev_aud" class="internal xref">rev_aud</a></p>
+                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-rev_audience" class="internal xref">rev_audience</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6">
                 <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-rev_scope" class="internal xref">rev_scope</a></p>
@@ -1338,13 +1338,13 @@ The new workflow has no ambition to replace the original workflow. The AS can us
               <p id="section-1-4.2.2.3.1">"rs_cnf2", used by the AS to provide C with the public keys of the RSs in the group-audience for which the access token is issued (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-6.9" class="relref">Section 6.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>).<a href="#section-1-4.2.2.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.4">
-              <p id="section-1-4.2.2.4.1">"aud2", used by the AS to provide C with the identifiers of the RSs in the group-audience for which the access token is issued.<a href="#section-1-4.2.2.4.1" class="pilcrow">¶</a></p>
+              <p id="section-1-4.2.2.4.1">"audience2", used by the AS to provide C with the identifiers of the RSs in the group-audience for which the access token is issued.<a href="#section-1-4.2.2.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.5">
               <p id="section-1-4.2.2.5.1">"anchor_cnf", used by the AS to provide C with the public keys of trust anchors, which C can use to validate the public key of an RS (e.g., as provided in the "rs_cnf" parameter defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> or in the "rs_cnf2" parameter defined in this document).<a href="#section-1-4.2.2.5.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.6">
-              <p id="section-1-4.2.2.6.1">"rev_aud", used by C to provide the AS with an identifier of itself as a reverse audience, and by the AS to possibly confirm that identifier in a response to C. A corresponding access token claim, namely "rev_aud", is also defined.<a href="#section-1-4.2.2.6.1" class="pilcrow">¶</a></p>
+              <p id="section-1-4.2.2.6.1">"rev_audience", used by C to provide the AS with an identifier of itself as a reverse audience, and by the AS to possibly confirm that identifier in a response to C. A corresponding access token claim, namely "rev_aud", is also defined.<a href="#section-1-4.2.2.6.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.7">
               <p id="section-1-4.2.2.7.1">"rev_scope", used by C to ask the AS that the requested access token specifies additional access rights as a reverse scope, allowing the access token's audience to accordingly access protected resources at C. This parameter is also used by the AS to provide C with the access rights that are actually granted as reverse scope to the access token's audience. A corresponding access token claim, namely "rev_scope", is also defined.<a href="#section-1-4.2.2.7.1" class="pilcrow">¶</a></p>
@@ -1352,7 +1352,7 @@ The new workflow has no ambition to replace the original workflow. The AS can us
           </ul>
 </li>
         <li class="normal" id="section-1-4.3">
-          <p id="section-1-4.3.1">It defines a method for the ACE framework to enforce bidirectional access control by means of a single access token (see <a href="#sec-bidirectional-access-control" class="auto internal xref">Section 4</a>), building on the two new parameters "rev_aud" and "rev_scope" as well as on the corresponding access token claims.<a href="#section-1-4.3.1" class="pilcrow">¶</a></p>
+          <p id="section-1-4.3.1">It defines a method for the ACE framework to enforce bidirectional access control by means of a single access token (see <a href="#sec-bidirectional-access-control" class="auto internal xref">Section 4</a>), building on the two new parameters "rev_audience" and "rev_scope" as well as on the corresponding access token claims "rev_aud" and "rev_scope".<a href="#section-1-4.3.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-4.4">
           <p id="section-1-4.4.1">It amends two of the requirements on profiles of the ACE framework (see <a href="#sec-updated-requirements" class="auto internal xref">Section 5</a>).<a href="#section-1-4.4.1" class="pilcrow">¶</a></p>
@@ -1389,7 +1389,7 @@ Profiles of ACE can provide their extended and specialized definition, e.g., by 
         </ul>
 <p id="section-1.1-8">CBOR <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> and CDDL <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> are used in this document. CDDL predefined type names, especially bstr for CBOR byte strings and tstr for CBOR text strings, are used extensively in this document.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
 <p id="section-1.1-9">Examples throughout this document are expressed in CBOR diagnostic notation as defined in <span><a href="https://rfc-editor.org/rfc/rfc8949#section-8" class="relref">Section 8</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>. Diagnostic notation comments are often used to provide a textual representation of the parameters' keys and values.<a href="#section-1.1-9" class="pilcrow">¶</a></p>
-<p id="section-1.1-10">In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 11</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. For example, {e'aud_2' : ["rs1", "rs2"]} stands for {50 : ["rs1", "rs2"]}.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
+<p id="section-1.1-10">In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 11</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. For example, {e'audience2' : ["rs1", "rs2"]} stands for {50 : ["rs1", "rs2"]}.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
 <p id="section-1.1-11">Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 11</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. Finally, please delete this note.<a href="#section-1.1-11" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1829,12 +1829,12 @@ In this case, the Access Token Response can include additional parameters as def
 </div>
 </section>
 </div>
-<div id="sec-rs_cnf2-aud2">
+<div id="sec-rs_cnf2-audience2">
 <section id="section-3.3">
-        <h3 id="name-rs_cnf2-and-aud2">
-<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-rs_cnf2-and-aud2" class="section-name selfRef">rs_cnf2 and aud2</a>
+        <h3 id="name-rs_cnf2-and-audience2">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-rs_cnf2-and-audience2" class="section-name selfRef">rs_cnf2 and audience2</a>
         </h3>
-<p id="section-3.3-1">This section defines the additional parameters "rs_cnf2" and "aud2" for an Access Token Response, sent by the AS in reply to a request to the token endpoint from C.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-1">This section defines the additional parameters "rs_cnf2" and "audience2" for an Access Token Response, sent by the AS in reply to a request to the token endpoint from C.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.3-2.1">
             <p id="section-3.3-2.1.1">The "rs_cnf2" parameter is <span class="bcp14">OPTIONAL</span> if the token type is "pop", asymmetric keys are used, and the access token is issued for an audience that includes multiple RSs (i.e., a group-audience, see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-6.9" class="relref">Section 6.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>). Otherwise, the "rs_cnf2" parameter <span class="bcp14">MUST NOT</span> be present.<a href="#section-3.3-2.1.1" class="pilcrow">¶</a></p>
@@ -1846,13 +1846,13 @@ If present, this parameter <span class="bcp14">MUST</span> encode a non-empty CB
 Each of the public keys may contain parameters specifying information such as the public key algorithm and use (e.g., by means of the parameters "alg" or "key_ops" in a COSE_Key structure). If such information is specified, a client <span class="bcp14">MUST NOT</span> use a public key that is incompatible with the profile of ACE used or with the PoP algorithm according to that information. An RS <span class="bcp14">MUST</span> reject a proof-of-possession that relies on such a key, and reply with a response code equivalent to the CoAP code 4.00 (Bad Request).<a href="#section-3.3-2.1.4" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-2.2">
-            <p id="section-3.3-2.2.1">The "aud2" parameter is <span class="bcp14">OPTIONAL</span> and specifies the identifiers of the RSs in the group-audience for which the access token is issued.<a href="#section-3.3-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-2.2.1">The "audience2" parameter is <span class="bcp14">OPTIONAL</span> and specifies the identifiers of the RSs in the group-audience for which the access token is issued.<a href="#section-3.3-2.2.1" class="pilcrow">¶</a></p>
 <p id="section-3.3-2.2.2">
-If present, this parameter <span class="bcp14">MUST</span> encode a non-empty CBOR array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. Each element of the CBOR array in the "aud2" parameter <span class="bcp14">MUST</span> be a CBOR text string, with value the identifier of one RS in the group-audience.<a href="#section-3.3-2.2.2" class="pilcrow">¶</a></p>
+If present, this parameter <span class="bcp14">MUST</span> encode a non-empty CBOR array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. Each element of the CBOR array in the "audience2" parameter <span class="bcp14">MUST</span> be a CBOR text string, with value the identifier of one RS in the group-audience.<a href="#section-3.3-2.2.2" class="pilcrow">¶</a></p>
 <p id="section-3.3-2.2.3">
-The element of the CBOR array referring to an RS in the group-audience <span class="bcp14">SHOULD</span> have the same value that would be used to identify that RS through the "aud" parameter of an Access Token Request to the AS (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.1" class="relref">Section 5.8.1</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>) and of an Access Token Response from the AS (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.2" class="relref">Section 5.8.2</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), when requesting and issuing an access token for that individual RS.<a href="#section-3.3-2.2.3" class="pilcrow">¶</a></p>
+The element of the CBOR array referring to an RS in the group-audience <span class="bcp14">SHOULD</span> have the same value that would be used to identify that RS through the "audience" parameter of an Access Token Request to the AS (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.1" class="relref">Section 5.8.1</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>) and of an Access Token Response from the AS (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.2" class="relref">Section 5.8.2</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), when requesting and issuing an access token for that individual RS.<a href="#section-3.3-2.2.3" class="pilcrow">¶</a></p>
 <p id="section-3.3-2.2.4">
-The "aud2" parameter is <span class="bcp14">REQUIRED</span> if the "rs_cnf2" parameter is present. In such a case, the i-th element of the CBOR array in the "aud2" parameter <span class="bcp14">MUST</span> be the identifier of the RS whose public key is specified as the i-th element of the CBOR array in the "rs_cnf2" parameter.<a href="#section-3.3-2.2.4" class="pilcrow">¶</a></p>
+The "audience2" parameter is <span class="bcp14">REQUIRED</span> if the "rs_cnf2" parameter is present. In such a case, the i-th element of the CBOR array in the "audience2" parameter <span class="bcp14">MUST</span> be the identifier of the RS whose public key is specified as the i-th element of the CBOR array in the "rs_cnf2" parameter.<a href="#section-3.3-2.2.4" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <div id="example-1">
@@ -1860,7 +1860,7 @@ The "aud2" parameter is <span class="bcp14">REQUIRED</span> if the "rs_cnf2" par
           <h4 id="name-example-2">
 <a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-example-2" class="section-name selfRef">Example</a>
           </h4>
-<p id="section-3.3.1-1"><a href="#fig-example-AS-to-C-rs_cnf2" class="auto internal xref">Figure 7</a> shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience composed of two RSs "rs1" and "rs2", and bound to C's public key as asymmetric PoP key. The Access Token Response includes the access token, as well as the parameters "aud2" and "rs_cnf2". These specify the public key of the two RSs as intended recipients of the access token and the identifiers of those two RSs, respectively.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-1"><a href="#fig-example-AS-to-C-rs_cnf2" class="auto internal xref">Figure 7</a> shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience composed of two RSs "rs1" and "rs2", and bound to C's public key as asymmetric PoP key. The Access Token Response includes the access token, as well as the parameters "audience2" and "rs_cnf2". These specify the public key of the two RSs as intended recipients of the access token and the identifiers of those two RSs, respectively.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
 <span id="name-example-of-access-token-res"></span><div id="fig-example-AS-to-C-rs_cnf2">
 <figure id="figure-7">
             <div class="alignLeft art-text artwork" id="section-3.3.1-2.1">
@@ -1876,7 +1876,7 @@ The "aud2" parameter is <span class="bcp14">REQUIRED</span> if the "rs_cnf2" par
        / (full CWT elided for brevity;
           CWT contains the client's RPK in the "cnf" claim) /
      / expires_in /   2 : 3600,
-                e'aud2' : ["rs1", "rs2"],
+           e'audience2' : ["rs1", "rs2"],
              e'rs_cnf2' : [
                {
                  / COSE_Key / 1 : {
@@ -1903,7 +1903,7 @@ The "aud2" parameter is <span class="bcp14">REQUIRED</span> if the "rs_cnf2" par
 </pre>
 </div>
 <figcaption><a href="#figure-7" class="selfRef">Figure 7</a>:
-<a href="#name-example-of-access-token-res" class="selfRef">Example of Access Token Response with an access token bound to an asymmetric key, using the parameters "aud2" and "rs_cnf2".</a>
+<a href="#name-example-of-access-token-res" class="selfRef">Example of Access Token Response with an access token bound to an asymmetric key, using the parameters "audience2" and "rs_cnf2".</a>
             </figcaption></figure>
 </div>
 </section>
@@ -1921,16 +1921,16 @@ The "aud2" parameter is <span class="bcp14">REQUIRED</span> if the "rs_cnf2" par
 <p id="section-3.4-4">If this parameter is absent, either the RS/RSs in the audience do not use a public key, or the AS knows that C can validate the public key of such RS/RSs without additional information (e.g., C has already obtained the required public keys of the involved trust anchors from the AS or through other means).<a href="#section-3.4-4" class="pilcrow">¶</a></p>
 <p id="section-3.4-5">If present, this parameter <span class="bcp14">MUST</span> encode a non-empty CBOR array that <span class="bcp14">MUST</span> be treated as a set, i.e., the order of its elements has no meaning. Each element of the CBOR array specifies the public key of one trust anchor, which can be used to validate the public key of at least one RS included in the audience for which the access token is issued. Each element of the CBOR array <span class="bcp14">MUST</span> follow the syntax and semantics of the "cnf" claim either from <span><a href="https://rfc-editor.org/rfc/rfc8747#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC8747" class="cite xref">RFC8747</a>]</span> for CBOR-based interactions, or from <span><a href="https://rfc-editor.org/rfc/rfc7800#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC7800" class="cite xref">RFC7800</a>]</span> for JSON-based interactions. It is not required that all the elements of the CBOR array rely on the same confirmation method.<a href="#section-3.4-5" class="pilcrow">¶</a></p>
 <p id="section-3.4-6">Each of the public keys specified in the "anchor_cnf" parameter may contain parameters specifying information such as the public key algorithm and use (e.g., by means of the parameters "alg" or "key_ops" in a COSE_Key structure). If such information is specified, a client <span class="bcp14">MUST NOT</span> use a public key that is incompatible with the profile of ACE used, or with the public keys to validate and the way to validate those.<a href="#section-3.4-6" class="pilcrow">¶</a></p>
-<p id="section-3.4-7">The presence of this parameter does not require that the Access Token Response also includes the "rs_cnf" parameter defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> or the "rs_cnf2" parameter defined in <a href="#sec-rs_cnf2-aud2" class="auto internal xref">Section 3.3</a> of this document. That is, C may be able to obtain the public keys of the RS/RSs for which the access token is issued through other means.<a href="#section-3.4-7" class="pilcrow">¶</a></p>
-<p id="section-3.4-8">When the Access Token Response includes both the "anchor_cnf" parameter and the "aud2" parameter defined in <a href="#sec-rs_cnf2-aud2" class="auto internal xref">Section 3.3</a>, then C <span class="bcp14">MUST</span> make sure that a public key PK_RS is associated with an RS identified by an element of "aud2", before using any of the public keys specified in "anchor_cnf" to validate PK_RS.<a href="#section-3.4-8" class="pilcrow">¶</a></p>
-<p id="section-3.4-9">When the Access Token Response includes the "anchor_cnf" parameter but not the "aud2" parameter, then C can use any of the public keys specified in "anchor_cnf" to validate the public key PK_RS of any RS in the targeted audience. This allows C to use the access token with an RS that is deployed later on as part of the same audience, which is particularly useful in the case of a group-audience.<a href="#section-3.4-9" class="pilcrow">¶</a></p>
+<p id="section-3.4-7">The presence of this parameter does not require that the Access Token Response also includes the "rs_cnf" parameter defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> or the "rs_cnf2" parameter defined in <a href="#sec-rs_cnf2-audience2" class="auto internal xref">Section 3.3</a> of this document. That is, C may be able to obtain the public keys of the RS/RSs for which the access token is issued through other means.<a href="#section-3.4-7" class="pilcrow">¶</a></p>
+<p id="section-3.4-8">When the Access Token Response includes both the "anchor_cnf" parameter and the "audience2" parameter defined in <a href="#sec-rs_cnf2-audience2" class="auto internal xref">Section 3.3</a>, then C <span class="bcp14">MUST</span> make sure that a public key PK_RS is associated with an RS identified by an element of "audience2", before using any of the public keys specified in "anchor_cnf" to validate PK_RS.<a href="#section-3.4-8" class="pilcrow">¶</a></p>
+<p id="section-3.4-9">When the Access Token Response includes the "anchor_cnf" parameter but not the "audience2" parameter, then C can use any of the public keys specified in "anchor_cnf" to validate the public key PK_RS of any RS in the targeted audience. This allows C to use the access token with an RS that is deployed later on as part of the same audience, which is particularly useful in the case of a group-audience.<a href="#section-3.4-9" class="pilcrow">¶</a></p>
 <div id="example-2">
 <section id="section-3.4.1">
           <h4 id="name-example-3">
 <a href="#section-3.4.1" class="section-number selfRef">3.4.1. </a><a href="#name-example-3" class="section-name selfRef">Example</a>
           </h4>
 <p id="section-3.4.1-1"><a href="#fig-example-AS-to-C-anchor_cnf" class="auto internal xref">Figure 8</a> shows an example of Access Token Response from the AS to C, following the issue of an access token for a group-audience, and bound to C's public key as asymmetric PoP key.<a href="#section-3.4.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.4.1-2">The identifier of the group-audience was specified by the "aud" parameter of the Access Token Request to the AS, is specified by the "aud" claim of the issued access token, and is not repeated in the Access Token Response from the AS.<a href="#section-3.4.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.4.1-2">The identifier of the group-audience was specified by the "audience" parameter of the Access Token Request to the AS, is specified by the "aud" claim of the issued access token, and is not repeated in the Access Token Response from the AS.<a href="#section-3.4.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.4.1-3">The Access Token Response includes the "anchor_cnf" parameter. This specifies the public key of a trust anchor that C can use to validate the public keys of any RS with which the access token is going to be used. The public key of the trust anchor is here conveyed within an X.509 certificate used as public authentication credential for that trust anchor, by means of the CWT confirmation method "x5chain" defined in <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>.<a href="#section-3.4.1-3" class="pilcrow">¶</a></p>
 <span id="name-example-of-access-token-resp"></span><div id="fig-example-AS-to-C-anchor_cnf">
 <figure id="figure-8">
@@ -1980,23 +1980,23 @@ The "aud2" parameter is <span class="bcp14">REQUIRED</span> if the "rs_cnf2" par
 </div>
 </section>
 </div>
-<div id="sec-rev_aud">
+<div id="sec-rev_audience">
 <section id="section-3.5">
-        <h3 id="name-rev_aud">
-<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-rev_aud" class="section-name selfRef">rev_aud</a>
+        <h3 id="name-rev_audience">
+<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-rev_audience" class="section-name selfRef">rev_audience</a>
         </h3>
-<p id="section-3.5-1">This section defines the additional "rev_aud" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.5-1">This section defines the additional "rev_audience" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.5-2.1">
-            <p id="section-3.5-2.1.1">The "rev_aud" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Request. The presence of this parameter indicates that C wishes the requested access token to specify additional access rights. These are intended for the access token's audience to access protected resources at C as the access token's reverse audience.<a href="#section-3.5-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.5-2.1.1">The "rev_audience" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Request. The presence of this parameter indicates that C wishes the requested access token to specify additional access rights. These are intended for the access token's audience to access protected resources at C as the access token's reverse audience.<a href="#section-3.5-2.1.1" class="pilcrow">¶</a></p>
 <p id="section-3.5-2.1.2">
 This parameter specifies such a reverse audience as a text string identifier of C. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR text string.<a href="#section-3.5-2.1.2" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.5-2.2">
-            <p id="section-3.5-2.2.1">The "rev_aud" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Response. If present, it has the same meaning and encoding that it has in the Access Token Request.<a href="#section-3.5-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.5-2.2.1">The "rev_audience" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Response. If present, it has the same meaning and encoding that it has in the Access Token Request.<a href="#section-3.5-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.5-3">Fundamentally, this parameter has the same semantics of the "aud" parameter used in the ACE framework, with the difference that it conveys an identifier of C as a host of protected resources to access, according to the access rights granted as reverse scope to the audience of the access token issued by the AS.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
+<p id="section-3.5-3">Fundamentally, this parameter has the same semantics of the "audience" parameter used in the ACE framework, with the difference that it conveys an identifier of C as a host of protected resources to access, according to the access rights granted as reverse scope to the audience of the access token issued by the AS.<a href="#section-3.5-3" class="pilcrow">¶</a></p>
 <p id="section-3.5-4">The use of this parameter is further detailed in <a href="#sec-bidirectional-access-control" class="auto internal xref">Section 4</a>.<a href="#section-3.5-4" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2041,14 +2041,14 @@ This parameter specifies such access rights as a reverse scope. When the Access 
 <li class="normal" id="section-4-4.1">
           <p id="section-4-4.1.1">The access token expresses access rights according to which the requesting ACE client DEV1 can access protected resources hosted at the ACE RS DEV2.<a href="#section-4-4.1.1" class="pilcrow">¶</a></p>
 <p id="section-4-4.1.2">
-For this first direction of access control, the target DEV2 is specified by means of the "aud" parameter and the corresponding access token claim "aud", while the access rights are specified by means of the "scope" parameter and the corresponding access token claim "scope".<a href="#section-4-4.1.2" class="pilcrow">¶</a></p>
+For this first direction of access control, the target DEV2 is specified by means of the "audience" parameter and the corresponding access token claim "aud", while the access rights are specified by means of the "scope" parameter and the corresponding access token claim "scope".<a href="#section-4-4.1.2" class="pilcrow">¶</a></p>
 <p id="section-4-4.1.3">
 This is the original, primary direction of access control, where the ACE client DEV1 that requests the access token wishes access rights to access protected resources at the ACE RS DEV2.<a href="#section-4-4.1.3" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-4-4.2">
           <p id="section-4-4.2.1">The same access token additionally expresses access rights according to which the ACE RS DEV2 can access protected resources hosted at the ACE client DEV1.<a href="#section-4-4.2.1" class="pilcrow">¶</a></p>
 <p id="section-4-4.2.2">
-For this second direction of access control, the target DEV1 is specified by means of the "rev_aud" parameter defined in <a href="#sec-rev_aud" class="auto internal xref">Section 3.5</a> and the corresponding access token claim "rev_aud" defined in this section, while the access rights are specified by means of the "rev_scope" parameter defined in <a href="#sec-rev_scope" class="auto internal xref">Section 3.6</a> and the corresponding access token claim "rev_scope" defined in this section.<a href="#section-4-4.2.2" class="pilcrow">¶</a></p>
+For this second direction of access control, the target DEV1 is specified by means of the "rev_audience" parameter defined in <a href="#sec-rev_audience" class="auto internal xref">Section 3.5</a> and the corresponding access token claim "rev_aud" defined in this section, while the access rights are specified by means of the "rev_scope" parameter defined in <a href="#sec-rev_scope" class="auto internal xref">Section 3.6</a> and the corresponding access token claim "rev_scope" defined in this section.<a href="#section-4-4.2.2" class="pilcrow">¶</a></p>
 <p id="section-4-4.2.3">
 This is the new, secondary direction of access control, where the ACE client DEV1 that requests the access token also wishes access rights for the ACE RS DEV2 to access resources at DEV1.<a href="#section-4-4.2.3" class="pilcrow">¶</a></p>
 <p id="section-4-4.2.4">
@@ -2148,9 +2148,9 @@ Clearly, this requires the ACE client DEV1 to also act as CoAP server, and the A
 <p id="section-4.1.1-1">As to the Access Token Request that DEV1 sends to AS, the following applies.<a href="#section-4.1.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.1.1-2.1">
-              <p id="section-4.1.1-2.1.1">The "aud" and "scope" parameters are used as defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, and according to the profile of ACE used by DEV1 and DEV2.<a href="#section-4.1.1-2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-4.1.1-2.1.1">The "audience" and "scope" parameters are used as defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, and according to the profile of ACE used by DEV1 and DEV2.<a href="#section-4.1.1-2.1.1" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-2.1.2">
-In particular, "aud" specifies an identifier of DEV2, while "scope" specifies access rights that DEV1 wishes to obtain for accessing protecting resources at DEV2.<a href="#section-4.1.1-2.1.2" class="pilcrow">¶</a></p>
+In particular, "audience" specifies an identifier of DEV2, while "scope" specifies access rights that DEV1 wishes to obtain for accessing protecting resources at DEV2.<a href="#section-4.1.1-2.1.2" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-2.1.3">
 That is, the two parameters pertain to the primary direction of access control.<a href="#section-4.1.1-2.1.3" class="pilcrow">¶</a></p>
 </li>
@@ -2158,14 +2158,14 @@ That is, the two parameters pertain to the primary direction of access control.<
               <p id="section-4.1.1-2.2.1">The "req_cnf" parameter defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> can be included. When present, it specifies the key that DEV1 wishes to bind to the requested access token.<a href="#section-4.1.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.1.1-2.3">
-              <p id="section-4.1.1-2.3.1">The "rev_aud" and "rev_scope" parameters defined in <a href="#sec-rev_aud" class="auto internal xref">Section 3.5</a> and <a href="#sec-rev_scope" class="auto internal xref">Section 3.6</a> can be included.<a href="#section-4.1.1-2.3.1" class="pilcrow">¶</a></p>
+              <p id="section-4.1.1-2.3.1">The "rev_audience" and "rev_scope" parameters defined in <a href="#sec-rev_audience" class="auto internal xref">Section 3.5</a> and <a href="#sec-rev_scope" class="auto internal xref">Section 3.6</a> can be included.<a href="#section-4.1.1-2.3.1" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-2.3.2">
-In particular, "rev_aud" specifies an identifier of DEV1, while "rev_scope" specifies access rights that DEV1 wishes for DEV2 to obtain for accessing protecting resources at DEV1.<a href="#section-4.1.1-2.3.2" class="pilcrow">¶</a></p>
+In particular, "rev_audience" specifies an identifier of DEV1, while "rev_scope" specifies access rights that DEV1 wishes for DEV2 to obtain for accessing protecting resources at DEV1.<a href="#section-4.1.1-2.3.2" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-2.3.3">
 That is, the two parameters pertain to the secondary direction of access control.<a href="#section-4.1.1-2.3.3" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-4.1.1-3">If DEV1 wishes that the requested access token also provides DEV2 with access rights pertaining to the secondary direction of access control, then the Access Token Request has to include at least one of the two parameters "rev_aud" and "rev_scope".<a href="#section-4.1.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.1.1-3">If DEV1 wishes that the requested access token also provides DEV2 with access rights pertaining to the secondary direction of access control, then the Access Token Request has to include at least one of the two parameters "rev_audience" and "rev_scope".<a href="#section-4.1.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-bidirectional-access-control-one-as-resp">
@@ -2173,13 +2173,13 @@ That is, the two parameters pertain to the secondary direction of access control
           <h4 id="name-access-token-response">
 <a href="#section-4.1.2" class="section-number selfRef">4.1.2. </a><a href="#name-access-token-response" class="section-name selfRef">Access Token Response</a>
           </h4>
-<p id="section-4.1.2-1">When receiving an Access Token Request that includes at least one of the two parameters "rev_aud" and "rev_scope", AS processes it as defined in <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.2" class="relref">Section 5.2</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, with the following additions:<a href="#section-4.1.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.1.2-1">When receiving an Access Token Request that includes at least one of the two parameters "rev_audience" and "rev_scope", AS processes it as defined in <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.2" class="relref">Section 5.2</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, with the following additions:<a href="#section-4.1.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.1.2-2.1">
-              <p id="section-4.1.2-2.1.1">If the Access Token Request includes the "rev_scope" parameter but not the "rev_aud" parameter, then AS assumes the identifier of DEV1 to be the default one, if any is defined.<a href="#section-4.1.2-2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-4.1.2-2.1.1">If the Access Token Request includes the "rev_scope" parameter but not the "rev_audience" parameter, then AS assumes the identifier of DEV1 to be the default one, if any is defined.<a href="#section-4.1.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.1.2-2.2">
-              <p id="section-4.1.2-2.2.1">If the Access Token Request includes the "rev_aud" parameter but not the "rev_scope" parameter, then AS assumes the access rights requested for DEV2 to access DEV1 to be the default ones, if any are defined.<a href="#section-4.1.2-2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-4.1.2-2.2.1">If the Access Token Request includes the "rev_audience" parameter but not the "rev_scope" parameter, then AS assumes the access rights requested for DEV2 to access DEV1 to be the default ones, if any are defined.<a href="#section-4.1.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.1.2-2.3">
               <p id="section-4.1.2-2.3.1">AS checks whether the access rights requested for DEV2 as reverse scope can be at least partially granted, in accordance with the installed access policies pertaining to the access to protected resources at DEV1 from DEV2.<a href="#section-4.1.2-2.3.1" class="pilcrow">¶</a></p>
@@ -2192,9 +2192,9 @@ It is <span class="bcp14">REQUIRED</span> that such evaluation succeeds, in orde
 <p id="section-4.1.2-3">As to the successful Access Token Response that AS sends to DEV1, the following applies.<a href="#section-4.1.2-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-4.1.2-4.1">
-              <p id="section-4.1.2-4.1.1">The "aud" and "scope" parameters are used as defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, and according to the profile of ACE used by DEV1 and DEV2.<a href="#section-4.1.2-4.1.1" class="pilcrow">¶</a></p>
+              <p id="section-4.1.2-4.1.1">The "audience" and "scope" parameters are used as defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, and according to the profile of ACE used by DEV1 and DEV2.<a href="#section-4.1.2-4.1.1" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-4.1.2">
-In particular, "aud" specifies an identifier of DEV2, while "scope" specifies the access rights that AS has granted to DEV1 for accessing protecting resources at DEV2.<a href="#section-4.1.2-4.1.2" class="pilcrow">¶</a></p>
+In particular, "audience" specifies an identifier of DEV2, while "scope" specifies the access rights that AS has granted to DEV1 for accessing protecting resources at DEV2.<a href="#section-4.1.2-4.1.2" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-4.1.3">
 The "scope" parameter has to be present if: i) it was present in the Access Token Request, and the access rights granted to DEV1 are different from the requested ones; or ii) it was not present in the Access Token Request, and the access rights granted to DEV1 are different from the default ones.<a href="#section-4.1.2-4.1.3" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-4.1.4">
@@ -2204,9 +2204,9 @@ If the "scope" parameter is not present, then the granted access rights are the 
               <p id="section-4.1.2-4.2.1">The "rs_cnf" parameter defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> can be included. When present, it specifies information about the public key that DEV2 uses to authenticate.<a href="#section-4.1.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.1.2-4.3">
-              <p id="section-4.1.2-4.3.1">The "rev_aud" parameter defined in <a href="#sec-rev_aud" class="auto internal xref">Section 3.5</a> can be included, and specifies an identifier of DEV1.<a href="#section-4.1.2-4.3.1" class="pilcrow">¶</a></p>
+              <p id="section-4.1.2-4.3.1">The "rev_audience" parameter defined in <a href="#sec-rev_audience" class="auto internal xref">Section 3.5</a> can be included, and specifies an identifier of DEV1.<a href="#section-4.1.2-4.3.1" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-4.3.2">
-If the "rev_aud" parameter is present in the Access Token Response and it was also present in the Access Token Request, then the parameter in the Access Token Response <span class="bcp14">MUST</span> have the same value specified by the parameter in the Access Token Request.<a href="#section-4.1.2-4.3.2" class="pilcrow">¶</a></p>
+If the "rev_audience" parameter is present in the Access Token Response and it was also present in the Access Token Request, then the parameter in the Access Token Response <span class="bcp14">MUST</span> have the same value specified by the parameter in the Access Token Request.<a href="#section-4.1.2-4.3.2" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.1.2-4.4">
               <p id="section-4.1.2-4.4.1">The "rev_scope" parameter defined in <a href="#sec-rev_scope" class="auto internal xref">Section 3.6</a> can be included, and specifies access rights that AS has granted to DEV2 for accessing protecting resources at DEV1.<a href="#section-4.1.2-4.4.1" class="pilcrow">¶</a></p>
@@ -2221,9 +2221,9 @@ If the "rev_scope" parameter is not present, then the access rights granted to D
 <li class="normal" id="section-4.1.2-6.1">
               <p id="section-4.1.2-6.1.1">The access token <span class="bcp14">MUST</span> contain a claim specifying the identifier of DEV1.<a href="#section-4.1.2-6.1.1" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-6.1.2">
-If the Access Token Response includes the "rev_aud" parameter, then the claim specifies the same information conveyed by that parameter.<a href="#section-4.1.2-6.1.2" class="pilcrow">¶</a></p>
+If the Access Token Response includes the "rev_audience" parameter, then the claim specifies the same information conveyed by that parameter.<a href="#section-4.1.2-6.1.2" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-6.1.3">
-If this is not the case, then the claim specifies the same information conveyed by the "rev_aud" parameter of the Access Token Request, if included therein, or the default identifier of DEV1 otherwise.<a href="#section-4.1.2-6.1.3" class="pilcrow">¶</a></p>
+If this is not the case, then the claim specifies the same information conveyed by the "rev_audience" parameter of the Access Token Request, if included therein, or the default identifier of DEV1 otherwise.<a href="#section-4.1.2-6.1.3" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-6.1.4">
 When CWTs are used as access tokens, this information <span class="bcp14">MUST</span> be transported in the "rev_aud" claim defined in <a href="#iana-token-cwt-claims" class="auto internal xref">Section 8.4</a>.<a href="#section-4.1.2-6.1.4" class="pilcrow">¶</a></p>
 </li>
@@ -2450,7 +2450,7 @@ Payload:
 <p id="section-8.1-7"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.1-8.1">
-            <p id="section-8.1-8.1.1">Name: "aud2"<a href="#section-8.1-8.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-8.1.1">Name: "audience2"<a href="#section-8.1-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-8.2">
             <p id="section-8.1-8.2.1">Parameter Usage Location: token response<a href="#section-8.1-8.2.1" class="pilcrow">¶</a></p>
@@ -2480,7 +2480,7 @@ Payload:
 <p id="section-8.1-11"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.1-12.1">
-            <p id="section-8.1-12.1.1">Name: "rev_aud"<a href="#section-8.1-12.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-12.1.1">Name: "rev_audience"<a href="#section-8.1-12.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-12.2">
             <p id="section-8.1-12.2.1">Parameter Usage Location: token request and token response<a href="#section-8.1-12.2.1" class="pilcrow">¶</a></p>
@@ -2571,7 +2571,7 @@ Payload:
 <p id="section-8.2-7"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.2-8.1">
-            <p id="section-8.2-8.1.1">Name: "aud2"<a href="#section-8.2-8.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-8.1.1">Name: "audience2"<a href="#section-8.2-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-8.2">
             <p id="section-8.2-8.2.1">CBOR Key: TBD<a href="#section-8.2-8.2.1" class="pilcrow">¶</a></p>
@@ -2607,7 +2607,7 @@ Payload:
 <p id="section-8.2-11"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.2-12.1">
-            <p id="section-8.2-12.1.1">Name: "rev_aud"<a href="#section-8.2-12.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-12.1.1">Name: "rev_audience"<a href="#section-8.2-12.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-12.2">
             <p id="section-8.2-12.2.1">CBOR Key: TBD<a href="#section-8.2-12.2.1" class="pilcrow">¶</a></p>
@@ -2943,7 +2943,7 @@ This is useful in profiles of ACE where C can re-upload the same Access Token to
         <h3 id="name-dtls-profile">
 <a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-dtls-profile" class="section-name selfRef">DTLS Profile</a>
         </h3>
-<p id="appendix-A.1-1">When the RPK mode of the DTLS profile is used (see <span><a href="https://rfc-editor.org/rfc/rfc9202#section-3.2" class="relref">Section 3.2</a> of [<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>), it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs. This is enabled by the parameters "rs_cnf2" and "aud2" defined in <a href="#sec-rs_cnf2-aud2" class="auto internal xref">Section 3.3</a>, as well as by the "anchor_cnf" parameter defined in <a href="#sec-anchor_cnf" class="auto internal xref">Section 3.4</a>. This seamlessly applies also if the profile uses Transport Layer Security (TLS) <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, as defined in <span>[<a href="#RFC9430" class="cite xref">RFC9430</a>]</span>.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-1">When the RPK mode of the DTLS profile is used (see <span><a href="https://rfc-editor.org/rfc/rfc9202#section-3.2" class="relref">Section 3.2</a> of [<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>), it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs. This is enabled by the parameters "rs_cnf2" and "audience2" defined in <a href="#sec-rs_cnf2-audience2" class="auto internal xref">Section 3.3</a>, as well as by the "anchor_cnf" parameter defined in <a href="#sec-anchor_cnf" class="auto internal xref">Section 3.4</a>. This seamlessly applies also if the profile uses Transport Layer Security (TLS) <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span>, as defined in <span>[<a href="#RFC9430" class="cite xref">RFC9430</a>]</span>.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="edhoc-and-oscore-profile">
@@ -2951,7 +2951,7 @@ This is useful in profiles of ACE where C can re-upload the same Access Token to
         <h3 id="name-edhoc-and-oscore-profile">
 <a href="#appendix-A.2" class="section-number selfRef">A.2. </a><a href="#name-edhoc-and-oscore-profile" class="section-name selfRef">EDHOC and OSCORE Profile</a>
         </h3>
-<p id="appendix-A.2-1">When the EDHOC and OSCORE profile is used <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs. This is enabled by the parameters "rs_cnf2" and "aud2" defined in <a href="#sec-rs_cnf2-aud2" class="auto internal xref">Section 3.3</a>, as well as by the "anchor_cnf" parameter defined in <a href="#sec-anchor_cnf" class="auto internal xref">Section 3.4</a>.<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
+<p id="appendix-A.2-1">When the EDHOC and OSCORE profile is used <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs. This is enabled by the parameters "rs_cnf2" and "audience2" defined in <a href="#sec-rs_cnf2-audience2" class="auto internal xref">Section 3.3</a>, as well as by the "anchor_cnf" parameter defined in <a href="#sec-anchor_cnf" class="auto internal xref">Section 3.4</a>.<a href="#appendix-A.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3060,14 +3060,14 @@ First, the RS specifies this parameter in the response sent to the AS, after the
 ; OAuth Parameters CBOR Mappings
 token_upload = 48
 token_hash = 49
-aud_2 = 50
+audience2 = 50
 rs_cnf_2 = 51
 anchor_cnf = 52
-rev_aud_param = 53
+rev_audience = 53
 rev_scope_param = 54
 
 ; CBOR Web Token (CWT) Claims
-rev_aud_claim = 42
+rev_aud = 42
 rev_scope_claim = 43
 
 ; CWT Confirmation Methods
@@ -3099,16 +3099,19 @@ ace-error = 2
             <p id="appendix-D.1-1.1.1">Lowercase use of "client", "resource server", and "authorization server".<a href="#appendix-D.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.2">
-            <p id="appendix-D.1-1.2.1">Split elision and comments in the examples in CBOR Diagnostic Notation.<a href="#appendix-D.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.2.1">Fixed naming of parameters/claims for audience.<a href="#appendix-D.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.3">
-            <p id="appendix-D.1-1.3.1">SHA-256 is mandatory to implement for computing token hashes.<a href="#appendix-D.1-1.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.3.1">Split elision and comments in the examples in CBOR Diagnostic Notation.<a href="#appendix-D.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.4">
-            <p id="appendix-D.1-1.4.1">Fixes in the IANA considerations.<a href="#appendix-D.1-1.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.4.1">SHA-256 is mandatory to implement for computing token hashes.<a href="#appendix-D.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.5">
-            <p id="appendix-D.1-1.5.1">Clarifications and editorial improvements.<a href="#appendix-D.1-1.5.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.5.1">Fixes in the IANA considerations.<a href="#appendix-D.1-1.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-D.1-1.6">
+            <p id="appendix-D.1-1.6.1">Clarifications and editorial improvements.<a href="#appendix-D.1-1.6.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
