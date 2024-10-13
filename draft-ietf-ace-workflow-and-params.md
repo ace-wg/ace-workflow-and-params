@@ -127,6 +127,8 @@ This document updates {{RFC9200}} as follows.
 
   - "rev_scope", used by C to ask the AS that the requested access token specifies additional access rights as a reverse scope, allowing the access token's audience to accordingly access protected resources at C. This parameter is also used by the AS to provide C with the access rights that are actually granted as reverse scope to the access token's audience. A corresponding access token claim, namely "rev_scope", is also defined.
 
+  - "token_series_id", used by the AS to provide C with the identifier of a token series, and by C to ask the AS for a new acces token in the same token series that dynamically updates access rights. A corresponding access token claim, namely "token_series_id", is also defined.
+
 * It defines a method for the ACE framework to enforce bidirectional access control by means of a single access token (see {{sec-bidirectional-access-control}}), building on the two new parameters "rev_audience" and "rev_scope" as well as on the corresponding access token claims "rev_aud" and "rev_scope".
 
 * It amends two of the requirements on profiles of the ACE framework (see {{sec-updated-requirements}}).
@@ -150,7 +152,7 @@ Note that the term "endpoint" is used here following its OAuth definition {{RFC6
 
 Furthermore, this document uses the following terms.
 
-* Token series: the set comprising all the access tokens issued by the same AS for the same pair (client, resource server).
+* Token series: the set comprising all the access tokens issued by the same AS for the same pair (client, resource server). A token series ends when the latest access token of that token series becomes invalid (e.g., when it expires or gets revoked).
 
   Profiles of ACE can provide their extended and specialized definition, e.g., by further taking into account the public authentication credentials of C and the RS.
 
@@ -678,6 +680,30 @@ Fundamentally, this parameter has the same semantics of the "scope" parameter us
 
 The use of this parameter is further detailed in {{sec-bidirectional-access-control}}.
 
+## token_series_id {#sec-token_series_id}
+
+This section defines the additional "token_series_id" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.
+
+* The "token_series_id" parameter is OPTIONAL in an Access Token Request. The presence of this parameter indicates that C wishes to obtain a new access token for dynamically updating its access rights. That is, the new access token is intended to be the next one in an active token series and to supersede the latest access token in that token series. This parameter MUST NOT be present if the requested access token is the first one of a new token series.
+
+  If present, this parameter specifies the identifier of the token series that the new access token is intended to extend. The identifier does not change throughout the lifetime of the token series, and was provided to C in the successful Access Token Response that the AS sent when issuing the first access token in that token series. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
+
+* The "token_series_id" parameter is OPTIONAL in an Access Token Response. This parameter MUST NOT be present if the issued access token is not the first one of the token series it belongs to.
+
+  If present, this parameter specifies the identifier of the token series to which the issued access token belongs. When the Access Token Response is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
+
+If the AS relies on the "token_series_id" parameter to exchange the identifier of token series with clients, then the following applies.
+
+* The value assigned to the identifier of a token series MUST be uniquely associated with the access tokens issued by the AS for that token series, and MUST be selected from a pool that the AS exclusively controls.
+
+* An issued access token that belongs to a token series MUST include the identifier of that token series. This allows the RS to identify the latest access token in the token series to be superseded by the issued access token.
+
+  In particular, each of such access tokens MUST include a claim specifying the identifier of the token series to which the access token belongs. When CWTs are used as access tokens, this information MUST be transported in the "token_series_id" claim registered in {{iana-token-cwt-claims}}.
+
+If a profile of ACE relies on a construct that uses different parameters/claims to transport the identifier of a token series, then the new "token_series_id" parameter and "token_series_id" claim MUST NOT be used when using that profile.
+
+For example, a number of parameters/claims are already used to transport information that acts de facto as identifier of token series, in the PSK mode of the DTLS profile {{RFC9202}}, in the OSCORE profile {{RFC9203}}, and in the EDHOC and OSCORE profile {{I-D.ietf-ace-edhoc-oscore-profile}}.
+
 # Bidirectional Access Control # {#sec-bidirectional-access-control}
 
 In some deployments, two devices DEV1 and DEV2 might wish to access each other's protected resources. This can clearly be achieved by means of two separate access tokens, each of which is used to enforce access control in one direction. That is:
@@ -798,7 +824,7 @@ The issued access token MUST include information about the reverse audience and 
 
   If this is not the case, then the claim specifies the same information conveyed by the "rev_audience" parameter of the Access Token Request, if included therein, or the default identifier of DEV1 otherwise.
 
-  When CWTs are used as access tokens, this information MUST be transported in the "rev_aud" claim defined in {{iana-token-cwt-claims}}.
+  When CWTs are used as access tokens, this information MUST be transported in the "rev_aud" claim registered in {{iana-token-cwt-claims}}.
 
 * The access token MUST contain a claim specifying the access rights that AS has granted to DEV2 for accessing protecting resources at DEV1.
 
@@ -806,7 +832,7 @@ The issued access token MUST include information about the reverse audience and 
 
   If this is not the case, then the claim specifies the same information conveyed by the "rev_scope" parameter of the Access Token Request, if included therein, or the default access rights for DEV2 to access DEV1 otherwise.
 
-  When CWTs are used as access tokens, this information MUST be transported in the "rev_scope" claim, defined in {{iana-token-cwt-claims}}.
+  When CWTs are used as access tokens, this information MUST be transported in the "rev_scope" claim, registered in {{iana-token-cwt-claims}}.
 
 ### Access to Protected Resources # {#sec-bidirectional-access-control-one-as-comm}
 
@@ -977,6 +1003,13 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 * Change Controller: IETF
 * Reference: {{&SELF}}
 
+<br>
+
+* Name: "token_series_id"
+* Parameter Usage Location: token request and token response
+* Change Controller: IETF
+* Reference: {{&SELF}}
+
 ## OAuth Parameters CBOR Mappings Registry ## {#iana-oauth-cbor-mappings}
 
 IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry, following the procedure specified in {{RFC9200}}.
@@ -1035,6 +1068,14 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
 
+<br>
+
+* Name: "token_series_id"
+* CBOR Key: TBD
+* Value Type: byte string
+* Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
+
 ## JSON Web Token Claims Registry ## {#iana-token-json-claims}
 
 IANA is asked to add the following entries to the "JSON Web Token Claims" registry, following the procedure specified in {{RFC7519}}.
@@ -1048,6 +1089,13 @@ IANA is asked to add the following entries to the "JSON Web Token Claims" regist
 
 *  Claim Name: "rev_scope"
 *  Claim Description: The reverse scope of an access token
+*  Change Controller: IETF
+*  Reference: {{&SELF}}
+
+<br>
+
+*  Claim Name: "token_series_id"
+*  Claim Description: The identifier of a token series
 *  Change Controller: IETF
 *  Reference: {{&SELF}}
 
@@ -1070,6 +1118,16 @@ IANA is asked to add the following entries to the "CBOR Web Token (CWT) Claims" 
 * JWT Claim Name: "rev_scope"
 * Claim Key: TBD
 * Claim Value Type: text string or byte string
+* Change Controller: IETF
+* Reference: {{sec-bidirectional-access-control}} of {{&SELF}}
+
+<br>
+
+* Claim Name: "token_series_id"
+* Claim Description: The identifier of a token series
+* JWT Claim Name: "token_series_id"
+* Claim Key: TBD
+* Claim Value Type: byte string
 * Change Controller: IETF
 * Reference: {{sec-bidirectional-access-control}} of {{&SELF}}
 
@@ -1120,37 +1178,19 @@ When the EDHOC and OSCORE profile is used {{I-D.ietf-ace-edhoc-oscore-profile}},
 
 The following discusses open points related to the use of the new ACE workflow defined in {{sec-workflow}}.
 
-### Allow the Dynamic Update of Access Rights # {#sec-open-points-workflow-dynamic-access-rights}
+### Prevent Ambiguities in the Dynamic Update of Access Rights # {#sec-open-points-workflow-dynamic-access-rights}
 
 In some profiles of ACE, C can request a new access token to update its access rights, while preserving the same secure association with the RS. The new access token supersedes the current one stored at the RS, as they are both part of the same token series.
 
 When using the original ACE workflow, C uploads the new access token to the RS by protecting the message exchange through the secure association with the RS. This allows the RS to determine that the upload of such access token is for updating the access rights of C.
 
-When using the new ACE workflow, the AS uploads the new access token to the RS also when an update of access rights for C is to be performed. This message exchange would be protected through the secure association between the AS and the RS. However, this secure association does not help the RS retrieve the stored access token to supersede, as that is rather bound to the secure association with C.
+When using the new ACE workflow, the AS uploads the new access token to the RS also when an update of access rights for C is to be performed. This message exchange is protected through the secure association between the AS and the RS.
 
-In order for the new ACE workflow to also allow the dynamic update of access rights, it is required that the new access token updating the access rights of C includes an explicit indication for the RS. Such an indication can point the RS to the token series in question (hence to the current access token to supersede), irrespective of the secure association used to protect the token uploading.
+In this latter case, even though the access token claim "token_series_id" defined in {{sec-token_series_id}} provides the RS with an explicit indication for recognizing a stored access token as belonging to an ongoing token series, such a process might still lead to ambiguities.
 
-In some profiles of ACE, such an indication is in fact already present in access tokens that are issued after the first one in the same token series:
+For example, the RS might have deleted a stored access token due to memory limitations. This effectively terminates the corresponding token series, which is however impractical for the RS to remember indefinitely. Consequently, if the AS uploads to the RS a new access token belonging to the same token series, the RS would erroneously interpret it to be the first access token of a new series.
 
-* In the PSK mode of the DTLS profile {{RFC9202}}, the token series is indicated by the "kid" parameter within the "cnf" claim of the new access token. This has the same value of the "kid" parameter in the COSE_Key object within the "cnf" claim from the first access token of the token series.
-
-* In the OSCORE profile {{RFC9203}}, the token series is indicated by the "kid" parameter within the "cnf" claim of the new access token. This has the same value of the "id" parameter in the OSCORE_Input_Material object within the "cnf" claim from the first access token of the token series.
-
-* In the EDHOC and OSCORE profile {{I-D.ietf-ace-edhoc-oscore-profile}}, the token series is indicated by the "session_id" parameter in the EDHOC_Information object conveyed by the "edhoc_info" claim of the new access token. This has the same value of the "session_id" parameter in the EDHOC_Information object conveyed by the "edhoc_info" claim from the first access token of the token series.
-
-̈́In the three cases above, the update of access rights is possible because there is a value used as de facto "token series ID". This value does not change throughout the lifetime of a token series, and it is used to associate the new access token with the previous one in the same series to be superseded.
-
-Such a token series ID is required to have a unique value from a namespace/pool that the AS exclusively controls. This is in fact what happens in the profiles of ACE above, where the AS is the entity creating the mentioned objects or COSE Key included in the first access token of a token series.
-
-However, this may generally not hold and it is not what happens in other known cases, i.e., the DTLS profile in RPK mode {{RFC9203}} and the Group OSCORE profile {{I-D.ietf-ace-group-oscore-profile}}. At the moment, the dynamic update of access rights is not possible for those, _neither in the original nor in the new ACE workflow_.
-
-In order to make the update of access rights possible also for such cases, as well as both in the original and in the new ACE workflow, those cases can rely on a new "token_series_id" parameter and corresponding "token_series_id" claim (see {{sec-more-parameters}}), which specify a unique identifier of the token series which an access token belongs to.
-
-As to existing profiles of ACE, the above has no intention to change the current behavior when the update of access rights occurs, irrespective of the used ACE workflow and especially when using the original workflow.
-
-Future profiles may rely on a construction where the AS creates the object or the key included in the "cnf" claim of the first access token in a token series, and a unique ID generated by the AS is included in such object or key. As "token series ID", those profiles must use that unique ID generated by the AS, and must not use the new "token_series_id" parameter.
-
-Even though a "token series ID" provides an explicit indication for recognizing a stored access token as belonging to an ongoing token series, such a process might still be prone to ambiguities. For example, the RS might have deleted a stored access token due to memory limitations. This effectively terminates the corresponding token series, which is however impractical for the RS to remember indefinitely. Consequently, if the AS uploads to the RS a new access token belonging to the same token series, the RS would erroneously interpret it to be the first access token of a new series. This can be avoided by relying on a new "updated_rights" parameter, which the AS can include in a POST request to the /authz-info endpoint when uploading to the RS an access token for dynamically updating the access rights of C (see {{sec-more-parameters}}).
+This can be avoided by relying on a new "updated_rights" parameter, which the AS can include in a POST request to the /authz-info endpoint when uploading to the RS an access token for dynamically updating the access rights of C (see {{sec-more-parameters}}).
 
 ### Ensure Applicability to Any ACE Profile # {#sec-open-points-workflow-applicability}
 
@@ -1167,16 +1207,6 @@ With reference to the two cases mentioned above, "to_rs" can specify the nonce N
 ## Further New Parameters to Consider # {#sec-more-parameters}
 
 The following discusses possible, further new parameters that can be defined for addressing the open points raised earlier in {{sec-open-points}}.
-
-* "token_series_id" - This parameter specifies the unique identifier of a token series, thus ensuring that C can dynamically update its access rights, irrespective of the used ACE workflow (see {{sec-open-points-workflow-dynamic-access-rights}}).
-
-  When issuing the first access token of a token series, the AS specifies this parameter in the Access Token Response to C, with value TS_ID. Also, the AS includes a "token_series_id" claim with the same value in the access token.
-
-  When C requests a new access token in the same token series for dynamically updating its access rights, C specifies TS_ID as value of the "token_series_id" parameter of the Access Token Request, which MUST omit the "req_cnf" parameter (see {{Section 3.1 of RFC9201}}). The AS specifies the same value within the "token_series_id" claim of the new access token.
-
-  When this parameter is used, the information about the token series in question has to be specified in that parameter and in the corresponding token claim. Instead, the "req_cnf" parameter and the "cnf" claim are used for their main purpose. That is, the "req_cnf" parameter specifies the public authentication credential of the client, while the "cnf" claim specifies the PoP key bound to the access token..
-
-  If a profile of ACE can use or is already using a different parameter/claim as de-facto identifier of the token series, then that profile must continue to do so, and must not use the new "token_series_id" parameter.
 
 * "updated_rights" - When using the new ACE workflow and issuing an access token for dynamically updating the access rights of C, the AS specifies this parameter in the request sent to the RS for uploading the access token on behalf of C (see {{sec-open-points-workflow-dynamic-access-rights}}). This parameter encodes the CBOR simple value `true` (0xf5).
 
@@ -1200,10 +1230,12 @@ rs_cnf_2 = 51
 anchor_cnf = 52
 rev_audience = 53
 rev_scope_param = 54
+token_series_id_param = 55
 
 ; CBOR Web Token (CWT) Claims
 rev_aud = 42
 rev_scope_claim = 43
+token_series_id_claim = 44
 
 ; CWT Confirmation Methods
 x5chain = 5
@@ -1217,6 +1249,8 @@ ace-error = 2
 {:removeinrfc}
 
 ## Version -02 to -03 ## {#sec-02-03}
+
+* Defined parameter and claim "token_series_id".
 
 * Lowercase use of "client", "resource server", and "authorization server".
 
