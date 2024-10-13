@@ -117,6 +117,10 @@ This document updates {{RFC9200}} as follows.
 
   - "token_hash", used by the AS to provide C with a token hash, corresponding to an access token that the AS has issued for C and has successfully uploaded to the RS on behalf of C per the new ACE workflow.
 
+  - "to_rs", used by C to provide the AS with information to relay to the RS, upon asking the AS to upload the access token to the RS per the new ACE workflow. Its specific use with the OSCORE profile {{RFC9203}} is also defined, thereby effectively enabling the use of the new ACE workflow for that profile.
+
+  - "from_rs", used by the AS to provide C with information to relay from the RS, after the AS has successfully uploaded the access token to the RS per the new ACE workflow. Its specific use with the OSCORE profile {{RFC9203}} is also defined, thereby effectively enabling the use of the new ACE workflow for that profile.
+
   - "rs_cnf2", used by the AS to provide C with the public keys of the RSs in the group-audience for which the access token is issued (see {{Section 6.9 of RFC9200}}).
 
   - "audience2", used by the AS to provide C with the identifiers of the RSs in the group-audience for which the access token is issued.
@@ -162,7 +166,7 @@ CBOR {{RFC8949}} and CDDL {{RFC8610}} are used in this document. CDDL predefined
 
 Examples throughout this document are expressed in CBOR diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Appendix G of RFC8610}}. Diagnostic notation comments are often used to provide a textual representation of the parameters' keys and values.
 
-In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. For example, {e'audience2' : \["rs1", "rs2"\]} stands for {50 : \["rs1", "rs2"\]}.
+In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. For example, {e'audience2' : \["rs1", "rs2"\]} stands for {52 : \["rs1", "rs2"\]}.
 
 Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. Finally, please delete this note.
 
@@ -522,6 +526,28 @@ Consistent with the value of the "token_upload" parameter in the Access Token Re
    }
 ~~~~~~~~~~~
 {: #fig-example-AS-to-C-token-hash title="Example of Access Token Request-Response Exchange. Following a successful uploading of the access token from the AS to the RS, the Access Token Response includes the \"token_upload\" parameter as well as the \"token_hash\" parameter. The \"token_hash\" parameter conveys the token hash corresponding to the issued access token, which is bound to a symmetric key and was uploaded to the RS by the AS."}
+
+## to_rs and from_rs {#sec-to_rs-from_rs}
+
+This section defines the additional parameters "to_rs" and "from_rs". The "to_rs" parameter can be used in an Access Token Request sent by C to the token endpoint at the AS. The "from_rs" parameter can be used in an Access Token Response, sent by the AS in reply to a request to the token endpoint from C.
+
+* The "to_rs" parameter is OPTIONAL in an Access Token Request. The presence of this parameter indicates that C wishes the AS to relay the information specified therein to the RS, when the AS uploads the issued access token to the RS per the new ACE workflow defined in {{sec-workflow}}. This parameter MUST NOT be present if the "token_upload" parameter defined in {{sec-token_upload}} is not present in the Access Token Request.
+
+  If present, this parameter specifies the information that C wishes the AS to relay to the RS, when uploading the access token to the RS on behalf of C. Together with the access token, this information is expected to consist in what C would have uploaded to the authz-info endpoint at the RS, if uploading the access token per the original ACE workflow. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
+
+  The semantics and encoding of the information specified in this parameter depend on the specific profile of ACE used. {{sec-to_rs-from_rs-oscore-profile}} defines those for when this parameter is used with the OSCORE profile {{RFC9203}}.
+
+* The "from_rs" parameter is OPTIONAL in an Access Token Response. The presence of this parameter indicates that the AS has to relay the information specified therein to C, which the AS has received from the RS after having successfully uploaded the access token to the RS per the new ACE workflow defined in {{sec-workflow}}. This parameter MUST NOT be present if the "token_upload" parameter defined in {{sec-token_upload}} is not present with value 0 in the Access Token Response.
+
+  If present, this parameter specifies the information that the AS has to relay to C from the RS, following the successful upload of the access token to the RS on behalf of C. This information is expected to consist in what C would have received in a successful response from the authz-info endpoint at the RS, if uploading the access token per the original ACE workflow. When the Access Token Response is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
+
+  The semantics and encoding of the information specified in this parameter depend on the specific profile of ACE used. {{sec-to_rs-from_rs-oscore-profile}} defines those for when this parameter is used with the OSCORE profile {{RFC9203}}.
+
+### Use with the OSCORE Profile {#sec-to_rs-from_rs-oscore-profile}
+
+This section defines the semantics and encoding of the information specified in the parameters "to_rs" and "from_rs" when used with the OSCORE profile {{RFC9203}}, thereby effectively enabling the use of the new ACE workflow for that profile.
+
+TBD
 
 ## rs_cnf2 and audience2 {#sec-rs_cnf2-audience2}
 
@@ -1010,6 +1036,20 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 * Change Controller: IETF
 * Reference: {{&SELF}}
 
+<br>
+
+* Name: "to_rs"
+* Parameter Usage Location: token request
+* Change Controller: IETF
+* Reference: {{&SELF}}
+
+<br>
+
+* Name: "from_rs"
+* Parameter Usage Location: token response
+* Change Controller: IETF
+* Reference: {{&SELF}}
+
 ## OAuth Parameters CBOR Mappings Registry ## {#iana-oauth-cbor-mappings}
 
 IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry, following the procedure specified in {{RFC9200}}.
@@ -1071,6 +1111,22 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 <br>
 
 * Name: "token_series_id"
+* CBOR Key: TBD
+* Value Type: byte string
+* Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
+
+<br>
+
+* Name: "to_rs"
+* CBOR Key: TBD
+* Value Type: byte string
+* Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
+
+<br>
+
+* Name: "from_rs"
 * CBOR Key: TBD
 * Value Type: byte string
 * Reference: {{&SELF}}
@@ -1190,7 +1246,7 @@ In this latter case, even though the access token claim "token_series_id" define
 
 For example, the RS might have deleted a stored access token due to memory limitations. This effectively terminates the corresponding token series, which is however impractical for the RS to remember indefinitely. Consequently, if the AS uploads to the RS a new access token belonging to the same token series, the RS would erroneously interpret it to be the first access token of a new series.
 
-This can be avoided by relying on a new "updated_rights" parameter, which the AS can include in a POST request to the /authz-info endpoint when uploading to the RS an access token for dynamically updating the access rights of C (see {{sec-more-parameters}}).
+This can be avoided by relying on a new "updated_rights" parameter, which the AS can include in a POST request to the authz-info endpoint when uploading to the RS an access token for dynamically updating the access rights of C (see {{sec-more-parameters}}).
 
 ### Ensure Applicability to Any ACE Profile # {#sec-open-points-workflow-applicability}
 
@@ -1225,12 +1281,14 @@ The following discusses possible, further new parameters that can be defined for
 ; OAuth Parameters CBOR Mappings
 token_upload = 48
 token_hash = 49
-audience2 = 50
-rs_cnf_2 = 51
-anchor_cnf = 52
-rev_audience = 53
-rev_scope_param = 54
-token_series_id_param = 55
+to_rs = 50
+from_rs = 51
+audience2 = 52
+rs_cnf2 = 53
+anchor_cnf = 54
+rev_audience = 55
+rev_scope_param = 56
+token_series_id_param = 57
 
 ; CBOR Web Token (CWT) Claims
 rev_aud = 42
@@ -1251,6 +1309,8 @@ ace-error = 2
 ## Version -02 to -03 ## {#sec-02-03}
 
 * Defined parameter and claim "token_series_id".
+
+* Defined parameters "to_rs" and "from_rs".
 
 * Lowercase use of "client", "resource server", and "authorization server".
 
