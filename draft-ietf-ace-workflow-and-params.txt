@@ -88,13 +88,15 @@ Table of Contents
      3.2.  token_hash
        3.2.1.  Computing the Token Hash
        3.2.2.  Example
-     3.3.  rs_cnf2 and audience2
-       3.3.1.  Example
-     3.4.  anchor_cnf
+     3.3.  to_rs and from_rs
+       3.3.1.  Use with the OSCORE Profile
+     3.4.  rs_cnf2 and audience2
        3.4.1.  Example
-     3.5.  rev_audience
-     3.6.  rev_scope
-     3.7.  token_series_id
+     3.5.  anchor_cnf
+       3.5.1.  Example
+     3.6.  rev_audience
+     3.7.  rev_scope
+     3.8.  token_series_id
    4.  Bidirectional Access Control
      4.1.  Scenario with One Authorization Server
        4.1.1.  Access Token Request
@@ -176,6 +178,19 @@ Table of Contents
          corresponding to an access token that the AS has issued for C
          and has successfully uploaded to the RS on behalf of C per the
          new ACE workflow.
+
+      -  "to_rs", used by C to provide the AS with information to relay
+         to the RS, upon asking the AS to upload the access token to the
+         RS per the new ACE workflow.  Its specific use with the OSCORE
+         profile [RFC9203] is also defined, thereby effectively enabling
+         the use of the new ACE workflow for that profile.
+
+      -  "from_rs", used by the AS to provide C with information to
+         relay from the RS, after the AS has successfully uploaded the
+         access token to the RS per the new ACE workflow.  Its specific
+         use with the OSCORE profile [RFC9203] is also defined, thereby
+         effectively enabling the use of the new ACE workflow for that
+         profile.
 
       -  "rs_cnf2", used by the AS to provide C with the public keys of
          the RSs in the group-audience for which the access token is
@@ -286,7 +301,7 @@ Table of Contents
    In the CBOR diagnostic notation used in this document, constructs of
    the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME
    in the CDDL model shown in Figure 11 of Appendix C.  For example,
-   {e'audience2' : ["rs1", "rs2"]} stands for {50 : ["rs1", "rs2"]}.
+   {e'audience2' : ["rs1", "rs2"]} stands for {52 : ["rs1", "rs2"]}.
 
    Note to RFC Editor: Please delete the paragraph immediately preceding
    this note.  Also, in the CBOR diagnostic notation used in this
@@ -872,7 +887,69 @@ Table of Contents
        the issued access token, which is bound to a symmetric key and
                      was uploaded to the RS by the AS.
 
-3.3.  rs_cnf2 and audience2
+3.3.  to_rs and from_rs
+
+   This section defines the additional parameters "to_rs" and "from_rs".
+   The "to_rs" parameter can be used in an Access Token Request sent by
+   C to the token endpoint at the AS.  The "from_rs" parameter can be
+   used in an Access Token Response, sent by the AS in reply to a
+   request to the token endpoint from C.
+
+   *  The "to_rs" parameter is OPTIONAL in an Access Token Request.  The
+      presence of this parameter indicates that C wishes the AS to relay
+      the information specified therein to the RS, when the AS uploads
+      the issued access token to the RS per the new ACE workflow defined
+      in Section 2.  This parameter MUST NOT be present if the
+      "token_upload" parameter defined in Section 3.1 is not present in
+      the Access Token Request.
+
+      If present, this parameter specifies the information that C wishes
+      the AS to relay to the RS, when uploading the access token to the
+      RS on behalf of C.  Together with the access token, this
+      information is expected to consist in what C would have uploaded
+      to the authz-info endpoint at the RS, if uploading the access
+      token per the original ACE workflow.  When the Access Token
+      Request is encoded in CBOR, the value of this parameter is encoded
+      as a CBOR byte string.
+
+      The semantics and encoding of the information specified in this
+      parameter depend on the specific profile of ACE used.
+      Section 3.3.1 defines those for when this parameter is used with
+      the OSCORE profile [RFC9203].
+
+   *  The "from_rs" parameter is OPTIONAL in an Access Token Response.
+      The presence of this parameter indicates that the AS has to relay
+      the information specified therein to C, which the AS has received
+      from the RS after having successfully uploaded the access token to
+      the RS per the new ACE workflow defined in Section 2.  This
+      parameter MUST NOT be present if the "token_upload" parameter
+      defined in Section 3.1 is not present with value 0 in the Access
+      Token Response.
+
+      If present, this parameter specifies the information that the AS
+      has to relay to C from the RS, following the successful upload of
+      the access token to the RS on behalf of C.  This information is
+      expected to consist in what C would have received in a successful
+      response from the authz-info endpoint at the RS, if uploading the
+      access token per the original ACE workflow.  When the Access Token
+      Response is encoded in CBOR, the value of this parameter is
+      encoded as a CBOR byte string.
+
+      The semantics and encoding of the information specified in this
+      parameter depend on the specific profile of ACE used.
+      Section 3.3.1 defines those for when this parameter is used with
+      the OSCORE profile [RFC9203].
+
+3.3.1.  Use with the OSCORE Profile
+
+   This section defines the semantics and encoding of the information
+   specified in the parameters "to_rs" and "from_rs" when used with the
+   OSCORE profile [RFC9203], thereby effectively enabling the use of the
+   new ACE workflow for that profile.
+
+   TBD
+
+3.4.  rs_cnf2 and audience2
 
    This section defines the additional parameters "rs_cnf2" and
    "audience2" for an Access Token Response, sent by the AS in reply to
@@ -936,7 +1013,7 @@ Table of Contents
       public key is specified as the i-th element of the CBOR array in
       the "rs_cnf2" parameter.
 
-3.3.1.  Example
+3.4.1.  Example
 
    Figure 7 shows an example of Access Token Response from the AS to C,
    following the issue of an access token for a group-audience composed
@@ -986,7 +1063,7 @@ Table of Contents
       bound to an asymmetric key, using the parameters "audience2" and
                                  "rs_cnf2".
 
-3.4.  anchor_cnf
+3.5.  anchor_cnf
 
    This section defines the additional "anchor_cnf" parameter for an
    Access Token Response, sent by the AS in reply to a request to the
@@ -1029,12 +1106,12 @@ Table of Contents
 
    The presence of this parameter does not require that the Access Token
    Response also includes the "rs_cnf" parameter defined in [RFC9201] or
-   the "rs_cnf2" parameter defined in Section 3.3 of this document.
+   the "rs_cnf2" parameter defined in Section 3.4 of this document.
    That is, C may be able to obtain the public keys of the RS/RSs for
    which the access token is issued through other means.
 
    When the Access Token Response includes both the "anchor_cnf"
-   parameter and the "audience2" parameter defined in Section 3.3, then
+   parameter and the "audience2" parameter defined in Section 3.4, then
    C MUST make sure that a public key PK_RS is associated with an RS
    identified by an element of "audience2", before using any of the
    public keys specified in "anchor_cnf" to validate PK_RS.
@@ -1047,7 +1124,7 @@ Table of Contents
    audience, which is particularly useful in the case of a group-
    audience.
 
-3.4.1.  Example
+3.5.1.  Example
 
    Figure 8 shows an example of Access Token Response from the AS to C,
    following the issue of an access token for a group-audience, and
@@ -1104,7 +1181,7 @@ Table of Contents
       Figure 8: Example of Access Token Response with an access token
        bound to an asymmetric key, using the "anchor_cnf" parameter.
 
-3.5.  rev_audience
+3.6.  rev_audience
 
    This section defines the additional "rev_audience" parameter.  The
    parameter can be used in an Access Token Request sent by C to the
@@ -1134,7 +1211,7 @@ Table of Contents
 
    The use of this parameter is further detailed in Section 4.
 
-3.6.  rev_scope
+3.7.  rev_scope
 
    This section defines the additional "rev_scope" parameter.  The
    parameter can be used in an Access Token Request sent by C to the
@@ -1165,7 +1242,7 @@ Table of Contents
 
    The use of this parameter is further detailed in Section 4.
 
-3.7.  token_series_id
+3.8.  token_series_id
 
    This section defines the additional "token_series_id" parameter.  The
    parameter can be used in an Access Token Request sent by C to the
@@ -1267,9 +1344,9 @@ Table of Contents
 
       For this second direction of access control, the target DEV1 is
       specified by means of the "rev_audience" parameter defined in
-      Section 3.5 and the corresponding access token claim "rev_aud"
+      Section 3.6 and the corresponding access token claim "rev_aud"
       defined in this section, while the access rights are specified by
-      means of the "rev_scope" parameter defined in Section 3.6 and the
+      means of the "rev_scope" parameter defined in Section 3.7 and the
       corresponding access token claim "rev_scope" defined in this
       section.
 
@@ -1341,7 +1418,7 @@ Table of Contents
       requested access token.
 
    *  The "rev_audience" and "rev_scope" parameters defined in
-      Section 3.5 and Section 3.6 can be included.
+      Section 3.6 and Section 3.7 can be included.
 
       In particular, "rev_audience" specifies an identifier of DEV1,
       while "rev_scope" specifies access rights that DEV1 wishes for
@@ -1409,7 +1486,7 @@ Table of Contents
       present, it specifies information about the public key that DEV2
       uses to authenticate.
 
-   *  The "rev_audience" parameter defined in Section 3.5 can be
+   *  The "rev_audience" parameter defined in Section 3.6 can be
       included, and specifies an identifier of DEV1.
 
       If the "rev_audience" parameter is present in the Access Token
@@ -1417,7 +1494,7 @@ Table of Contents
       the parameter in the Access Token Response MUST have the same
       value specified by the parameter in the Access Token Request.
 
-   *  The "rev_scope" parameter defined in Section 3.6 can be included,
+   *  The "rev_scope" parameter defined in Section 3.7 can be included,
       and specifies access rights that AS has granted to DEV2 for
       accessing protecting resources at DEV1.
 
@@ -1751,6 +1828,26 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
+
+
+   *  Name: "to_rs"
+
+   *  Parameter Usage Location: token request
+
+   *  Change Controller: IETF
+
+   *  Reference: [RFC-XXXX]
+
+
+
+   *  Name: "from_rs"
+
+   *  Parameter Usage Location: token response
+
+   *  Change Controller: IETF
+
+   *  Reference: [RFC-XXXX]
+
 8.2.  OAuth Parameters CBOR Mappings Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters
@@ -1842,6 +1939,30 @@ Table of Contents
 
 
    *  Name: "token_series_id"
+
+   *  CBOR Key: TBD
+
+   *  Value Type: byte string
+
+   *  Reference: [RFC-XXXX]
+
+   *  Original Specification: [RFC-XXXX]
+
+
+
+   *  Name: "to_rs"
+
+   *  CBOR Key: TBD
+
+   *  Value Type: byte string
+
+   *  Reference: [RFC-XXXX]
+
+   *  Original Specification: [RFC-XXXX]
+
+
+
+   *  Name: "from_rs"
 
    *  CBOR Key: TBD
 
@@ -2164,8 +2285,8 @@ A.1.  DTLS Profile
    [RFC9202]), it becomes possible for the AS to effectively issue an
    access token intended to an audience that includes multiple RSs.
    This is enabled by the parameters "rs_cnf2" and "audience2" defined
-   in Section 3.3, as well as by the "anchor_cnf" parameter defined in
-   Section 3.4.  This seamlessly applies also if the profile uses
+   in Section 3.4, as well as by the "anchor_cnf" parameter defined in
+   Section 3.5.  This seamlessly applies also if the profile uses
    Transport Layer Security (TLS) [RFC8446], as defined in [RFC9430].
 
 A.2.  EDHOC and OSCORE Profile
@@ -2174,8 +2295,8 @@ A.2.  EDHOC and OSCORE Profile
    [I-D.ietf-ace-edhoc-oscore-profile], it becomes possible for the AS
    to effectively issue an access token intended to an audience that
    includes multiple RSs.  This is enabled by the parameters "rs_cnf2"
-   and "audience2" defined in Section 3.3, as well as by the
-   "anchor_cnf" parameter defined in Section 3.4.
+   and "audience2" defined in Section 3.4, as well as by the
+   "anchor_cnf" parameter defined in Section 3.5.
 
 Appendix B.  Open Points
 
@@ -2202,7 +2323,7 @@ B.1.1.  Prevent Ambiguities in the Dynamic Update of Access Rights
    association between the AS and the RS.
 
    In this latter case, even though the access token claim
-   "token_series_id" defined in Section 3.7 provides the RS with an
+   "token_series_id" defined in Section 3.8 provides the RS with an
    explicit indication for recognizing a stored access token as
    belonging to an ongoing token series, such a process might still lead
    to ambiguities.
@@ -2215,9 +2336,9 @@ B.1.1.  Prevent Ambiguities in the Dynamic Update of Access Rights
    interpret it to be the first access token of a new series.
 
    This can be avoided by relying on a new "updated_rights" parameter,
-   which the AS can include in a POST request to the /authz-info
-   endpoint when uploading to the RS an access token for dynamically
-   updating the access rights of C (see Appendix B.2).
+   which the AS can include in a POST request to the authz-info endpoint
+   when uploading to the RS an access token for dynamically updating the
+   access rights of C (see Appendix B.2).
 
 B.1.2.  Ensure Applicability to Any ACE Profile
 
@@ -2296,12 +2417,14 @@ Appendix C.  CDDL Model
    ; OAuth Parameters CBOR Mappings
    token_upload = 48
    token_hash = 49
-   audience2 = 50
-   rs_cnf_2 = 51
-   anchor_cnf = 52
-   rev_audience = 53
-   rev_scope_param = 54
-   token_series_id_param = 55
+   to_rs = 50
+   from_rs = 51
+   audience2 = 52
+   rs_cnf2 = 53
+   anchor_cnf = 54
+   rev_audience = 55
+   rev_scope_param = 56
+   token_series_id_param = 57
 
    ; CBOR Web Token (CWT) Claims
    rev_aud = 42
@@ -2323,6 +2446,8 @@ Appendix D.  Document Updates
 D.1.  Version -02 to -03
 
    *  Defined parameter and claim "token_series_id".
+
+   *  Defined parameters "to_rs" and "from_rs".
 
    *  Lowercase use of "client", "resource server", and "authorization
       server".
