@@ -127,11 +127,11 @@ This document updates {{RFC9200}} as follows.
 
   - "anchor_cnf", used by the AS to provide C with the public keys of trust anchors, which C can use to validate the public key of an RS (e.g., as provided in the "rs_cnf" parameter defined in {{RFC9201}} or in the "rs_cnf2" parameter defined in this document).
 
+  - "token_series_id", used by the AS to provide C with the identifier of a token series, and by C to ask the AS for a new acces token in the same token series that dynamically updates access rights. A corresponding access token claim, namely "token_series_id", is also defined.
+
   - "rev_audience", used by C to provide the AS with an identifier of itself as a reverse audience, and by the AS to possibly confirm that identifier in a response to C. A corresponding access token claim, namely "rev_aud", is also defined.
 
   - "rev_scope", used by C to ask the AS that the requested access token specifies additional access rights as a reverse scope, allowing the access token's audience to accordingly access protected resources at C. This parameter is also used by the AS to provide C with the access rights that are actually granted as reverse scope to the access token's audience. A corresponding access token claim, namely "rev_scope", is also defined.
-
-  - "token_series_id", used by the AS to provide C with the identifier of a token series, and by C to ask the AS for a new acces token in the same token series that dynamically updates access rights. A corresponding access token claim, namely "token_series_id", is also defined.
 
 * It defines a method for the ACE framework to enforce bidirectional access control by means of a single access token (see {{sec-bidirectional-access-control}}), building on the two new parameters "rev_audience" and "rev_scope" as well as on the corresponding access token claims "rev_aud" and "rev_scope".
 
@@ -166,7 +166,7 @@ CBOR {{RFC8949}} and CDDL {{RFC8610}} are used in this document. CDDL predefined
 
 Examples throughout this document are expressed in CBOR diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Appendix G of RFC8610}}. Diagnostic notation comments are often used to provide a textual representation of the parameters' keys and values.
 
-In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. For example, {e'audience2' : \["rs1", "rs2"\]} stands for {52 : \["rs1", "rs2"\]}.
+In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. For example, {e'audience2' : \["rs1", "rs2"\]} stands for {53 : \["rs1", "rs2"\]}.
 
 Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. Finally, please delete this note.
 
@@ -749,6 +749,30 @@ The Access Token Response includes the "anchor_cnf" parameter. This specifies th
 ~~~~~~~~~~~
 {: #fig-example-AS-to-C-anchor_cnf title="Example of Access Token Response with an access token bound to an asymmetric key, using the \"anchor_cnf\" parameter."}
 
+## token_series_id {#sec-token_series_id}
+
+This section defines the additional "token_series_id" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.
+
+* The "token_series_id" parameter is OPTIONAL in an Access Token Request. The presence of this parameter indicates that C wishes to obtain a new access token for dynamically updating its access rights. That is, the new access token is intended to be the next one in an active token series and to supersede the latest access token in that token series. This parameter MUST NOT be present if the requested access token is the first one of a new token series.
+
+  If present, this parameter specifies the identifier of the token series that the new access token is intended to extend. The identifier does not change throughout the lifetime of the token series, and was provided to C in the successful Access Token Response that the AS sent when issuing the first access token in that token series. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
+
+* The "token_series_id" parameter is OPTIONAL in an Access Token Response. This parameter MUST NOT be present if the issued access token is not the first one of the token series it belongs to.
+
+  If present, this parameter specifies the identifier of the token series to which the issued access token belongs. When the Access Token Response is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
+
+If the AS relies on the "token_series_id" parameter to exchange the identifier of token series with clients, then the following applies.
+
+* The value assigned to the identifier of a token series MUST be uniquely associated with the access tokens issued by the AS for that token series, and MUST be selected from a pool that the AS exclusively controls.
+
+* An issued access token that belongs to a token series MUST include the identifier of that token series. This allows the RS to identify the latest access token in the token series to be superseded by the issued access token.
+
+  In particular, each of such access tokens MUST include a claim specifying the identifier of the token series to which the access token belongs. When CWTs are used as access tokens, this information MUST be transported in the "token_series_id" claim registered in {{iana-token-cwt-claims}}.
+
+If a profile of ACE relies on a construct that uses different parameters/claims to transport the identifier of a token series, then the new "token_series_id" parameter and "token_series_id" claim MUST NOT be used when using that profile.
+
+For example, a number of parameters/claims are already used to transport information that acts de facto as identifier of token series, in the PSK mode of the DTLS profile {{RFC9202}}, in the OSCORE profile {{RFC9203}}, and in the EDHOC and OSCORE profile {{I-D.ietf-ace-edhoc-oscore-profile}}.
+
 ## rev_audience {#sec-rev_audience}
 
 This section defines the additional "rev_audience" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.
@@ -776,30 +800,6 @@ This section defines the additional "rev_scope" parameter. The parameter can be 
 Fundamentally, this parameter has the same semantics of the "scope" parameter used in the ACE framework, with the difference that it conveys the access rights requested/granted as reverse scope for/to the audience of the access token issued by the AS.
 
 The use of this parameter is further detailed in {{sec-bidirectional-access-control}}.
-
-## token_series_id {#sec-token_series_id}
-
-This section defines the additional "token_series_id" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.
-
-* The "token_series_id" parameter is OPTIONAL in an Access Token Request. The presence of this parameter indicates that C wishes to obtain a new access token for dynamically updating its access rights. That is, the new access token is intended to be the next one in an active token series and to supersede the latest access token in that token series. This parameter MUST NOT be present if the requested access token is the first one of a new token series.
-
-  If present, this parameter specifies the identifier of the token series that the new access token is intended to extend. The identifier does not change throughout the lifetime of the token series, and was provided to C in the successful Access Token Response that the AS sent when issuing the first access token in that token series. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
-
-* The "token_series_id" parameter is OPTIONAL in an Access Token Response. This parameter MUST NOT be present if the issued access token is not the first one of the token series it belongs to.
-
-  If present, this parameter specifies the identifier of the token series to which the issued access token belongs. When the Access Token Response is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
-
-If the AS relies on the "token_series_id" parameter to exchange the identifier of token series with clients, then the following applies.
-
-* The value assigned to the identifier of a token series MUST be uniquely associated with the access tokens issued by the AS for that token series, and MUST be selected from a pool that the AS exclusively controls.
-
-* An issued access token that belongs to a token series MUST include the identifier of that token series. This allows the RS to identify the latest access token in the token series to be superseded by the issued access token.
-
-  In particular, each of such access tokens MUST include a claim specifying the identifier of the token series to which the access token belongs. When CWTs are used as access tokens, this information MUST be transported in the "token_series_id" claim registered in {{iana-token-cwt-claims}}.
-
-If a profile of ACE relies on a construct that uses different parameters/claims to transport the identifier of a token series, then the new "token_series_id" parameter and "token_series_id" claim MUST NOT be used when using that profile.
-
-For example, a number of parameters/claims are already used to transport information that acts de facto as identifier of token series, in the PSK mode of the DTLS profile {{RFC9202}}, in the OSCORE profile {{RFC9203}}, and in the EDHOC and OSCORE profile {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
 # Bidirectional Access Control # {#sec-bidirectional-access-control}
 
@@ -1067,6 +1067,20 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 
 <br>
 
+* Name: "to_rs"
+* Parameter Usage Location: token request
+* Change Controller: IETF
+* Reference: {{&SELF}}
+
+<br>
+
+* Name: "from_rs"
+* Parameter Usage Location: token response
+* Change Controller: IETF
+* Reference: {{&SELF}}
+
+<br>
+
 * Name: "rs_cnf2"
 * Parameter Usage Location: token response
 * Change Controller: IETF
@@ -1088,6 +1102,13 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 
 <br>
 
+* Name: "token_series_id"
+* Parameter Usage Location: token request and token response
+* Change Controller: IETF
+* Reference: {{&SELF}}
+
+<br>
+
 * Name: "rev_audience"
 * Parameter Usage Location: token request and token response
 * Change Controller: IETF
@@ -1097,27 +1118,6 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 
 * Name: "rev_scope"
 * Parameter Usage Location: token request and token response
-* Change Controller: IETF
-* Reference: {{&SELF}}
-
-<br>
-
-* Name: "token_series_id"
-* Parameter Usage Location: token request and token response
-* Change Controller: IETF
-* Reference: {{&SELF}}
-
-<br>
-
-* Name: "to_rs"
-* Parameter Usage Location: token request
-* Change Controller: IETF
-* Reference: {{&SELF}}
-
-<br>
-
-* Name: "from_rs"
-* Parameter Usage Location: token response
 * Change Controller: IETF
 * Reference: {{&SELF}}
 
@@ -1141,6 +1141,22 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 <br>
 
+* Name: "to_rs"
+* CBOR Key: TBD
+* Value Type: byte string
+* Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
+
+<br>
+
+* Name: "from_rs"
+* CBOR Key: TBD
+* Value Type: byte string
+* Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
+
+<br>
+
 * Name: "rs_cnf2"
 * CBOR Key: TBD
 * Value Type: array
@@ -1165,6 +1181,14 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 <br>
 
+* Name: "token_series_id"
+* CBOR Key: TBD
+* Value Type: byte string
+* Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
+
+<br>
+
 * Name: "rev_audience"
 * CBOR Key: TBD
 * Value Type: text string
@@ -1179,33 +1203,16 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
 
-<br>
-
-* Name: "token_series_id"
-* CBOR Key: TBD
-* Value Type: byte string
-* Reference: {{&SELF}}
-* Original Specification: {{&SELF}}
-
-<br>
-
-* Name: "to_rs"
-* CBOR Key: TBD
-* Value Type: byte string
-* Reference: {{&SELF}}
-* Original Specification: {{&SELF}}
-
-<br>
-
-* Name: "from_rs"
-* CBOR Key: TBD
-* Value Type: byte string
-* Reference: {{&SELF}}
-* Original Specification: {{&SELF}}
-
 ## JSON Web Token Claims Registry ## {#iana-token-json-claims}
 
 IANA is asked to add the following entries to the "JSON Web Token Claims" registry, following the procedure specified in {{RFC7519}}.
+
+*  Claim Name: "token_series_id"
+*  Claim Description: The identifier of a token series
+*  Change Controller: IETF
+*  Reference: {{&SELF}}
+
+<br>
 
 *  Claim Name: "rev_aud"
 *  Claim Description: The reverse audience of an access token
@@ -1219,16 +1226,19 @@ IANA is asked to add the following entries to the "JSON Web Token Claims" regist
 *  Change Controller: IETF
 *  Reference: {{&SELF}}
 
-<br>
-
-*  Claim Name: "token_series_id"
-*  Claim Description: The identifier of a token series
-*  Change Controller: IETF
-*  Reference: {{&SELF}}
-
 ## CBOR Web Token (CWT) Claims Registry ## {#iana-token-cwt-claims}
 
 IANA is asked to add the following entries to the "CBOR Web Token (CWT) Claims" registry, following the procedure specified in {{RFC8392}}.
+
+* Claim Name: "token_series_id"
+* Claim Description: The identifier of a token series
+* JWT Claim Name: "token_series_id"
+* Claim Key: TBD
+* Claim Value Type: byte string
+* Change Controller: IETF
+* Reference: {{sec-bidirectional-access-control}} of {{&SELF}}
+
+<br>
 
 * Claim Name: "rev_aud"
 * Claim Description: The reverse audience of an access token
@@ -1245,16 +1255,6 @@ IANA is asked to add the following entries to the "CBOR Web Token (CWT) Claims" 
 * JWT Claim Name: "rev_scope"
 * Claim Key: TBD
 * Claim Value Type: text string or byte string
-* Change Controller: IETF
-* Reference: {{sec-bidirectional-access-control}} of {{&SELF}}
-
-<br>
-
-* Claim Name: "token_series_id"
-* Claim Description: The identifier of a token series
-* JWT Claim Name: "token_series_id"
-* Claim Key: TBD
-* Claim Value Type: byte string
 * Change Controller: IETF
 * Reference: {{sec-bidirectional-access-control}} of {{&SELF}}
 
@@ -1354,17 +1354,17 @@ token_upload = 48
 token_hash = 49
 to_rs = 50
 from_rs = 51
-audience2 = 52
-rs_cnf2 = 53
+rs_cnf2 = 52
+audience2 = 53
 anchor_cnf = 54
-rev_audience = 55
-rev_scope_param = 56
-token_series_id_param = 57
+token_series_id_param = 55
+rev_audience = 56
+rev_scope_param = 57
 
 ; CBOR Web Token (CWT) Claims
-rev_aud = 42
-rev_scope_claim = 43
-token_series_id_claim = 44
+token_series_id_claim = 42
+rev_aud = 43
+rev_scope_claim = 44
 
 ; CWT Confirmation Methods
 x5chain = 5
