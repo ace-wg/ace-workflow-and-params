@@ -127,7 +127,7 @@ This document updates {{RFC9200}} as follows.
 
   - "anchor_cnf", used by the AS to provide C with the public keys of trust anchors, which C can use to validate the public key of an RS (e.g., as provided in the "rs_cnf" parameter defined in {{RFC9201}} or in the "rs_cnf2" parameter defined in this document).
 
-  - "token_series_id", used by the AS to provide C with the identifier of a token series, and by C to ask the AS for a new acces token in the same token series that dynamically updates access rights. A corresponding access token claim, namely "token_series_id", is also defined.
+  - "token_series_id", used by the AS to provide C with the identifier of a token series, and by C to ask the AS for a new access token in the same token series that dynamically updates access rights. A corresponding access token claim, namely "token_series_id", is also defined.
 
   - "rev_audience", used by C to provide the AS with an identifier of itself as a reverse audience, and by the AS to possibly confirm that identifier in a response to C. A corresponding access token claim, namely "rev_aud", is also defined.
 
