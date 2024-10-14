@@ -207,7 +207,7 @@ Table of Contents
 
       -  "token_series_id", used by the AS to provide C with the
          identifier of a token series, and by C to ask the AS for a new
-         acces token in the same token series that dynamically updates
+         access token in the same token series that dynamically updates
          access rights.  A corresponding access token claim, namely
          "token_series_id", is also defined.
 
