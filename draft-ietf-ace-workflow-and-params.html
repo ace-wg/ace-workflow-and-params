@@ -1190,13 +1190,13 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6">
-                <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-rev_audience" class="internal xref">rev_audience</a></p>
+                <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-token_series_id" class="internal xref">token_series_id</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7">
-                <p id="section-toc.1-1.3.2.7.1"><a href="#section-3.7" class="auto internal xref">3.7</a>.  <a href="#name-rev_scope" class="internal xref">rev_scope</a></p>
+                <p id="section-toc.1-1.3.2.7.1"><a href="#section-3.7" class="auto internal xref">3.7</a>.  <a href="#name-rev_audience" class="internal xref">rev_audience</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8">
-                <p id="section-toc.1-1.3.2.8.1"><a href="#section-3.8" class="auto internal xref">3.8</a>.  <a href="#name-token_series_id" class="internal xref">token_series_id</a></p>
+                <p id="section-toc.1-1.3.2.8.1"><a href="#section-3.8" class="auto internal xref">3.8</a>.  <a href="#name-rev_scope" class="internal xref">rev_scope</a></p>
 </li>
             </ul>
 </li>
@@ -1361,13 +1361,13 @@ The new workflow has no ambition to replace the original workflow. The AS can us
               <p id="section-1-4.2.2.7.1">"anchor_cnf", used by the AS to provide C with the public keys of trust anchors, which C can use to validate the public key of an RS (e.g., as provided in the "rs_cnf" parameter defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> or in the "rs_cnf2" parameter defined in this document).<a href="#section-1-4.2.2.7.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.8">
-              <p id="section-1-4.2.2.8.1">"rev_audience", used by C to provide the AS with an identifier of itself as a reverse audience, and by the AS to possibly confirm that identifier in a response to C. A corresponding access token claim, namely "rev_aud", is also defined.<a href="#section-1-4.2.2.8.1" class="pilcrow">¶</a></p>
+              <p id="section-1-4.2.2.8.1">"token_series_id", used by the AS to provide C with the identifier of a token series, and by C to ask the AS for a new acces token in the same token series that dynamically updates access rights. A corresponding access token claim, namely "token_series_id", is also defined.<a href="#section-1-4.2.2.8.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.9">
-              <p id="section-1-4.2.2.9.1">"rev_scope", used by C to ask the AS that the requested access token specifies additional access rights as a reverse scope, allowing the access token's audience to accordingly access protected resources at C. This parameter is also used by the AS to provide C with the access rights that are actually granted as reverse scope to the access token's audience. A corresponding access token claim, namely "rev_scope", is also defined.<a href="#section-1-4.2.2.9.1" class="pilcrow">¶</a></p>
+              <p id="section-1-4.2.2.9.1">"rev_audience", used by C to provide the AS with an identifier of itself as a reverse audience, and by the AS to possibly confirm that identifier in a response to C. A corresponding access token claim, namely "rev_aud", is also defined.<a href="#section-1-4.2.2.9.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.10">
-              <p id="section-1-4.2.2.10.1">"token_series_id", used by the AS to provide C with the identifier of a token series, and by C to ask the AS for a new acces token in the same token series that dynamically updates access rights. A corresponding access token claim, namely "token_series_id", is also defined.<a href="#section-1-4.2.2.10.1" class="pilcrow">¶</a></p>
+              <p id="section-1-4.2.2.10.1">"rev_scope", used by C to ask the AS that the requested access token specifies additional access rights as a reverse scope, allowing the access token's audience to accordingly access protected resources at C. This parameter is also used by the AS to provide C with the access rights that are actually granted as reverse scope to the access token's audience. A corresponding access token claim, namely "rev_scope", is also defined.<a href="#section-1-4.2.2.10.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </li>
@@ -1409,7 +1409,7 @@ Profiles of ACE can provide their extended and specialized definition, e.g., by 
         </ul>
 <p id="section-1.1-8">CBOR <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> and CDDL <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> are used in this document. CDDL predefined type names, especially bstr for CBOR byte strings and tstr for CBOR text strings, are used extensively in this document.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
 <p id="section-1.1-9">Examples throughout this document are expressed in CBOR diagnostic notation as defined in <span><a href="https://rfc-editor.org/rfc/rfc8949#section-8" class="relref">Section 8</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>. Diagnostic notation comments are often used to provide a textual representation of the parameters' keys and values.<a href="#section-1.1-9" class="pilcrow">¶</a></p>
-<p id="section-1.1-10">In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 12</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. For example, {e'audience2' : ["rs1", "rs2"]} stands for {52 : ["rs1", "rs2"]}.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
+<p id="section-1.1-10">In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 12</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. For example, {e'audience2' : ["rs1", "rs2"]} stands for {53 : ["rs1", "rs2"]}.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
 <p id="section-1.1-11">Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 12</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. Finally, please delete this note.<a href="#section-1.1-11" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2119,77 +2119,77 @@ The "audience2" parameter is <span class="bcp14">REQUIRED</span> if the "rs_cnf2
 </div>
 </section>
 </div>
-<div id="sec-rev_audience">
+<div id="sec-token_series_id">
 <section id="section-3.6">
-        <h3 id="name-rev_audience">
-<a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-rev_audience" class="section-name selfRef">rev_audience</a>
+        <h3 id="name-token_series_id">
+<a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-token_series_id" class="section-name selfRef">token_series_id</a>
         </h3>
-<p id="section-3.6-1">This section defines the additional "rev_audience" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
+<p id="section-3.6-1">This section defines the additional "token_series_id" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.6-2.1">
-            <p id="section-3.6-2.1.1">The "rev_audience" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Request. The presence of this parameter indicates that C wishes the requested access token to specify additional access rights. These are intended for the access token's audience to access protected resources at C as the access token's reverse audience.<a href="#section-3.6-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.6-2.1.1">The "token_series_id" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Request. The presence of this parameter indicates that C wishes to obtain a new access token for dynamically updating its access rights. That is, the new access token is intended to be the next one in an active token series and to supersede the latest access token in that token series. This parameter <span class="bcp14">MUST NOT</span> be present if the requested access token is the first one of a new token series.<a href="#section-3.6-2.1.1" class="pilcrow">¶</a></p>
 <p id="section-3.6-2.1.2">
-This parameter specifies such a reverse audience as a text string identifier of C. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR text string.<a href="#section-3.6-2.1.2" class="pilcrow">¶</a></p>
+If present, this parameter specifies the identifier of the token series that the new access token is intended to extend. The identifier does not change throughout the lifetime of the token series, and was provided to C in the successful Access Token Response that the AS sent when issuing the first access token in that token series. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.<a href="#section-3.6-2.1.2" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.6-2.2">
-            <p id="section-3.6-2.2.1">The "rev_audience" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Response. If present, it has the same meaning and encoding that it has in the Access Token Request.<a href="#section-3.6-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.6-2.2.1">The "token_series_id" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Response. This parameter <span class="bcp14">MUST NOT</span> be present if the issued access token is not the first one of the token series it belongs to.<a href="#section-3.6-2.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.6-2.2.2">
+If present, this parameter specifies the identifier of the token series to which the issued access token belongs. When the Access Token Response is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.<a href="#section-3.6-2.2.2" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.6-3">Fundamentally, this parameter has the same semantics of the "audience" parameter used in the ACE framework, with the difference that it conveys an identifier of C as a host of protected resources to access, according to the access rights granted as reverse scope to the audience of the access token issued by the AS.<a href="#section-3.6-3" class="pilcrow">¶</a></p>
-<p id="section-3.6-4">The use of this parameter is further detailed in <a href="#sec-bidirectional-access-control" class="auto internal xref">Section 4</a>.<a href="#section-3.6-4" class="pilcrow">¶</a></p>
+<p id="section-3.6-3">If the AS relies on the "token_series_id" parameter to exchange the identifier of token series with clients, then the following applies.<a href="#section-3.6-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.6-4.1">
+            <p id="section-3.6-4.1.1">The value assigned to the identifier of a token series <span class="bcp14">MUST</span> be uniquely associated with the access tokens issued by the AS for that token series, and <span class="bcp14">MUST</span> be selected from a pool that the AS exclusively controls.<a href="#section-3.6-4.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.6-4.2">
+            <p id="section-3.6-4.2.1">An issued access token that belongs to a token series <span class="bcp14">MUST</span> include the identifier of that token series. This allows the RS to identify the latest access token in the token series to be superseded by the issued access token.<a href="#section-3.6-4.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.6-4.2.2">
+In particular, each of such access tokens <span class="bcp14">MUST</span> include a claim specifying the identifier of the token series to which the access token belongs. When CWTs are used as access tokens, this information <span class="bcp14">MUST</span> be transported in the "token_series_id" claim registered in <a href="#iana-token-cwt-claims" class="auto internal xref">Section 8.4</a>.<a href="#section-3.6-4.2.2" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.6-5">If a profile of ACE relies on a construct that uses different parameters/claims to transport the identifier of a token series, then the new "token_series_id" parameter and "token_series_id" claim <span class="bcp14">MUST NOT</span> be used when using that profile.<a href="#section-3.6-5" class="pilcrow">¶</a></p>
+<p id="section-3.6-6">For example, a number of parameters/claims are already used to transport information that acts de facto as identifier of token series, in the PSK mode of the DTLS profile <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>, in the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, and in the EDHOC and OSCORE profile <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>.<a href="#section-3.6-6" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="sec-rev_scope">
+<div id="sec-rev_audience">
 <section id="section-3.7">
-        <h3 id="name-rev_scope">
-<a href="#section-3.7" class="section-number selfRef">3.7. </a><a href="#name-rev_scope" class="section-name selfRef">rev_scope</a>
+        <h3 id="name-rev_audience">
+<a href="#section-3.7" class="section-number selfRef">3.7. </a><a href="#name-rev_audience" class="section-name selfRef">rev_audience</a>
         </h3>
-<p id="section-3.7-1">This section defines the additional "rev_scope" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.<a href="#section-3.7-1" class="pilcrow">¶</a></p>
+<p id="section-3.7-1">This section defines the additional "rev_audience" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.<a href="#section-3.7-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.7-2.1">
-            <p id="section-3.7-2.1.1">The "rev_scope" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Request. The presence of this parameter indicates that C wishes the requested access token to specify additional access rights. These are intended for the access token's audience to access protected resources at C as the access token's reverse audience.<a href="#section-3.7-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.7-2.1.1">The "rev_audience" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Request. The presence of this parameter indicates that C wishes the requested access token to specify additional access rights. These are intended for the access token's audience to access protected resources at C as the access token's reverse audience.<a href="#section-3.7-2.1.1" class="pilcrow">¶</a></p>
 <p id="section-3.7-2.1.2">
-This parameter specifies such access rights as a reverse scope. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR text string or a CBOR byte string.<a href="#section-3.7-2.1.2" class="pilcrow">¶</a></p>
+This parameter specifies such a reverse audience as a text string identifier of C. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR text string.<a href="#section-3.7-2.1.2" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.7-2.2">
-            <p id="section-3.7-2.2.1">The "rev_scope" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Response. If present, this parameter specifies the access rights that the AS has actually granted as a reverse scope to the access token's audience, for accessing protected resources at C as the access token's reverse audience.<a href="#section-3.7-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.7-2.2.1">The "rev_audience" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Response. If present, it has the same meaning and encoding that it has in the Access Token Request.<a href="#section-3.7-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.7-3">Fundamentally, this parameter has the same semantics of the "scope" parameter used in the ACE framework, with the difference that it conveys the access rights requested/granted as reverse scope for/to the audience of the access token issued by the AS.<a href="#section-3.7-3" class="pilcrow">¶</a></p>
+<p id="section-3.7-3">Fundamentally, this parameter has the same semantics of the "audience" parameter used in the ACE framework, with the difference that it conveys an identifier of C as a host of protected resources to access, according to the access rights granted as reverse scope to the audience of the access token issued by the AS.<a href="#section-3.7-3" class="pilcrow">¶</a></p>
 <p id="section-3.7-4">The use of this parameter is further detailed in <a href="#sec-bidirectional-access-control" class="auto internal xref">Section 4</a>.<a href="#section-3.7-4" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="sec-token_series_id">
+<div id="sec-rev_scope">
 <section id="section-3.8">
-        <h3 id="name-token_series_id">
-<a href="#section-3.8" class="section-number selfRef">3.8. </a><a href="#name-token_series_id" class="section-name selfRef">token_series_id</a>
+        <h3 id="name-rev_scope">
+<a href="#section-3.8" class="section-number selfRef">3.8. </a><a href="#name-rev_scope" class="section-name selfRef">rev_scope</a>
         </h3>
-<p id="section-3.8-1">This section defines the additional "token_series_id" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.<a href="#section-3.8-1" class="pilcrow">¶</a></p>
+<p id="section-3.8-1">This section defines the additional "rev_scope" parameter. The parameter can be used in an Access Token Request sent by C to the token endpoint at the AS, as well as in the successful Access Token Response sent as reply by the AS.<a href="#section-3.8-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.8-2.1">
-            <p id="section-3.8-2.1.1">The "token_series_id" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Request. The presence of this parameter indicates that C wishes to obtain a new access token for dynamically updating its access rights. That is, the new access token is intended to be the next one in an active token series and to supersede the latest access token in that token series. This parameter <span class="bcp14">MUST NOT</span> be present if the requested access token is the first one of a new token series.<a href="#section-3.8-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.8-2.1.1">The "rev_scope" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Request. The presence of this parameter indicates that C wishes the requested access token to specify additional access rights. These are intended for the access token's audience to access protected resources at C as the access token's reverse audience.<a href="#section-3.8-2.1.1" class="pilcrow">¶</a></p>
 <p id="section-3.8-2.1.2">
-If present, this parameter specifies the identifier of the token series that the new access token is intended to extend. The identifier does not change throughout the lifetime of the token series, and was provided to C in the successful Access Token Response that the AS sent when issuing the first access token in that token series. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.<a href="#section-3.8-2.1.2" class="pilcrow">¶</a></p>
+This parameter specifies such access rights as a reverse scope. When the Access Token Request is encoded in CBOR, the value of this parameter is encoded as a CBOR text string or a CBOR byte string.<a href="#section-3.8-2.1.2" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.8-2.2">
-            <p id="section-3.8-2.2.1">The "token_series_id" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Response. This parameter <span class="bcp14">MUST NOT</span> be present if the issued access token is not the first one of the token series it belongs to.<a href="#section-3.8-2.2.1" class="pilcrow">¶</a></p>
-<p id="section-3.8-2.2.2">
-If present, this parameter specifies the identifier of the token series to which the issued access token belongs. When the Access Token Response is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.<a href="#section-3.8-2.2.2" class="pilcrow">¶</a></p>
+            <p id="section-3.8-2.2.1">The "rev_scope" parameter is <span class="bcp14">OPTIONAL</span> in an Access Token Response. If present, this parameter specifies the access rights that the AS has actually granted as a reverse scope to the access token's audience, for accessing protected resources at C as the access token's reverse audience.<a href="#section-3.8-2.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.8-3">If the AS relies on the "token_series_id" parameter to exchange the identifier of token series with clients, then the following applies.<a href="#section-3.8-3" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.8-4.1">
-            <p id="section-3.8-4.1.1">The value assigned to the identifier of a token series <span class="bcp14">MUST</span> be uniquely associated with the access tokens issued by the AS for that token series, and <span class="bcp14">MUST</span> be selected from a pool that the AS exclusively controls.<a href="#section-3.8-4.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-3.8-4.2">
-            <p id="section-3.8-4.2.1">An issued access token that belongs to a token series <span class="bcp14">MUST</span> include the identifier of that token series. This allows the RS to identify the latest access token in the token series to be superseded by the issued access token.<a href="#section-3.8-4.2.1" class="pilcrow">¶</a></p>
-<p id="section-3.8-4.2.2">
-In particular, each of such access tokens <span class="bcp14">MUST</span> include a claim specifying the identifier of the token series to which the access token belongs. When CWTs are used as access tokens, this information <span class="bcp14">MUST</span> be transported in the "token_series_id" claim registered in <a href="#iana-token-cwt-claims" class="auto internal xref">Section 8.4</a>.<a href="#section-3.8-4.2.2" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-3.8-5">If a profile of ACE relies on a construct that uses different parameters/claims to transport the identifier of a token series, then the new "token_series_id" parameter and "token_series_id" claim <span class="bcp14">MUST NOT</span> be used when using that profile.<a href="#section-3.8-5" class="pilcrow">¶</a></p>
-<p id="section-3.8-6">For example, a number of parameters/claims are already used to transport information that acts de facto as identifier of token series, in the PSK mode of the DTLS profile <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>, in the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, and in the EDHOC and OSCORE profile <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>.<a href="#section-3.8-6" class="pilcrow">¶</a></p>
+<p id="section-3.8-3">Fundamentally, this parameter has the same semantics of the "scope" parameter used in the ACE framework, with the difference that it conveys the access rights requested/granted as reverse scope for/to the audience of the access token issued by the AS.<a href="#section-3.8-3" class="pilcrow">¶</a></p>
+<p id="section-3.8-4">The use of this parameter is further detailed in <a href="#sec-bidirectional-access-control" class="auto internal xref">Section 4</a>.<a href="#section-3.8-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2220,7 +2220,7 @@ This is the original, primary direction of access control, where the ACE client 
         <li class="normal" id="section-4-4.2">
           <p id="section-4-4.2.1">The same access token additionally expresses access rights according to which the ACE RS DEV2 can access protected resources hosted at the ACE client DEV1.<a href="#section-4-4.2.1" class="pilcrow">¶</a></p>
 <p id="section-4-4.2.2">
-For this second direction of access control, the target DEV1 is specified by means of the "rev_audience" parameter defined in <a href="#sec-rev_audience" class="auto internal xref">Section 3.6</a> and the corresponding access token claim "rev_aud" defined in this section, while the access rights are specified by means of the "rev_scope" parameter defined in <a href="#sec-rev_scope" class="auto internal xref">Section 3.7</a> and the corresponding access token claim "rev_scope" defined in this section.<a href="#section-4-4.2.2" class="pilcrow">¶</a></p>
+For this second direction of access control, the target DEV1 is specified by means of the "rev_audience" parameter defined in <a href="#sec-rev_audience" class="auto internal xref">Section 3.7</a> and the corresponding access token claim "rev_aud" defined in this section, while the access rights are specified by means of the "rev_scope" parameter defined in <a href="#sec-rev_scope" class="auto internal xref">Section 3.8</a> and the corresponding access token claim "rev_scope" defined in this section.<a href="#section-4-4.2.2" class="pilcrow">¶</a></p>
 <p id="section-4-4.2.3">
 This is the new, secondary direction of access control, where the ACE client DEV1 that requests the access token also wishes access rights for the ACE RS DEV2 to access resources at DEV1.<a href="#section-4-4.2.3" class="pilcrow">¶</a></p>
 <p id="section-4-4.2.4">
@@ -2330,7 +2330,7 @@ That is, the two parameters pertain to the primary direction of access control.<
               <p id="section-4.1.1-2.2.1">The "req_cnf" parameter defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> can be included. When present, it specifies the key that DEV1 wishes to bind to the requested access token.<a href="#section-4.1.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.1.1-2.3">
-              <p id="section-4.1.1-2.3.1">The "rev_audience" and "rev_scope" parameters defined in <a href="#sec-rev_audience" class="auto internal xref">Section 3.6</a> and <a href="#sec-rev_scope" class="auto internal xref">Section 3.7</a> can be included.<a href="#section-4.1.1-2.3.1" class="pilcrow">¶</a></p>
+              <p id="section-4.1.1-2.3.1">The "rev_audience" and "rev_scope" parameters defined in <a href="#sec-rev_audience" class="auto internal xref">Section 3.7</a> and <a href="#sec-rev_scope" class="auto internal xref">Section 3.8</a> can be included.<a href="#section-4.1.1-2.3.1" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-2.3.2">
 In particular, "rev_audience" specifies an identifier of DEV1, while "rev_scope" specifies access rights that DEV1 wishes for DEV2 to obtain for accessing protecting resources at DEV1.<a href="#section-4.1.1-2.3.2" class="pilcrow">¶</a></p>
 <p id="section-4.1.1-2.3.3">
@@ -2376,12 +2376,12 @@ If the "scope" parameter is not present, then the granted access rights are the 
               <p id="section-4.1.2-4.2.1">The "rs_cnf" parameter defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> can be included. When present, it specifies information about the public key that DEV2 uses to authenticate.<a href="#section-4.1.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.1.2-4.3">
-              <p id="section-4.1.2-4.3.1">The "rev_audience" parameter defined in <a href="#sec-rev_audience" class="auto internal xref">Section 3.6</a> can be included, and specifies an identifier of DEV1.<a href="#section-4.1.2-4.3.1" class="pilcrow">¶</a></p>
+              <p id="section-4.1.2-4.3.1">The "rev_audience" parameter defined in <a href="#sec-rev_audience" class="auto internal xref">Section 3.7</a> can be included, and specifies an identifier of DEV1.<a href="#section-4.1.2-4.3.1" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-4.3.2">
 If the "rev_audience" parameter is present in the Access Token Response and it was also present in the Access Token Request, then the parameter in the Access Token Response <span class="bcp14">MUST</span> have the same value specified by the parameter in the Access Token Request.<a href="#section-4.1.2-4.3.2" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-4.1.2-4.4">
-              <p id="section-4.1.2-4.4.1">The "rev_scope" parameter defined in <a href="#sec-rev_scope" class="auto internal xref">Section 3.7</a> can be included, and specifies access rights that AS has granted to DEV2 for accessing protecting resources at DEV1.<a href="#section-4.1.2-4.4.1" class="pilcrow">¶</a></p>
+              <p id="section-4.1.2-4.4.1">The "rev_scope" parameter defined in <a href="#sec-rev_scope" class="auto internal xref">Section 3.8</a> can be included, and specifies access rights that AS has granted to DEV2 for accessing protecting resources at DEV1.<a href="#section-4.1.2-4.4.1" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-4.4.2">
 The "rev_scope" parameter <span class="bcp14">MUST</span> be present if: i) it was present in the Access Token Request, and the access rights granted to DEV2 are different from the requested ones; or ii) it was not present in the Access Token Request, and the access rights granted to DEV2 are different from the default ones.<a href="#section-4.1.2-4.4.2" class="pilcrow">¶</a></p>
 <p id="section-4.1.2-4.4.3">
@@ -2607,10 +2607,10 @@ Payload:
 <p id="section-8.1-5"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.1-6.1">
-            <p id="section-8.1-6.1.1">Name: "rs_cnf2"<a href="#section-8.1-6.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-6.1.1">Name: "to_rs"<a href="#section-8.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-6.2">
-            <p id="section-8.1-6.2.1">Parameter Usage Location: token response<a href="#section-8.1-6.2.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-6.2.1">Parameter Usage Location: token request<a href="#section-8.1-6.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-6.3">
             <p id="section-8.1-6.3.1">Change Controller: IETF<a href="#section-8.1-6.3.1" class="pilcrow">¶</a></p>
@@ -2622,7 +2622,7 @@ Payload:
 <p id="section-8.1-7"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.1-8.1">
-            <p id="section-8.1-8.1.1">Name: "audience2"<a href="#section-8.1-8.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-8.1.1">Name: "from_rs"<a href="#section-8.1-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-8.2">
             <p id="section-8.1-8.2.1">Parameter Usage Location: token response<a href="#section-8.1-8.2.1" class="pilcrow">¶</a></p>
@@ -2637,7 +2637,7 @@ Payload:
 <p id="section-8.1-9"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.1-10.1">
-            <p id="section-8.1-10.1.1">Name: "anchor_cnf"<a href="#section-8.1-10.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-10.1.1">Name: "rs_cnf2"<a href="#section-8.1-10.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-10.2">
             <p id="section-8.1-10.2.1">Parameter Usage Location: token response<a href="#section-8.1-10.2.1" class="pilcrow">¶</a></p>
@@ -2652,10 +2652,10 @@ Payload:
 <p id="section-8.1-11"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.1-12.1">
-            <p id="section-8.1-12.1.1">Name: "rev_audience"<a href="#section-8.1-12.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-12.1.1">Name: "audience2"<a href="#section-8.1-12.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-12.2">
-            <p id="section-8.1-12.2.1">Parameter Usage Location: token request and token response<a href="#section-8.1-12.2.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-12.2.1">Parameter Usage Location: token response<a href="#section-8.1-12.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-12.3">
             <p id="section-8.1-12.3.1">Change Controller: IETF<a href="#section-8.1-12.3.1" class="pilcrow">¶</a></p>
@@ -2667,10 +2667,10 @@ Payload:
 <p id="section-8.1-13"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.1-14.1">
-            <p id="section-8.1-14.1.1">Name: "rev_scope"<a href="#section-8.1-14.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-14.1.1">Name: "anchor_cnf"<a href="#section-8.1-14.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-14.2">
-            <p id="section-8.1-14.2.1">Parameter Usage Location: token request and token response<a href="#section-8.1-14.2.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-14.2.1">Parameter Usage Location: token response<a href="#section-8.1-14.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-14.3">
             <p id="section-8.1-14.3.1">Change Controller: IETF<a href="#section-8.1-14.3.1" class="pilcrow">¶</a></p>
@@ -2697,10 +2697,10 @@ Payload:
 <p id="section-8.1-17"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.1-18.1">
-            <p id="section-8.1-18.1.1">Name: "to_rs"<a href="#section-8.1-18.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-18.1.1">Name: "rev_audience"<a href="#section-8.1-18.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-18.2">
-            <p id="section-8.1-18.2.1">Parameter Usage Location: token request<a href="#section-8.1-18.2.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-18.2.1">Parameter Usage Location: token request and token response<a href="#section-8.1-18.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-18.3">
             <p id="section-8.1-18.3.1">Change Controller: IETF<a href="#section-8.1-18.3.1" class="pilcrow">¶</a></p>
@@ -2712,10 +2712,10 @@ Payload:
 <p id="section-8.1-19"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.1-20.1">
-            <p id="section-8.1-20.1.1">Name: "from_rs"<a href="#section-8.1-20.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-20.1.1">Name: "rev_scope"<a href="#section-8.1-20.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-20.2">
-            <p id="section-8.1-20.2.1">Parameter Usage Location: token response<a href="#section-8.1-20.2.1" class="pilcrow">¶</a></p>
+            <p id="section-8.1-20.2.1">Parameter Usage Location: token request and token response<a href="#section-8.1-20.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.1-20.3">
             <p id="section-8.1-20.3.1">Change Controller: IETF<a href="#section-8.1-20.3.1" class="pilcrow">¶</a></p>
@@ -2770,13 +2770,13 @@ Payload:
 <p id="section-8.2-5"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.2-6.1">
-            <p id="section-8.2-6.1.1">Name: "rs_cnf2"<a href="#section-8.2-6.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-6.1.1">Name: "to_rs"<a href="#section-8.2-6.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-6.2">
             <p id="section-8.2-6.2.1">CBOR Key: TBD<a href="#section-8.2-6.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-6.3">
-            <p id="section-8.2-6.3.1">Value Type: array<a href="#section-8.2-6.3.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-6.3.1">Value Type: byte string<a href="#section-8.2-6.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-6.4">
             <p id="section-8.2-6.4.1">Reference: [RFC-XXXX]<a href="#section-8.2-6.4.1" class="pilcrow">¶</a></p>
@@ -2788,13 +2788,13 @@ Payload:
 <p id="section-8.2-7"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.2-8.1">
-            <p id="section-8.2-8.1.1">Name: "audience2"<a href="#section-8.2-8.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-8.1.1">Name: "from_rs"<a href="#section-8.2-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-8.2">
             <p id="section-8.2-8.2.1">CBOR Key: TBD<a href="#section-8.2-8.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-8.3">
-            <p id="section-8.2-8.3.1">Value Type: array<a href="#section-8.2-8.3.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-8.3.1">Value Type: byte string<a href="#section-8.2-8.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-8.4">
             <p id="section-8.2-8.4.1">Reference: [RFC-XXXX]<a href="#section-8.2-8.4.1" class="pilcrow">¶</a></p>
@@ -2806,7 +2806,7 @@ Payload:
 <p id="section-8.2-9"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.2-10.1">
-            <p id="section-8.2-10.1.1">Name: "anchor_cnf"<a href="#section-8.2-10.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-10.1.1">Name: "rs_cnf2"<a href="#section-8.2-10.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-10.2">
             <p id="section-8.2-10.2.1">CBOR Key: TBD<a href="#section-8.2-10.2.1" class="pilcrow">¶</a></p>
@@ -2824,13 +2824,13 @@ Payload:
 <p id="section-8.2-11"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.2-12.1">
-            <p id="section-8.2-12.1.1">Name: "rev_audience"<a href="#section-8.2-12.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-12.1.1">Name: "audience2"<a href="#section-8.2-12.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-12.2">
             <p id="section-8.2-12.2.1">CBOR Key: TBD<a href="#section-8.2-12.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-12.3">
-            <p id="section-8.2-12.3.1">Value Type: text string<a href="#section-8.2-12.3.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-12.3.1">Value Type: array<a href="#section-8.2-12.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-12.4">
             <p id="section-8.2-12.4.1">Reference: [RFC-XXXX]<a href="#section-8.2-12.4.1" class="pilcrow">¶</a></p>
@@ -2842,13 +2842,13 @@ Payload:
 <p id="section-8.2-13"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.2-14.1">
-            <p id="section-8.2-14.1.1">Name: "rev_scope"<a href="#section-8.2-14.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-14.1.1">Name: "anchor_cnf"<a href="#section-8.2-14.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-14.2">
             <p id="section-8.2-14.2.1">CBOR Key: TBD<a href="#section-8.2-14.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-14.3">
-            <p id="section-8.2-14.3.1">Value Type: text string or byte string<a href="#section-8.2-14.3.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-14.3.1">Value Type: array<a href="#section-8.2-14.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-14.4">
             <p id="section-8.2-14.4.1">Reference: [RFC-XXXX]<a href="#section-8.2-14.4.1" class="pilcrow">¶</a></p>
@@ -2878,13 +2878,13 @@ Payload:
 <p id="section-8.2-17"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.2-18.1">
-            <p id="section-8.2-18.1.1">Name: "to_rs"<a href="#section-8.2-18.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-18.1.1">Name: "rev_audience"<a href="#section-8.2-18.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-18.2">
             <p id="section-8.2-18.2.1">CBOR Key: TBD<a href="#section-8.2-18.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-18.3">
-            <p id="section-8.2-18.3.1">Value Type: byte string<a href="#section-8.2-18.3.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-18.3.1">Value Type: text string<a href="#section-8.2-18.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-18.4">
             <p id="section-8.2-18.4.1">Reference: [RFC-XXXX]<a href="#section-8.2-18.4.1" class="pilcrow">¶</a></p>
@@ -2896,13 +2896,13 @@ Payload:
 <p id="section-8.2-19"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.2-20.1">
-            <p id="section-8.2-20.1.1">Name: "from_rs"<a href="#section-8.2-20.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-20.1.1">Name: "rev_scope"<a href="#section-8.2-20.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-20.2">
             <p id="section-8.2-20.2.1">CBOR Key: TBD<a href="#section-8.2-20.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-20.3">
-            <p id="section-8.2-20.3.1">Value Type: byte string<a href="#section-8.2-20.3.1" class="pilcrow">¶</a></p>
+            <p id="section-8.2-20.3.1">Value Type: text string or byte string<a href="#section-8.2-20.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.2-20.4">
             <p id="section-8.2-20.4.1">Reference: [RFC-XXXX]<a href="#section-8.2-20.4.1" class="pilcrow">¶</a></p>
@@ -2921,10 +2921,10 @@ Payload:
 <p id="section-8.3-1">IANA is asked to add the following entries to the "JSON Web Token Claims" registry, following the procedure specified in <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>.<a href="#section-8.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-8.3-2.1">
-            <p id="section-8.3-2.1.1">Claim Name: "rev_aud"<a href="#section-8.3-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.3-2.1.1">Claim Name: "token_series_id"<a href="#section-8.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.3-2.2">
-            <p id="section-8.3-2.2.1">Claim Description: The reverse audience of an access token<a href="#section-8.3-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-8.3-2.2.1">Claim Description: The identifier of a token series<a href="#section-8.3-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.3-2.3">
             <p id="section-8.3-2.3.1">Change Controller: IETF<a href="#section-8.3-2.3.1" class="pilcrow">¶</a></p>
@@ -2936,10 +2936,10 @@ Payload:
 <p id="section-8.3-3"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.3-4.1">
-            <p id="section-8.3-4.1.1">Claim Name: "rev_scope"<a href="#section-8.3-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.3-4.1.1">Claim Name: "rev_aud"<a href="#section-8.3-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.3-4.2">
-            <p id="section-8.3-4.2.1">Claim Description: The reverse scope of an access token<a href="#section-8.3-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-8.3-4.2.1">Claim Description: The reverse audience of an access token<a href="#section-8.3-4.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.3-4.3">
             <p id="section-8.3-4.3.1">Change Controller: IETF<a href="#section-8.3-4.3.1" class="pilcrow">¶</a></p>
@@ -2951,10 +2951,10 @@ Payload:
 <p id="section-8.3-5"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.3-6.1">
-            <p id="section-8.3-6.1.1">Claim Name: "token_series_id"<a href="#section-8.3-6.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.3-6.1.1">Claim Name: "rev_scope"<a href="#section-8.3-6.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.3-6.2">
-            <p id="section-8.3-6.2.1">Claim Description: The identifier of a token series<a href="#section-8.3-6.2.1" class="pilcrow">¶</a></p>
+            <p id="section-8.3-6.2.1">Claim Description: The reverse scope of an access token<a href="#section-8.3-6.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.3-6.3">
             <p id="section-8.3-6.3.1">Change Controller: IETF<a href="#section-8.3-6.3.1" class="pilcrow">¶</a></p>
@@ -2973,19 +2973,19 @@ Payload:
 <p id="section-8.4-1">IANA is asked to add the following entries to the "CBOR Web Token (CWT) Claims" registry, following the procedure specified in <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>.<a href="#section-8.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-8.4-2.1">
-            <p id="section-8.4-2.1.1">Claim Name: "rev_aud"<a href="#section-8.4-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.4-2.1.1">Claim Name: "token_series_id"<a href="#section-8.4-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-2.2">
-            <p id="section-8.4-2.2.1">Claim Description: The reverse audience of an access token<a href="#section-8.4-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-8.4-2.2.1">Claim Description: The identifier of a token series<a href="#section-8.4-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-2.3">
-            <p id="section-8.4-2.3.1">JWT Claim Name: "rev_aud"<a href="#section-8.4-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-8.4-2.3.1">JWT Claim Name: "token_series_id"<a href="#section-8.4-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-2.4">
             <p id="section-8.4-2.4.1">Claim Key: TBD<a href="#section-8.4-2.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-2.5">
-            <p id="section-8.4-2.5.1">Claim Value Type: text string<a href="#section-8.4-2.5.1" class="pilcrow">¶</a></p>
+            <p id="section-8.4-2.5.1">Claim Value Type: byte string<a href="#section-8.4-2.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-2.6">
             <p id="section-8.4-2.6.1">Change Controller: IETF<a href="#section-8.4-2.6.1" class="pilcrow">¶</a></p>
@@ -2997,19 +2997,19 @@ Payload:
 <p id="section-8.4-3"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.4-4.1">
-            <p id="section-8.4-4.1.1">Claim Name: "rev_scope"<a href="#section-8.4-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.4-4.1.1">Claim Name: "rev_aud"<a href="#section-8.4-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-4.2">
-            <p id="section-8.4-4.2.1">Claim Description: The reverse scope of an access token<a href="#section-8.4-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-8.4-4.2.1">Claim Description: The reverse audience of an access token<a href="#section-8.4-4.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-4.3">
-            <p id="section-8.4-4.3.1">JWT Claim Name: "rev_scope"<a href="#section-8.4-4.3.1" class="pilcrow">¶</a></p>
+            <p id="section-8.4-4.3.1">JWT Claim Name: "rev_aud"<a href="#section-8.4-4.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-4.4">
             <p id="section-8.4-4.4.1">Claim Key: TBD<a href="#section-8.4-4.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-4.5">
-            <p id="section-8.4-4.5.1">Claim Value Type: text string or byte string<a href="#section-8.4-4.5.1" class="pilcrow">¶</a></p>
+            <p id="section-8.4-4.5.1">Claim Value Type: text string<a href="#section-8.4-4.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-4.6">
             <p id="section-8.4-4.6.1">Change Controller: IETF<a href="#section-8.4-4.6.1" class="pilcrow">¶</a></p>
@@ -3021,19 +3021,19 @@ Payload:
 <p id="section-8.4-5"><br></p>
 <ul class="normal">
 <li class="normal" id="section-8.4-6.1">
-            <p id="section-8.4-6.1.1">Claim Name: "token_series_id"<a href="#section-8.4-6.1.1" class="pilcrow">¶</a></p>
+            <p id="section-8.4-6.1.1">Claim Name: "rev_scope"<a href="#section-8.4-6.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-6.2">
-            <p id="section-8.4-6.2.1">Claim Description: The identifier of a token series<a href="#section-8.4-6.2.1" class="pilcrow">¶</a></p>
+            <p id="section-8.4-6.2.1">Claim Description: The reverse scope of an access token<a href="#section-8.4-6.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-6.3">
-            <p id="section-8.4-6.3.1">JWT Claim Name: "token_series_id"<a href="#section-8.4-6.3.1" class="pilcrow">¶</a></p>
+            <p id="section-8.4-6.3.1">JWT Claim Name: "rev_scope"<a href="#section-8.4-6.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-6.4">
             <p id="section-8.4-6.4.1">Claim Key: TBD<a href="#section-8.4-6.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-6.5">
-            <p id="section-8.4-6.5.1">Claim Value Type: byte string<a href="#section-8.4-6.5.1" class="pilcrow">¶</a></p>
+            <p id="section-8.4-6.5.1">Claim Value Type: text string or byte string<a href="#section-8.4-6.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-8.4-6.6">
             <p id="section-8.4-6.6.1">Change Controller: IETF<a href="#section-8.4-6.6.1" class="pilcrow">¶</a></p>
@@ -3285,7 +3285,7 @@ This is useful in profiles of ACE where C can re-upload the same access token to
 <p id="appendix-B.1.1-1">In some profiles of ACE, C can request a new access token to update its access rights, while preserving the same secure association with the RS. The new access token supersedes the current one stored at the RS, as they are both part of the same token series.<a href="#appendix-B.1.1-1" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-2">When using the original ACE workflow, C uploads the new access token to the RS by protecting the message exchange through the secure association with the RS. This allows the RS to determine that the upload of such access token is for updating the access rights of C.<a href="#appendix-B.1.1-2" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-3">When using the new ACE workflow, the AS uploads the new access token to the RS also when an update of access rights for C is to be performed. This message exchange is protected through the secure association between the AS and the RS.<a href="#appendix-B.1.1-3" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-4">In this latter case, even though the access token claim "token_series_id" defined in <a href="#sec-token_series_id" class="auto internal xref">Section 3.8</a> provides the RS with an explicit indication for recognizing a stored access token as belonging to an ongoing token series, such a process might still lead to ambiguities.<a href="#appendix-B.1.1-4" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-4">In this latter case, even though the access token claim "token_series_id" defined in <a href="#sec-token_series_id" class="auto internal xref">Section 3.6</a> provides the RS with an explicit indication for recognizing a stored access token as belonging to an ongoing token series, such a process might still lead to ambiguities.<a href="#appendix-B.1.1-4" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-5">For example, the RS might have deleted a stored access token due to memory limitations. This effectively terminates the corresponding token series, which is however impractical for the RS to remember indefinitely. Consequently, if the AS uploads to the RS a new access token belonging to the same token series, the RS would erroneously interpret it to be the first access token of a new series.<a href="#appendix-B.1.1-5" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-6">This can be avoided by relying on a new "updated_rights" parameter, which the AS can include in a POST request to the authz-info endpoint when uploading to the RS an access token for dynamically updating the access rights of C (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2</a>).<a href="#appendix-B.1.1-6" class="pilcrow">¶</a></p>
 </section>
@@ -3344,17 +3344,17 @@ token_upload = 48
 token_hash = 49
 to_rs = 50
 from_rs = 51
-audience2 = 52
-rs_cnf2 = 53
+rs_cnf2 = 52
+audience2 = 53
 anchor_cnf = 54
-rev_audience = 55
-rev_scope_param = 56
-token_series_id_param = 57
+token_series_id_param = 55
+rev_audience = 56
+rev_scope_param = 57
 
 ; CBOR Web Token (CWT) Claims
-rev_aud = 42
-rev_scope_claim = 43
-token_series_id_claim = 44
+token_series_id_claim = 42
+rev_aud = 43
+rev_scope_claim = 44
 
 ; CWT Confirmation Methods
 x5chain = 5

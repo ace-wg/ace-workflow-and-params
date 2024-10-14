@@ -94,9 +94,9 @@ Table of Contents
        3.4.1.  Example
      3.5.  anchor_cnf
        3.5.1.  Example
-     3.6.  rev_audience
-     3.7.  rev_scope
-     3.8.  token_series_id
+     3.6.  token_series_id
+     3.7.  rev_audience
+     3.8.  rev_scope
    4.  Bidirectional Access Control
      4.1.  Scenario with One Authorization Server
        4.1.1.  Access Token Request
@@ -206,6 +206,12 @@ Table of Contents
          [RFC9201] or in the "rs_cnf2" parameter defined in this
          document).
 
+      -  "token_series_id", used by the AS to provide C with the
+         identifier of a token series, and by C to ask the AS for a new
+         acces token in the same token series that dynamically updates
+         access rights.  A corresponding access token claim, namely
+         "token_series_id", is also defined.
+
       -  "rev_audience", used by C to provide the AS with an identifier
          of itself as a reverse audience, and by the AS to possibly
          confirm that identifier in a response to C.  A corresponding
@@ -219,12 +225,6 @@ Table of Contents
          granted as reverse scope to the access token's audience.  A
          corresponding access token claim, namely "rev_scope", is also
          defined.
-
-      -  "token_series_id", used by the AS to provide C with the
-         identifier of a token series, and by C to ask the AS for a new
-         acces token in the same token series that dynamically updates
-         access rights.  A corresponding access token claim, namely
-         "token_series_id", is also defined.
 
    *  It defines a method for the ACE framework to enforce bidirectional
       access control by means of a single access token (see Section 4),
@@ -301,7 +301,7 @@ Table of Contents
    In the CBOR diagnostic notation used in this document, constructs of
    the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME
    in the CDDL model shown in Figure 12 of Appendix C.  For example,
-   {e'audience2' : ["rs1", "rs2"]} stands for {52 : ["rs1", "rs2"]}.
+   {e'audience2' : ["rs1", "rs2"]} stands for {53 : ["rs1", "rs2"]}.
 
    Note to RFC Editor: Please delete the paragraph immediately preceding
    this note.  Also, in the CBOR diagnostic notation used in this
@@ -1301,68 +1301,7 @@ Table of Contents
       Figure 9: Example of Access Token Response with an access token
        bound to an asymmetric key, using the "anchor_cnf" parameter.
 
-3.6.  rev_audience
-
-   This section defines the additional "rev_audience" parameter.  The
-   parameter can be used in an Access Token Request sent by C to the
-   token endpoint at the AS, as well as in the successful Access Token
-   Response sent as reply by the AS.
-
-   *  The "rev_audience" parameter is OPTIONAL in an Access Token
-      Request.  The presence of this parameter indicates that C wishes
-      the requested access token to specify additional access rights.
-      These are intended for the access token's audience to access
-      protected resources at C as the access token's reverse audience.
-
-      This parameter specifies such a reverse audience as a text string
-      identifier of C.  When the Access Token Request is encoded in
-      CBOR, the value of this parameter is encoded as a CBOR text
-      string.
-
-   *  The "rev_audience" parameter is OPTIONAL in an Access Token
-      Response.  If present, it has the same meaning and encoding that
-      it has in the Access Token Request.
-
-   Fundamentally, this parameter has the same semantics of the
-   "audience" parameter used in the ACE framework, with the difference
-   that it conveys an identifier of C as a host of protected resources
-   to access, according to the access rights granted as reverse scope to
-   the audience of the access token issued by the AS.
-
-   The use of this parameter is further detailed in Section 4.
-
-3.7.  rev_scope
-
-   This section defines the additional "rev_scope" parameter.  The
-   parameter can be used in an Access Token Request sent by C to the
-   token endpoint at the AS, as well as in the successful Access Token
-   Response sent as reply by the AS.
-
-   *  The "rev_scope" parameter is OPTIONAL in an Access Token Request.
-      The presence of this parameter indicates that C wishes the
-      requested access token to specify additional access rights.  These
-      are intended for the access token's audience to access protected
-      resources at C as the access token's reverse audience.
-
-      This parameter specifies such access rights as a reverse scope.
-      When the Access Token Request is encoded in CBOR, the value of
-      this parameter is encoded as a CBOR text string or a CBOR byte
-      string.
-
-   *  The "rev_scope" parameter is OPTIONAL in an Access Token Response.
-      If present, this parameter specifies the access rights that the AS
-      has actually granted as a reverse scope to the access token's
-      audience, for accessing protected resources at C as the access
-      token's reverse audience.
-
-   Fundamentally, this parameter has the same semantics of the "scope"
-   parameter used in the ACE framework, with the difference that it
-   conveys the access rights requested/granted as reverse scope for/to
-   the audience of the access token issued by the AS.
-
-   The use of this parameter is further detailed in Section 4.
-
-3.8.  token_series_id
+3.6.  token_series_id
 
    This section defines the additional "token_series_id" parameter.  The
    parameter can be used in an Access Token Request sent by C to the
@@ -1425,6 +1364,67 @@ Table of Contents
    profile [RFC9203], and in the EDHOC and OSCORE profile
    [I-D.ietf-ace-edhoc-oscore-profile].
 
+3.7.  rev_audience
+
+   This section defines the additional "rev_audience" parameter.  The
+   parameter can be used in an Access Token Request sent by C to the
+   token endpoint at the AS, as well as in the successful Access Token
+   Response sent as reply by the AS.
+
+   *  The "rev_audience" parameter is OPTIONAL in an Access Token
+      Request.  The presence of this parameter indicates that C wishes
+      the requested access token to specify additional access rights.
+      These are intended for the access token's audience to access
+      protected resources at C as the access token's reverse audience.
+
+      This parameter specifies such a reverse audience as a text string
+      identifier of C.  When the Access Token Request is encoded in
+      CBOR, the value of this parameter is encoded as a CBOR text
+      string.
+
+   *  The "rev_audience" parameter is OPTIONAL in an Access Token
+      Response.  If present, it has the same meaning and encoding that
+      it has in the Access Token Request.
+
+   Fundamentally, this parameter has the same semantics of the
+   "audience" parameter used in the ACE framework, with the difference
+   that it conveys an identifier of C as a host of protected resources
+   to access, according to the access rights granted as reverse scope to
+   the audience of the access token issued by the AS.
+
+   The use of this parameter is further detailed in Section 4.
+
+3.8.  rev_scope
+
+   This section defines the additional "rev_scope" parameter.  The
+   parameter can be used in an Access Token Request sent by C to the
+   token endpoint at the AS, as well as in the successful Access Token
+   Response sent as reply by the AS.
+
+   *  The "rev_scope" parameter is OPTIONAL in an Access Token Request.
+      The presence of this parameter indicates that C wishes the
+      requested access token to specify additional access rights.  These
+      are intended for the access token's audience to access protected
+      resources at C as the access token's reverse audience.
+
+      This parameter specifies such access rights as a reverse scope.
+      When the Access Token Request is encoded in CBOR, the value of
+      this parameter is encoded as a CBOR text string or a CBOR byte
+      string.
+
+   *  The "rev_scope" parameter is OPTIONAL in an Access Token Response.
+      If present, this parameter specifies the access rights that the AS
+      has actually granted as a reverse scope to the access token's
+      audience, for accessing protected resources at C as the access
+      token's reverse audience.
+
+   Fundamentally, this parameter has the same semantics of the "scope"
+   parameter used in the ACE framework, with the difference that it
+   conveys the access rights requested/granted as reverse scope for/to
+   the audience of the access token issued by the AS.
+
+   The use of this parameter is further detailed in Section 4.
+
 4.  Bidirectional Access Control
 
    In some deployments, two devices DEV1 and DEV2 might wish to access
@@ -1464,9 +1464,9 @@ Table of Contents
 
       For this second direction of access control, the target DEV1 is
       specified by means of the "rev_audience" parameter defined in
-      Section 3.6 and the corresponding access token claim "rev_aud"
+      Section 3.7 and the corresponding access token claim "rev_aud"
       defined in this section, while the access rights are specified by
-      means of the "rev_scope" parameter defined in Section 3.7 and the
+      means of the "rev_scope" parameter defined in Section 3.8 and the
       corresponding access token claim "rev_scope" defined in this
       section.
 
@@ -1539,7 +1539,7 @@ Table of Contents
       requested access token.
 
    *  The "rev_audience" and "rev_scope" parameters defined in
-      Section 3.6 and Section 3.7 can be included.
+      Section 3.7 and Section 3.8 can be included.
 
       In particular, "rev_audience" specifies an identifier of DEV1,
       while "rev_scope" specifies access rights that DEV1 wishes for
@@ -1607,7 +1607,7 @@ Table of Contents
       present, it specifies information about the public key that DEV2
       uses to authenticate.
 
-   *  The "rev_audience" parameter defined in Section 3.6 can be
+   *  The "rev_audience" parameter defined in Section 3.7 can be
       included, and specifies an identifier of DEV1.
 
       If the "rev_audience" parameter is present in the Access Token
@@ -1615,7 +1615,7 @@ Table of Contents
       the parameter in the Access Token Response MUST have the same
       value specified by the parameter in the Access Token Request.
 
-   *  The "rev_scope" parameter defined in Section 3.7 can be included,
+   *  The "rev_scope" parameter defined in Section 3.8 can be included,
       and specifies access rights that AS has granted to DEV2 for
       accessing protecting resources at DEV1.
 
@@ -1891,6 +1891,26 @@ Table of Contents
 
 
 
+   *  Name: "to_rs"
+
+   *  Parameter Usage Location: token request
+
+   *  Change Controller: IETF
+
+   *  Reference: [RFC-XXXX]
+
+
+
+   *  Name: "from_rs"
+
+   *  Parameter Usage Location: token response
+
+   *  Change Controller: IETF
+
+   *  Reference: [RFC-XXXX]
+
+
+
    *  Name: "rs_cnf2"
 
    *  Parameter Usage Location: token response
@@ -1921,6 +1941,16 @@ Table of Contents
 
 
 
+   *  Name: "token_series_id"
+
+   *  Parameter Usage Location: token request and token response
+
+   *  Change Controller: IETF
+
+   *  Reference: [RFC-XXXX]
+
+
+
    *  Name: "rev_audience"
 
    *  Parameter Usage Location: token request and token response
@@ -1934,36 +1964,6 @@ Table of Contents
    *  Name: "rev_scope"
 
    *  Parameter Usage Location: token request and token response
-
-   *  Change Controller: IETF
-
-   *  Reference: [RFC-XXXX]
-
-
-
-   *  Name: "token_series_id"
-
-   *  Parameter Usage Location: token request and token response
-
-   *  Change Controller: IETF
-
-   *  Reference: [RFC-XXXX]
-
-
-
-   *  Name: "to_rs"
-
-   *  Parameter Usage Location: token request
-
-   *  Change Controller: IETF
-
-   *  Reference: [RFC-XXXX]
-
-
-
-   *  Name: "from_rs"
-
-   *  Parameter Usage Location: token response
 
    *  Change Controller: IETF
 
@@ -1999,6 +1999,30 @@ Table of Contents
 
 
 
+   *  Name: "to_rs"
+
+   *  CBOR Key: TBD
+
+   *  Value Type: byte string
+
+   *  Reference: [RFC-XXXX]
+
+   *  Original Specification: [RFC-XXXX]
+
+
+
+   *  Name: "from_rs"
+
+   *  CBOR Key: TBD
+
+   *  Value Type: byte string
+
+   *  Reference: [RFC-XXXX]
+
+   *  Original Specification: [RFC-XXXX]
+
+
+
    *  Name: "rs_cnf2"
 
    *  CBOR Key: TBD
@@ -2035,6 +2059,18 @@ Table of Contents
 
 
 
+   *  Name: "token_series_id"
+
+   *  CBOR Key: TBD
+
+   *  Value Type: byte string
+
+   *  Reference: [RFC-XXXX]
+
+   *  Original Specification: [RFC-XXXX]
+
+
+
    *  Name: "rev_audience"
 
    *  CBOR Key: TBD
@@ -2057,46 +2093,20 @@ Table of Contents
 
    *  Original Specification: [RFC-XXXX]
 
-
-
-   *  Name: "token_series_id"
-
-   *  CBOR Key: TBD
-
-   *  Value Type: byte string
-
-   *  Reference: [RFC-XXXX]
-
-   *  Original Specification: [RFC-XXXX]
-
-
-
-   *  Name: "to_rs"
-
-   *  CBOR Key: TBD
-
-   *  Value Type: byte string
-
-   *  Reference: [RFC-XXXX]
-
-   *  Original Specification: [RFC-XXXX]
-
-
-
-   *  Name: "from_rs"
-
-   *  CBOR Key: TBD
-
-   *  Value Type: byte string
-
-   *  Reference: [RFC-XXXX]
-
-   *  Original Specification: [RFC-XXXX]
-
 8.3.  JSON Web Token Claims Registry
 
    IANA is asked to add the following entries to the "JSON Web Token
    Claims" registry, following the procedure specified in [RFC7519].
+
+   *  Claim Name: "token_series_id"
+
+   *  Claim Description: The identifier of a token series
+
+   *  Change Controller: IETF
+
+   *  Reference: [RFC-XXXX]
+
+
 
    *  Claim Name: "rev_aud"
 
@@ -2116,21 +2126,27 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
-
-
-   *  Claim Name: "token_series_id"
-
-   *  Claim Description: The identifier of a token series
-
-   *  Change Controller: IETF
-
-   *  Reference: [RFC-XXXX]
-
 8.4.  CBOR Web Token (CWT) Claims Registry
 
    IANA is asked to add the following entries to the "CBOR Web Token
    (CWT) Claims" registry, following the procedure specified in
    [RFC8392].
+
+   *  Claim Name: "token_series_id"
+
+   *  Claim Description: The identifier of a token series
+
+   *  JWT Claim Name: "token_series_id"
+
+   *  Claim Key: TBD
+
+   *  Claim Value Type: byte string
+
+   *  Change Controller: IETF
+
+   *  Reference: Section 4 of [RFC-XXXX]
+
+
 
    *  Claim Name: "rev_aud"
 
@@ -2157,22 +2173,6 @@ Table of Contents
    *  Claim Key: TBD
 
    *  Claim Value Type: text string or byte string
-
-   *  Change Controller: IETF
-
-   *  Reference: Section 4 of [RFC-XXXX]
-
-
-
-   *  Claim Name: "token_series_id"
-
-   *  Claim Description: The identifier of a token series
-
-   *  JWT Claim Name: "token_series_id"
-
-   *  Claim Key: TBD
-
-   *  Claim Value Type: byte string
 
    *  Change Controller: IETF
 
@@ -2444,7 +2444,7 @@ B.1.1.  Prevent Ambiguities in the Dynamic Update of Access Rights
    association between the AS and the RS.
 
    In this latter case, even though the access token claim
-   "token_series_id" defined in Section 3.8 provides the RS with an
+   "token_series_id" defined in Section 3.6 provides the RS with an
    explicit indication for recognizing a stored access token as
    belonging to an ongoing token series, such a process might still lead
    to ambiguities.
@@ -2540,17 +2540,17 @@ Appendix C.  CDDL Model
    token_hash = 49
    to_rs = 50
    from_rs = 51
-   audience2 = 52
-   rs_cnf2 = 53
+   rs_cnf2 = 52
+   audience2 = 53
    anchor_cnf = 54
-   rev_audience = 55
-   rev_scope_param = 56
-   token_series_id_param = 57
+   token_series_id_param = 55
+   rev_audience = 56
+   rev_scope_param = 57
 
    ; CBOR Web Token (CWT) Claims
-   rev_aud = 42
-   rev_scope_claim = 43
-   token_series_id_claim = 44
+   token_series_id_claim = 42
+   rev_aud = 43
+   rev_scope_claim = 44
 
    ; CWT Confirmation Methods
    x5chain = 5
