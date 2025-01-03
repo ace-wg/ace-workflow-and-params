@@ -6,7 +6,7 @@ ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Updates: 9200, 9202, 9203, 9431 (if approved)                G. Selander
 Intended status: Standards Track                             Ericsson AB
-Expires: 17 April 2025                                   14 October 2024
+Expires: 7 July 2025                                      3 January 2025
 
 
   Alternative Workflow and OAuth Parameters for the Authentication and
@@ -21,9 +21,7 @@ Abstract
    server can use for uploading an access token to a resource server on
    behalf of the client.  Second, it defines new parameters and
    encodings for the OAuth 2.0 token endpoint at the authorization
-   server.  Third, it defines a method for the ACE framework to enforce
-   bidirectional access control by means of a single access token.
-   Fourth, it amends two of the requirements on profiles of the
+   server.  Third, it amends two of the requirements on profiles of the
    framework.  Finally, it deprecates the original payload format of
    error responses that convey an error code, when CBOR is used to
    encode message payloads.  For such error responses, it defines a new
@@ -61,11 +59,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 April 2025.
+   This Internet-Draft will expire on 7 July 2025.
 
 Copyright Notice
 
-   Copyright (c) 2024 IETF Trust and the persons identified as the
+   Copyright (c) 2025 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -95,27 +93,18 @@ Table of Contents
      3.5.  anchor_cnf
        3.5.1.  Example
      3.6.  token_series_id
-     3.7.  rev_audience
-     3.8.  rev_scope
-   4.  Bidirectional Access Control
-     4.1.  Scenario with One Authorization Server
-       4.1.1.  Access Token Request
-       4.1.2.  Access Token Response
-       4.1.3.  Access to Protected Resources
-     4.2.  Scenario with Two Authorization Servers
-     4.3.  Practical Considerations
-   5.  Updated Requirements on Profiles
-   6.  Updated Payload Format of Error Responses
-   7.  Security Considerations
-   8.  IANA Considerations
-     8.1.  OAuth Parameters Registry
-     8.2.  OAuth Parameters CBOR Mappings Registry
-     8.3.  JSON Web Token Claims Registry
-     8.4.  CBOR Web Token (CWT) Claims Registry
-     8.5.  Custom Problem Detail Keys Registry
-   9.  References
-     9.1.  Normative References
-     9.2.  Informative References
+   4.  Updated Requirements on Profiles
+   5.  Updated Payload Format of Error Responses
+   6.  Security Considerations
+   7.  IANA Considerations
+     7.1.  OAuth Parameters Registry
+     7.2.  OAuth Parameters CBOR Mappings Registry
+     7.3.  JSON Web Token Claims Registry
+     7.4.  CBOR Web Token (CWT) Claims Registry
+     7.5.  Custom Problem Detail Keys Registry
+   8.  References
+     8.1.  Normative References
+     8.2.  Informative References
    Appendix A.  Benefits for ACE Profiles
      A.1.  DTLS Profile
      A.2.  EDHOC and OSCORE Profile
@@ -126,9 +115,10 @@ Table of Contents
      B.2.  Further New Parameters to Consider
    Appendix C.  CDDL Model
    Appendix D.  Document Updates
-     D.1.  Version -02 to -03
-     D.2.  Version -01 to -02
-     D.3.  Version -00 to -01
+     D.1.  Version -03 to -04
+     D.2.  Version -02 to -03
+     D.3.  Version -01 to -02
+     D.4.  Version -00 to -01
    Acknowledgments
    Authors' Addresses
 
@@ -211,34 +201,14 @@ Table of Contents
          access rights.  A corresponding access token claim, namely
          "token_series_id", is also defined.
 
-      -  "rev_audience", used by C to provide the AS with an identifier
-         of itself as a reverse audience, and by the AS to possibly
-         confirm that identifier in a response to C.  A corresponding
-         access token claim, namely "rev_aud", is also defined.
-
-      -  "rev_scope", used by C to ask the AS that the requested access
-         token specifies additional access rights as a reverse scope,
-         allowing the access token's audience to accordingly access
-         protected resources at C.  This parameter is also used by the
-         AS to provide C with the access rights that are actually
-         granted as reverse scope to the access token's audience.  A
-         corresponding access token claim, namely "rev_scope", is also
-         defined.
-
-   *  It defines a method for the ACE framework to enforce bidirectional
-      access control by means of a single access token (see Section 4),
-      building on the two new parameters "rev_audience" and "rev_scope"
-      as well as on the corresponding access token claims "rev_aud" and
-      "rev_scope".
-
    *  It amends two of the requirements on profiles of the ACE framework
-      (see Section 5).
+      (see Section 4).
 
    *  It deprecates the original payload format of error responses that
       convey an error code, when CBOR is used to encode message payloads
       in the ACE framework.  For such error responses, it defines a new
       payload format according to the problem-details format specified
-      in [RFC9290] (see Section 6).
+      in [RFC9290] (see Section 5).
 
       In this respect, it also updates the profiles of the ACE framework
       defined in [RFC9202], [RFC9203], and [RFC9431].
@@ -299,13 +269,13 @@ Table of Contents
 
    In the CBOR diagnostic notation used in this document, constructs of
    the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME
-   in the CDDL model shown in Figure 12 of Appendix C.  For example,
+   in the CDDL model shown in Figure 11 of Appendix C.  For example,
    {e'audience2' : ["rs1", "rs2"]} stands for {53 : ["rs1", "rs2"]}.
 
    Note to RFC Editor: Please delete the paragraph immediately preceding
    this note.  Also, in the CBOR diagnostic notation used in this
    document, please replace the constructs of the form e'SOME_NAME' with
-   the value assigned to SOME_NAME in the CDDL model shown in Figure 12
+   the value assigned to SOME_NAME in the CDDL model shown in Figure 11
    of Appendix C.  Finally, please delete this note.
 
 2.  New ACE Workflow
@@ -1350,7 +1320,7 @@ Table of Contents
       specifying the identifier of the token series to which the access
       token belongs.  When CWTs are used as access tokens, this
       information MUST be transported in the "token_series_id" claim
-      registered in Section 8.4.
+      registered in Section 7.4.
 
    If a profile of ACE relies on a construct that uses different
    parameters/claims to transport the identifier of a token series, then
@@ -1363,351 +1333,7 @@ Table of Contents
    profile [RFC9203], and in the EDHOC and OSCORE profile
    [I-D.ietf-ace-edhoc-oscore-profile].
 
-3.7.  rev_audience
-
-   This section defines the additional "rev_audience" parameter.  The
-   parameter can be used in an Access Token Request sent by C to the
-   token endpoint at the AS, as well as in the successful Access Token
-   Response sent as reply by the AS.
-
-   *  The "rev_audience" parameter is OPTIONAL in an Access Token
-      Request.  The presence of this parameter indicates that C wishes
-      the requested access token to specify additional access rights.
-      These are intended for the access token's audience to access
-      protected resources at C as the access token's reverse audience.
-
-      This parameter specifies such a reverse audience as a text string
-      identifier of C.  When the Access Token Request is encoded in
-      CBOR, the value of this parameter is encoded as a CBOR text
-      string.
-
-   *  The "rev_audience" parameter is OPTIONAL in an Access Token
-      Response.  If present, it has the same meaning and encoding that
-      it has in the Access Token Request.
-
-   Fundamentally, this parameter has the same semantics of the
-   "audience" parameter used in the ACE framework, with the difference
-   that it conveys an identifier of C as a host of protected resources
-   to access, according to the access rights granted as reverse scope to
-   the audience of the access token issued by the AS.
-
-   The use of this parameter is further detailed in Section 4.
-
-3.8.  rev_scope
-
-   This section defines the additional "rev_scope" parameter.  The
-   parameter can be used in an Access Token Request sent by C to the
-   token endpoint at the AS, as well as in the successful Access Token
-   Response sent as reply by the AS.
-
-   *  The "rev_scope" parameter is OPTIONAL in an Access Token Request.
-      The presence of this parameter indicates that C wishes the
-      requested access token to specify additional access rights.  These
-      are intended for the access token's audience to access protected
-      resources at C as the access token's reverse audience.
-
-      This parameter specifies such access rights as a reverse scope.
-      When the Access Token Request is encoded in CBOR, the value of
-      this parameter is encoded as a CBOR text string or a CBOR byte
-      string.
-
-   *  The "rev_scope" parameter is OPTIONAL in an Access Token Response.
-      If present, this parameter specifies the access rights that the AS
-      has actually granted as a reverse scope to the access token's
-      audience, for accessing protected resources at C as the access
-      token's reverse audience.
-
-   Fundamentally, this parameter has the same semantics of the "scope"
-   parameter used in the ACE framework, with the difference that it
-   conveys the access rights requested/granted as reverse scope for/to
-   the audience of the access token issued by the AS.
-
-   The use of this parameter is further detailed in Section 4.
-
-4.  Bidirectional Access Control
-
-   In some deployments, two devices DEV1 and DEV2 might wish to access
-   each other's protected resources.  This can clearly be achieved by
-   means of two separate access tokens, each of which is used to enforce
-   access control in one direction.  That is:
-
-   *  A first access token is requested by and issued to DEV1, for
-      accessing protected resources at DEV2.  With respect to this
-      access token, DEV1 is an ACE client, while DEV2 is an ACE RS.
-
-   *  A second access token is requested by and issued to DEV2, for
-      accessing protected resources at DEV1.  With respect to this
-      access token, DEV2 is an ACE client, while DEV1 is an ACE RS.
-
-   This section defines how to enforce such a bidirectional access
-   control by means of a single access token, which is requested by and
-   issued to a device DEV1 acting as ACE client.  In particular:
-
-   *  The access token expresses access rights according to which the
-      requesting ACE client DEV1 can access protected resources hosted
-      at the ACE RS DEV2.
-
-      For this first direction of access control, the target DEV2 is
-      specified by means of the "audience" parameter and the
-      corresponding access token claim "aud", while the access rights
-      are specified by means of the "scope" parameter and the
-      corresponding access token claim "scope".
-
-      This is the original, primary direction of access control, where
-      the ACE client DEV1 that requests the access token wishes access
-      rights to access protected resources at the ACE RS DEV2.
-
-   *  The same access token additionally expresses access rights
-      according to which the ACE RS DEV2 can access protected resources
-      hosted at the ACE client DEV1.
-
-      For this second direction of access control, the target DEV1 is
-      specified by means of the "rev_audience" parameter defined in
-      Section 3.7 and the corresponding access token claim "rev_aud"
-      defined in this section, while the access rights are specified by
-      means of the "rev_scope" parameter defined in Section 3.8 and the
-      corresponding access token claim "rev_scope" defined in this
-      section.
-
-      This is the new, secondary direction of access control, where the
-      ACE client DEV1 that requests the access token also wishes access
-      rights for the ACE RS DEV2 to access resources at DEV1.
-
-      Clearly, this requires the ACE client DEV1 to also act as CoAP
-      server, and the ACE RS DEV2 to also act as CoAP client.
-
-   Like for the original case with a single access control direction,
-   the access token is uploaded to the ACE RS DEV2, which processes the
-   access token as per Section 5.10 of [RFC9200] and according to the
-   profile of ACE used by DEV1 and DEV2.
-
-   The protocol workflow is detailed in the following Section 4.1 and
-   Section 4.2, in case only one authorization server or two
-   authorization servers are involved, respectively.
-
-4.1.  Scenario with One Authorization Server
-
-   As shown in Figure 10, this section considers a scenario with a
-   single authorization server AS.  Both devices DEV1 and DEV2 are
-   registered at AS, and each of them with permissions to access
-   protected resources at the other device.  In the following, DEV1 acts
-   as ACE client by requesting an access token from AS.
-
-   - DEV1 is registered as:                       +----+
-     - Device authorized to access DEV2; and      |    |
-     - Device that can be accessed by DEV2        |    |
-                                                  |    |
-   - DEV2 is registered as:                       | AS |
-     - Device that can be accessed by DEV1; and   |    |
-     - Device authorized to access DEV1           |    |
-                                                  |    |
-                                                  +----+
-
-                                                     ^
-                                                     |
-                                                     |
-                                                     |
-                                                     v
-
-    DEV2                                           DEV1
-   +----+                                          +---+
-   | RS | <--------------------------------------> | C |
-   +----+                                          +---+
-
-       Figure 10: Bidirectional access control with one Authorization
-                                  Server.
-
-4.1.1.  Access Token Request
-
-   As to the Access Token Request that DEV1 sends to AS, the following
-   applies.
-
-   *  The "audience" and "scope" parameters are used as defined in
-      [RFC9200], and according to the profile of ACE used by DEV1 and
-      DEV2.
-
-      In particular, "audience" specifies an identifier of DEV2, while
-      "scope" specifies access rights that DEV1 wishes to obtain for
-      accessing protecting resources at DEV2.
-
-      That is, the two parameters pertain to the primary direction of
-      access control.
-
-   *  The "req_cnf" parameter defined in [RFC9201] can be included.
-      When present, it specifies the key that DEV1 wishes to bind to the
-      requested access token.
-
-   *  The "rev_audience" and "rev_scope" parameters defined in
-      Section 3.7 and Section 3.8 can be included.
-
-      In particular, "rev_audience" specifies an identifier of DEV1,
-      while "rev_scope" specifies access rights that DEV1 wishes for
-      DEV2 to obtain for accessing protecting resources at DEV1.
-
-      That is, the two parameters pertain to the secondary direction of
-      access control.
-
-   If DEV1 wishes that the requested access token also provides DEV2
-   with access rights pertaining to the secondary direction of access
-   control, then the Access Token Request has to include at least one of
-   the two parameters "rev_audience" and "rev_scope".
-
-4.1.2.  Access Token Response
-
-   When receiving an Access Token Request that includes at least one of
-   the two parameters "rev_audience" and "rev_scope", AS processes it as
-   defined in Section 5.2 of [RFC9200], with the following additions:
-
-   *  If the Access Token Request includes the "rev_scope" parameter but
-      not the "rev_audience" parameter, then AS assumes the identifier
-      of DEV1 to be the default one, if any is defined.
-
-   *  If the Access Token Request includes the "rev_audience" parameter
-      but not the "rev_scope" parameter, then AS assumes the access
-      rights requested for DEV2 to access DEV1 to be the default ones,
-      if any are defined.
-
-   *  AS checks whether the access rights requested for DEV2 as reverse
-      scope can be at least partially granted, in accordance with the
-      installed access policies pertaining to the access to protected
-      resources at DEV1 from DEV2.
-
-      That is, AS performs the same evaluation that it would perform if
-      DEV2 sent an Access Token Request as an ACE client, with the
-      intent to access protected resources at DEV1 as an ACE RS.
-
-      It is REQUIRED that such evaluation succeeds, in order for AS to
-      issue an access token and reply to DEV1 with a successful Access
-      Token Response.
-
-   As to the successful Access Token Response that AS sends to DEV1, the
-   following applies.
-
-   *  The "audience" and "scope" parameters are used as defined in
-      [RFC9200], and according to the profile of ACE used by DEV1 and
-      DEV2.
-
-      In particular, "audience" specifies an identifier of DEV2, while
-      "scope" specifies the access rights that AS has granted to DEV1
-      for accessing protecting resources at DEV2.
-
-      The "scope" parameter has to be present if: i) it was present in
-      the Access Token Request, and the access rights granted to DEV1
-      are different from the requested ones; or ii) it was not present
-      in the Access Token Request, and the access rights granted to DEV1
-      are different from the default ones.
-
-      If the "scope" parameter is not present, then the granted access
-      rights are the same as those requested by the "scope" parameter in
-      the Access Token Request if present therein, or the default access
-      rights otherwise.
-
-   *  The "rs_cnf" parameter defined in [RFC9201] can be included.  When
-      present, it specifies information about the public key that DEV2
-      uses to authenticate.
-
-   *  The "rev_audience" parameter defined in Section 3.7 can be
-      included, and specifies an identifier of DEV1.
-
-      If the "rev_audience" parameter is present in the Access Token
-      Response and it was also present in the Access Token Request, then
-      the parameter in the Access Token Response MUST have the same
-      value specified by the parameter in the Access Token Request.
-
-   *  The "rev_scope" parameter defined in Section 3.8 can be included,
-      and specifies access rights that AS has granted to DEV2 for
-      accessing protecting resources at DEV1.
-
-      The "rev_scope" parameter MUST be present if: i) it was present in
-      the Access Token Request, and the access rights granted to DEV2
-      are different from the requested ones; or ii) it was not present
-      in the Access Token Request, and the access rights granted to DEV2
-      are different from the default ones.
-
-      If the "rev_scope" parameter is not present, then the access
-      rights granted to DEV2 are the same as those requested by the
-      "rev_scope" parameter in the Access Token Request if present
-      therein, or the default access rights otherwise.
-
-   The issued access token MUST include information about the reverse
-   audience and reverse scope pertaining to the secondary access control
-   direction.  In particular:
-
-   *  The access token MUST contain a claim specifying the identifier of
-      DEV1.
-
-      If the Access Token Response includes the "rev_audience"
-      parameter, then the claim specifies the same information conveyed
-      by that parameter.
-
-      If this is not the case, then the claim specifies the same
-      information conveyed by the "rev_audience" parameter of the Access
-      Token Request, if included therein, or the default identifier of
-      DEV1 otherwise.
-
-      When CWTs are used as access tokens, this information MUST be
-      transported in the "rev_aud" claim registered in Section 8.4.
-
-   *  The access token MUST contain a claim specifying the access rights
-      that AS has granted to DEV2 for accessing protecting resources at
-      DEV1.
-
-      If the Access Token Response includes the "rev_scope" parameter,
-      then the claim specifies the same information conveyed by that
-      parameter.
-
-      If this is not the case, then the claim specifies the same
-      information conveyed by the "rev_scope" parameter of the Access
-      Token Request, if included therein, or the default access rights
-      for DEV2 to access DEV1 otherwise.
-
-      When CWTs are used as access tokens, this information MUST be
-      transported in the "rev_scope" claim, registered in Section 8.4.
-
-4.1.3.  Access to Protected Resources
-
-   As to the secure communication association between DEV1 and DEV2, its
-   establishment and maintenance does not deviate from what is defined
-   in the profile of ACE used by DEV1 and DEV2.
-
-   Furthermore, communications between DEV1 and DEV2 MUST rely on such
-   secure communication association for both directions of access
-   control, i.e., when DEV1 accesses protected resources at DEV2 and
-   vice versa.
-
-   After having received a successful Access Token Response from AS,
-   DEV1 MUST maintain and enforce the information about the access
-   rights granted to DEV2 and pertaining to the secondary access control
-   direction.
-
-   In particular, DEV1 MUST prevent DEV2 from accessing protected
-   resources at DEV1, in case access requests from DEV2 are not
-   authorized as per the reverse scope specified by the issued access
-   token, or after having purged the issued access token (e.g.,
-   following its expiration of revocation).
-
-4.2.  Scenario with Two Authorization Servers
-
-   TBD
-
-4.3.  Practical Considerations
-
-   When enforcing bidirectional access control by means of a single
-   access token, the following considerations hold.
-
-   *  The access token can be uploaded to the ACE RS DEV2 by the ACE
-      client per the original ACE workflow, or by the AS that has issued
-      the access token per the new ACE workflow defined in Section 2.
-
-   *  Since the access token is requested by the ACE client DEV1, only
-      DEV1 can request for a new access token in the same token series,
-      in order to dynamically update the access rights concerning its
-      own access to protected resources hosted by DEV2 (on the primary
-      access control direction) and/or the access rights concerning the
-      access of DEV2 to access protected resources hosted by DEV1 (on
-      the secondary access control direction).
-
-5.  Updated Requirements on Profiles
+4.  Updated Requirements on Profiles
 
    Appendix C of [RFC9200] compiles a list of requirements on the
    profiles of ACE.  This document amends two of those requirements as
@@ -1746,7 +1372,7 @@ Table of Contents
    RFC (i.e., [RFC9202][RFC9203][RFC9431]) already comply with the two
    updated requirements as formulated above.
 
-6.  Updated Payload Format of Error Responses
+5.  Updated Payload Format of Error Responses
 
    This section deprecates the original payload format of error
    responses conveying an error code, when CBOR is used to encode
@@ -1765,7 +1391,7 @@ Table of Contents
    (see Section 2 of [RFC9290]).  The CBOR map is formatted as follows.
 
    *  It MUST include the Custom Problem Detail entry "ace-error"
-      registered in Section 8.5 of this document.
+      registered in Section 7.5 of this document.
 
       This entry is formatted as a CBOR map including only one field,
       namely "error-code".  The map key for "error-code" is the CBOR
@@ -1818,7 +1444,7 @@ Table of Contents
          parameter (see, e.g., Sections 5.8.3 and 5.9.3 of [RFC9200]).
 
    An example of error response using the problem-details format is
-   shown in Figure 11.
+   shown in Figure 10.
 
    Header: Bad Request (Code=4.00)
    Content-Format: 257 (application/concise-problem-details+cbor)
@@ -1831,7 +1457,7 @@ Table of Contents
        }
    }
 
-         Figure 11: Example of Error Response with Problem Details.
+         Figure 10: Example of Error Response with Problem Details.
 
    When the ACE framework is used with CBOR for encoding message
    payloads, the following applies.
@@ -1844,7 +1470,7 @@ Table of Contents
       the payload format defined in this section MUST use it when
       composing an outgoing error response that conveys an error code.
 
-7.  Security Considerations
+6.  Security Considerations
 
    The same security considerations from the ACE framework for
    Authentication and Authorization [RFC9200] apply to this document,
@@ -1858,14 +1484,14 @@ Table of Contents
 
    Editor's note: add more security considerations.
 
-8.  IANA Considerations
+7.  IANA Considerations
 
    This document has the following actions for IANA.
 
    Note to RFC Editor: Please replace all occurrences of "[RFC-XXXX]"
    with the RFC number of this specification and delete this paragraph.
 
-8.1.  OAuth Parameters Registry
+7.1.  OAuth Parameters Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters"
    registry.
@@ -1948,27 +1574,7 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
-
-
-   *  Name: "rev_audience"
-
-   *  Parameter Usage Location: token request and token response
-
-   *  Change Controller: IETF
-
-   *  Reference: [RFC-XXXX]
-
-
-
-   *  Name: "rev_scope"
-
-   *  Parameter Usage Location: token request and token response
-
-   *  Change Controller: IETF
-
-   *  Reference: [RFC-XXXX]
-
-8.2.  OAuth Parameters CBOR Mappings Registry
+7.2.  OAuth Parameters CBOR Mappings Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters
    CBOR Mappings" registry, following the procedure specified in
@@ -2068,31 +1674,7 @@ Table of Contents
 
    *  Original Specification: [RFC-XXXX]
 
-
-
-   *  Name: "rev_audience"
-
-   *  CBOR Key: TBD
-
-   *  Value Type: text string
-
-   *  Reference: [RFC-XXXX]
-
-   *  Original Specification: [RFC-XXXX]
-
-
-
-   *  Name: "rev_scope"
-
-   *  CBOR Key: TBD
-
-   *  Value Type: text string or byte string
-
-   *  Reference: [RFC-XXXX]
-
-   *  Original Specification: [RFC-XXXX]
-
-8.3.  JSON Web Token Claims Registry
+7.3.  JSON Web Token Claims Registry
 
    IANA is asked to add the following entries to the "JSON Web Token
    Claims" registry, following the procedure specified in [RFC7519].
@@ -2105,27 +1687,7 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
-
-
-   *  Claim Name: "rev_aud"
-
-   *  Claim Description: The reverse audience of an access token
-
-   *  Change Controller: IETF
-
-   *  Reference: [RFC-XXXX]
-
-
-
-   *  Claim Name: "rev_scope"
-
-   *  Claim Description: The reverse scope of an access token
-
-   *  Change Controller: IETF
-
-   *  Reference: [RFC-XXXX]
-
-8.4.  CBOR Web Token (CWT) Claims Registry
+7.4.  CBOR Web Token (CWT) Claims Registry
 
    IANA is asked to add the following entries to the "CBOR Web Token
    (CWT) Claims" registry, following the procedure specified in
@@ -2143,41 +1705,9 @@ Table of Contents
 
    *  Change Controller: IETF
 
-   *  Reference: Section 4 of [RFC-XXXX]
+   *  Reference: Section 3.6 of [RFC-XXXX]
 
-
-
-   *  Claim Name: "rev_aud"
-
-   *  Claim Description: The reverse audience of an access token
-
-   *  JWT Claim Name: "rev_aud"
-
-   *  Claim Key: TBD
-
-   *  Claim Value Type: text string
-
-   *  Change Controller: IETF
-
-   *  Reference: Section 4 of [RFC-XXXX]
-
-
-
-   *  Claim Name: "rev_scope"
-
-   *  Claim Description: The reverse scope of an access token
-
-   *  JWT Claim Name: "rev_scope"
-
-   *  Claim Key: TBD
-
-   *  Claim Value Type: text string or byte string
-
-   *  Change Controller: IETF
-
-   *  Reference: Section 4 of [RFC-XXXX]
-
-8.5.  Custom Problem Detail Keys Registry
+7.5.  Custom Problem Detail Keys Registry
 
    IANA is asked to register the following entry in the "Custom Problem
    Detail Keys" registry within the "Constrained RESTful Environments
@@ -2192,11 +1722,11 @@ Table of Contents
 
    *  Change Controller: IETF
 
-   *  Reference: Section 6 of [RFC-XXXX]
+   *  Reference: Section 5 of [RFC-XXXX]
 
-9.  References
+8.  References
 
-9.1.  Normative References
+8.1.  Normative References
 
    [ACE.OAuth.Error.Code.CBOR.Mappings]
               IANA, "OAuth Error Code CBOR Mappings",
@@ -2209,9 +1739,9 @@ Table of Contents
               Security for Constrained Environments (OSCORE) Profile for
               Authentication and Authorization for Constrained
               Environments (ACE)", Work in Progress, Internet-Draft,
-              draft-ietf-ace-edhoc-oscore-profile-05, 8 July 2024,
+              draft-ietf-ace-edhoc-oscore-profile-06, 21 October 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              edhoc-oscore-profile-05>.
+              edhoc-oscore-profile-06>.
 
    [I-D.ietf-ace-revoked-token-notification]
               Tiloca, M., Palombini, F., Echeverria, S., and G. Lewis,
@@ -2353,7 +1883,7 @@ Table of Contents
               <http://csrc.nist.gov/publications/fips/fips180-3/
               fips180-3_final.pdf>.
 
-9.2.  Informative References
+8.2.  Informative References
 
    [I-D.ietf-ace-group-oscore-profile]
               Tiloca, M., Höglund, R., and F. Palombini, "The Group
@@ -2361,9 +1891,9 @@ Table of Contents
               (Group OSCORE) Profile of the Authentication and
               Authorization for Constrained Environments (ACE)
               Framework", Work in Progress, Internet-Draft, draft-ietf-
-              ace-group-oscore-profile-02, 8 July 2024,
+              ace-group-oscore-profile-03, 21 October 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              group-oscore-profile-02>.
+              group-oscore-profile-03>.
 
 Appendix A.  Benefits for ACE Profiles
 
@@ -2484,13 +2014,9 @@ Appendix C.  CDDL Model
    audience2 = 53
    anchor_cnf = 54
    token_series_id_param = 55
-   rev_audience = 56
-   rev_scope_param = 57
 
    ; CBOR Web Token (CWT) Claims
    token_series_id_claim = 42
-   rev_aud = 43
-   rev_scope_claim = 44
 
    ; CWT Confirmation Methods
    x5chain = 5
@@ -2498,13 +2024,19 @@ Appendix C.  CDDL Model
    ; Custom Problem Detail Keys Registry
    ace-error = 2
 
-                           Figure 12: CDDL model
+                           Figure 11: CDDL model
 
 Appendix D.  Document Updates
 
    This section is to be removed before publishing as an RFC.
 
-D.1.  Version -02 to -03
+D.1.  Version -03 to -04
+
+   *  Removed content on bidirectional access control.
+
+   *  Editorial fixes and improvements.
+
+D.2.  Version -02 to -03
 
    *  Defined parameter and claim "token_series_id".
 
@@ -2528,7 +2060,7 @@ D.1.  Version -02 to -03
 
    *  Clarifications and editorial improvements.
 
-D.2.  Version -01 to -02
+D.3.  Version -01 to -02
 
    *  CBOR diagnostic notation uses placeholders from a CDDL model.
 
@@ -2545,7 +2077,7 @@ D.2.  Version -01 to -02
 
    *  Clarifications and editorial improvements.
 
-D.3.  Version -00 to -01
+D.4.  Version -00 to -01
 
    *  Definition of the "token series" moved to the "Terminology"
       section.
