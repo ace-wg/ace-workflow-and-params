@@ -6,7 +6,7 @@ ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Updates: 9200, 9202, 9203, 9431 (if approved)                G. Selander
 Intended status: Standards Track                             Ericsson AB
-Expires: 7 July 2025                                      3 January 2025
+Expires: 6 August 2025                                   2 February 2025
 
 
   Alternative Workflow and OAuth Parameters for the Authentication and
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 July 2025.
+   This Internet-Draft will expire on 6 August 2025.
 
 Copyright Notice
 
