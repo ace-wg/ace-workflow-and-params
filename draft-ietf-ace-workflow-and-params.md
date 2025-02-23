@@ -759,7 +759,7 @@ If the AS relies on the "token_series_id" parameter to exchange the identifier o
 
 * The value assigned to the identifier of a token series MUST be associated with all the access tokens issued by the AS for that token series, and MUST be selected from a pool that the AS exclusively controls.
 
-  In particular, the triple (TS_ID, C, AUD) MUST uniquely identify a token series and its corresponding access tokens, where TS_ID is the identifier of the token series, C is the client whose authentication credential is bound to the access token, and AUD is the audience for which the access token is issued. The AS MUST take into account both ongoing and ended token series for selecting a new TS_ID that complies with the above requirements.
+  In particular, the triple (TS_ID, C, AUD) MUST uniquely identify a token series and its corresponding access tokens, where TS_ID is the identifier of the token series, while C and AUD are the client and the audience for which the access token is issued, respectively. The AS MUST take into account both ongoing and ended token series for selecting a new TS_ID that complies with the above requirements.
 
   Note that the ACE profile is not part of the triple, hence the requirement spans across all the ACE profiles that the AS and its registered clients/RSs support.
 
