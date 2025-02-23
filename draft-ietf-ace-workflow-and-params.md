@@ -757,7 +757,11 @@ This section defines the additional "token_series_id" parameter. The parameter c
 
 If the AS relies on the "token_series_id" parameter to exchange the identifier of token series with clients, then the following applies.
 
-* The value assigned to the identifier of a token series MUST be uniquely associated with the access tokens issued by the AS for that token series, and MUST be selected from a pool that the AS exclusively controls.
+* The value assigned to the identifier of a token series MUST be associated with all the access tokens issued by the AS for that token series, and MUST be selected from a pool that the AS exclusively controls.
+
+  In particular, the triple (TS_ID, C, AUD) MUST uniquely identify a token series and its corresponding access tokens, where TS_ID is the identifier of the token series, C is the client whose authentication credential is bound to the access token, and AUD is the audience for which the access token is issued. The AS MUST take into account both ongoing and ended token series for selecting a new TS_ID that complies with the above requirements.
+
+  Note that the ACE profile is not part of the triple, hence the requirement spans across all the ACE profiles that the AS and its registered clients/RSs support.
 
 * An issued access token that belongs to a token series MUST include the identifier of that token series. This allows the RS to identify the latest access token in the token series to be superseded by the issued access token.
 
@@ -1106,6 +1110,8 @@ ace-error = 2
 ## Version -03 to -04 ## {#sec-03-04}
 
 * Improved definition of "token series".
+
+* Revised criterion for the AS to choose a token series identifier.
 
 * Removed content on bidirectional access control.
 
