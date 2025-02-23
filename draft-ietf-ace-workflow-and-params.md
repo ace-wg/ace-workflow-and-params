@@ -867,56 +867,56 @@ Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC n
 
 IANA is asked to add the following entries to the "OAuth Parameters" registry.
 
-* Name: "token_upload"
+* Name: token_upload
 * Parameter Usage Location: token request and token response
 * Change Controller: IETF
 * Reference: {{&SELF}}
 
 <br>
 
-* Name: "token_hash"
+* Name: token_hash
 * Parameter Usage Location: token response
 * Change Controller: IETF
 * Reference: {{&SELF}}
 
 <br>
 
-* Name: "to_rs"
+* Name: to_rs
 * Parameter Usage Location: token request
 * Change Controller: IETF
 * Reference: {{&SELF}}
 
 <br>
 
-* Name: "from_rs"
+* Name: from_rs
 * Parameter Usage Location: token response
 * Change Controller: IETF
 * Reference: {{&SELF}}
 
 <br>
 
-* Name: "rs_cnf2"
+* Name: rs_cnf2
 * Parameter Usage Location: token response
 * Change Controller: IETF
 * Reference: {{&SELF}}
 
 <br>
 
-* Name: "audience2"
+* Name: audience2
 * Parameter Usage Location: token response
 * Change Controller: IETF
 * Reference: {{&SELF}}
 
 <br>
 
-* Name: "anchor_cnf"
+* Name: anchor_cnf
 * Parameter Usage Location: token response
 * Change Controller: IETF
 * Reference: {{&SELF}}
 
 <br>
 
-* Name: "token_series_id"
+* Name: token_series_id
 * Parameter Usage Location: token request and token response
 * Change Controller: IETF
 * Reference: {{&SELF}}
@@ -925,7 +925,7 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 
 IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry, following the procedure specified in {{RFC9200}}.
 
-* Name: "token_upload"
+* Name: token_upload
 * CBOR Key: TBD
 * Value Type: unsigned integer
 * Reference: {{&SELF}}
@@ -933,7 +933,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 <br>
 
-* Name: "token_hash"
+* Name: token_hash
 * CBOR Key: TBD
 * Value Type: unsigned integer
 * Reference: {{&SELF}}
@@ -941,7 +941,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 <br>
 
-* Name: "to_rs"
+* Name: to_rs
 * CBOR Key: TBD
 * Value Type: byte string
 * Reference: {{&SELF}}
@@ -949,7 +949,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 <br>
 
-* Name: "from_rs"
+* Name: from_rs
 * CBOR Key: TBD
 * Value Type: byte string
 * Reference: {{&SELF}}
@@ -957,7 +957,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 <br>
 
-* Name: "rs_cnf2"
+* Name: rs_cnf2
 * CBOR Key: TBD
 * Value Type: array
 * Reference: {{&SELF}}
@@ -965,7 +965,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 <br>
 
-* Name: "audience2"
+* Name: audience2
 * CBOR Key: TBD
 * Value Type: array
 * Reference: {{&SELF}}
@@ -973,7 +973,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 <br>
 
-* Name: "anchor_cnf"
+* Name: anchor_cnf
 * CBOR Key: TBD
 * Value Type: array
 * Reference: {{&SELF}}
@@ -981,7 +981,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 <br>
 
-* Name: "token_series_id"
+* Name: token_series_id
 * CBOR Key: TBD
 * Value Type: byte string
 * Reference: {{&SELF}}
@@ -991,7 +991,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 IANA is asked to add the following entries to the "JSON Web Token Claims" registry, following the procedure specified in {{RFC7519}}.
 
-*  Claim Name: "token_series_id"
+*  Claim Name: token_series_id
 *  Claim Description: The identifier of a token series
 *  Change Controller: IETF
 *  Reference: {{&SELF}}
@@ -1000,9 +1000,9 @@ IANA is asked to add the following entries to the "JSON Web Token Claims" regist
 
 IANA is asked to add the following entries to the "CBOR Web Token (CWT) Claims" registry, following the procedure specified in {{RFC8392}}.
 
-* Claim Name: "token_series_id"
+* Claim Name: token_series_id
 * Claim Description: The identifier of a token series
-* JWT Claim Name: "token_series_id"
+* JWT Claim Name: token_series_id
 * Claim Key: TBD
 * Claim Value Type: byte string
 * Change Controller: IETF
