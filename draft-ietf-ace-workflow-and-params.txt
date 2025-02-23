@@ -244,10 +244,12 @@ Table of Contents
 
    Furthermore, this document uses the following terms.
 
-   *  Token series: the set comprising all the access tokens issued by
-      the same AS for the same pair (client, resource server).  A token
-      series ends when the latest access token of that token series
-      becomes invalid (e.g., when it expires or gets revoked).
+   *  Token series: a set of access tokens, all of which are bound to
+      the same proof-of-possession (PoP) key and are sequentially issued
+      by the same AS for the same pair (client, audience) per the same
+      profile of ACE.  A token series ends when the latest access token
+      of that token series becomes invalid (e.g., when it expires or
+      gets revoked).
 
       Profiles of ACE can provide their extended and specialized
       definition, e.g., by further taking into account the public
@@ -2031,6 +2033,8 @@ Appendix D.  Document Updates
    This section is to be removed before publishing as an RFC.
 
 D.1.  Version -03 to -04
+
+   *  Improved definition of "token series".
 
    *  Removed content on bidirectional access control.
 
