@@ -150,7 +150,7 @@ Note that the term "endpoint" is used here following its OAuth definition {{RFC6
 
 Furthermore, this document uses the following terms.
 
-* Token series: the set comprising all the access tokens issued by the same AS for the same pair (client, resource server). A token series ends when the latest access token of that token series becomes invalid (e.g., when it expires or gets revoked).
+* Token series: a set of access tokens, all of which are bound to the same proof-of-possession (PoP) key and are sequentially issued by the same AS for the same pair (client, audience) per the same profile of ACE. A token series ends when the latest access token of that token series becomes invalid (e.g., when it expires or gets revoked).
 
   Profiles of ACE can provide their extended and specialized definition, e.g., by further taking into account the public authentication credentials of C and the RS.
 
@@ -1104,6 +1104,8 @@ ace-error = 2
 {:removeinrfc}
 
 ## Version -03 to -04 ## {#sec-03-04}
+
+* Improved definition of "token series".
 
 * Removed content on bidirectional access control.
 
