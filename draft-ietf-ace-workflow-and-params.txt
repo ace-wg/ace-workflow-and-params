@@ -1309,9 +1309,21 @@ Table of Contents
    identifier of token series with clients, then the following applies.
 
    *  The value assigned to the identifier of a token series MUST be
-      uniquely associated with the access tokens issued by the AS for
-      that token series, and MUST be selected from a pool that the AS
+      associated with all the access tokens issued by the AS for that
+      token series, and MUST be selected from a pool that the AS
       exclusively controls.
+
+      In particular, the triple (TS_ID, C, AUD) MUST uniquely identify a
+      token series and its corresponding access tokens, where TS_ID is
+      the identifier of the token series, C is the client whose
+      authentication credential is bound to the access token, and AUD is
+      the audience for which the access token is issued.  The AS MUST
+      take into account both ongoing and ended token series for
+      selecting a new TS_ID that complies with the above requirements.
+
+      Note that the ACE profile is not part of the triple, hence the
+      requirement spans across all the ACE profiles that the AS and its
+      registered clients/RSs support.
 
    *  An issued access token that belongs to a token series MUST include
       the identifier of that token series.  This allows the RS to
@@ -2035,6 +2047,8 @@ Appendix D.  Document Updates
 D.1.  Version -03 to -04
 
    *  Improved definition of "token series".
+
+   *  Revised criterion for the AS to choose a token series identifier.
 
    *  Removed content on bidirectional access control.
 
