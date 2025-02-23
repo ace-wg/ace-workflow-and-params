@@ -926,7 +926,7 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry, following the procedure specified in {{RFC9200}}.
 
 * Name: token_upload
-* CBOR Key: TBD
+* CBOR Key: TBD (value between 1 and 255)
 * Value Type: unsigned integer
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
@@ -934,7 +934,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 <br>
 
 * Name: token_hash
-* CBOR Key: TBD
+* CBOR Key: TBD (value between 1 and 255)
 * Value Type: unsigned integer
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
@@ -942,7 +942,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 <br>
 
 * Name: to_rs
-* CBOR Key: TBD
+* CBOR Key: TBD (value between 1 and 255)
 * Value Type: byte string
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
@@ -950,7 +950,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 <br>
 
 * Name: from_rs
-* CBOR Key: TBD
+* CBOR Key: TBD (value between 1 and 255)
 * Value Type: byte string
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
@@ -958,7 +958,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 <br>
 
 * Name: rs_cnf2
-* CBOR Key: TBD
+* CBOR Key: TBD (value between 1 and 255)
 * Value Type: array
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
@@ -966,7 +966,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 <br>
 
 * Name: audience2
-* CBOR Key: TBD
+* CBOR Key: TBD (value between 1 and 255)
 * Value Type: array
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
@@ -974,7 +974,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 <br>
 
 * Name: anchor_cnf
-* CBOR Key: TBD
+* CBOR Key: TBD (value between 1 and 255)
 * Value Type: array
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
@@ -982,7 +982,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 <br>
 
 * Name: token_series_id
-* CBOR Key: TBD
+* CBOR Key: TBD (value between 1 and 255)
 * Value Type: byte string
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
@@ -1003,7 +1003,7 @@ IANA is asked to add the following entries to the "CBOR Web Token (CWT) Claims" 
 * Claim Name: token_series_id
 * Claim Description: The identifier of a token series
 * JWT Claim Name: token_series_id
-* Claim Key: TBD
+* Claim Key: TBD (value between 1 and 255)
 * Claim Value Type: byte string
 * Change Controller: IETF
 * Reference: {{sec-token_series_id}} of {{&SELF}}
@@ -1012,7 +1012,7 @@ IANA is asked to add the following entries to the "CBOR Web Token (CWT) Claims" 
 
 IANA is asked to register the following entry in the "Custom Problem Detail Keys" registry within the "Constrained RESTful Environments (CoRE) Parameters" registry group.
 
-* Key Value: TBD
+* Key Value: TBD (value between 0 and 23)
 * Name: ace-error
 * Brief Description: Carry ACE {{RFC9200}} problem details in a Concise Problem Details data item.
 * Change Controller: IETF
@@ -1106,6 +1106,8 @@ ace-error = 2
 ## Version -03 to -04 ## {#sec-03-04}
 
 * Removed content on bidirectional access control.
+
+* Suggested value ranges for codepoints to register.
 
 * Editorial fixes and improvements.
 
