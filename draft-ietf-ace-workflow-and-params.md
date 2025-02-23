@@ -1093,7 +1093,7 @@ token_series_id_param = 55
 token_series_id_claim = 42
 
 ; CWT Confirmation Methods
-x5chain = 5
+x5chain = 24
 
 ; Custom Problem Detail Keys Registry
 ace-error = 2
