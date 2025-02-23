@@ -10,12 +10,12 @@
 <meta content="
        This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines a new, alternative workflow that the authorization server can use for uploading an access token to a resource server on behalf of the client. Second, it defines new parameters and encodings for the OAuth 2.0 token endpoint at the authorization server. Third, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads. For such error responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431. 
     " name="description">
-<meta content="xml2rfc 3.25.0" name="generator">
+<meta content="xml2rfc 3.27.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-ace-workflow-and-params-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.25.0
-    Python 3.12.8
+  xml2rfc 3.27.0
+    Python 3.12.9
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
@@ -436,7 +436,7 @@ dl {
     margin-bottom: 0;
   }
 }
-dl > dt {
+dl:not(.dlNewline) > dt {
   float: left;
   margin-right: 2ch;
   min-width: 8ch;
@@ -1049,7 +1049,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca &amp; Selander</td>
-<td class="center">Expires 6 August 2025</td>
+<td class="center">Expires 27 August 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc9200" class="eref">9200</a>, <a href="https://www.rfc-editor.org/rfc/rfc9202" class="eref">9202</a>, <a href="https://www.rfc-editor.org/rfc/rfc9203" class="eref">9203</a>, <a href="https://www.rfc-editor.org/rfc/rfc9431" class="eref">9431</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-02-02" class="published">2 February 2025</time>
+<time datetime="2025-02-23" class="published">23 February 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-08-06">6 August 2025</time></dd>
+<dd class="expires"><time datetime="2025-08-27">27 August 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1123,7 +1123,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 6 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 27 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2261,7 +2261,7 @@ Payload:
 <p id="section-7.1-1">IANA is asked to add the following entries to the "OAuth Parameters" registry.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.1-2.1">
-            <p id="section-7.1-2.1.1">Name: "token_upload"<a href="#section-7.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.1-2.1.1">Name: token_upload<a href="#section-7.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.1-2.2">
             <p id="section-7.1-2.2.1">Parameter Usage Location: token request and token response<a href="#section-7.1-2.2.1" class="pilcrow">¶</a></p>
@@ -2276,7 +2276,7 @@ Payload:
 <p id="section-7.1-3"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.1-4.1">
-            <p id="section-7.1-4.1.1">Name: "token_hash"<a href="#section-7.1-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.1-4.1.1">Name: token_hash<a href="#section-7.1-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.1-4.2">
             <p id="section-7.1-4.2.1">Parameter Usage Location: token response<a href="#section-7.1-4.2.1" class="pilcrow">¶</a></p>
@@ -2291,7 +2291,7 @@ Payload:
 <p id="section-7.1-5"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.1-6.1">
-            <p id="section-7.1-6.1.1">Name: "to_rs"<a href="#section-7.1-6.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.1-6.1.1">Name: to_rs<a href="#section-7.1-6.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.1-6.2">
             <p id="section-7.1-6.2.1">Parameter Usage Location: token request<a href="#section-7.1-6.2.1" class="pilcrow">¶</a></p>
@@ -2306,7 +2306,7 @@ Payload:
 <p id="section-7.1-7"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.1-8.1">
-            <p id="section-7.1-8.1.1">Name: "from_rs"<a href="#section-7.1-8.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.1-8.1.1">Name: from_rs<a href="#section-7.1-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.1-8.2">
             <p id="section-7.1-8.2.1">Parameter Usage Location: token response<a href="#section-7.1-8.2.1" class="pilcrow">¶</a></p>
@@ -2321,7 +2321,7 @@ Payload:
 <p id="section-7.1-9"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.1-10.1">
-            <p id="section-7.1-10.1.1">Name: "rs_cnf2"<a href="#section-7.1-10.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.1-10.1.1">Name: rs_cnf2<a href="#section-7.1-10.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.1-10.2">
             <p id="section-7.1-10.2.1">Parameter Usage Location: token response<a href="#section-7.1-10.2.1" class="pilcrow">¶</a></p>
@@ -2336,7 +2336,7 @@ Payload:
 <p id="section-7.1-11"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.1-12.1">
-            <p id="section-7.1-12.1.1">Name: "audience2"<a href="#section-7.1-12.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.1-12.1.1">Name: audience2<a href="#section-7.1-12.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.1-12.2">
             <p id="section-7.1-12.2.1">Parameter Usage Location: token response<a href="#section-7.1-12.2.1" class="pilcrow">¶</a></p>
@@ -2351,7 +2351,7 @@ Payload:
 <p id="section-7.1-13"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.1-14.1">
-            <p id="section-7.1-14.1.1">Name: "anchor_cnf"<a href="#section-7.1-14.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.1-14.1.1">Name: anchor_cnf<a href="#section-7.1-14.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.1-14.2">
             <p id="section-7.1-14.2.1">Parameter Usage Location: token response<a href="#section-7.1-14.2.1" class="pilcrow">¶</a></p>
@@ -2366,7 +2366,7 @@ Payload:
 <p id="section-7.1-15"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.1-16.1">
-            <p id="section-7.1-16.1.1">Name: "token_series_id"<a href="#section-7.1-16.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.1-16.1.1">Name: token_series_id<a href="#section-7.1-16.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.1-16.2">
             <p id="section-7.1-16.2.1">Parameter Usage Location: token request and token response<a href="#section-7.1-16.2.1" class="pilcrow">¶</a></p>
@@ -2388,7 +2388,7 @@ Payload:
 <p id="section-7.2-1">IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry, following the procedure specified in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.2-2.1">
-            <p id="section-7.2-2.1.1">Name: "token_upload"<a href="#section-7.2-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.2-2.1.1">Name: token_upload<a href="#section-7.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-2.2">
             <p id="section-7.2-2.2.1">CBOR Key: TBD<a href="#section-7.2-2.2.1" class="pilcrow">¶</a></p>
@@ -2406,7 +2406,7 @@ Payload:
 <p id="section-7.2-3"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.2-4.1">
-            <p id="section-7.2-4.1.1">Name: "token_hash"<a href="#section-7.2-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.2-4.1.1">Name: token_hash<a href="#section-7.2-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-4.2">
             <p id="section-7.2-4.2.1">CBOR Key: TBD<a href="#section-7.2-4.2.1" class="pilcrow">¶</a></p>
@@ -2424,7 +2424,7 @@ Payload:
 <p id="section-7.2-5"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.2-6.1">
-            <p id="section-7.2-6.1.1">Name: "to_rs"<a href="#section-7.2-6.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.2-6.1.1">Name: to_rs<a href="#section-7.2-6.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-6.2">
             <p id="section-7.2-6.2.1">CBOR Key: TBD<a href="#section-7.2-6.2.1" class="pilcrow">¶</a></p>
@@ -2442,7 +2442,7 @@ Payload:
 <p id="section-7.2-7"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.2-8.1">
-            <p id="section-7.2-8.1.1">Name: "from_rs"<a href="#section-7.2-8.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.2-8.1.1">Name: from_rs<a href="#section-7.2-8.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-8.2">
             <p id="section-7.2-8.2.1">CBOR Key: TBD<a href="#section-7.2-8.2.1" class="pilcrow">¶</a></p>
@@ -2460,7 +2460,7 @@ Payload:
 <p id="section-7.2-9"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.2-10.1">
-            <p id="section-7.2-10.1.1">Name: "rs_cnf2"<a href="#section-7.2-10.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.2-10.1.1">Name: rs_cnf2<a href="#section-7.2-10.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-10.2">
             <p id="section-7.2-10.2.1">CBOR Key: TBD<a href="#section-7.2-10.2.1" class="pilcrow">¶</a></p>
@@ -2478,7 +2478,7 @@ Payload:
 <p id="section-7.2-11"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.2-12.1">
-            <p id="section-7.2-12.1.1">Name: "audience2"<a href="#section-7.2-12.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.2-12.1.1">Name: audience2<a href="#section-7.2-12.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-12.2">
             <p id="section-7.2-12.2.1">CBOR Key: TBD<a href="#section-7.2-12.2.1" class="pilcrow">¶</a></p>
@@ -2496,7 +2496,7 @@ Payload:
 <p id="section-7.2-13"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.2-14.1">
-            <p id="section-7.2-14.1.1">Name: "anchor_cnf"<a href="#section-7.2-14.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.2-14.1.1">Name: anchor_cnf<a href="#section-7.2-14.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-14.2">
             <p id="section-7.2-14.2.1">CBOR Key: TBD<a href="#section-7.2-14.2.1" class="pilcrow">¶</a></p>
@@ -2514,7 +2514,7 @@ Payload:
 <p id="section-7.2-15"><br></p>
 <ul class="normal">
 <li class="normal" id="section-7.2-16.1">
-            <p id="section-7.2-16.1.1">Name: "token_series_id"<a href="#section-7.2-16.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.2-16.1.1">Name: token_series_id<a href="#section-7.2-16.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.2-16.2">
             <p id="section-7.2-16.2.1">CBOR Key: TBD<a href="#section-7.2-16.2.1" class="pilcrow">¶</a></p>
@@ -2539,7 +2539,7 @@ Payload:
 <p id="section-7.3-1">IANA is asked to add the following entries to the "JSON Web Token Claims" registry, following the procedure specified in <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.3-2.1">
-            <p id="section-7.3-2.1.1">Claim Name: "token_series_id"<a href="#section-7.3-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.3-2.1.1">Claim Name: token_series_id<a href="#section-7.3-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.3-2.2">
             <p id="section-7.3-2.2.1">Claim Description: The identifier of a token series<a href="#section-7.3-2.2.1" class="pilcrow">¶</a></p>
@@ -2561,13 +2561,13 @@ Payload:
 <p id="section-7.4-1">IANA is asked to add the following entries to the "CBOR Web Token (CWT) Claims" registry, following the procedure specified in <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.4-2.1">
-            <p id="section-7.4-2.1.1">Claim Name: "token_series_id"<a href="#section-7.4-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-7.4-2.1.1">Claim Name: token_series_id<a href="#section-7.4-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.4-2.2">
             <p id="section-7.4-2.2.1">Claim Description: The identifier of a token series<a href="#section-7.4-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.4-2.3">
-            <p id="section-7.4-2.3.1">JWT Claim Name: "token_series_id"<a href="#section-7.4-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-7.4-2.3.1">JWT Claim Name: token_series_id<a href="#section-7.4-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.4-2.4">
             <p id="section-7.4-2.4.1">Claim Key: TBD<a href="#section-7.4-2.4.1" class="pilcrow">¶</a></p>
