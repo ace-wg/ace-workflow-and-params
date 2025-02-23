@@ -1582,7 +1582,7 @@ Table of Contents
 
    *  Name: token_upload
 
-   *  CBOR Key: TBD
+   *  CBOR Key: TBD (value between 1 and 255)
 
    *  Value Type: unsigned integer
 
@@ -1594,7 +1594,7 @@ Table of Contents
 
    *  Name: token_hash
 
-   *  CBOR Key: TBD
+   *  CBOR Key: TBD (value between 1 and 255)
 
    *  Value Type: unsigned integer
 
@@ -1606,7 +1606,7 @@ Table of Contents
 
    *  Name: to_rs
 
-   *  CBOR Key: TBD
+   *  CBOR Key: TBD (value between 1 and 255)
 
    *  Value Type: byte string
 
@@ -1618,7 +1618,7 @@ Table of Contents
 
    *  Name: from_rs
 
-   *  CBOR Key: TBD
+   *  CBOR Key: TBD (value between 1 and 255)
 
    *  Value Type: byte string
 
@@ -1630,7 +1630,7 @@ Table of Contents
 
    *  Name: rs_cnf2
 
-   *  CBOR Key: TBD
+   *  CBOR Key: TBD (value between 1 and 255)
 
    *  Value Type: array
 
@@ -1642,7 +1642,7 @@ Table of Contents
 
    *  Name: audience2
 
-   *  CBOR Key: TBD
+   *  CBOR Key: TBD (value between 1 and 255)
 
    *  Value Type: array
 
@@ -1654,7 +1654,7 @@ Table of Contents
 
    *  Name: anchor_cnf
 
-   *  CBOR Key: TBD
+   *  CBOR Key: TBD (value between 1 and 255)
 
    *  Value Type: array
 
@@ -1666,7 +1666,7 @@ Table of Contents
 
    *  Name: token_series_id
 
-   *  CBOR Key: TBD
+   *  CBOR Key: TBD (value between 1 and 255)
 
    *  Value Type: byte string
 
@@ -1699,7 +1699,7 @@ Table of Contents
 
    *  JWT Claim Name: token_series_id
 
-   *  Claim Key: TBD
+   *  Claim Key: TBD (value between 1 and 255)
 
    *  Claim Value Type: byte string
 
@@ -1713,7 +1713,7 @@ Table of Contents
    Detail Keys" registry within the "Constrained RESTful Environments
    (CoRE) Parameters" registry group.
 
-   *  Key Value: TBD
+   *  Key Value: TBD (value between 0 and 23)
 
    *  Name: ace-error
 
@@ -2033,6 +2033,8 @@ Appendix D.  Document Updates
 D.1.  Version -03 to -04
 
    *  Removed content on bidirectional access control.
+
+   *  Suggested value ranges for codepoints to register.
 
    *  Editorial fixes and improvements.
 
