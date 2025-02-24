@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta content="Common,Latin" name="scripts">
 <meta content="initial-scale=1.0" name="viewport">
-<title>Alternative Workflow and OAuth Parameters for the Authentication and Authorization for Constrained Environments (ACE) Framework</title>
+<title>Short Distribution Chain (SDC) Workflow and New OAuth Parameters for the Authentication and Authorization for Constrained Environments (ACE) Framework</title>
 <meta content="Marco Tiloca" name="author">
 <meta content="Göran Selander" name="author">
 <meta content="
-       This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines a new, alternative workflow that the authorization server can use for uploading an access token to a resource server on behalf of the client. Second, it defines new parameters and encodings for the OAuth 2.0 token endpoint at the authorization server. Third, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads. For such error responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431. 
+       This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines the Short Distribution Chain (SDC) workflow that the authorization server can use for uploading an access token to a resource server on behalf of the client. Second, it defines new parameters and their encodings for the OAuth 2.0 token endpoint at the authorization server. Third, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads. For such error responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431. 
     " name="description">
 <meta content="xml2rfc 3.27.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
@@ -1044,12 +1044,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <table class="ears">
 <thead><tr>
 <td class="left">Internet-Draft</td>
-<td class="center">Alternative ACE Workflow and Parameters</td>
+<td class="center">New ACE Workflow and Parameters</td>
 <td class="right">February 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca &amp; Selander</td>
-<td class="center">Expires 27 August 2025</td>
+<td class="center">Expires 28 August 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1065,12 +1065,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc9200" class="eref">9200</a>, <a href="https://www.rfc-editor.org/rfc/rfc9202" class="eref">9202</a>, <a href="https://www.rfc-editor.org/rfc/rfc9203" class="eref">9203</a>, <a href="https://www.rfc-editor.org/rfc/rfc9431" class="eref">9431</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-02-23" class="published">23 February 2025</time>
+<time datetime="2025-02-24" class="published">24 February 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-08-27">27 August 2025</time></dd>
+<dd class="expires"><time datetime="2025-08-28">28 August 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1084,10 +1084,10 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </dd>
 </dl>
 </div>
-<h1 id="title">Alternative Workflow and OAuth Parameters for the Authentication and Authorization for Constrained Environments (ACE) Framework</h1>
+<h1 id="title">Short Distribution Chain (SDC) Workflow and New OAuth Parameters for the Authentication and Authorization for Constrained Environments (ACE) Framework</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines a new, alternative workflow that the authorization server can use for uploading an access token to a resource server on behalf of the client. Second, it defines new parameters and encodings for the OAuth 2.0 token endpoint at the authorization server. Third, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads. For such error responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines the Short Distribution Chain (SDC) workflow that the authorization server can use for uploading an access token to a resource server on behalf of the client. Second, it defines new parameters and their encodings for the OAuth 2.0 token endpoint at the authorization server. Third, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads. For such error responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1123,7 +1123,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 27 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 28 August 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1161,7 +1161,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
-            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-new-ace-workflow" class="internal xref">New ACE Workflow</a></p>
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-the-short-distribution-chai" class="internal xref">The Short Distribution Chain (SDC) Workflow</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
             <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-new-ace-parameters" class="internal xref">New ACE Parameters</a></p>
@@ -1269,7 +1269,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
             <p id="section-toc.1-1.10.1"><a href="#appendix-B" class="auto internal xref">Appendix B</a>.  <a href="#name-open-points" class="internal xref">Open Points</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
-                <p id="section-toc.1-1.10.2.1.1"><a href="#appendix-B.1" class="auto internal xref">B.1</a>.  <a href="#name-new-workflow" class="internal xref">New Workflow</a></p>
+                <p id="section-toc.1-1.10.2.1.1"><a href="#appendix-B.1" class="auto internal xref">B.1</a>.  <a href="#name-sdc-workflow" class="internal xref">SDC Workflow</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1.2.1">
                     <p id="section-toc.1-1.10.2.1.2.1.1"><a href="#appendix-B.1.1" class="auto internal xref">B.1.1</a>.  <a href="#name-prevent-ambiguities-in-the-" class="internal xref">Prevent Ambiguities in the Dynamic Update of Access Rights</a></p>
@@ -1321,24 +1321,24 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <p id="section-1-3">This document updates <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span> as follows.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-4.1">
-          <p id="section-1-4.1.1">It defines a new, alternative protocol workflow for the ACE framework (see <a href="#sec-workflow" class="auto internal xref">Section 2</a>), according to which the AS uploads the access token to the RS on behalf of C, and then informs C about the outcome. The new workflow is especially convenient in deployments where the communication leg between C and the RS is constrained, but the communication leg between the AS and the RS is not.<a href="#section-1-4.1.1" class="pilcrow">¶</a></p>
+          <p id="section-1-4.1.1">It defines the Short Distribution Chain (SDC) workflow for the ACE framework (see <a href="#sec-workflow" class="auto internal xref">Section 2</a>), according to which the AS uploads the access token to the RS on behalf of C, and then informs C about the outcome. The SDC workflow is especially convenient in deployments where the communication leg between C and the RS is constrained, but the communication leg between the AS and the RS is not.<a href="#section-1-4.1.1" class="pilcrow">¶</a></p>
 <p id="section-1-4.1.2">
-The new workflow has no ambition to replace the original workflow. The AS can use one workflow or the other depending, for example, on the specific RS for which an access token has been issued and the nature of the communication leg with that RS.<a href="#section-1-4.1.2" class="pilcrow">¶</a></p>
+The SDC workflow has no ambition to replace the original workflow defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>. The AS can use one workflow or the other depending, for example, on the specific RS for which an access token has been issued and the nature of the communication leg with that RS.<a href="#section-1-4.1.2" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-4.2">
-          <p id="section-1-4.2.1">It defines additional parameters and encodings for the OAuth 2.0 token endpoint at the AS (see <a href="#sec-parameters" class="auto internal xref">Section 3</a>). These include:<a href="#section-1-4.2.1" class="pilcrow">¶</a></p>
+          <p id="section-1-4.2.1">It defines new parameters and their encodings for the OAuth 2.0 token endpoint at the AS (see <a href="#sec-parameters" class="auto internal xref">Section 3</a>). These include:<a href="#section-1-4.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1-4.2.2.1">
-              <p id="section-1-4.2.2.1.1">"token_upload", used by C to inform the AS that it opts in to use the new ACE workflow, and by the AS to inform C about the outcome of the token uploading to the RS per the new workflow.<a href="#section-1-4.2.2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-1-4.2.2.1.1">"token_upload", used by C to inform the AS that it opts in to use the SDC workflow, and by the AS to inform C about the outcome of the token uploading to the RS per the SDC workflow.<a href="#section-1-4.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.2">
-              <p id="section-1-4.2.2.2.1">"token_hash", used by the AS to provide C with a token hash, corresponding to an access token that the AS has issued for C and has successfully uploaded to the RS on behalf of C per the new ACE workflow.<a href="#section-1-4.2.2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-1-4.2.2.2.1">"token_hash", used by the AS to provide C with a token hash, corresponding to an access token that the AS has issued for C and has successfully uploaded to the RS on behalf of C per the SDC workflow.<a href="#section-1-4.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.3">
-              <p id="section-1-4.2.2.3.1">"to_rs", used by C to provide the AS with information to relay to the RS, upon asking the AS to upload the access token to the RS per the new ACE workflow. Its specific use with the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span> is also defined, thereby effectively enabling the use of the new ACE workflow for that profile.<a href="#section-1-4.2.2.3.1" class="pilcrow">¶</a></p>
+              <p id="section-1-4.2.2.3.1">"to_rs", used by C to provide the AS with information to relay to the RS, upon asking the AS to upload the access token to the RS per the SDC workflow. Its specific use with the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span> is also defined, thereby effectively enabling the use of the SDC workflow for that profile.<a href="#section-1-4.2.2.3.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.4">
-              <p id="section-1-4.2.2.4.1">"from_rs", used by the AS to provide C with information to relay from the RS, after the AS has successfully uploaded the access token to the RS per the new ACE workflow. Its specific use with the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span> is also defined, thereby effectively enabling the use of the new ACE workflow for that profile.<a href="#section-1-4.2.2.4.1" class="pilcrow">¶</a></p>
+              <p id="section-1-4.2.2.4.1">"from_rs", used by the AS to provide C with information to relay from the RS, after the AS has successfully uploaded the access token to the RS per the SDC workflow. Its specific use with the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span> is also defined, thereby effectively enabling the use of SDC workflow for that profile.<a href="#section-1-4.2.2.4.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-1-4.2.2.5">
               <p id="section-1-4.2.2.5.1">"rs_cnf2", used by the AS to provide C with the public keys of the RSs in the group-audience for which the access token is issued (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-6.9" class="relref">Section 6.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>).<a href="#section-1-4.2.2.5.1" class="pilcrow">¶</a></p>
@@ -1397,10 +1397,10 @@ Profiles of ACE can provide their extended and specialized definition, e.g., by 
 </div>
 <div id="sec-workflow">
 <section id="section-2">
-      <h2 id="name-new-ace-workflow">
-<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-new-ace-workflow" class="section-name selfRef">New ACE Workflow</a>
+      <h2 id="name-the-short-distribution-chai">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-the-short-distribution-chai" class="section-name selfRef">The Short Distribution Chain (SDC) Workflow</a>
       </h2>
-<p id="section-2-1">As defined in <span><a href="https://rfc-editor.org/rfc/rfc9200#section-4" class="relref">Section 4</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, the ACE framework considers what is shown in <a href="#fig-old-workflow" class="auto internal xref">Figure 1</a> as its basic protocol workflow.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-1">As defined in <span><a href="https://rfc-editor.org/rfc/rfc9200#section-4" class="relref">Section 4</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, the ACE framework relies on its basic protocol workflow shown in <a href="#fig-old-workflow" class="auto internal xref">Figure 1</a>.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">That is, the client first sends an access token request to the token endpoint at the AS (Step A), specifying permissions that it seeks to obtain for accessing protected resources at the RS, possibly together with information on its own public authentication credential.<a href="#section-2-2" class="pilcrow">¶</a></p>
 <p id="section-2-3">Then, if the request has been successfully verified, authenticated, and authorized, the AS replies to the client (Step B), providing an access token and possibly additional parameters as access information including the actually granted permissions.<a href="#section-2-3" class="pilcrow">¶</a></p>
 <p id="section-2-4">Finally, the client uploads the access token to the RS and, consistently with the permissions granted according to the access token, accesses a resource at the RS (Step C), which replies with the result of the resource access (Step F). Details about what protocol the client and the RS use to establish a secure association, mutually authenticate, and secure their communications are defined in the specific profile of ACE used, e.g., <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span><span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span><span>[<a href="#RFC9431" class="cite xref">RFC9431</a>]</span><span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span><span>[<a href="#I-D.ietf-ace-group-oscore-profile" class="cite xref">I-D.ietf-ace-group-oscore-profile</a>]</span><span>[<a href="#RFC9431" class="cite xref">RFC9431</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
@@ -1432,9 +1432,9 @@ Profiles of ACE can provide their extended and specialized definition, e.g., by 
 <a href="#name-ace-basic-protocol-workflow" class="selfRef">ACE Basic Protocol Workflow.</a>
         </figcaption></figure>
 </div>
-<p id="section-2-7">This section defines a new, alternative protocol workflow shown in <a href="#fig-new-workflow" class="auto internal xref">Figure 2</a>, which <span class="bcp14">MAY</span> be supported by the AS. Unlike in the original protocol workflow, the AS uploads the access token to the RS on behalf of the client, and then informs the client about the outcome.<a href="#section-2-7" class="pilcrow">¶</a></p>
+<p id="section-2-7">This section defines the alternative Short Distribution Chain (SDC) workflow shown in <a href="#fig-new-workflow" class="auto internal xref">Figure 2</a>, which <span class="bcp14">MAY</span> be supported by the AS. Unlike in the original workflow defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, the AS uploads the access token to the RS on behalf of the client, and then informs the client about the outcome.<a href="#section-2-7" class="pilcrow">¶</a></p>
 <p id="section-2-8">If the token uploading has been successfully completed, the client typically does not need to obtain the access token from the AS altogether. Instead, the client simply establishes a secure association with the RS (if that has not happened already), and then accesses protected resources at the RS according to the permissions granted per the access token and specified by the AS as access information.<a href="#section-2-8" class="pilcrow">¶</a></p>
-<span id="name-ace-alternative-protocol-wo"></span><div id="fig-new-workflow">
+<span id="name-ace-short-distribution-chai"></span><div id="fig-new-workflow">
 <figure id="figure-2">
         <div class="alignLeft art-text artwork" id="section-2-9.1">
 <pre>
@@ -1461,13 +1461,13 @@ Profiles of ACE can provide their extended and specialized definition, e.g., by 
 </pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
-<a href="#name-ace-alternative-protocol-wo" class="selfRef">ACE Alternative Protocol Workflow.</a>
+<a href="#name-ace-short-distribution-chai" class="selfRef">ACE Short Distribution Chain (SDC) Workflow.</a>
         </figcaption></figure>
 </div>
-<p id="section-2-10">More specifically, the new workflow consists of the following steps.<a href="#section-2-10" class="pilcrow">¶</a></p>
+<p id="section-2-10">More specifically, the SDC workflow consists of the following steps.<a href="#section-2-10" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2-11.1">
-          <p id="section-2-11.1.1">Step A - Like in the original workflow, the client sends an access token request to the token endpoint at the AS, with the additional indication that it opts in to use the alternative workflow.<a href="#section-2-11.1.1" class="pilcrow">¶</a></p>
+          <p id="section-2-11.1.1">Step A - Like in the original workflow, the client sends an access token request to the token endpoint at the AS, with the additional indication that it opts in to use the SDC workflow.<a href="#section-2-11.1.1" class="pilcrow">¶</a></p>
 <p id="section-2-11.1.2">
 As defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a>, this information is conveyed to the AS by means of the "token_upload" parameter. The parameter also specifies what the AS has to return in the access token response at Step B, following a successful uploading of the access token from the AS to the RS.<a href="#section-2-11.1.2" class="pilcrow">¶</a></p>
 </li>
@@ -1492,9 +1492,9 @@ As defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1
           <p id="section-2-11.7.1">Steps D, E, and F are as in the original workflow.<a href="#section-2-11.7.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-2-12">The new workflow has no ambition to replace the original workflow defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>. The AS can use one workflow or the other depending, for example, on the specific RS for which the access token has been issued and the nature of the communication leg with that RS.<a href="#section-2-12" class="pilcrow">¶</a></p>
-<p id="section-2-13">When using the new workflow, all the communications between the AS and the RS <span class="bcp14">MUST</span> be protected, consistent with Sections <a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.4.3" class="relref">5.8.4.3</a> and <a href="https://rfc-editor.org/rfc/rfc9200#section-6.5" class="relref">6.5</a> of <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>. Unlike in the original workflow, this results in protecting also the uploading of the first access token in a token series, i.e., in addition to the uploading of the following access tokens in the token series for dynamically updating the access rights of the client.<a href="#section-2-13" class="pilcrow">¶</a></p>
-<p id="section-2-14">Note that the new workflow is also suitable for deployments where devices meant to access protected resources at the RS are not required or expected to be actual ACE clients. That is, consistent with the intended access policies, the AS can be configured to automatically issue access tokens for such devices and upload those access tokens to the RS. This means that those devices do not have to request for an access token to be issued in the first place, and instead can immediately send requests to the RS for accessing its protected resources, in accordance with the access tokens already issued and uploaded by the AS.<a href="#section-2-14" class="pilcrow">¶</a></p>
+<p id="section-2-12">The SDC workflow has no ambition to replace the original workflow defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>. The AS can use one workflow or the other depending, for example, on the specific RS for which the access token has been issued and the nature of the communication leg with that RS.<a href="#section-2-12" class="pilcrow">¶</a></p>
+<p id="section-2-13">When using the SDC workflow, all the communications between the AS and the RS <span class="bcp14">MUST</span> be protected, consistent with Sections <a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.4.3" class="relref">5.8.4.3</a> and <a href="https://rfc-editor.org/rfc/rfc9200#section-6.5" class="relref">6.5</a> of <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>. Unlike in the original workflow, this results in protecting also the uploading of the first access token in a token series, i.e., in addition to the uploading of the following access tokens in the token series for dynamically updating the access rights of the client.<a href="#section-2-13" class="pilcrow">¶</a></p>
+<p id="section-2-14">Note that the SDC workflow is also suitable for deployments where devices meant to access protected resources at the RS are not required or expected to be actual ACE clients. That is, consistent with the intended access policies, the AS can be configured to automatically issue access tokens for such devices and upload those access tokens to the RS. This means that those devices do not have to request for an access token to be issued in the first place, and instead can immediately send requests to the RS for accessing its protected resources, in accordance with the access tokens already issued and uploaded by the AS.<a href="#section-2-14" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-parameters">
@@ -1511,7 +1511,7 @@ As defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1
 <p id="section-3.1-1">This section defines the additional "token_upload" parameter. The parameter can be used in an access token request sent by C to the token endpoint at the AS, as well as in the successful access token response sent as reply by the AS.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1-2.1">
-            <p id="section-3.1-2.1.1">The "token_upload" parameter is <span class="bcp14">OPTIONAL</span> in an access token request. The presence of this parameter indicates that C opts in to use the new, alternative ACE workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>, whose actual use for uploading the issued access token to the RS is an exclusive prerogative of the AS.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.1-2.1.1">The "token_upload" parameter is <span class="bcp14">OPTIONAL</span> in an access token request. The presence of this parameter indicates that C opts in to use the SDC workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>, whose actual use for uploading the issued access token to the RS is an exclusive prerogative of the AS.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
 <p id="section-3.1-2.1.2">
 This parameter can take one of the following integer values. When the access token request is encoded in CBOR, those values are encoded as CBOR unsigned integers. The value of the parameter determines whether the follow-up successful access token response will have to include certain information, in case the AS has successfully uploaded the access token to the RS.<a href="#section-3.1-2.1.2" class="pilcrow">¶</a></p>
 <ul class="normal">
@@ -1526,7 +1526,7 @@ This parameter can take one of the following integer values. When the access tok
 </li>
             </ul>
 <p id="section-3.1-2.1.4">
-If the AS supports the new ACE workflow and the access token request includes the "token_upload" parameter with value 0, 1, or 2, then the AS <span class="bcp14">MAY</span> use the new ACE workflow to upload the access token to the RS on behalf of C. Otherwise, following that access token request, the AS <span class="bcp14">MUST NOT</span> use the new ACE workflow.<a href="#section-3.1-2.1.4" class="pilcrow">¶</a></p>
+If the AS supports the SDC workflow and the access token request includes the "token_upload" parameter with value 0, 1, or 2, then the AS <span class="bcp14">MAY</span> use the SDC workflow to upload the access token to the RS on behalf of C. Otherwise, following that access token request, the AS <span class="bcp14">MUST NOT</span> use the SDC workflow.<a href="#section-3.1-2.1.4" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.1-2.2">
             <p id="section-3.1-2.2.1">The "token_upload" parameter is <span class="bcp14">REQUIRED</span> in a successful access token response with response code 2.01 (Created), if both the following conditions apply. Otherwise, the "token_upload" parameter <span class="bcp14">MUST NOT</span> be present.<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
@@ -1535,7 +1535,7 @@ If the AS supports the new ACE workflow and the access token request includes th
                 <p id="section-3.1-2.2.2.1.1">The corresponding access token request included the "token_upload" parameter, with value 0, 1, or 2.<a href="#section-3.1-2.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-3.1-2.2.2.2">
-                <p id="section-3.1-2.2.2.2.1">The AS has attempted to upload the issued access token to the RS as per the new ACE workflow, irrespective of the result of the token upload.<a href="#section-3.1-2.2.2.2.1" class="pilcrow">¶</a></p>
+                <p id="section-3.1-2.2.2.2.1">The AS has attempted to upload the issued access token to the RS as per the SDC workflow, irrespective of the result of the token upload.<a href="#section-3.1-2.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 <p id="section-3.1-2.2.3">
@@ -1728,7 +1728,7 @@ In this case, the access token response can include additional parameters as def
             <p id="section-3.2-4.1.1">The corresponding access token request included the "token_upload" parameter with value 1.<a href="#section-3.2-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.2-4.2">
-            <p id="section-3.2-4.2.1">The access token response includes the "token_upload" parameter with value 0. That is, the AS has successfully uploaded the issued access token to the RS, as per the new ACE workflow.<a href="#section-3.2-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.2-4.2.1">The access token response includes the "token_upload" parameter with value 0. That is, the AS has successfully uploaded the issued access token to the RS, as per the SDC workflow.<a href="#section-3.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-3.2-5">This parameter specifies the token hash corresponding to the access token issued by the AS and successfully uploaded to the RS on behalf of C. In particular:<a href="#section-3.2-5" class="pilcrow">¶</a></p>
@@ -1837,16 +1837,16 @@ In this case, the access token response can include additional parameters as def
 <p id="section-3.3-1">This section defines the additional parameters "to_rs" and "from_rs". The "to_rs" parameter can be used in an access token request sent by C to the token endpoint at the AS. The "from_rs" parameter can be used in an access token response, sent by the AS in reply to a request to the token endpoint from C.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.3-2.1">
-            <p id="section-3.3-2.1.1">The "to_rs" parameter is <span class="bcp14">OPTIONAL</span> in an access token request. The presence of this parameter indicates that C wishes the AS to relay the information specified therein to the RS, when the AS uploads the issued access token to the RS per the new ACE workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>. This parameter <span class="bcp14">MUST NOT</span> be present if the "token_upload" parameter defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a> is not present in the access token request.<a href="#section-3.3-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-2.1.1">The "to_rs" parameter is <span class="bcp14">OPTIONAL</span> in an access token request. The presence of this parameter indicates that C wishes the AS to relay the information specified therein to the RS, when the AS uploads the issued access token to the RS per the SDC workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>. This parameter <span class="bcp14">MUST NOT</span> be present if the "token_upload" parameter defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a> is not present in the access token request.<a href="#section-3.3-2.1.1" class="pilcrow">¶</a></p>
 <p id="section-3.3-2.1.2">
-If present, this parameter specifies the information that C wishes the AS to relay to the RS, when uploading the access token to the RS on behalf of C. If considered together with the access token, this information is expected to consist in what C would have uploaded to the authz-info endpoint at the RS, if uploading the access token per the original ACE workflow. When the access token request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.<a href="#section-3.3-2.1.2" class="pilcrow">¶</a></p>
+If present, this parameter specifies the information that C wishes the AS to relay to the RS, when uploading the access token to the RS on behalf of C. If considered together with the access token, this information is expected to consist in what C would have uploaded to the authz-info endpoint at the RS, if uploading the access token per the original workflow. When the access token request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.<a href="#section-3.3-2.1.2" class="pilcrow">¶</a></p>
 <p id="section-3.3-2.1.3">
 The semantics and encoding of the information specified in this parameter depend on the specific profile of ACE used. <a href="#sec-to_rs-from_rs-oscore-profile" class="auto internal xref">Section 3.3.1</a> defines those for when this parameter is used with the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>.<a href="#section-3.3-2.1.3" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.3-2.2">
-            <p id="section-3.3-2.2.1">The "from_rs" parameter is <span class="bcp14">OPTIONAL</span> in an access token response. The presence of this parameter indicates that the AS has to relay the information specified therein to C, which the AS has received from the RS after having successfully uploaded the access token to the RS per the new ACE workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>. This parameter <span class="bcp14">MUST NOT</span> be present if the "token_upload" parameter defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a> is not present with value 0 in the access token response.<a href="#section-3.3-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.3-2.2.1">The "from_rs" parameter is <span class="bcp14">OPTIONAL</span> in an access token response. The presence of this parameter indicates that the AS has to relay the information specified therein to C, which the AS has received from the RS after having successfully uploaded the access token to the RS per the SDC workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>. This parameter <span class="bcp14">MUST NOT</span> be present if the "token_upload" parameter defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a> is not present with value 0 in the access token response.<a href="#section-3.3-2.2.1" class="pilcrow">¶</a></p>
 <p id="section-3.3-2.2.2">
-If present, this parameter specifies the information that the AS has to relay to C from the RS, following the successful upload of the access token to the RS on behalf of C. This information is expected to consist in what C would have received in a successful response from the authz-info endpoint at the RS, if uploading the access token per the original ACE workflow. When the access token response is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.<a href="#section-3.3-2.2.2" class="pilcrow">¶</a></p>
+If present, this parameter specifies the information that the AS has to relay to C from the RS, following the successful upload of the access token to the RS on behalf of C. This information is expected to consist in what C would have received in a successful response from the authz-info endpoint at the RS, if uploading the access token per the original workflow. When the access token response is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.<a href="#section-3.3-2.2.2" class="pilcrow">¶</a></p>
 <p id="section-3.3-2.2.3">
 The semantics and encoding of the information specified in this parameter depend on the specific profile of ACE used. <a href="#sec-to_rs-from_rs-oscore-profile" class="auto internal xref">Section 3.3.1</a> defines those for when this parameter is used with the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>.<a href="#section-3.3-2.2.3" class="pilcrow">¶</a></p>
 </li>
@@ -1856,7 +1856,7 @@ The semantics and encoding of the information specified in this parameter depend
           <h4 id="name-use-with-the-oscore-profile">
 <a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-use-with-the-oscore-profile" class="section-name selfRef">Use with the OSCORE Profile</a>
           </h4>
-<p id="section-3.3.1-1">This section defines the semantics and encoding of the information specified in the parameters "to_rs" and "from_rs" when used with the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, thereby effectively enabling the use of the new ACE workflow for that profile.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-1">This section defines the semantics and encoding of the information specified in the parameters "to_rs" and "from_rs" when used with the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, thereby effectively enabling the use of the SDC workflow for that profile.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.3.1-2">The value of the "to_rs" parameter is the binary representation of a CBOR map C_MAP composed of two fields:<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.3.1-3.1">
@@ -1896,7 +1896,7 @@ The semantics and encoding of the information specified in this parameter depend
               <p id="section-3.3.1-9.2.1">A field with the CBOR unsigned integer 44 as map key, and with value the same CBOR byte string specified by the "ace_server_recipientid" field of RS_MAP.<a href="#section-3.3.1-9.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.3.1-10">When C receives from the AS the successful access token response specifying the "token_upload" parameter with value 0, C can retrieve the nonce N2 and the Recipient ID ID2 from the "from_rs" parameter, just like when retrieving those from a 2.01 (Created) response received from the RS when using the original ACE workflow.<a href="#section-3.3.1-10" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-10">When C receives from the AS the successful access token response specifying the "token_upload" parameter with value 0, C can retrieve the nonce N2 and the Recipient ID ID2 from the "from_rs" parameter, just like when retrieving those from a 2.01 (Created) response received from the RS when using the original workflow.<a href="#section-3.3.1-10" class="pilcrow">¶</a></p>
 <p id="section-3.3.1-11"><a href="#fig-example-AS-to-C-token-upload-oscore-profile" class="auto internal xref">Figure 7</a> shows an example where the OSCORE profile is used, with first an access token request from C to the AS, and then an access token response from the AS to C, following the issue of an access token bound to a symmetric PoP key.<a href="#section-3.3.1-11" class="pilcrow">¶</a></p>
 <p id="section-3.3.1-12">The access token request specifies the "token_upload" parameter with value 0. That is, C indicates that it requires neither the access token nor the corresponding token hash from the AS, in case the AS successfully uploads the access token to the RS. Also, the access token request includes the "to_rs" parameter, specifying the values of N1 = 0x018a278f7faab55a and ID1 = 0x1645 intended to the RS.<a href="#section-3.3.1-12" class="pilcrow">¶</a></p>
 <p id="section-3.3.1-13">The access token response specifies the "token_upload" parameter with value 0, which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.<a href="#section-3.3.1-13" class="pilcrow">¶</a></p>
@@ -2768,13 +2768,13 @@ Payload:
 <p id="appendix-A-1">For any profile of ACE, the following holds.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-2.1">
-          <p id="appendix-A-2.1.1">The new ACE workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a> is effectively possible to use. This is beneficial for deployments where the communication leg between C and the RS is constrained, but the communication leg between the AS and RS is not.<a href="#appendix-A-2.1.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.1.1">The SDC workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a> is effectively possible to use. This is beneficial for deployments where the communication leg between C and the RS is constrained, but the communication leg between the AS and RS is not.<a href="#appendix-A-2.1.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="appendix-A-2.2">
-          <p id="appendix-A-2.2.1">When the new ACE workflow is used, the "token_upload" parameter defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a> is used:<a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.2.1">When the SDC workflow is used, the "token_upload" parameter defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a> is used:<a href="#appendix-A-2.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-A-2.2.2.1">
-              <p id="appendix-A-2.2.2.1.1">To inform the AS about C opting in to use the new ACE workflow.<a href="#appendix-A-2.2.2.1.1" class="pilcrow">¶</a></p>
+              <p id="appendix-A-2.2.2.1.1">To inform the AS about C opting in to use the SDC workflow.<a href="#appendix-A-2.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="appendix-A-2.2.2.2">
               <p id="appendix-A-2.2.2.2.1">To request the AS that the follow-up successful access token response will have to include certain information, in case the AS has successfully uploaded the access token to the RS.<a href="#appendix-A-2.2.2.2.1" class="pilcrow">¶</a></p>
@@ -2785,7 +2785,7 @@ Payload:
           </ul>
 </li>
         <li class="normal" id="appendix-A-2.3">
-          <p id="appendix-A-2.3.1">When the new ACE workflow is used, it remains possible for C to always obtain the issued access token from the AS.<a href="#appendix-A-2.3.1" class="pilcrow">¶</a></p>
+          <p id="appendix-A-2.3.1">When the SDC workflow is used, it remains possible for C to always obtain the issued access token from the AS.<a href="#appendix-A-2.3.1" class="pilcrow">¶</a></p>
 <p id="appendix-A-2.3.2">
 That is, by specifying the value 2 for the "token_upload" parameter in the access token request, C will ensure to receive the access token from the AS, even in case the AS successfully uploads the access token to the RS on behalf of C.<a href="#appendix-A-2.3.2" class="pilcrow">¶</a></p>
 <p id="appendix-A-2.3.3">
@@ -2817,18 +2817,18 @@ This is useful in profiles of ACE where C can re-upload the same access token to
       </h2>
 <div id="sec-open-points-workflow">
 <section id="appendix-B.1">
-        <h3 id="name-new-workflow">
-<a href="#appendix-B.1" class="section-number selfRef">B.1. </a><a href="#name-new-workflow" class="section-name selfRef">New Workflow</a>
+        <h3 id="name-sdc-workflow">
+<a href="#appendix-B.1" class="section-number selfRef">B.1. </a><a href="#name-sdc-workflow" class="section-name selfRef">SDC Workflow</a>
         </h3>
-<p id="appendix-B.1-1">The following discusses open points related to the use of the new ACE workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>.<a href="#appendix-B.1-1" class="pilcrow">¶</a></p>
+<p id="appendix-B.1-1">The following discusses open points related to the use of the SDC workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>.<a href="#appendix-B.1-1" class="pilcrow">¶</a></p>
 <div id="sec-open-points-workflow-dynamic-access-rights">
 <section id="appendix-B.1.1">
           <h4 id="name-prevent-ambiguities-in-the-">
 <a href="#appendix-B.1.1" class="section-number selfRef">B.1.1. </a><a href="#name-prevent-ambiguities-in-the-" class="section-name selfRef">Prevent Ambiguities in the Dynamic Update of Access Rights</a>
           </h4>
 <p id="appendix-B.1.1-1">In some profiles of ACE, C can request a new access token to update its access rights, while preserving the same secure association with the RS. The new access token supersedes the current one stored at the RS, as they are both part of the same token series.<a href="#appendix-B.1.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-2">When using the original ACE workflow, C uploads the new access token to the RS by protecting the message exchange through the secure association with the RS. This allows the RS to determine that the upload of such access token is for updating the access rights of C.<a href="#appendix-B.1.1-2" class="pilcrow">¶</a></p>
-<p id="appendix-B.1.1-3">When using the new ACE workflow, the AS uploads the new access token to the RS also when an update of access rights for C is to be performed. This message exchange is protected through the secure association between the AS and the RS.<a href="#appendix-B.1.1-3" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-2">When using the original workflow, C uploads the new access token to the RS by protecting the message exchange through the secure association with the RS. This allows the RS to determine that the upload of such access token is for updating the access rights of C.<a href="#appendix-B.1.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-B.1.1-3">When using the SDC workflow, the AS uploads the new access token to the RS also when an update of access rights for C is to be performed. This message exchange is protected through the secure association between the AS and the RS.<a href="#appendix-B.1.1-3" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-4">In this latter case, even though the access token claim "token_series_id" defined in <a href="#sec-token_series_id" class="auto internal xref">Section 3.6</a> provides the RS with an explicit indication for recognizing a stored access token as belonging to an ongoing token series, such a process might still lead to ambiguities.<a href="#appendix-B.1.1-4" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-5">For example, the RS might have deleted a stored access token due to memory limitations. This effectively terminates the corresponding token series, which is however impractical for the RS to remember indefinitely. Consequently, if the AS uploads to the RS a new access token belonging to the same token series, the RS would erroneously interpret it to be the first access token of a new series.<a href="#appendix-B.1.1-5" class="pilcrow">¶</a></p>
 <p id="appendix-B.1.1-6">This can be avoided by relying on a new "updated_rights" parameter, which the AS can include in a POST request to the authz-info endpoint when uploading to the RS an access token for dynamically updating the access rights of C (see <a href="#sec-more-parameters" class="auto internal xref">Appendix B.2</a>).<a href="#appendix-B.1.1-6" class="pilcrow">¶</a></p>
@@ -2844,7 +2844,7 @@ This is useful in profiles of ACE where C can re-upload the same access token to
 <p id="appendix-B.2-1">The following discusses possible, further new parameters that can be defined for addressing the open points raised earlier in <a href="#sec-open-points" class="auto internal xref">Appendix B</a>.<a href="#appendix-B.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="appendix-B.2-2.1">
-            <p id="appendix-B.2-2.1.1">"updated_rights" - When using the new ACE workflow and issuing an access token for dynamically updating the access rights of C, the AS specifies this parameter in the request sent to the RS for uploading the access token on behalf of C (see <a href="#sec-open-points-workflow-dynamic-access-rights" class="auto internal xref">Appendix B.1.1</a>). This parameter encodes the CBOR simple value <code>true</code> (0xf5).<a href="#appendix-B.2-2.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-B.2-2.1.1">"updated_rights" - When using the SDC workflow and issuing an access token for dynamically updating the access rights of C, the AS specifies this parameter in the request sent to the RS for uploading the access token on behalf of C (see <a href="#sec-open-points-workflow-dynamic-access-rights" class="auto internal xref">Appendix B.1.1</a>). This parameter encodes the CBOR simple value <code>true</code> (0xf5).<a href="#appendix-B.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -2900,19 +2900,25 @@ ace-error = 2
         </h3>
 <ul class="normal">
 <li class="normal" id="appendix-D.1-1.1">
-            <p id="appendix-D.1-1.1.1">Improved definition of "token series".<a href="#appendix-D.1-1.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.1.1">Updated document title.<a href="#appendix-D.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.2">
-            <p id="appendix-D.1-1.2.1">Revised criterion for the AS to choose a token series identifier.<a href="#appendix-D.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.2.1">Defined name for the new workflow.<a href="#appendix-D.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.3">
-            <p id="appendix-D.1-1.3.1">Removed content on bidirectional access control.<a href="#appendix-D.1-1.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.3.1">Improved definition of "token series".<a href="#appendix-D.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.4">
-            <p id="appendix-D.1-1.4.1">Suggested value ranges for codepoints to register.<a href="#appendix-D.1-1.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.4.1">Revised criterion for the AS to choose a token series identifier.<a href="#appendix-D.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.5">
-            <p id="appendix-D.1-1.5.1">Editorial fixes and improvements.<a href="#appendix-D.1-1.5.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.5.1">Removed content on bidirectional access control.<a href="#appendix-D.1-1.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-D.1-1.6">
+            <p id="appendix-D.1-1.6.1">Suggested value ranges for codepoints to register.<a href="#appendix-D.1-1.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-D.1-1.7">
+            <p id="appendix-D.1-1.7.1">Editorial fixes and improvements.<a href="#appendix-D.1-1.7.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -3002,7 +3008,7 @@ ace-error = 2
             <p id="appendix-D.4-1.3.1">Amended two of the requirements on profiles of the framework.<a href="#appendix-D.4-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.4-1.4">
-            <p id="appendix-D.4-1.4.1">The client has to opt-in for using the alternative workflow.<a href="#appendix-D.4-1.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.4-1.4.1">The client has to opt-in for using the new workflow.<a href="#appendix-D.4-1.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.4-1.5">
             <p id="appendix-D.4-1.5.1">Parameter "token_uploaded" renamed to "token_upload".<a href="#appendix-D.4-1.5.1" class="pilcrow">¶</a></p>
