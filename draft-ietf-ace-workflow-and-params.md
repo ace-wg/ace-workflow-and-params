@@ -1,8 +1,8 @@
 ---
 v: 3
 
-title: Alternative Workflow and OAuth Parameters for the Authentication and Authorization for Constrained Environments (ACE) Framework
-abbrev: Alternative ACE Workflow and Parameters
+title: Short Distribution Chain (SDC) Workflow and New OAuth Parameters for the Authentication and Authorization for Constrained Environments (ACE) Framework
+abbrev: New ACE Workflow and Parameters
 docname: draft-ietf-ace-workflow-and-params-latest
 
 # stand_alone: true
@@ -95,7 +95,7 @@ entity:
 
 --- abstract
 
-This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines a new, alternative workflow that the authorization server can use for uploading an access token to a resource server on behalf of the client. Second, it defines new parameters and encodings for the OAuth 2.0 token endpoint at the authorization server. Third, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads. For such error responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431.
+This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines the Short Distribution Chain (SDC) workflow that the authorization server can use for uploading an access token to a resource server on behalf of the client. Second, it defines new parameters and their encodings for the OAuth 2.0 token endpoint at the authorization server. Third, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads. For such error responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431.
 
 --- middle
 
@@ -107,19 +107,19 @@ The framework has as main building blocks the OAuth 2.0 framework {{RFC6749}}, t
 
 This document updates {{RFC9200}} as follows.
 
-* It defines a new, alternative protocol workflow for the ACE framework (see {{sec-workflow}}), according to which the AS uploads the access token to the RS on behalf of C, and then informs C about the outcome. The new workflow is especially convenient in deployments where the communication leg between C and the RS is constrained, but the communication leg between the AS and the RS is not.
+* It defines the Short Distribution Chain (SDC) workflow for the ACE framework (see {{sec-workflow}}), according to which the AS uploads the access token to the RS on behalf of C, and then informs C about the outcome. The SDC workflow is especially convenient in deployments where the communication leg between C and the RS is constrained, but the communication leg between the AS and the RS is not.
 
-  The new workflow has no ambition to replace the original workflow. The AS can use one workflow or the other depending, for example, on the specific RS for which an access token has been issued and the nature of the communication leg with that RS.
+  The SDC workflow has no ambition to replace the original workflow defined in {{RFC9200}}. The AS can use one workflow or the other depending, for example, on the specific RS for which an access token has been issued and the nature of the communication leg with that RS.
 
-* It defines additional parameters and encodings for the OAuth 2.0 token endpoint at the AS (see {{sec-parameters}}). These include:
+* It defines new parameters and their encodings for the OAuth 2.0 token endpoint at the AS (see {{sec-parameters}}). These include:
 
-  - "token_upload", used by C to inform the AS that it opts in to use the new ACE workflow, and by the AS to inform C about the outcome of the token uploading to the RS per the new workflow.
+  - "token_upload", used by C to inform the AS that it opts in to use the SDC workflow, and by the AS to inform C about the outcome of the token uploading to the RS per the SDC workflow.
 
-  - "token_hash", used by the AS to provide C with a token hash, corresponding to an access token that the AS has issued for C and has successfully uploaded to the RS on behalf of C per the new ACE workflow.
+  - "token_hash", used by the AS to provide C with a token hash, corresponding to an access token that the AS has issued for C and has successfully uploaded to the RS on behalf of C per the SDC workflow.
 
-  - "to_rs", used by C to provide the AS with information to relay to the RS, upon asking the AS to upload the access token to the RS per the new ACE workflow. Its specific use with the OSCORE profile {{RFC9203}} is also defined, thereby effectively enabling the use of the new ACE workflow for that profile.
+  - "to_rs", used by C to provide the AS with information to relay to the RS, upon asking the AS to upload the access token to the RS per the SDC workflow. Its specific use with the OSCORE profile {{RFC9203}} is also defined, thereby effectively enabling the use of the SDC workflow for that profile.
 
-  - "from_rs", used by the AS to provide C with information to relay from the RS, after the AS has successfully uploaded the access token to the RS per the new ACE workflow. Its specific use with the OSCORE profile {{RFC9203}} is also defined, thereby effectively enabling the use of the new ACE workflow for that profile.
+  - "from_rs", used by the AS to provide C with information to relay from the RS, after the AS has successfully uploaded the access token to the RS per the SDC workflow. Its specific use with the OSCORE profile {{RFC9203}} is also defined, thereby effectively enabling the use of SDC workflow for that profile.
 
   - "rs_cnf2", used by the AS to provide C with the public keys of the RSs in the group-audience for which the access token is issued (see {{Section 6.9 of RFC9200}}).
 
@@ -164,9 +164,9 @@ In the CBOR diagnostic notation used in this document, constructs of the form e'
 
 Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. Finally, please delete this note.
 
-# New ACE Workflow # {#sec-workflow}
+# The Short Distribution Chain (SDC) Workflow # {#sec-workflow}
 
-As defined in {{Section 4 of RFC9200}}, the ACE framework considers what is shown in {{fig-old-workflow}} as its basic protocol workflow.
+As defined in {{Section 4 of RFC9200}}, the ACE framework relies on its basic protocol workflow shown in {{fig-old-workflow}}.
 
 That is, the client first sends an access token request to the token endpoint at the AS (Step A), specifying permissions that it seeks to obtain for accessing protected resources at the RS, possibly together with information on its own public authentication credential.
 
@@ -197,7 +197,7 @@ Further interactions are possible between the AS and the RS, i.e., the exchange 
 ~~~~~~~~~~~
 {: #fig-old-workflow title="ACE Basic Protocol Workflow."}
 
-This section defines a new, alternative protocol workflow shown in {{fig-new-workflow}}, which MAY be supported by the AS. Unlike in the original protocol workflow, the AS uploads the access token to the RS on behalf of the client, and then informs the client about the outcome.
+This section defines the alternative Short Distribution Chain (SDC) workflow shown in {{fig-new-workflow}}, which MAY be supported by the AS. Unlike in the original workflow defined in {{RFC9200}}, the AS uploads the access token to the RS on behalf of the client, and then informs the client about the outcome.
 
 If the token uploading has been successfully completed, the client typically does not need to obtain the access token from the AS altogether. Instead, the client simply establishes a secure association with the RS (if that has not happened already), and then accesses protected resources at the RS according to the permissions granted per the access token and specified by the AS as access information.
 
@@ -223,11 +223,11 @@ If the token uploading has been successfully completed, the client typically doe
 |        |                               |                            |
 +--------+                               +----------------------------+
 ~~~~~~~~~~~
-{: #fig-new-workflow title="ACE Alternative Protocol Workflow."}
+{: #fig-new-workflow title="ACE Short Distribution Chain (SDC) Workflow."}
 
-More specifically, the new workflow consists of the following steps.
+More specifically, the SDC workflow consists of the following steps.
 
-* Step A - Like in the original workflow, the client sends an access token request to the token endpoint at the AS, with the additional indication that it opts in to use the alternative workflow.
+* Step A - Like in the original workflow, the client sends an access token request to the token endpoint at the AS, with the additional indication that it opts in to use the SDC workflow.
 
   As defined in {{sec-token_upload}}, this information is conveyed to the AS by means of the "token_upload" parameter. The parameter also specifies what the AS has to return in the access token response at Step B, following a successful uploading of the access token from the AS to the RS.
 
@@ -245,11 +245,11 @@ More specifically, the new workflow consists of the following steps.
 
 * Steps D, E, and F are as in the original workflow.
 
-The new workflow has no ambition to replace the original workflow defined in {{RFC9200}}. The AS can use one workflow or the other depending, for example, on the specific RS for which the access token has been issued and the nature of the communication leg with that RS.
+The SDC workflow has no ambition to replace the original workflow defined in {{RFC9200}}. The AS can use one workflow or the other depending, for example, on the specific RS for which the access token has been issued and the nature of the communication leg with that RS.
 
-When using the new workflow, all the communications between the AS and the RS MUST be protected, consistent with {{Sections 5.8.4.3 and 6.5 of RFC9200}}. Unlike in the original workflow, this results in protecting also the uploading of the first access token in a token series, i.e., in addition to the uploading of the following access tokens in the token series for dynamically updating the access rights of the client.
+When using the SDC workflow, all the communications between the AS and the RS MUST be protected, consistent with {{Sections 5.8.4.3 and 6.5 of RFC9200}}. Unlike in the original workflow, this results in protecting also the uploading of the first access token in a token series, i.e., in addition to the uploading of the following access tokens in the token series for dynamically updating the access rights of the client.
 
-Note that the new workflow is also suitable for deployments where devices meant to access protected resources at the RS are not required or expected to be actual ACE clients. That is, consistent with the intended access policies, the AS can be configured to automatically issue access tokens for such devices and upload those access tokens to the RS. This means that those devices do not have to request for an access token to be issued in the first place, and instead can immediately send requests to the RS for accessing its protected resources, in accordance with the access tokens already issued and uploaded by the AS.
+Note that the SDC workflow is also suitable for deployments where devices meant to access protected resources at the RS are not required or expected to be actual ACE clients. That is, consistent with the intended access policies, the AS can be configured to automatically issue access tokens for such devices and upload those access tokens to the RS. This means that those devices do not have to request for an access token to be issued in the first place, and instead can immediately send requests to the RS for accessing its protected resources, in accordance with the access tokens already issued and uploaded by the AS.
 
 # New ACE Parameters # {#sec-parameters}
 
@@ -259,7 +259,7 @@ The rest of this section defines a number of additional parameters and encodings
 
 This section defines the additional "token_upload" parameter. The parameter can be used in an access token request sent by C to the token endpoint at the AS, as well as in the successful access token response sent as reply by the AS.
 
-* The "token_upload" parameter is OPTIONAL in an access token request. The presence of this parameter indicates that C opts in to use the new, alternative ACE workflow defined in {{sec-workflow}}, whose actual use for uploading the issued access token to the RS is an exclusive prerogative of the AS.
+* The "token_upload" parameter is OPTIONAL in an access token request. The presence of this parameter indicates that C opts in to use the SDC workflow defined in {{sec-workflow}}, whose actual use for uploading the issued access token to the RS is an exclusive prerogative of the AS.
 
   This parameter can take one of the following integer values. When the access token request is encoded in CBOR, those values are encoded as CBOR unsigned integers. The value of the parameter determines whether the follow-up successful access token response will have to include certain information, in case the AS has successfully uploaded the access token to the RS.
 
@@ -269,13 +269,13 @@ This section defines the additional "token_upload" parameter. The parameter can 
 
   - 2: The access token response will have to include the access token, but not the corresponding token hash.
 
-  If the AS supports the new ACE workflow and the access token request includes the "token_upload" parameter with value 0, 1, or 2, then the AS MAY use the new ACE workflow to upload the access token to the RS on behalf of C. Otherwise, following that access token request, the AS MUST NOT use the new ACE workflow.
+  If the AS supports the SDC workflow and the access token request includes the "token_upload" parameter with value 0, 1, or 2, then the AS MAY use the SDC workflow to upload the access token to the RS on behalf of C. Otherwise, following that access token request, the AS MUST NOT use the SDC workflow.
 
 * The "token_upload" parameter is REQUIRED in a successful access token response with response code 2.01 (Created), if both the following conditions apply. Otherwise, the "token_upload" parameter MUST NOT be present.
 
   - The corresponding access token request included the "token_upload" parameter, with value 0, 1, or 2.
 
-  - The AS has attempted to upload the issued access token to the RS as per the new ACE workflow, irrespective of the result of the token upload.
+  - The AS has attempted to upload the issued access token to the RS as per the SDC workflow, irrespective of the result of the token upload.
 
   When the "token_upload" parameter is present in the access token response, it can take one of the following integer values. When the access token response is encoded in CBOR, those values are encoded as CBOR unsigned integers.
 
@@ -440,7 +440,7 @@ The "token_hash" parameter is REQUIRED in a successful access token response wit
 
 * The corresponding access token request included the "token_upload" parameter with value 1.
 
-* The access token response includes the "token_upload" parameter with value 0. That is, the AS has successfully uploaded the issued access token to the RS, as per the new ACE workflow.
+* The access token response includes the "token_upload" parameter with value 0. That is, the AS has successfully uploaded the issued access token to the RS, as per the SDC workflow.
 
 This parameter specifies the token hash corresponding to the access token issued by the AS and successfully uploaded to the RS on behalf of C. In particular:
 
@@ -525,21 +525,21 @@ Consistent with the value of the "token_upload" parameter in the access token re
 
 This section defines the additional parameters "to_rs" and "from_rs". The "to_rs" parameter can be used in an access token request sent by C to the token endpoint at the AS. The "from_rs" parameter can be used in an access token response, sent by the AS in reply to a request to the token endpoint from C.
 
-* The "to_rs" parameter is OPTIONAL in an access token request. The presence of this parameter indicates that C wishes the AS to relay the information specified therein to the RS, when the AS uploads the issued access token to the RS per the new ACE workflow defined in {{sec-workflow}}. This parameter MUST NOT be present if the "token_upload" parameter defined in {{sec-token_upload}} is not present in the access token request.
+* The "to_rs" parameter is OPTIONAL in an access token request. The presence of this parameter indicates that C wishes the AS to relay the information specified therein to the RS, when the AS uploads the issued access token to the RS per the SDC workflow defined in {{sec-workflow}}. This parameter MUST NOT be present if the "token_upload" parameter defined in {{sec-token_upload}} is not present in the access token request.
 
-  If present, this parameter specifies the information that C wishes the AS to relay to the RS, when uploading the access token to the RS on behalf of C. If considered together with the access token, this information is expected to consist in what C would have uploaded to the authz-info endpoint at the RS, if uploading the access token per the original ACE workflow. When the access token request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
+  If present, this parameter specifies the information that C wishes the AS to relay to the RS, when uploading the access token to the RS on behalf of C. If considered together with the access token, this information is expected to consist in what C would have uploaded to the authz-info endpoint at the RS, if uploading the access token per the original workflow. When the access token request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
 
   The semantics and encoding of the information specified in this parameter depend on the specific profile of ACE used. {{sec-to_rs-from_rs-oscore-profile}} defines those for when this parameter is used with the OSCORE profile {{RFC9203}}.
 
-* The "from_rs" parameter is OPTIONAL in an access token response. The presence of this parameter indicates that the AS has to relay the information specified therein to C, which the AS has received from the RS after having successfully uploaded the access token to the RS per the new ACE workflow defined in {{sec-workflow}}. This parameter MUST NOT be present if the "token_upload" parameter defined in {{sec-token_upload}} is not present with value 0 in the access token response.
+* The "from_rs" parameter is OPTIONAL in an access token response. The presence of this parameter indicates that the AS has to relay the information specified therein to C, which the AS has received from the RS after having successfully uploaded the access token to the RS per the SDC workflow defined in {{sec-workflow}}. This parameter MUST NOT be present if the "token_upload" parameter defined in {{sec-token_upload}} is not present with value 0 in the access token response.
 
-  If present, this parameter specifies the information that the AS has to relay to C from the RS, following the successful upload of the access token to the RS on behalf of C. This information is expected to consist in what C would have received in a successful response from the authz-info endpoint at the RS, if uploading the access token per the original ACE workflow. When the access token response is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
+  If present, this parameter specifies the information that the AS has to relay to C from the RS, following the successful upload of the access token to the RS on behalf of C. This information is expected to consist in what C would have received in a successful response from the authz-info endpoint at the RS, if uploading the access token per the original workflow. When the access token response is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
 
   The semantics and encoding of the information specified in this parameter depend on the specific profile of ACE used. {{sec-to_rs-from_rs-oscore-profile}} defines those for when this parameter is used with the OSCORE profile {{RFC9203}}.
 
 ### Use with the OSCORE Profile {#sec-to_rs-from_rs-oscore-profile}
 
-This section defines the semantics and encoding of the information specified in the parameters "to_rs" and "from_rs" when used with the OSCORE profile {{RFC9203}}, thereby effectively enabling the use of the new ACE workflow for that profile.
+This section defines the semantics and encoding of the information specified in the parameters "to_rs" and "from_rs" when used with the OSCORE profile {{RFC9203}}, thereby effectively enabling the use of the SDC workflow for that profile.
 
 The value of the "to_rs" parameter is the binary representation of a CBOR map C_MAP composed of two fields:
 
@@ -567,7 +567,7 @@ The value of the "from_rs" parameter is the binary representation of a CBOR map 
 
 * A field with the CBOR unsigned integer 44 as map key, and with value the same CBOR byte string specified by the "ace_server_recipientid" field of RS_MAP.
 
-When C receives from the AS the successful access token response specifying the "token_upload" parameter with value 0, C can retrieve the nonce N2 and the Recipient ID ID2 from the "from_rs" parameter, just like when retrieving those from a 2.01 (Created) response received from the RS when using the original ACE workflow.
+When C receives from the AS the successful access token response specifying the "token_upload" parameter with value 0, C can retrieve the nonce N2 and the Recipient ID ID2 from the "from_rs" parameter, just like when retrieving those from a 2.01 (Created) response received from the RS when using the original workflow.
 
 {{fig-example-AS-to-C-token-upload-oscore-profile}} shows an example where the OSCORE profile is used, with first an access token request from C to the AS, and then an access token response from the AS to C, following the issue of an access token bound to a symmetric PoP key.
 
@@ -1029,17 +1029,17 @@ IANA is asked to register the following entry in the "Custom Problem Detail Keys
 
 For any profile of ACE, the following holds.
 
-* The new ACE workflow defined in {{sec-workflow}} is effectively possible to use. This is beneficial for deployments where the communication leg between C and the RS is constrained, but the communication leg between the AS and RS is not.
+* The SDC workflow defined in {{sec-workflow}} is effectively possible to use. This is beneficial for deployments where the communication leg between C and the RS is constrained, but the communication leg between the AS and RS is not.
 
-* When the new ACE workflow is used, the "token_upload" parameter defined in {{sec-token_upload}} is used:
+* When the SDC workflow is used, the "token_upload" parameter defined in {{sec-token_upload}} is used:
 
-  - To inform the AS about C opting in to use the new ACE workflow.
+  - To inform the AS about C opting in to use the SDC workflow.
 
   - To request the AS that the follow-up successful access token response will have to include certain information, in case the AS has successfully uploaded the access token to the RS.
 
   - To inform C that the AS has attempted to upload the issued access token to the RS, specifying whether the uploading has succeeded or failed.
 
-* When the new ACE workflow is used, it remains possible for C to always obtain the issued access token from the AS.
+* When the SDC workflow is used, it remains possible for C to always obtain the issued access token from the AS.
 
   That is, by specifying the value 2 for the "token_upload" parameter in the access token request, C will ensure to receive the access token from the AS, even in case the AS successfully uploads the access token to the RS on behalf of C.
 
@@ -1055,17 +1055,17 @@ When the EDHOC and OSCORE profile is used {{I-D.ietf-ace-edhoc-oscore-profile}},
 
 # Open Points # {#sec-open-points}
 
-## New Workflow # {#sec-open-points-workflow}
+## SDC Workflow # {#sec-open-points-workflow}
 
-The following discusses open points related to the use of the new ACE workflow defined in {{sec-workflow}}.
+The following discusses open points related to the use of the SDC workflow defined in {{sec-workflow}}.
 
 ### Prevent Ambiguities in the Dynamic Update of Access Rights # {#sec-open-points-workflow-dynamic-access-rights}
 
 In some profiles of ACE, C can request a new access token to update its access rights, while preserving the same secure association with the RS. The new access token supersedes the current one stored at the RS, as they are both part of the same token series.
 
-When using the original ACE workflow, C uploads the new access token to the RS by protecting the message exchange through the secure association with the RS. This allows the RS to determine that the upload of such access token is for updating the access rights of C.
+When using the original workflow, C uploads the new access token to the RS by protecting the message exchange through the secure association with the RS. This allows the RS to determine that the upload of such access token is for updating the access rights of C.
 
-When using the new ACE workflow, the AS uploads the new access token to the RS also when an update of access rights for C is to be performed. This message exchange is protected through the secure association between the AS and the RS.
+When using the SDC workflow, the AS uploads the new access token to the RS also when an update of access rights for C is to be performed. This message exchange is protected through the secure association between the AS and the RS.
 
 In this latter case, even though the access token claim "token_series_id" defined in {{sec-token_series_id}} provides the RS with an explicit indication for recognizing a stored access token as belonging to an ongoing token series, such a process might still lead to ambiguities.
 
@@ -1077,7 +1077,7 @@ This can be avoided by relying on a new "updated_rights" parameter, which the AS
 
 The following discusses possible, further new parameters that can be defined for addressing the open points raised earlier in {{sec-open-points}}.
 
-* "updated_rights" - When using the new ACE workflow and issuing an access token for dynamically updating the access rights of C, the AS specifies this parameter in the request sent to the RS for uploading the access token on behalf of C (see {{sec-open-points-workflow-dynamic-access-rights}}). This parameter encodes the CBOR simple value `true` (0xf5).
+* "updated_rights" - When using the SDC workflow and issuing an access token for dynamically updating the access rights of C, the AS specifies this parameter in the request sent to the RS for uploading the access token on behalf of C (see {{sec-open-points-workflow-dynamic-access-rights}}). This parameter encodes the CBOR simple value `true` (0xf5).
 
 # CDDL Model # {#sec-cddl-model}
 {:removeinrfc}
@@ -1108,6 +1108,10 @@ ace-error = 2
 {:removeinrfc}
 
 ## Version -03 to -04 ## {#sec-03-04}
+
+* Updated document title.
+
+* Defined name for the new workflow.
 
 * Improved definition of "token series".
 
@@ -1165,7 +1169,7 @@ ace-error = 2
 
 * Amended two of the requirements on profiles of the framework.
 
-* The client has to opt-in for using the alternative workflow.
+* The client has to opt-in for using the new workflow.
 
 * Parameter "token_uploaded" renamed to "token_upload".
 
