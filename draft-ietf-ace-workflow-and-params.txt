@@ -6,7 +6,7 @@ ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Updates: 9200, 9202, 9203, 9431 (if approved)                G. Selander
 Intended status: Standards Track                             Ericsson AB
-Expires: 28 August 2025                                 24 February 2025
+Expires: 29 August 2025                                 25 February 2025
 
 
 Short Distribution Chain (SDC) Workflow and New OAuth Parameters for the
@@ -22,8 +22,10 @@ Abstract
    the authorization server can use for uploading an access token to a
    resource server on behalf of the client.  Second, it defines new
    parameters and their encodings for the OAuth 2.0 token endpoint at
-   the authorization server.  Third, it amends two of the requirements
-   on profiles of the framework.  Finally, it deprecates the original
+   the authorization server.  Third, it extends the semantics of the
+   "ace_profile" parameter for the OAuth 2.0 token endpoint at the
+   authorization server.  Fourth, it amends two of the requirements on
+   profiles of the framework.  Finally, it deprecates the original
    payload format of error responses that convey an error code, when
    CBOR is used to encode message payloads.  For such error responses,
    it defines a new payload format aligned with RFC 9290, thus updating
@@ -61,7 +63,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 August 2025.
+   This Internet-Draft will expire on 29 August 2025.
 
 Copyright Notice
 
@@ -82,7 +84,7 @@ Table of Contents
    1.  Introduction
      1.1.  Terminology
    2.  The Short Distribution Chain (SDC) Workflow
-   3.  New ACE Parameters
+   3.  New Parameters
      3.1.  token_upload
        3.1.1.  Examples
      3.2.  token_hash
@@ -95,18 +97,19 @@ Table of Contents
      3.5.  anchor_cnf
        3.5.1.  Example
      3.6.  token_series_id
-   4.  Updated Requirements on Profiles
-   5.  Updated Payload Format of Error Responses
-   6.  Security Considerations
-   7.  IANA Considerations
-     7.1.  OAuth Parameters Registry
-     7.2.  OAuth Parameters CBOR Mappings Registry
-     7.3.  JSON Web Token Claims Registry
-     7.4.  CBOR Web Token (CWT) Claims Registry
-     7.5.  Custom Problem Detail Keys Registry
-   8.  References
-     8.1.  Normative References
-     8.2.  Informative References
+   4.  Updated "ace_profile" Parameter
+   5.  Updated Requirements on Profiles
+   6.  Updated Payload Format of Error Responses
+   7.  Security Considerations
+   8.  IANA Considerations
+     8.1.  OAuth Parameters Registry
+     8.2.  OAuth Parameters CBOR Mappings Registry
+     8.3.  JSON Web Token Claims Registry
+     8.4.  CBOR Web Token (CWT) Claims Registry
+     8.5.  Custom Problem Detail Keys Registry
+   9.  References
+     9.1.  Normative References
+     9.2.  Informative References
    Appendix A.  Benefits for ACE Profiles
      A.1.  DTLS Profile
      A.2.  EDHOC and OSCORE Profile
@@ -203,14 +206,18 @@ Table of Contents
          access rights.  A corresponding access token claim, namely
          "token_series_id", is also defined.
 
+   *  It extends the semantics of the "ace_profile" parameter for the
+      OAuth 2.0 token endpoint at the authorization server defined in
+      [RFC9200] (see Section 4).
+
    *  It amends two of the requirements on profiles of the ACE framework
-      (see Section 4).
+      (see Section 5).
 
    *  It deprecates the original payload format of error responses that
       convey an error code, when CBOR is used to encode message payloads
       in the ACE framework.  For such error responses, it defines a new
       payload format according to the problem-details format specified
-      in [RFC9290] (see Section 5).
+      in [RFC9290] (see Section 6).
 
       In this respect, it also updates the profiles of the ACE framework
       defined in [RFC9202], [RFC9203], and [RFC9431].
@@ -436,10 +443,10 @@ Table of Contents
    protected resources, in accordance with the access tokens already
    issued and uploaded by the AS.
 
-3.  New ACE Parameters
+3.  New Parameters
 
    The rest of this section defines a number of additional parameters
-   and encodings for the OAuth 2.0 token endpoint at the AS.
+   and their encodings for the OAuth 2.0 token endpoint at the AS.
 
 3.1.  token_upload
 
@@ -1337,7 +1344,7 @@ Table of Contents
       specifying the identifier of the token series to which the access
       token belongs.  When CWTs are used as access tokens, this
       information MUST be transported in the "token_series_id" claim
-      registered in Section 7.4.
+      registered in Section 8.4.
 
    If a profile of ACE relies on a construct that uses different
    parameters/claims to transport the identifier of a token series, then
@@ -1350,7 +1357,44 @@ Table of Contents
    profile [RFC9203], and in the EDHOC and OSCORE profile
    [I-D.ietf-ace-edhoc-oscore-profile].
 
-4.  Updated Requirements on Profiles
+4.  Updated "ace_profile" Parameter
+
+   This section extends the semantics of the "ace_profile" parameter
+   defined in [RFC9200] for the OAuth 2.0 token endpoint at the
+   authorization server.
+
+   In addition to what is specified in Sections 5.8.1, 5.8.2, and
+   5.8.4.3 of [RFC9200], the following applies.
+
+   *  When sending an access token request to the token endpoint at the
+      AS (see Section 5.8.1 of [RFC9200]), C MAY include the
+      "ace_profile" parameter, specifying the identifier of the profile
+      that C wishes to use towards the RS.
+
+   *  If the AS receives an access token request that includes the
+      "ace_profile" parameter specifying the identifier of a profile,
+      then the AS proceeds as follows.
+
+      In case the AS does not issue access tokens per the profile
+      specified in the access token request, or C and the RS do not
+      share that profile, then the AS MUST reject the request and reply
+      with an error response (see Section 5.8.3 of [RFC9200]).  The
+      error response MUST have a response code equivalent to the CoAP
+      code 4.00 (Bad Request) and MUST include the error code
+      "incompatible_ace_profiles".
+
+      In case the AS issues an access token to C, the access token MUST
+      be per the profile whose identifier was specified by the
+      "ace_profile" parameter in the access token request.
+
+      In case the AS replies to C with a successful access token
+      response (see Section 5.8.2 of [RFC9200]), then the response MAY
+      include the "ace_profile" parameter.  If it is included in the
+      access token response, the "ace_profile" parameter MUST specify
+      the same profile identifier that was specified by the
+      "ace_profile" parameter of the corresponding access token request.
+
+5.  Updated Requirements on Profiles
 
    Appendix C of [RFC9200] compiles a list of requirements on the
    profiles of ACE.  This document amends two of those requirements as
@@ -1389,7 +1433,7 @@ Table of Contents
    RFC (i.e., [RFC9202][RFC9203][RFC9431]) already comply with the two
    updated requirements as formulated above.
 
-5.  Updated Payload Format of Error Responses
+6.  Updated Payload Format of Error Responses
 
    This section deprecates the original payload format of error
    responses conveying an error code, when CBOR is used to encode
@@ -1408,7 +1452,7 @@ Table of Contents
    (see Section 2 of [RFC9290]).  The CBOR map is formatted as follows.
 
    *  It MUST include the Custom Problem Detail entry "ace-error"
-      registered in Section 7.5 of this document.
+      registered in Section 8.5 of this document.
 
       This entry is formatted as a CBOR map including only one field,
       namely "error-code".  The map key for "error-code" is the CBOR
@@ -1487,7 +1531,7 @@ Table of Contents
       the payload format defined in this section MUST use it when
       composing an outgoing error response that conveys an error code.
 
-6.  Security Considerations
+7.  Security Considerations
 
    The same security considerations from the ACE framework for
    Authentication and Authorization [RFC9200] apply to this document,
@@ -1501,14 +1545,14 @@ Table of Contents
 
    Editor's note: add more security considerations.
 
-7.  IANA Considerations
+8.  IANA Considerations
 
    This document has the following actions for IANA.
 
    Note to RFC Editor: Please replace all occurrences of "[RFC-XXXX]"
    with the RFC number of this specification and delete this paragraph.
 
-7.1.  OAuth Parameters Registry
+8.1.  OAuth Parameters Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters"
    registry.
@@ -1591,7 +1635,7 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
-7.2.  OAuth Parameters CBOR Mappings Registry
+8.2.  OAuth Parameters CBOR Mappings Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters
    CBOR Mappings" registry, following the procedure specified in
@@ -1691,7 +1735,7 @@ Table of Contents
 
    *  Original Specification: [RFC-XXXX]
 
-7.3.  JSON Web Token Claims Registry
+8.3.  JSON Web Token Claims Registry
 
    IANA is asked to add the following entries to the "JSON Web Token
    Claims" registry, following the procedure specified in [RFC7519].
@@ -1704,7 +1748,7 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
-7.4.  CBOR Web Token (CWT) Claims Registry
+8.4.  CBOR Web Token (CWT) Claims Registry
 
    IANA is asked to add the following entries to the "CBOR Web Token
    (CWT) Claims" registry, following the procedure specified in
@@ -1724,7 +1768,7 @@ Table of Contents
 
    *  Reference: Section 3.6 of [RFC-XXXX]
 
-7.5.  Custom Problem Detail Keys Registry
+8.5.  Custom Problem Detail Keys Registry
 
    IANA is asked to register the following entry in the "Custom Problem
    Detail Keys" registry within the "Constrained RESTful Environments
@@ -1739,11 +1783,11 @@ Table of Contents
 
    *  Change Controller: IETF
 
-   *  Reference: Section 5 of [RFC-XXXX]
+   *  Reference: Section 6 of [RFC-XXXX]
 
-8.  References
+9.  References
 
-8.1.  Normative References
+9.1.  Normative References
 
    [ACE.OAuth.Error.Code.CBOR.Mappings]
               IANA, "OAuth Error Code CBOR Mappings",
@@ -1900,7 +1944,7 @@ Table of Contents
               <http://csrc.nist.gov/publications/fips/fips180-3/
               fips180-3_final.pdf>.
 
-8.2.  Informative References
+9.2.  Informative References
 
    [I-D.ietf-ace-group-oscore-profile]
               Tiloca, M., Höglund, R., and F. Palombini, "The Group
@@ -2056,6 +2100,8 @@ D.1.  Version -03 to -04
    *  Improved definition of "token series".
 
    *  Revised criterion for the AS to choose a token series identifier.
+
+   *  Updated semantics of the "ace_profile" parameter.
 
    *  Removed content on bidirectional access control.
 
