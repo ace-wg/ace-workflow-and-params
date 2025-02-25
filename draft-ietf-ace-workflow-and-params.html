@@ -1500,7 +1500,7 @@ As defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1
       </ul>
 <p id="section-2-12">The SDC workflow has no ambition to replace the original workflow defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>. The AS can use one workflow or the other depending, for example, on the specific RS for which the access token has been issued and the nature of the communication leg with that RS.<a href="#section-2-12" class="pilcrow">¶</a></p>
 <p id="section-2-13">When using the SDC workflow, all the communications between the AS and the RS <span class="bcp14">MUST</span> be protected, consistent with Sections <a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.4.3" class="relref">5.8.4.3</a> and <a href="https://rfc-editor.org/rfc/rfc9200#section-6.5" class="relref">6.5</a> of <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>. Unlike in the original workflow, this results in protecting also the uploading of the first access token in a token series, i.e., in addition to the uploading of the following access tokens in the token series for dynamically updating the access rights of the client.<a href="#section-2-13" class="pilcrow">¶</a></p>
-<p id="section-2-14">Note that the SDC workflow is also suitable for deployments where devices meant to access protected resources at the RS are not required or expected to be actual ACE clients. That is, consistent with the intended access policies, the AS can be configured to automatically issue access tokens for such devices and upload those access tokens to the RS. This means that those devices do not have to request for an access token to be issued in the first place, and instead can immediately send requests to the RS for accessing its protected resources, in accordance with the access tokens already issued and uploaded by the AS.<a href="#section-2-14" class="pilcrow">¶</a></p>
+<p id="section-2-14">The SDC workflow is also suitable for deployments where clients are not aware of details such as the need for access tokens to be issued by the AS and uploaded at the RS. Consistent with the intended access policies, the AS can be configured to automatically issue access tokens for such clients and upload those access tokens to the RS. This means that such clients do not have to request for an access token to be issued in the first place, and instead can immediately send requests to the RS for accessing its protected resources, in accordance with the access tokens already issued and uploaded by the AS.<a href="#section-2-14" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-parameters">
@@ -2938,19 +2938,22 @@ ace-error = 2
             <p id="appendix-D.1-1.3.1">Improved definition of "token series".<a href="#appendix-D.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.4">
-            <p id="appendix-D.1-1.4.1">Revised criterion for the AS to choose a token series identifier.<a href="#appendix-D.1-1.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.4.1">Revised note on the new workflow suitable for "unaware" clients.<a href="#appendix-D.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.5">
-            <p id="appendix-D.1-1.5.1">Updated semantics of the "ace_profile" parameter.<a href="#appendix-D.1-1.5.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.5.1">Revised criterion for the AS to choose a token series identifier.<a href="#appendix-D.1-1.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.6">
-            <p id="appendix-D.1-1.6.1">Removed content on bidirectional access control.<a href="#appendix-D.1-1.6.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.6.1">Updated semantics of the "ace_profile" parameter.<a href="#appendix-D.1-1.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.7">
-            <p id="appendix-D.1-1.7.1">Suggested value ranges for codepoints to register.<a href="#appendix-D.1-1.7.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.7.1">Removed content on bidirectional access control.<a href="#appendix-D.1-1.7.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.8">
-            <p id="appendix-D.1-1.8.1">Editorial fixes and improvements.<a href="#appendix-D.1-1.8.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.8.1">Suggested value ranges for codepoints to register.<a href="#appendix-D.1-1.8.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-D.1-1.9">
+            <p id="appendix-D.1-1.9.1">Editorial fixes and improvements.<a href="#appendix-D.1-1.9.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
