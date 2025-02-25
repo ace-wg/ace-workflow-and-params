@@ -95,7 +95,7 @@ entity:
 
 --- abstract
 
-This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines the Short Distribution Chain (SDC) workflow that the authorization server can use for uploading an access token to a resource server on behalf of the client. Second, it defines new parameters and their encodings for the OAuth 2.0 token endpoint at the authorization server. Third, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads. For such error responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431.
+This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines the Short Distribution Chain (SDC) workflow that the authorization server can use for uploading an access token to a resource server on behalf of the client. Second, it defines new parameters and their encodings for the OAuth 2.0 token endpoint at the authorization server. Third, it extends the semantics of the "ace_profile" parameter for the OAuth 2.0 token endpoint at the authorization server. Fourth, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads. For such error responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431.
 
 --- middle
 
@@ -128,6 +128,8 @@ This document updates {{RFC9200}} as follows.
   - "anchor_cnf", used by the AS to provide C with the public keys of trust anchors, which C can use to validate the public key of an RS (e.g., as provided in the "rs_cnf" parameter defined in {{RFC9201}} or in the "rs_cnf2" parameter defined in this document).
 
   - "token_series_id", used by the AS to provide C with the identifier of a token series, and by C to ask the AS for a new access token in the same token series that dynamically updates access rights. A corresponding access token claim, namely "token_series_id", is also defined.
+
+* It extends the semantics of the "ace_profile" parameter for the OAuth 2.0 token endpoint at the authorization server defined in {{RFC9200}} (see {{sec-updated-ace-profile-parameter}}).
 
 * It amends two of the requirements on profiles of the ACE framework (see {{sec-updated-requirements}}).
 
@@ -251,9 +253,9 @@ When using the SDC workflow, all the communications between the AS and the RS MU
 
 Note that the SDC workflow is also suitable for deployments where devices meant to access protected resources at the RS are not required or expected to be actual ACE clients. That is, consistent with the intended access policies, the AS can be configured to automatically issue access tokens for such devices and upload those access tokens to the RS. This means that those devices do not have to request for an access token to be issued in the first place, and instead can immediately send requests to the RS for accessing its protected resources, in accordance with the access tokens already issued and uploaded by the AS.
 
-# New ACE Parameters # {#sec-parameters}
+# New Parameters # {#sec-parameters}
 
-The rest of this section defines a number of additional parameters and encodings for the OAuth 2.0 token endpoint at the AS.
+The rest of this section defines a number of additional parameters and their encodings for the OAuth 2.0 token endpoint at the AS.
 
 ## token_upload {#sec-token_upload}
 
@@ -771,6 +773,22 @@ If a profile of ACE relies on a construct that uses different parameters/claims 
 
 For example, a number of parameters/claims are already used to transport information that acts de facto as identifier of token series, in the PSK mode of the DTLS profile {{RFC9202}}, in the OSCORE profile {{RFC9203}}, and in the EDHOC and OSCORE profile {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
+# Updated "ace_profile" Parameter # {#sec-updated-ace-profile-parameter}
+
+This section extends the semantics of the "ace_profile" parameter defined in {{RFC9200}} for the OAuth 2.0 token endpoint at the authorization server.
+
+In addition to what is specified in {{Sections 5.8.1, 5.8.2, and 5.8.4.3 of RFC9200}}, the following applies.
+
+* When sending an access token request to the token endpoint at the AS (see {{Section 5.8.1 of RFC9200}}), C MAY include the "ace_profile" parameter, specifying the identifier of the profile that C wishes to use towards the RS.
+
+* If the AS receives an access token request that includes the "ace_profile" parameter specifying the identifier of a profile, then the AS proceeds as follows.
+
+  In case the AS does not issue access tokens per the profile specified in the access token request, or C and the RS do not share that profile, then the AS MUST reject the request and reply with an error response (see {{Section 5.8.3 of RFC9200}}). The error response MUST have a response code equivalent to the CoAP code 4.00 (Bad Request) and MUST include the error code "incompatible_ace_profiles".
+
+  In case the AS issues an access token to C, the access token MUST be per the profile whose identifier was specified by the "ace_profile" parameter in the access token request.
+
+  In case the AS replies to C with a successful access token response (see {{Section 5.8.2 of RFC9200}}), then the response MAY include the "ace_profile" parameter. If it is included in the access token response, the "ace_profile" parameter MUST specify the same profile identifier that was specified by the "ace_profile" parameter of the corresponding access token request.
+
 # Updated Requirements on Profiles # {#sec-updated-requirements}
 
 {{Section C of RFC9200}} compiles a list of requirements on the profiles of ACE. This document amends two of those requirements as follows.
@@ -1116,6 +1134,8 @@ ace-error = 2
 * Improved definition of "token series".
 
 * Revised criterion for the AS to choose a token series identifier.
+
+* Updated semantics of the "ace_profile" parameter.
 
 * Removed content on bidirectional access control.
 
