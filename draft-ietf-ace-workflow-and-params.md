@@ -251,7 +251,7 @@ The SDC workflow has no ambition to replace the original workflow defined in {{R
 
 When using the SDC workflow, all the communications between the AS and the RS MUST be protected, consistent with {{Sections 5.8.4.3 and 6.5 of RFC9200}}. Unlike in the original workflow, this results in protecting also the uploading of the first access token in a token series, i.e., in addition to the uploading of the following access tokens in the token series for dynamically updating the access rights of the client.
 
-Note that the SDC workflow is also suitable for deployments where devices meant to access protected resources at the RS are not required or expected to be actual ACE clients. That is, consistent with the intended access policies, the AS can be configured to automatically issue access tokens for such devices and upload those access tokens to the RS. This means that those devices do not have to request for an access token to be issued in the first place, and instead can immediately send requests to the RS for accessing its protected resources, in accordance with the access tokens already issued and uploaded by the AS.
+The SDC workflow is also suitable for deployments where clients are not aware of details such as the need for access tokens to be issued by the AS and uploaded at the RS. Consistent with the intended access policies, the AS can be configured to automatically issue access tokens for such clients and upload those access tokens to the RS. This means that such clients do not have to request for an access token to be issued in the first place, and instead can immediately send requests to the RS for accessing its protected resources, in accordance with the access tokens already issued and uploaded by the AS.
 
 # New Parameters # {#sec-parameters}
 
@@ -1132,6 +1132,8 @@ ace-error = 2
 * Defined name for the new workflow.
 
 * Improved definition of "token series".
+
+* Revised note on the new workflow suitable for "unaware" clients.
 
 * Revised criterion for the AS to choose a token series identifier.
 
