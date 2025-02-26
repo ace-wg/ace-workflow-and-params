@@ -825,7 +825,7 @@ Conversely, if the response includes the "rs_cnf" or "rs_cnf2" parameter specify
 
 The following extends the semantics of the "rs_cnf" parameter defined in {{RFC9201}}, so that C can include the "rs_cnf" parameter in an access token request. When doing so, C instructs the AS about whether and how the successful access token response should specify the authentication credential(s) of the RS(s) belonging to the targeted audience.
 
-Per its extended semantics, the "rs_cnf" parameter is also OPTIONAL to include in an access token request, if the token type is "pop" and asymmetric keys are used. Otherwise, the parameter MUST NOT be included in an access token request.
+Per its extended semantics, the "rs_cnf" parameter is also OPTIONAL to include in an access token request for requesting the first access token in a token series, if the token type is "pop" and asymmetric keys are used. Otherwise, the parameter MUST NOT be included in an access token request.
 
 When C includes the "rs_cnf" parameter in an access token request, the parameter MUST have one of the following encodings.
 
