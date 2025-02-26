@@ -819,7 +819,7 @@ After receiving such an error response, C can send a new access token request, w
 
 ## Instructing the AS on How to Provide the RS's Authentication Credential # {#sec-cred-rs-value}
 
-When C receives an access token response and this includes the "req_cnf" or "req_cnf2" parameter identifiying the authentication credential(s) of the RS(s) by reference, it might happen that C is not able to access the authentication credential(s) by using the specified reference(s).
+When C receives an access token response and this includes the "req_cnf" or "req_cnf2" parameter identifying the authentication credential(s) of the RS(s) by reference, it might happen that C is not able to access the authentication credential(s) by using the specified reference(s).
 
 Conversely, if the response includes the "rs_cnf" or "rs_cnf2" parameter specifying the authentication credential(s) of the RS(s) by value, it might happen that C has already been storing those credential(s), unbeknown to the AS. In fact, it would have been sufficient that the "rs_cnf" or "rs_cnf2" parameter identified the credential(s) by reference, or that neither parameter was included in the response.
 
