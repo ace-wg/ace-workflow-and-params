@@ -13,7 +13,7 @@ wg: ACE Working Group
 kw: Internet-Draft
 cat: std
 submissiontype: IETF
-updates: 9200, 9202, 9203, 9431
+updates: 9200, 9201, 9202, 9203, 9431
 
 venue:
   group: Authentication and Authorization for Constrained Environments (ace)
@@ -89,13 +89,14 @@ normative:
 
 informative:
   I-D.ietf-ace-group-oscore-profile:
+  I-D.ietf-ace-authcred-dtls-profile:
 
 entity:
   SELF: "[RFC-XXXX]"
 
 --- abstract
 
-This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. First, it defines the Short Distribution Chain (SDC) workflow that the authorization server can use for uploading an access token to a resource server on behalf of the client. Second, it defines new parameters and their encodings for the OAuth 2.0 token endpoint at the authorization server. Third, it extends the semantics of the "ace_profile" parameter for the OAuth 2.0 token endpoint at the authorization server. Fourth, it amends two of the requirements on profiles of the framework. Finally, it deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads. For such error responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles of ACE defined in RFC 9202, RFC 9203, and RFC 9431.
+This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. (1) It defines the Short Distribution Chain (SDC) workflow that the authorization server can use for uploading an access token to a resource server on behalf of the client. (2) For the OAuth 2.0 token endpoint, it defines new parameters and encodings, and extends the semantics of the "ace_profile" parameter. (3) It defines how the client and the authorization server can coordinate on the exchange of the client's and resource server's public authentication credentials, when those can be transported by value or identified by reference; this extends the semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint, thus updating RFC 9201. (4) It amends two of the requirements on profiles of the framework. (5) It deprecates the original payload format of error responses conveying an error code, when CBOR is used to encode message payloads. For those responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles defined in RFC 9202, RFC 9203, and RFC 9431.
 
 --- middle
 
@@ -111,7 +112,7 @@ This document updates {{RFC9200}} as follows.
 
   The SDC workflow has no ambition to replace the original workflow defined in {{RFC9200}}. The AS can use one workflow or the other depending, for example, on the specific RS for which an access token has been issued and the nature of the communication leg with that RS.
 
-* It defines new parameters and their encodings for the OAuth 2.0 token endpoint at the AS (see {{sec-parameters}}). These include:
+* It defines new parameters and encodings for the OAuth 2.0 token endpoint at the AS (see {{sec-parameters}}). These include:
 
   - "token_upload", used by C to inform the AS that it opts in to use the SDC workflow, and by the AS to inform C about the outcome of the token uploading to the RS per the SDC workflow.
 
@@ -130,6 +131,10 @@ This document updates {{RFC9200}} as follows.
   - "token_series_id", used by the AS to provide C with the identifier of a token series, and by C to ask the AS for a new access token in the same token series that dynamically updates access rights. A corresponding access token claim, namely "token_series_id", is also defined.
 
 * It extends the semantics of the "ace_profile" parameter for the OAuth 2.0 token endpoint at the authorization server defined in {{RFC9200}} (see {{sec-updated-ace-profile-parameter}}).
+
+* It defines how C and the AS can coordinate on the exchange of the client's and resource server's public authentication credentials, when those can be transported by value or identified by reference in the access token request and response (see {{sec-coord-exchanged-cred}}).
+
+  This extends the semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint defined in {{RFC9201}}, and therefore updates {{RFC9201}}.
 
 * It amends two of the requirements on profiles of the ACE framework (see {{sec-updated-requirements}}).
 
@@ -255,7 +260,7 @@ The SDC workflow is also suitable for deployments where clients are not aware of
 
 # New Parameters # {#sec-parameters}
 
-The rest of this section defines a number of additional parameters and their encodings for the OAuth 2.0 token endpoint at the AS.
+The rest of this section defines a number of additional parameters and encodings for the OAuth 2.0 token endpoint at the AS.
 
 ## token_upload {#sec-token_upload}
 
@@ -789,6 +794,59 @@ In addition to what is specified in {{Sections 5.8.1, 5.8.2, and 5.8.4.3 of RFC9
 
   In case the AS replies to C with a successful access token response (see {{Section 5.8.2 of RFC9200}}), then the response MAY include the "ace_profile" parameter. If it is included in the access token response, the "ace_profile" parameter MUST specify the same profile identifier that was specified by the "ace_profile" parameter of the corresponding access token request.
 
+# Coordinating on the Exchange of Public Authentication Credentials # {#sec-coord-exchanged-cred}
+
+In some profiles of ACE, it is possible for C and the RS to use public authentication credentials. Depending on the specific profile, the access token request and response exchanged between C and the AS can specify those authentication credentials as transported by value or instead identified by reference. For instance, this is the case in the EDHOC and OSCORE profile {{I-D.ietf-ace-edhoc-oscore-profile}} and in the DTLS profile {{RFC9202}} as extended in {{I-D.ietf-ace-authcred-dtls-profile}}.
+
+At some point, the AS (C) might become unable to use a credential identifier as a reference for accessing the authentication credential of C (of the RS) obtained earlier, e.g., due to having deleted the credential from the local storage. This can prevent the AS (C) from successfully processing an incoming access token request (response) that specifies the authentication credential of C (of the RS) as identified by reference. Ultimately, this can prevent the AS from issuing an access token and C from securely accessing protected resources at the RS.
+
+Conversely, unbeknown to the AS, C might already be storing the authentication credential of the RS when sending the access token request. In such a situation, the AS would specify the authentication credential of the RS by value in the access token response. However, it would be sufficient for C that the response specified the credential of the RS as identified by reference, or even that the response omitted the credential altogether.
+
+In order to allow C and the AS to coordinate on the exchange of the authentication credentials of C and the RS, the rest of this section defines:
+
+* How the AS can instruct C to specify its public authentication credential by value in the "req_cnf" parameter of an access token request (see {{sec-cred-c-value}}).
+
+* How C can instruct the AS to specify the public authentication credential(s) of the RS(s) by value or by reference in the "rs_cnf" or "rs_cnf2" parameter of an access token response (see {{sec-cred-rs-value}}), or instead to omit the credential(s) from the response.
+
+## Instructing C on How to Provide its Authentication Credential # {#sec-cred-c-value}
+
+When the AS receives an access token request and this includes the "req_cnf" parameter identifying the public authentication credential of C by reference, it might happen that the AS is not able to access the credential by using the specified reference.
+
+In such a case, the AS MUST reject the request and reply with an error response (see {{Section 5.8.3 of RFC9200}}). The error response MUST have a response code equivalent to the CoAP code 5.00 (Internal Server Error) and MUST include the error code "unknown_credential_referenced". The error code and its CBOR abbreviation are registered in {{iana-oauth-extensions-errors}} and {{iana-oauth-error-code-cbor-mappings}}, respectively.
+
+After receiving such an error response, C can send a new access token request, where the "req_cnf" parameter specifies the authentication credential of C by value.
+
+
+## Instructing the AS on How to Provide the RS's Authentication Credential # {#sec-cred-rs-value}
+
+When C receives an access token response and this includes the "req_cnf" or "req_cnf2" parameter identifiying the authentication credential(s) of the RS(s) by reference, it might happen that C is not able to access the authentication credential(s) by using the specified reference(s).
+
+Conversely, if the response includes the "rs_cnf" or "rs_cnf2" parameter specifying the authentication credential(s) of the RS(s) by value, it might happen that C has already been storing those credential(s), unbeknown to the AS. In fact, it would have been sufficient that the "rs_cnf" or "rs_cnf2" parameter identified the credential(s) by reference, or that neither parameter was included in the response.
+
+The following extends the semantics of the "rs_cnf" parameter defined in {{RFC9201}}, so that C can include the "rs_cnf" parameter in an access token request. When doing so, C instructs the AS about whether and how the successful access token response should specify the authentication credential(s) of the RS(s) belonging to the targeted audience.
+
+Per its extended semantics, the "rs_cnf" parameter is also OPTIONAL to include in an access token request, if the token type is "pop" and asymmetric keys are used. Otherwise, the parameter MUST NOT be included in an access token request.
+
+When C includes the "rs_cnf" parameter in an access token request, the parameter MUST have one of the following encodings.
+
+* If the parameter specifies the CBOR simple value `true` (0xf5), then it instructs the AS to include in the successful access token response the "rs_cnf" or "rs_cnf2" parameter, specifying the authentication credential(s) of the RS(s) by value.
+
+  In the successful access token response, each pertaining authentication credential MUST be specified by value.
+
+* If the parameter specifies the CBOR simple value `false` (0xf4), then it instructs the AS to include in the successful access token response the "rs_cnf" or "rs_cnf2" parameter, specifying the authentication credential(s) of the RS(s) by reference.
+
+  In the successful access token response, each pertaining authentication credential MUST be specified by reference, or alternatively by value only in case that was not possible.
+
+* If the parameter specifies the CBOR simple value `null` (0xf6), then it instructs the AS to omit the "rs_cnf" and "rs_cnf2" parameters from the successful access token response.
+
+  In the successful access token response, the "rs_cnf" and "rs_cnf2" parameters MUST NOT be included.
+
+If the AS is not able to comply in the first two cases above, then the AS MUST reject the request and reply with an error response. The error response MUST have a response code equivalent to the CoAP code 5.00 (Internal Server Error).
+
+Irrespective of what "rs_cnf" specifies in the access token request, C MUST rely on the authentication credential(s) specified by the parameter "rs_cnf" or "rs_cnf2" in the access token response, as those use by the RS(s) to authenticate.
+
+If C does not currently store the authentication credential(s) of the RS(s), then C MUST NOT include the "rs_cnf" parameter specifying the CBOR simple value `null` (0xf6) in an access token request.
+
 # Updated Requirements on Profiles # {#sec-updated-requirements}
 
 {{Section C of RFC9200}} compiles a list of requirements on the profiles of ACE. This document amends two of those requirements as follows.
@@ -1030,7 +1088,42 @@ IANA is asked to add the following entries to the "CBOR Web Token (CWT) Claims" 
 * Change Controller: IETF
 * Reference: {{sec-token_series_id}} of {{&SELF}}
 
-## Custom Problem Detail Keys Registry  ## {#iana-problem-details}
+## OAuth Extensions Errors Registry ## {#iana-oauth-extensions-errors}
+
+IANA is asked to add the following entries to the "OAuth Extensions Errors" registry within the "OAuth Parameters" registry group.
+
+* Name: unknown_credential_referenced
+* Usage Location: token error response
+* Protocol Extension: {{&SELF}}
+* Change Controller: IETF
+* Reference: {{sec-coord-exchanged-cred}} of {{&SELF}}
+
+## OAuth Error Code CBOR Mappings Registry ## {#iana-oauth-error-code-cbor-mappings}
+
+IANA is asked to add the following entries to the "OAuth Error Code CBOR Mappings" registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.
+
+* Name: unknown_credential_referenced
+* CBOR Value: TBD (value between 1 and 255)
+* Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
+
+## OAuth Parameters ## {#iana-oauth-parameters}
+
+In the "OAuth Parameters" registry within the "OAuth Parameters" registry group, IANA is asked to update the entry for "rs_cnf" as follows:
+
+* The "Parameter Usage Location" column specifies "token request, token response".
+
+* The "Reference" column specifies "\[RFC9201, Section 5\]\[RFC-XXXX, {{sec-cred-rs-value}}\]".
+
+## OAuth Parameters CBOR Mappings ## {#iana-oauth-parameters-cbor-mappings}
+
+In the "OAuth Parameters CBOR Mappings" registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group, IANA is asked to update the entry for "rs_cnf" as follows:
+
+* The "Value Type" column specifies "True or False or Null or map".
+
+* The "Reference" column specifies "\[RFC9201, Section 3.2\]\[RFC-XXXX, {{sec-cred-rs-value}}\]".
+
+## Custom Problem Detail Keys Registry ## {#iana-problem-details}
 
 IANA is asked to register the following entry in the "Custom Problem Detail Keys" registry within the "Constrained RESTful Environments (CoRE) Parameters" registry group.
 
@@ -1137,7 +1230,9 @@ ace-error = 2
 
 * Revised criterion for the AS to choose a token series identifier.
 
-* Updated semantics of the "ace_profile" parameter.
+* Extended semantics of the "ace_profile" parameter.
+
+* Specified means for C and the AS to coordinate on the exchange of public authentication credentials.
 
 * Removed content on bidirectional access control.
 
