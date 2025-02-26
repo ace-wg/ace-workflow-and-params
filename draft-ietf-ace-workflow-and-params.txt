@@ -1504,9 +1504,10 @@ Table of Contents
    targeted audience.
 
    Per its extended semantics, the "rs_cnf" parameter is also OPTIONAL
-   to include in an access token request, if the token type is "pop" and
-   asymmetric keys are used.  Otherwise, the parameter MUST NOT be
-   included in an access token request.
+   to include in an access token request for requesting the first access
+   token in a token series, if the token type is "pop" and asymmetric
+   keys are used.  Otherwise, the parameter MUST NOT be included in an
+   access token request.
 
    When C includes the "rs_cnf" parameter in an access token request,
    the parameter MUST have one of the following encodings.
