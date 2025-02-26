@@ -1483,7 +1483,7 @@ Table of Contents
       Credential
 
    When C receives an access token response and this includes the
-   "req_cnf" or "req_cnf2" parameter identifiying the authentication
+   "req_cnf" or "req_cnf2" parameter identifying the authentication
    credential(s) of the RS(s) by reference, it might happen that C is
    not able to access the authentication credential(s) by using the
    specified reference(s).
