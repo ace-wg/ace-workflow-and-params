@@ -1189,7 +1189,13 @@ svg :is([fill="white"], [fill^="#fff"]) {
                 <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-to_rs-and-from_rs" class="internal xref">to_rs and from_rs</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.1">
-                    <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="auto internal xref">3.3.1</a>.  <a href="#name-use-with-the-oscore-profile" class="internal xref">Use with the OSCORE Profile</a></p>
+                    <p id="section-toc.1-1.3.2.3.2.1.1"><a href="#section-3.3.1" class="auto internal xref">3.3.1</a>.  <a href="#name-to_rs" class="internal xref">to_rs</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.2">
+                    <p id="section-toc.1-1.3.2.3.2.2.1"><a href="#section-3.3.2" class="auto internal xref">3.3.2</a>.  <a href="#name-from_rs" class="internal xref">from_rs</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3.2.3">
+                    <p id="section-toc.1-1.3.2.3.2.3.1"><a href="#section-3.3.3" class="auto internal xref">3.3.3</a>.  <a href="#name-use-with-the-oscore-profile" class="internal xref">Use with the OSCORE Profile</a></p>
 </li>
                 </ul>
 </li>
@@ -1389,7 +1395,7 @@ The SDC workflow has no ambition to replace the original workflow defined in <sp
 This extends the semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> and therefore updates <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span>.<a href="#section-1-4.4.2" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-4.5">
-          <p id="section-1-4.5.1">It extends the error handling at the AS, for which it defines a new error code that the AS can use for error responses sent to the client, after failing to verify the proof of possesssion of the client's private key when processing an access token request (see <a href="#sec-error-failed-pop" class="auto internal xref">Section 6</a>).<a href="#section-1-4.5.1" class="pilcrow">¶</a></p>
+          <p id="section-1-4.5.1">It extends the error handling at the AS, for which it defines a new error code that the AS can use for error responses sent to the client, after failing to verify the proof of possession of the client's private key when processing an access token request (see <a href="#sec-error-failed-pop" class="auto internal xref">Section 6</a>).<a href="#section-1-4.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-1-4.6">
           <p id="section-1-4.6.1">It deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads in the ACE framework. For such error responses, it defines a new payload format according to the problem-details format specified in <span>[<a href="#RFC9290" class="cite xref">RFC9290</a>]</span> (see <a href="#sec-updated-error-responses" class="auto internal xref">Section 7</a>).<a href="#section-1-4.6.1" class="pilcrow">¶</a></p>
@@ -1871,73 +1877,141 @@ In this case, the access token response can include additional parameters as def
         <h3 id="name-to_rs-and-from_rs">
 <a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-to_rs-and-from_rs" class="section-name selfRef">to_rs and from_rs</a>
         </h3>
-<p id="section-3.3-1">This section defines the additional parameters "to_rs" and "from_rs". The "to_rs" parameter can be used in an access token request sent by C to the token endpoint at the AS. The "from_rs" parameter can be used in an access token response sent by the AS, in reply to a request to the token endpoint from C.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.3-2.1">
-            <p id="section-3.3-2.1.1">The "to_rs" parameter is <span class="bcp14">OPTIONAL</span> in an access token request. The presence of this parameter indicates that C wishes the AS to relay the information specified therein to the RS, when the AS uploads the issued access token to the RS per the SDC workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>. This parameter <span class="bcp14">MUST NOT</span> be present if the "token_upload" parameter defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a> is not present in the access token request.<a href="#section-3.3-2.1.1" class="pilcrow">¶</a></p>
-<p id="section-3.3-2.1.2">
-If present, this parameter specifies the information that C wishes the AS to relay to the RS, when uploading the access token to the RS on behalf of C. If considered together with the access token, this information is expected to consist in what C would have uploaded to the authz-info endpoint at the RS, if uploading the access token per the original workflow. When the access token request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.<a href="#section-3.3-2.1.2" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-3.3-2.2">
-            <p id="section-3.3-2.2.1">The "from_rs" parameter is <span class="bcp14">OPTIONAL</span> in an access token response. The presence of this parameter indicates that the AS is relaying the information specified therein to C, which the AS has received from the RS after having successfully uploaded the access token to the RS per the SDC workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>. This parameter <span class="bcp14">MUST NOT</span> be present if the "token_upload" parameter defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a> is not present with value 0 in the access token response.<a href="#section-3.3-2.2.1" class="pilcrow">¶</a></p>
-<p id="section-3.3-2.2.2">
-If present, this parameter specifies the information that the AS is relaying to C from the RS, following the successful upload of the access token to the RS on behalf of C. This information is expected to consist in what C would have received in a successful response from the authz-info endpoint at the RS, if uploading the access token per the original workflow. When the access token response is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.<a href="#section-3.3-2.2.2" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-3.3-3">The semantics and encoding of the information specified in the parameters "to_rs" and "from_rs" depend on the specific profile of ACE used. <a href="#sec-to_rs-from_rs-oscore-profile" class="auto internal xref">Section 3.3.1</a> defines those for when these parameters are used with the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
-<div id="sec-to_rs-from_rs-oscore-profile">
+<p id="section-3.3-1">The rest of this section defines the additional parameters "to_rs" (see <a href="#sec-to_rs" class="auto internal xref">Section 3.3.1</a>) and "from_rs" (see <a href="#sec-from_rs" class="auto internal xref">Section 3.3.2</a>).<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-2">The "to_rs" parameter can be used in an access token request sent by C to the token endpoint at the AS. The "from_rs" parameter can be used in an access token response sent by the AS, in reply to a request to the token endpoint from C.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">The semantics and encoding of the information specified in the two parameters depend on the specific profile of ACE and application used.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">For instance, when using the OSCORE profile of ACE <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, C and RS can use the two parameters to exchange the expected nonces and identifiers via the AS. <a href="#sec-to_rs-from_rs-oscore-profile" class="auto internal xref">Section 3.3.3</a> describes how the two parameters are used when the OSCORE profile of ACE is used, thereby effectively enabling the use of the SDC workflow for that profile.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<div id="sec-to_rs">
 <section id="section-3.3.1">
-          <h4 id="name-use-with-the-oscore-profile">
-<a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-use-with-the-oscore-profile" class="section-name selfRef">Use with the OSCORE Profile</a>
+          <h4 id="name-to_rs">
+<a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-to_rs" class="section-name selfRef">to_rs</a>
           </h4>
-<p id="section-3.3.1-1">This section defines the semantics and encoding of the information specified in the parameters "to_rs" and "from_rs" when used with the OSCORE profile <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, thereby effectively enabling the use of the SDC workflow for that profile.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-2">The value of the "to_rs" parameter is the binary representation of a CBOR map C_MAP composed of two fields:<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-1">The "to_rs" parameter is <span class="bcp14">OPTIONAL</span> in an access token request. The presence of this parameter indicates that:<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.3.1-3.1">
-              <p id="section-3.3.1-3.1.1">A field with the CBOR unsigned integer 40 as map key and with value the nonce N1 generated by C, encoded a CBOR byte string (see <span><a href="https://rfc-editor.org/rfc/rfc9203#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>).<a href="#section-3.3.1-3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3.1-2.1">
+              <p id="section-3.3.1-2.1.1">C wishes the AS to relay the information specified therein to the RS, when the AS uploads the issued access token to the RS per the SDC workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>; and<a href="#section-3.3.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.3.1-3.2">
-              <p id="section-3.3.1-3.2.1">A field with the CBOR unsigned integer 43 as map key and with value the Recipient ID ID1 generated by C, encoded as a CBOR byte string (see <span><a href="https://rfc-editor.org/rfc/rfc9203#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>).<a href="#section-3.3.1-3.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.3.1-2.2">
+              <p id="section-3.3.1-2.2.1">C wishes the AS to relay information received from the RS to C, after having successfully uploaded the access token to the RS per the SDC workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>.<a href="#section-3.3.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.3.1-4">When building the POST request for uploading the access token to the authz-info endpoint at the RS, the AS composes the request payload as specified in <span><a href="https://rfc-editor.org/rfc/rfc9203#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>. In particular, the CBOR map specified as payload includes:<a href="#section-3.3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-3">This parameter <span class="bcp14">MUST NOT</span> be present if the "token_upload" parameter defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a> is not present in the access token request. Also, this parameter <span class="bcp14">MUST NOT</span> be present if the requested access token is not the first one of a new token series, i.e., if C is asking the AS for a new access token in the same token series that dynamically updates access rights.<a href="#section-3.3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-4">If C wishes that the AS relays information from the RS after successfully uploading the access token, but does not have any information to be relayed to the RS, then this parameter <span class="bcp14">MUST</span> specify the CBOR simple value <code>null</code> (0xf6).<a href="#section-3.3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-5">Otherwise, this parameter specifies the information that C wishes the AS to relay to the RS, when uploading the access token to the RS on behalf of C.<a href="#section-3.3.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-6">Such information consists in what C would provide to the RS in addition to the access token, by sending a POST request to the authz-info endpoint in case the original workflow was used.<a href="#section-3.3.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-7">When composing the parameter "to_rs", C considers the same information and <span class="bcp14">MUST</span> wrap it in a data structure STRUCT, by using the same method that it employs when using the original workflow. For example, with reference to the OSCORE profile of ACE <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, such a method composes STRUCT as a CBOR map, which has to be sent as payload of a request with Content-Format "application/ace+cbor".<a href="#section-3.3.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-8">After that, C builds a CBOR byte string STR, whose value is the binary representation of STRUCT.<a href="#section-3.3.1-8" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-9">If and only if the request to the authz-info endpoint has to be sent with a Content-Format ct different from the one specified by the profile of ACE used, then C <span class="bcp14">MUST</span> tag the CBOR byte string STR (see <span><a href="https://rfc-editor.org/rfc/rfc8949#section-3.4" class="relref">Section 3.4</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>). The tag number TN <span class="bcp14">MUST</span> be the one associated with the Content-Format ct and is determined according to the technique described in <span><a href="https://rfc-editor.org/rfc/rfc9277#appendix-B" class="relref">Appendix B</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>. For example, the Content-Format "application/ace+cbor" has Content-Format ID 19 and therefore has 1668546836 as its associated tag number.<a href="#section-3.3.1-9" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-10">When the access token request is encoded in CBOR, the value of the "to_rs" parameter is the (tagged) CBOR byte string STR.<a href="#section-3.3.1-10" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-11">When the access token request is encoded in JSON, the value of the "to_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>).<a href="#section-3.3.1-11" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-12">If the "to_rs" parameter specifies a value different from the CBOR simple value <code>null</code> (0xf6), the AS proceeds as follows when composing the POST request to send to the authz-info endpoint on behalf of C:<a href="#section-3.3.1-12" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-3.3.1-13">
+<li id="section-3.3.1-13.1">
+              <p id="section-3.3.1-13.1.1">The AS sets the Content-Format of the request to be either:<a href="#section-3.3.1-13.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.3.1-5.1">
-              <p id="section-3.3.1-5.1.1">The "access_token" field, with value the access token to upload, encoded as a CBOR byte string.<a href="#section-3.3.1-5.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3.1-13.1.2.1">
+                  <p id="section-3.3.1-13.1.2.1.1">the one specified by the profile of ACE used and for which the access token is issued, if the CBOR byte string STR is not tagged; or, otherwise<a href="#section-3.3.1-13.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.3.1-5.2">
-              <p id="section-3.3.1-5.2.1">The "nonce1" field, with value the same CBOR byte string specified by the field of C_MAP that has the CBOR unsigned integer 40 as map key.<a href="#section-3.3.1-5.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-3.3.1-13.1.2.2">
+                  <p id="section-3.3.1-13.1.2.2.1">the one associated with the tag number TN of the tagged CBOR byte string STR conveyed by the "to_rs" parameter.<a href="#section-3.3.1-13.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.3.1-5.3">
-              <p id="section-3.3.1-5.3.1">The "ace_client_recipientid" field, with value the same CBOR byte string specified by the field of C_MAP that has the CBOR unsigned integer 43 as map key.<a href="#section-3.3.1-5.3.1" class="pilcrow">¶</a></p>
+              </ul>
+</li>
+            <li id="section-3.3.1-13.2">
+              <p id="section-3.3.1-13.2.1">The AS retrieves the structure STRUCT from the "to_rs" parameter and extends it by adding the issued access token, consistently with the Content-Format determined at the previous step.<a href="#section-3.3.1-13.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-13.2.2">
+For example, if the Content-Format to use is "application/ace+cbor", STRUCT is a CBOR map and the access token is included therein as an entry that has: as map key, 1 encoded as a CBOR integer; as map value, a CBOR byte string whose value is the binary representation of the access token.<a href="#section-3.3.1-13.2.2" class="pilcrow">¶</a></p>
+</li>
+          </ol>
+<p id="section-3.3.1-14">Tagging the CBOR byte string as defined above ensures that the AS can relay the information specified in the "to_rs" parameter as intended by C, i.e., by sending to the authz-info endpoint a POST request that has the correct Content-Format and conveys the correct payload.<a href="#section-3.3.1-14" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-15">As a case in point, using the DTLS profile of ACE <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span> typically results in a POST request to the authz-info endpoint with Content-Format "application/cwt", per <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.10" class="relref">Section 5.10</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>. However, the DTLS profile of ACE can be combined with application profiles of <span>[<a href="#RFC9594" class="cite xref">RFC9594</a>]</span>. In such a case, the POST request might convey both the access token and additional parameters from C (e.g., "sign_info" defined in <span><a href="https://rfc-editor.org/rfc/rfc9594#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9594" class="cite xref">RFC9594</a>]</span>), which requires the request to have Content-Format "application/ace+cbor" (see <span><a href="https://rfc-editor.org/rfc/rfc9594#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9594" class="cite xref">RFC9594</a>]</span>).<a href="#section-3.3.1-15" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-from_rs">
+<section id="section-3.3.2">
+          <h4 id="name-from_rs">
+<a href="#section-3.3.2" class="section-number selfRef">3.3.2. </a><a href="#name-from_rs" class="section-name selfRef">from_rs</a>
+          </h4>
+<p id="section-3.3.2-1">The "from_rs" parameter is <span class="bcp14">OPTIONAL</span> in an access token response. The presence of this parameter indicates that the AS is relaying the information specified therein to C, which the AS has received from the RS after having successfully uploaded the access token to the RS per the SDC workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>.<a href="#section-3.3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-2">This parameter <span class="bcp14">MUST</span> be present if and only if both the following conditions apply:<a href="#section-3.3.2-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.3.2-3.1">
+              <p id="section-3.3.2-3.1.1">The "token_upload" parameter defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a> is present with value 0 in the access token response.<a href="#section-3.3.2-3.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.3.2-3.2">
+              <p id="section-3.3.2-3.2.1">The "to_rs" parameter was present in the access token request corresponding to the access token response.<a href="#section-3.3.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.3.1-6">In case the upload of the access token to the RS from the AS is successful, the RS replies to the AS with a 2.01 (Created) response, whose payload is a CBOR map RS_MAP that includes:<a href="#section-3.3.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-4">This parameter specifies the information that the AS is relaying to C from the RS, following the successful upload of the access token to the RS on behalf of C.<a href="#section-3.3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-5">Such information consists in what C would receive in a successful response from the authz-info endpoint, if the access token was uploaded per the original workflow.<a href="#section-3.3.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-6">When composing the parameter "from_rs", the AS builds a CBOR byte string STR as follows:<a href="#section-3.3.2-6" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.3.1-7.1">
-              <p id="section-3.3.1-7.1.1">The "nonce2" field, with value the nonce N2 generated by the RS, encoded as a CBOR byte string (see <span><a href="https://rfc-editor.org/rfc/rfc9203#section-4.2" class="relref">Section 4.2</a> of [<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>).<a href="#section-3.3.1-7.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3.2-7.1">
+              <p id="section-3.3.2-7.1.1">If the successful response from the authz-info endpoint does not include a payload, then STR is the empty CBOR byte string (0x40); otherwise<a href="#section-3.3.2-7.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.3.1-7.2">
-              <p id="section-3.3.1-7.2.1">The "ace_server_recipientid" field, with value the Recipient ID ID2 generated by the RS, encoded as a CBOR byte string (see <span><a href="https://rfc-editor.org/rfc/rfc9203#section-4.2" class="relref">Section 4.2</a> of [<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>).<a href="#section-3.3.1-7.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.3.2-7.2">
+              <p id="section-3.3.2-7.2.1">The value of STR is the payload of the successful response from the authz-info endpoint.<a href="#section-3.3.2-7.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-7.2.2">
+If and only if the response specifies a given Content-Format ct (i.e., by means of the CoAP Content-Format Option), then the AS <span class="bcp14">MUST</span> tag the CBOR byte string STR (see <span><a href="https://rfc-editor.org/rfc/rfc8949#section-3.4" class="relref">Section 3.4</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>). The tag number TN <span class="bcp14">MUST</span> be the one associated with the Content-Format ct and is determined according to the technique described in <span><a href="https://rfc-editor.org/rfc/rfc9277#appendix-B" class="relref">Appendix B</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-3.3.2-7.2.2" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.3.1-8">The value of the "from_rs" parameter is the binary representation of a CBOR map composed of two elements:<a href="#section-3.3.1-8" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-8">When the access token response is encoded in CBOR, the value of the "from_rs" parameter is the (tagged) CBOR byte string STR.<a href="#section-3.3.2-8" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-9">When the access token response is encoded in JSON, the value of the "from_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>).<a href="#section-3.3.2-9" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-to_rs-from_rs-oscore-profile">
+<section id="section-3.3.3">
+          <h4 id="name-use-with-the-oscore-profile">
+<a href="#section-3.3.3" class="section-number selfRef">3.3.3. </a><a href="#name-use-with-the-oscore-profile" class="section-name selfRef">Use with the OSCORE Profile</a>
+          </h4>
+<p id="section-3.3.3-1">This section describes how to use the parameters "to_rs" and "from_rs" when the OSCORE profile of ACE <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span> is used.<a href="#section-3.3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.3-2">The value of the "to_rs" parameter is the binary representation of a CBOR map C_MAP composed of two fields:<a href="#section-3.3.3-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.3.1-9.1">
-              <p id="section-3.3.1-9.1.1">A field with the CBOR unsigned integer 42 as map key and with value the same CBOR byte string specified by the "nonce2" field of RS_MAP.<a href="#section-3.3.1-9.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3.3-3.1">
+              <p id="section-3.3.3-3.1.1">A field with the CBOR unsigned integer 40 as map key and with value the nonce N1 generated by C, encoded a CBOR byte string (see <span><a href="https://rfc-editor.org/rfc/rfc9203#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>).<a href="#section-3.3.3-3.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.3.1-9.2">
-              <p id="section-3.3.1-9.2.1">A field with the CBOR unsigned integer 44 as map key and with value the same CBOR byte string specified by the "ace_server_recipientid" field of RS_MAP.<a href="#section-3.3.1-9.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.3.3-3.2">
+              <p id="section-3.3.3-3.2.1">A field with the CBOR unsigned integer 43 as map key and with value the Recipient ID ID1 generated by C, encoded as a CBOR byte string (see <span><a href="https://rfc-editor.org/rfc/rfc9203#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>).<a href="#section-3.3.3-3.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.3.1-10">When C receives from the AS the successful access token response specifying the "token_upload" parameter with value 0, C retrieves the nonce N2 and the Recipient ID ID2 from the "from_rs" parameter, just like when retrieving those from a 2.01 (Created) response received from the RS when using the original workflow.<a href="#section-3.3.1-10" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-11"><a href="#fig-example-AS-to-C-token-upload-oscore-profile" class="auto internal xref">Figure 7</a> shows an example where the OSCORE profile is used, with first an access token request from C to the AS, and then an access token response from the AS to C, following the issue of an access token bound to a symmetric PoP key.<a href="#section-3.3.1-11" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-12">The access token request specifies the "token_upload" parameter with value 0. That is, C indicates that it requires neither the access token nor the corresponding token hash from the AS, in case the AS successfully uploads the access token to the RS. Also, the access token request includes the "to_rs" parameter, specifying the values of N1 = 0x018a278f7faab55a and ID1 = 0x1645 intended to the RS.<a href="#section-3.3.1-12" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-13">The access token response specifies the "token_upload" parameter with value 0, which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.<a href="#section-3.3.1-13" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-14">Consistent with the value of the "token_upload" parameter in the access token request, the access token response includes neither the access token nor its corresponding token hash. The access token response also includes the "cnf" parameter specifying the symmetric PoP key bound to the access token, as an OSCORE_Input_Material object. Also, the access token response includes the "from_rs" parameter, specifying the values of N2 = 0x25a8991cd700ac01 and ID2 = 0x0000 received from the RS and intended to C.<a href="#section-3.3.1-14" class="pilcrow">¶</a></p>
+<p id="section-3.3.3-4">When building the POST request for uploading the access token to the authz-info endpoint at the RS, the AS composes the request payload as specified in <span><a href="https://rfc-editor.org/rfc/rfc9203#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>. In particular, the CBOR map specified as payload includes:<a href="#section-3.3.3-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.3.3-5.1">
+              <p id="section-3.3.3-5.1.1">The "access_token" field, with value the access token to upload, encoded as a CBOR byte string.<a href="#section-3.3.3-5.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.3.3-5.2">
+              <p id="section-3.3.3-5.2.1">The "nonce1" field, with value the same CBOR byte string specified by the field of C_MAP that has the CBOR unsigned integer 40 as map key.<a href="#section-3.3.3-5.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.3.3-5.3">
+              <p id="section-3.3.3-5.3.1">The "ace_client_recipientid" field, with value the same CBOR byte string specified by the field of C_MAP that has the CBOR unsigned integer 43 as map key.<a href="#section-3.3.3-5.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.3.3-6">In case the upload of the access token to the RS from the AS is successful, the RS replies to the AS with a 2.01 (Created) response, whose payload is a CBOR map RS_MAP that includes:<a href="#section-3.3.3-6" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.3.3-7.1">
+              <p id="section-3.3.3-7.1.1">The "nonce2" field, with value the nonce N2 generated by the RS, encoded as a CBOR byte string (see <span><a href="https://rfc-editor.org/rfc/rfc9203#section-4.2" class="relref">Section 4.2</a> of [<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>).<a href="#section-3.3.3-7.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.3.3-7.2">
+              <p id="section-3.3.3-7.2.1">The "ace_server_recipientid" field, with value the Recipient ID ID2 generated by the RS, encoded as a CBOR byte string (see <span><a href="https://rfc-editor.org/rfc/rfc9203#section-4.2" class="relref">Section 4.2</a> of [<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>).<a href="#section-3.3.3-7.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.3.3-8">The value of the "from_rs" parameter is the binary representation of a CBOR map composed of two elements:<a href="#section-3.3.3-8" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.3.3-9.1">
+              <p id="section-3.3.3-9.1.1">A field with the CBOR unsigned integer 42 as map key and with value the same CBOR byte string specified by the "nonce2" field of RS_MAP.<a href="#section-3.3.3-9.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.3.3-9.2">
+              <p id="section-3.3.3-9.2.1">A field with the CBOR unsigned integer 44 as map key and with value the same CBOR byte string specified by the "ace_server_recipientid" field of RS_MAP.<a href="#section-3.3.3-9.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-3.3.3-10">When C receives from the AS the successful access token response specifying the "token_upload" parameter with value 0, C retrieves the nonce N2 and the Recipient ID ID2 from the "from_rs" parameter, just like when retrieving those from a 2.01 (Created) response received from the RS when using the original workflow.<a href="#section-3.3.3-10" class="pilcrow">¶</a></p>
+<p id="section-3.3.3-11"><a href="#fig-example-AS-to-C-token-upload-oscore-profile" class="auto internal xref">Figure 7</a> shows an example where the OSCORE profile is used, with first an access token request from C to the AS, and then an access token response from the AS to C, following the issue of an access token bound to a symmetric PoP key.<a href="#section-3.3.3-11" class="pilcrow">¶</a></p>
+<p id="section-3.3.3-12">The access token request specifies the "token_upload" parameter with value 0. That is, C indicates that it requires neither the access token nor the corresponding token hash from the AS, in case the AS successfully uploads the access token to the RS. Also, the access token request includes the "to_rs" parameter, specifying the values of N1 = 0x018a278f7faab55a and ID1 = 0x1645 intended to the RS.<a href="#section-3.3.3-12" class="pilcrow">¶</a></p>
+<p id="section-3.3.3-13">The access token response specifies the "token_upload" parameter with value 0, which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.<a href="#section-3.3.3-13" class="pilcrow">¶</a></p>
+<p id="section-3.3.3-14">Consistent with the value of the "token_upload" parameter in the access token request, the access token response includes neither the access token nor its corresponding token hash. The access token response also includes the "cnf" parameter specifying the symmetric PoP key bound to the access token, as an OSCORE_Input_Material object. Also, the access token response includes the "from_rs" parameter, specifying the values of N2 = 0x25a8991cd700ac01 and ID2 = 0x0000 received from the RS and intended to C.<a href="#section-3.3.3-14" class="pilcrow">¶</a></p>
 <span id="name-example-of-access-token-request"></span><div id="fig-example-AS-to-C-token-upload-oscore-profile">
 <figure id="figure-7">
-            <div class="alignLeft art-text artwork" id="section-3.3.1-15.1">
+            <div class="alignLeft art-text artwork" id="section-3.3.3-15.1">
 <pre>
    Access token request
 
@@ -2573,7 +2647,7 @@ Payload:
             <p id="section-10.2-6.2.1">CBOR Key: TBD (value between 1 and 255)<a href="#section-10.2-6.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-10.2-6.3">
-            <p id="section-10.2-6.3.1">Value Type: byte string<a href="#section-10.2-6.3.1" class="pilcrow">¶</a></p>
+            <p id="section-10.2-6.3.1">Value Type: Null or byte string or #6.&lt;uint&gt;(bstr)<a href="#section-10.2-6.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-10.2-6.4">
             <p id="section-10.2-6.4.1">Reference: [RFC-XXXX]<a href="#section-10.2-6.4.1" class="pilcrow">¶</a></p>
@@ -2955,6 +3029,10 @@ Payload:
         <dd>
 <span class="refAuthor">Palombini, F.</span>, <span class="refAuthor">Seitz, L.</span>, <span class="refAuthor">Selander, G.</span>, and <span class="refAuthor">M. Gunnarsson</span>, <span class="refTitle">"The Object Security for Constrained RESTful Environments (OSCORE) Profile of the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="seriesInfo">RFC 9203</span>, <span class="seriesInfo">DOI 10.17487/RFC9203</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9203">https://www.rfc-editor.org/rfc/rfc9203</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="RFC9277">[RFC9277]</dt>
+        <dd>
+<span class="refAuthor">Richardson, M.</span> and <span class="refAuthor">C. Bormann</span>, <span class="refTitle">"On Stable Storage for Items in Concise Binary Object Representation (CBOR)"</span>, <span class="seriesInfo">RFC 9277</span>, <span class="seriesInfo">DOI 10.17487/RFC9277</span>, <time datetime="2022-08" class="refDate">August 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9277">https://www.rfc-editor.org/rfc/rfc9277</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="RFC9290">[RFC9290]</dt>
         <dd>
 <span class="refAuthor">Fossati, T.</span> and <span class="refAuthor">C. Bormann</span>, <span class="refTitle">"Concise Problem Details for Constrained Application Protocol (CoAP) APIs"</span>, <span class="seriesInfo">RFC 9290</span>, <span class="seriesInfo">DOI 10.17487/RFC9290</span>, <time datetime="2022-10" class="refDate">October 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9290">https://www.rfc-editor.org/rfc/rfc9290</a>&gt;</span>. </dd>
@@ -2989,8 +3067,12 @@ Payload:
 <span class="refAuthor">Tiloca, M.</span> and <span class="refAuthor">J. P. Mattsson</span>, <span class="refTitle">"Additional Formats of Authentication Credentials for the Datagram Transport Layer Security (DTLS) Profile for Authentication and Authorization for Constrained Environments (ACE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-authcred-dtls-profile-01</span>, <time datetime="2025-03-03" class="refDate">3 March 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-authcred-dtls-profile-01">https://datatracker.ietf.org/doc/html/draft-ietf-ace-authcred-dtls-profile-01</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-ace-group-oscore-profile">[I-D.ietf-ace-group-oscore-profile]</dt>
-      <dd>
+        <dd>
 <span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Höglund, R.</span>, and <span class="refAuthor">F. Palombini</span>, <span class="refTitle">"The Group Object Security for Constrained RESTful Environments (Group OSCORE) Profile of the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-group-oscore-profile-04</span>, <time datetime="2025-03-03" class="refDate">3 March 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-group-oscore-profile-04">https://datatracker.ietf.org/doc/html/draft-ietf-ace-group-oscore-profile-04</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9594">[RFC9594]</dt>
+      <dd>
+<span class="refAuthor">Palombini, F.</span> and <span class="refAuthor">M. Tiloca</span>, <span class="refTitle">"Key Provisioning for Group Communication Using Authentication and Authorization for Constrained Environments (ACE)"</span>, <span class="seriesInfo">RFC 9594</span>, <span class="seriesInfo">DOI 10.17487/RFC9594</span>, <time datetime="2024-09" class="refDate">September 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9594">https://www.rfc-editor.org/rfc/rfc9594</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -3142,16 +3224,19 @@ ace-error = 2
             <p id="appendix-D.1-1.1.1">Error handling and error code for failed PoP verification at the AS.<a href="#appendix-D.1-1.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.2">
-            <p id="appendix-D.1-1.2.1">Fixes and presentation improvements in the IANA considerations.<a href="#appendix-D.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.2.1">Extended definition of the parameters "to_rs" and "from_rs".<a href="#appendix-D.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.3">
-            <p id="appendix-D.1-1.3.1">Updated references.<a href="#appendix-D.1-1.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.3.1">Fixes and presentation improvements in the IANA considerations.<a href="#appendix-D.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.4">
-            <p id="appendix-D.1-1.4.1">Revised order of some sections.<a href="#appendix-D.1-1.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.4.1">Updated references.<a href="#appendix-D.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-D.1-1.5">
-            <p id="appendix-D.1-1.5.1">Editorial fixes and improvements.<a href="#appendix-D.1-1.5.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.5.1">Revised order of some sections.<a href="#appendix-D.1-1.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-D.1-1.6">
+            <p id="appendix-D.1-1.6.1">Editorial fixes and improvements.<a href="#appendix-D.1-1.6.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
