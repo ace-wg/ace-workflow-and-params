@@ -95,7 +95,7 @@ entity:
 
 --- abstract
 
-This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. (1) It defines the Short Distribution Chain (SDC) workflow that the authorization server can use for uploading an access token to a resource server on behalf of the client. (2) For the OAuth 2.0 token endpoint, it defines new parameters and encodings and it extends the semantics of the "ace_profile" parameter. (3) It defines how the client and the authorization server can coordinate on the exchange of the client's and resource server's public authentication credentials, when those can be transported by value or identified by reference; this extends the semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint, thus updating RFC 9201. (4) It amends two of the requirements on profiles of the framework. (5) It deprecates the original payload format of error responses conveying an error code, when CBOR is used to encode message payloads. For those responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles defined in RFC 9202, RFC 9203, and RFC 9431.
+This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. (1) It defines the Short Distribution Chain (SDC) workflow that the authorization server (AS) can use for uploading an access token to a resource server on behalf of the client. (2) For the OAuth 2.0 token endpoint, it defines new parameters and encodings and it extends the semantics of the "ace_profile" parameter. (3) It defines how the client and the AS can coordinate on the exchange of the client's and resource server's public authentication credentials, when those can be transported by value or identified by reference; this extends the semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint, thus updating RFC 9201. (4) It extends the error handling at the AS, for which it defines a new error code. (5) It deprecates the original payload format of error responses conveying an error code, when CBOR is used to encode message payloads. For those responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles defined in RFC 9202, RFC 9203, and RFC 9431. (6) It amends two of the requirements on profiles of the framework.
 
 --- middle
 
@@ -134,6 +134,8 @@ This document updates {{RFC9200}} as follows.
 * It defines how C and the AS can coordinate on the exchange of the client's and resource server's public authentication credentials, when those can be transported by value or identified by reference in the access token request and response (see {{sec-coord-exchanged-cred}}).
 
   This extends the semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint defined in {{RFC9201}} and therefore updates {{RFC9201}}.
+
+* It extends the error handling at the AS, for which it defines a new error code that the AS can use for error responses sent to the client, after failing to verify the proof of possesssion of the client's private key when processing an access token request (see {{sec-error-failed-pop}}).
 
 * It deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads in the ACE framework. For such error responses, it defines a new payload format according to the problem-details format specified in {{RFC9290}} (see {{sec-updated-error-responses}}).
 
@@ -842,6 +844,16 @@ Irrespective of what "rs_cnf" specifies in the access token request, C MUST rely
 
 If C does not currently store the authentication credential(s) of the RS(s), then C MUST NOT include the "rs_cnf" parameter specifying the CBOR simple value `null` (0xf6) in an access token request.
 
+# Failed Verification of Proof of Possession at the AS # {#sec-error-failed-pop}
+
+When sending an access token request to the AS (see {{Section 5.8.1 of RFC9200}}), a client can include the "req_cnf" parameter defined in {{Section 3.1 of RFC9201}} in order to provide the AS with a specific PoP key to bind to the requested access token.
+
+Typically, the PoP key in question is the client's public key. In such a case, as per {{Section 3.1 of RFC9201}}, the AS has to verify proof of possession of the client's private key, i.e., that the client is indeed in possession of the private key corresponding to the public key conveyed in the "req_cnf" parameter.
+
+The AS might have previously achieved proof of possession of the private key in question, e.g., from previous interactions with the client or through out-of-band means. Alternatively, a profile of ACE might define how the AS verifies a PoP evidence that the client computes and provides to the AS by means of a parameter included in the access token request (e.g., see {{I-D.ietf-ace-group-oscore-profile}}).
+
+Irrespective of the method used, if the AS fails to verify the proof of possession of the client's private key, then the AS MUST reject the access token request and MUST reply with an error response (see {{Section 5.8.3 of RFC9200}}). The error response MUST have a response code equivalent to the CoAP code 4.00 (Bad Request) and MUST include the error code "failed_pop_verification".The error code and its CBOR abbreviation are registered in {{iana-oauth-extensions-errors}} and {{iana-oauth-error-code-cbor-mappings}}, respectively.
+
 # Updated Payload Format of Error Responses # {#sec-updated-error-responses}
 
 This section deprecates the original payload format of error responses conveying an error code, when CBOR is used to encode message payloads in the ACE framework. That format is referred to, e.g., when defining the error responses of {{Sections 5.8.3 and 5.9.3 of RFC9200}}.
@@ -1101,7 +1113,7 @@ IANA is asked to add the following entry to the "CBOR Web Token (CWT) Claims" re
 
 ## OAuth Extensions Error Registry ## {#iana-oauth-extensions-errors}
 
-IANA is asked to add the following entry to the "OAuth Extensions Error Registry" within the "OAuth Parameters" registry group.
+IANA is asked to add the following entries to the "OAuth Extensions Error Registry" within the "OAuth Parameters" registry group.
 
 * Name: unknown_credential_referenced
 * Usage Location: token error response
@@ -1109,11 +1121,26 @@ IANA is asked to add the following entry to the "OAuth Extensions Error Registry
 * Change Controller: IETF
 * Reference: {{sec-coord-exchanged-cred}} of {{&SELF}}
 
+<br>
+
+* Name: failed_pop_verification
+* Usage Location: token error response
+* Protocol Extension: {{&SELF}}
+* Change Controller: IETF
+* Reference: {{sec-error-failed-pop}} of {{&SELF}}
+
 ## OAuth Error Code CBOR Mappings Registry ## {#iana-oauth-error-code-cbor-mappings}
 
-IANA is asked to add the following entry to the "OAuth Error Code CBOR Mappings" registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.
+IANA is asked to add the following entries to the "OAuth Error Code CBOR Mappings" registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.
 
 * Name: unknown_credential_referenced
+* CBOR Value: TBD (value between 1 and 255)
+* Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
+
+<br>
+
+* Name: failed_pop_verification
 * CBOR Value: TBD (value between 1 and 255)
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
@@ -1217,6 +1244,8 @@ ace-error = 2
 {:removeinrfc}
 
 ## Version -04 to -05 ## {#sec-04-05}
+
+* Error handling and error code for failed PoP verification at the AS.
 
 * Fixes and presentation improvements in the IANA considerations.
 
