@@ -20,21 +20,22 @@ Abstract
    This document updates the Authentication and Authorization for
    Constrained Environments Framework (ACE, RFC 9200) as follows. (1) It
    defines the Short Distribution Chain (SDC) workflow that the
-   authorization server can use for uploading an access token to a
+   authorization server (AS) can use for uploading an access token to a
    resource server on behalf of the client. (2) For the OAuth 2.0 token
    endpoint, it defines new parameters and encodings and it extends the
    semantics of the "ace_profile" parameter. (3) It defines how the
-   client and the authorization server can coordinate on the exchange of
-   the client's and resource server's public authentication credentials,
-   when those can be transported by value or identified by reference;
-   this extends the semantics of the "rs_cnf" parameter for the OAuth
-   2.0 token endpoint, thus updating RFC 9201. (4) It amends two of the
-   requirements on profiles of the framework. (5) It deprecates the
-   original payload format of error responses conveying an error code,
-   when CBOR is used to encode message payloads.  For those responses,
-   it defines a new payload format aligned with RFC 9290, thus updating
-   in this respect also the profiles defined in RFC 9202, RFC 9203, and
-   RFC 9431.
+   client and the AS can coordinate on the exchange of the client's and
+   resource server's public authentication credentials, when those can
+   be transported by value or identified by reference; this extends the
+   semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint,
+   thus updating RFC 9201. (4) It extends the error handling at the AS,
+   for which it defines a new error code. (5) It deprecates the original
+   payload format of error responses conveying an error code, when CBOR
+   is used to encode message payloads.  For those responses, it defines
+   a new payload format aligned with RFC 9290, thus updating in this
+   respect also the profiles defined in RFC 9202, RFC 9203, and RFC
+   9431. (6) It amends two of the requirements on profiles of the
+   framework.
 
 About This Document
 
@@ -108,20 +109,21 @@ Table of Contents
            Credential
      5.2.  Instructing the AS on How to Provide the RS's
            Authentication Credential
-   6.  Updated Payload Format of Error Responses
-   7.  Updated Requirements on Profiles of ACE
-   8.  Security Considerations
-   9.  IANA Considerations
-     9.1.  OAuth Parameters Registry
-     9.2.  OAuth Parameters CBOR Mappings Registry
-     9.3.  JSON Web Token Claims Registry
-     9.4.  CBOR Web Token (CWT) Claims Registry
-     9.5.  OAuth Extensions Error Registry
-     9.6.  OAuth Error Code CBOR Mappings Registry
-     9.7.  Custom Problem Detail Keys Registry
-   10. References
-     10.1.  Normative References
-     10.2.  Informative References
+   6.  Failed Verification of Proof of Possession at the AS
+   7.  Updated Payload Format of Error Responses
+   8.  Updated Requirements on Profiles of ACE
+   9.  Security Considerations
+   10. IANA Considerations
+     10.1.  OAuth Parameters Registry
+     10.2.  OAuth Parameters CBOR Mappings Registry
+     10.3.  JSON Web Token Claims Registry
+     10.4.  CBOR Web Token (CWT) Claims Registry
+     10.5.  OAuth Extensions Error Registry
+     10.6.  OAuth Error Code CBOR Mappings Registry
+     10.7.  Custom Problem Detail Keys Registry
+   11. References
+     11.1.  Normative References
+     11.2.  Informative References
    Appendix A.  Benefits for ACE Profiles
      A.1.  DTLS Profile
      A.2.  EDHOC and OSCORE Profile
@@ -231,17 +233,23 @@ Table of Contents
       2.0 token endpoint defined in [RFC9201] and therefore updates
       [RFC9201].
 
+   *  It extends the error handling at the AS, for which it defines a
+      new error code that the AS can use for error responses sent to the
+      client, after failing to verify the proof of possesssion of the
+      client's private key when processing an access token request (see
+      Section 6).
+
    *  It deprecates the original payload format of error responses that
       convey an error code, when CBOR is used to encode message payloads
       in the ACE framework.  For such error responses, it defines a new
       payload format according to the problem-details format specified
-      in [RFC9290] (see Section 6).
+      in [RFC9290] (see Section 7).
 
       In this respect, it also updates the profiles of the ACE framework
       defined in [RFC9202], [RFC9203], and [RFC9431].
 
    *  It amends two of the requirements on profiles of the ACE framework
-      originally compiled in Appendix C of [RFC9200] (see Section 7).
+      originally compiled in Appendix C of [RFC9200] (see Section 8).
 
 1.1.  Terminology
 
@@ -1357,7 +1365,7 @@ Table of Contents
       specifying the identifier of the token series to which the access
       token belongs.  When CWTs are used as access tokens, this
       information MUST be transported in the "token_series_id" claim
-      registered in Section 9.4.
+      registered in Section 10.4.
 
    If a profile of ACE relies on a construct that uses different
    parameters/claims to transport the identifier of a token series, then
@@ -1462,7 +1470,7 @@ Table of Contents
    MUST have a response code equivalent to the CoAP code 5.00 (Internal
    Server Error) and MUST include the error code
    "unknown_credential_referenced".  The error code and its CBOR
-   abbreviation are registered in Section 9.5 and Section 9.6,
+   abbreviation are registered in Section 10.5 and Section 10.6,
    respectively.
 
    After receiving such an error response, C can send a new access token
@@ -1540,7 +1548,37 @@ Table of Contents
    RS(s), then C MUST NOT include the "rs_cnf" parameter specifying the
    CBOR simple value null (0xf6) in an access token request.
 
-6.  Updated Payload Format of Error Responses
+6.  Failed Verification of Proof of Possession at the AS
+
+   When sending an access token request to the AS (see Section 5.8.1 of
+   [RFC9200]), a client can include the "req_cnf" parameter defined in
+   Section 3.1 of [RFC9201] in order to provide the AS with a specific
+   PoP key to bind to the requested access token.
+
+   Typically, the PoP key in question is the client's public key.  In
+   such a case, as per Section 3.1 of [RFC9201], the AS has to verify
+   proof of possession of the client's private key, i.e., that the
+   client is indeed in possession of the private key corresponding to
+   the public key conveyed in the "req_cnf" parameter.
+
+   The AS might have previously achieved proof of possession of the
+   private key in question, e.g., from previous interactions with the
+   client or through out-of-band means.  Alternatively, a profile of ACE
+   might define how the AS verifies a PoP evidence that the client
+   computes and provides to the AS by means of a parameter included in
+   the access token request (e.g., see
+   [I-D.ietf-ace-group-oscore-profile]).
+
+   Irrespective of the method used, if the AS fails to verify the proof
+   of possession of the client's private key, then the AS MUST reject
+   the access token request and MUST reply with an error response (see
+   Section 5.8.3 of [RFC9200]).  The error response MUST have a response
+   code equivalent to the CoAP code 4.00 (Bad Request) and MUST include
+   the error code "failed_pop_verification".The error code and its CBOR
+   abbreviation are registered in Section 10.5 and Section 10.6,
+   respectively.
+
+7.  Updated Payload Format of Error Responses
 
    This section deprecates the original payload format of error
    responses conveying an error code, when CBOR is used to encode
@@ -1559,7 +1597,7 @@ Table of Contents
    (see Section 2 of [RFC9290]).  The CBOR map is formatted as follows:
 
    *  It MUST include the Custom Problem Detail entry "ace-error"
-      registered in Section 9.7 of this document.
+      registered in Section 10.7 of this document.
 
       This entry is formatted as a CBOR map including only one field,
       namely "error-code".  The map key for the "error-code" field is
@@ -1638,7 +1676,7 @@ Table of Contents
       the payload format defined in this section MUST use it when
       composing an outgoing error response that conveys an error code.
 
-7.  Updated Requirements on Profiles of ACE
+8.  Updated Requirements on Profiles of ACE
 
    Appendix C of [RFC9200] compiles a list of requirements on the
    profiles of ACE.  This document amends two of those requirements as
@@ -1677,7 +1715,7 @@ Table of Contents
    RFC (i.e., [RFC9202][RFC9203][RFC9431]) already comply with the two
    updated requirements as formulated above.
 
-8.  Security Considerations
+9.  Security Considerations
 
    The same security considerations from the ACE framework for
    Authentication and Authorization [RFC9200] apply to this document,
@@ -1691,14 +1729,14 @@ Table of Contents
 
    Editor's note: add more security considerations.
 
-9.  IANA Considerations
+10.  IANA Considerations
 
    This document has the following actions for IANA.
 
    Note to RFC Editor: Please replace all occurrences of "[RFC-XXXX]"
    with the RFC number of this specification and delete this paragraph.
 
-9.1.  OAuth Parameters Registry
+10.1.  OAuth Parameters Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters"
    registry within the "OAuth Parameters" registry group.
@@ -1792,7 +1830,7 @@ Table of Contents
    *  The "Reference" column specifies "[RFC9201, Section 5][RFC-XXXX,
       Section 5.2]".
 
-9.2.  OAuth Parameters CBOR Mappings Registry
+10.2.  OAuth Parameters CBOR Mappings Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters
    CBOR Mappings" registry within the "Authentication and Authorization
@@ -1903,7 +1941,7 @@ Table of Contents
    *  The "Reference" column specifies "[RFC9201, Section 3.2][RFC-XXXX,
       Section 5.2]".
 
-9.3.  JSON Web Token Claims Registry
+10.3.  JSON Web Token Claims Registry
 
    IANA is asked to add the following entry to the "JSON Web Token
    Claims" registry within the "JSON Web Token (JWT)" registry group,
@@ -1917,7 +1955,7 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
-9.4.  CBOR Web Token (CWT) Claims Registry
+10.4.  CBOR Web Token (CWT) Claims Registry
 
    IANA is asked to add the following entry to the "CBOR Web Token (CWT)
    Claims" registry within the "CBOR Web Token (CWT) Claims" registry
@@ -1937,9 +1975,9 @@ Table of Contents
 
    *  Reference: Section 3.6 of [RFC-XXXX]
 
-9.5.  OAuth Extensions Error Registry
+10.5.  OAuth Extensions Error Registry
 
-   IANA is asked to add the following entry to the "OAuth Extensions
+   IANA is asked to add the following entries to the "OAuth Extensions
    Error Registry" within the "OAuth Parameters" registry group.
 
    *  Name: unknown_credential_referenced
@@ -1952,9 +1990,21 @@ Table of Contents
 
    *  Reference: Section 5 of [RFC-XXXX]
 
-9.6.  OAuth Error Code CBOR Mappings Registry
 
-   IANA is asked to add the following entry to the "OAuth Error Code
+
+   *  Name: failed_pop_verification
+
+   *  Usage Location: token error response
+
+   *  Protocol Extension: [RFC-XXXX]
+
+   *  Change Controller: IETF
+
+   *  Reference: Section 6 of [RFC-XXXX]
+
+10.6.  OAuth Error Code CBOR Mappings Registry
+
+   IANA is asked to add the following entries to the "OAuth Error Code
    CBOR Mappings" registry within the "Authentication and Authorization
    for Constrained Environments (ACE)" registry group.
 
@@ -1966,7 +2016,17 @@ Table of Contents
 
    *  Original Specification: [RFC-XXXX]
 
-9.7.  Custom Problem Detail Keys Registry
+
+
+   *  Name: failed_pop_verification
+
+   *  CBOR Value: TBD (value between 1 and 255)
+
+   *  Reference: [RFC-XXXX]
+
+   *  Original Specification: [RFC-XXXX]
+
+10.7.  Custom Problem Detail Keys Registry
 
    IANA is asked to register the following entry in the "Custom Problem
    Detail Keys" registry within the "Constrained RESTful Environments
@@ -1981,11 +2041,11 @@ Table of Contents
 
    *  Change Controller: IETF
 
-   *  Reference: Section 6 of [RFC-XXXX]
+   *  Reference: Section 7 of [RFC-XXXX]
 
-10.  References
+11.  References
 
-10.1.  Normative References
+11.1.  Normative References
 
    [ACE.OAuth.Error.Code.CBOR.Mappings]
               IANA, "OAuth Error Code CBOR Mappings",
@@ -2147,7 +2207,7 @@ Table of Contents
               <https://nvlpubs.nist.gov/nistpubs/FIPS/
               NIST.FIPS.180-4.pdf>.
 
-10.2.  Informative References
+11.2.  Informative References
 
    [I-D.ietf-ace-authcred-dtls-profile]
               Tiloca, M. and J. P. Mattsson, "Additional Formats of
@@ -2308,6 +2368,9 @@ Appendix D.  Document Updates
    This section is to be removed before publishing as an RFC.
 
 D.1.  Version -04 to -05
+
+   *  Error handling and error code for failed PoP verification at the
+      AS.
 
    *  Fixes and presentation improvements in the IANA considerations.
 
