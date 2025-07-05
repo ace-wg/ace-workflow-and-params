@@ -941,7 +941,7 @@ Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC n
 
 ## OAuth Parameters Registry ## {#iana-oauth-params}
 
-IANA is asked to add the following entries to the "OAuth Parameters" registry.
+IANA is asked to add the following entries to the "OAuth Parameters" registry within the "OAuth Parameters" registry group.
 
 * Name: token_upload
 * Parameter Usage Location: token request and token response
@@ -997,9 +997,17 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry.
 * Change Controller: IETF
 * Reference: {{&SELF}}
 
+<br>
+
+In the same registry, IANA is asked to update the entry for "rs_cnf" to be as follows:
+
+* The "Parameter Usage Location" column specifies "token request, token response".
+
+* The "Reference" column specifies "\[RFC9201, Section 5\]\[RFC-XXXX, {{sec-cred-rs-value}}\]".
+
 ## OAuth Parameters CBOR Mappings Registry ## {#iana-oauth-cbor-mappings}
 
-IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry, following the procedure specified in {{RFC9200}}.
+IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group, following the procedure specified in {{RFC9200}}.
 
 * Name: token_upload
 * CBOR Key: TBD (value between 1 and 255)
@@ -1063,9 +1071,17 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
 
+<br>
+
+In the same registry, IANA is asked to update the entry for "rs_cnf" to be as follows:
+
+* The "Value Type" column specifies "True or False or Null or map".
+
+* The "Reference" column specifies "\[RFC9201, Section 3.2\]\[RFC-XXXX, {{sec-cred-rs-value}}\]".
+
 ## JSON Web Token Claims Registry ## {#iana-token-json-claims}
 
-IANA is asked to add the following entry to the "JSON Web Token Claims" registry, following the procedure specified in {{RFC7519}}.
+IANA is asked to add the following entry to the "JSON Web Token Claims" registry within the "JSON Web Token (JWT)" registry group, following the procedure specified in {{RFC7519}}.
 
 *  Claim Name: token_series_id
 *  Claim Description: The identifier of a token series
@@ -1074,7 +1090,7 @@ IANA is asked to add the following entry to the "JSON Web Token Claims" registry
 
 ## CBOR Web Token (CWT) Claims Registry ## {#iana-token-cwt-claims}
 
-IANA is asked to add the following entry to the "CBOR Web Token (CWT) Claims" registry, following the procedure specified in {{RFC8392}}.
+IANA is asked to add the following entry to the "CBOR Web Token (CWT) Claims" registry within the "CBOR Web Token (CWT) Claims" registry group, following the procedure specified in {{RFC8392}}.
 
 * Claim Name: token_series_id
 * Claim Description: The identifier of a token series
@@ -1084,9 +1100,9 @@ IANA is asked to add the following entry to the "CBOR Web Token (CWT) Claims" re
 * Change Controller: IETF
 * Reference: {{sec-token_series_id}} of {{&SELF}}
 
-## OAuth Extensions Errors Registry ## {#iana-oauth-extensions-errors}
+## OAuth Extensions Error Registry ## {#iana-oauth-extensions-errors}
 
-IANA is asked to add the following entry to the "OAuth Extensions Errors" registry within the "OAuth Parameters" registry group.
+IANA is asked to add the following entry to the "OAuth Extensions Error Registry" within the "OAuth Parameters" registry group.
 
 * Name: unknown_credential_referenced
 * Usage Location: token error response
@@ -1103,22 +1119,6 @@ IANA is asked to add the following entry to the "OAuth Error Code CBOR Mappings"
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
 
-## OAuth Parameters ## {#iana-oauth-parameters}
-
-In the "OAuth Parameters" registry within the "OAuth Parameters" registry group, IANA is asked to update the entry for "rs_cnf" as follows:
-
-* The "Parameter Usage Location" column specifies "token request, token response".
-
-* The "Reference" column specifies "\[RFC9201, Section 5\]\[RFC-XXXX, {{sec-cred-rs-value}}\]".
-
-## OAuth Parameters CBOR Mappings ## {#iana-oauth-parameters-cbor-mappings}
-
-In the "OAuth Parameters CBOR Mappings" registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group, IANA is asked to update the entry for "rs_cnf" as follows:
-
-* The "Value Type" column specifies "True or False or Null or map".
-
-* The "Reference" column specifies "\[RFC9201, Section 3.2\]\[RFC-XXXX, {{sec-cred-rs-value}}\]".
-
 ## Custom Problem Detail Keys Registry ## {#iana-problem-details}
 
 IANA is asked to register the following entry in the "Custom Problem Detail Keys" registry within the "Constrained RESTful Environments (CoRE) Parameters" registry group.
@@ -1128,7 +1128,6 @@ IANA is asked to register the following entry in the "Custom Problem Detail Keys
 * Brief Description: Carry ACE {{RFC9200}} problem details in a Concise Problem Details data item.
 * Change Controller: IETF
 * Reference: {{sec-updated-error-responses}} of {{&SELF}}
-
 
 --- back
 
@@ -1219,6 +1218,8 @@ ace-error = 2
 {:removeinrfc}
 
 ## Version -04 to -05 ## {#sec-04-05}
+
+* Fixes and presentation improvements in the IANA considerations.
 
 * Updated references.
 
