@@ -135,12 +135,11 @@ This document updates {{RFC9200}} as follows.
 
   This extends the semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint defined in {{RFC9201}} and therefore updates {{RFC9201}}.
 
-* It amends two of the requirements on profiles of the ACE framework originally compiled in {{Section C of RFC9200}} (see {{sec-updated-requirements}}).
-
 * It deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads in the ACE framework. For such error responses, it defines a new payload format according to the problem-details format specified in {{RFC9290}} (see {{sec-updated-error-responses}}).
 
   In this respect, it also updates the profiles of the ACE framework defined in {{RFC9202}}, {{RFC9203}}, and {{RFC9431}}.
 
+* It amends two of the requirements on profiles of the ACE framework originally compiled in {{Section C of RFC9200}} (see {{sec-updated-requirements}}).
 
 ## Terminology ## {#terminology}
 
@@ -843,32 +842,6 @@ Irrespective of what "rs_cnf" specifies in the access token request, C MUST rely
 
 If C does not currently store the authentication credential(s) of the RS(s), then C MUST NOT include the "rs_cnf" parameter specifying the CBOR simple value `null` (0xf6) in an access token request.
 
-# Updated Requirements on Profiles of ACE # {#sec-updated-requirements}
-
-{{Section C of RFC9200}} compiles a list of requirements on the profiles of ACE. This document amends two of those requirements as follows.
-
-The text of the fifth requirement
-
-{:quote}
-> Specify the security protocol the client and RS must use to protect their communication (e.g., OSCORE or DTLS). This must provide encryption and integrity and replay protection (Section 5.8.4.3).
-
-is replaced by the following text:
-
-{:quote}
-> Specify the security protocol the client and RS must use to protect their communication (e.g., OSCORE or DTLS). In combination with the used communication protocol, this must provide encryption, integrity and replay protection, and a binding between requests and responses (Section 5.8.4.3 and Section 6.5).
-
-The text of the tenth requirement
-
-{:quote}
-> Specify the communication and security protocol for interactions between the client and AS. This must provide encryption, integrity protection, replay protection, and a binding between requests and responses (Sections 5 and 5.8).
-
-is replaced by the following text:
-
-{:quote}
-> Specify the communication and security protocol for interactions between the client and AS. The combined use of those protocols must provide encryption, integrity protection, replay protection, and a binding between requests and responses (Sections 5 and 5.8).
-
-At the time of writing, all the profiles of ACE that are published as RFC (i.e., {{RFC9202}}{{RFC9203}}{{RFC9431}}) already comply with the two updated requirements as formulated above.
-
 # Updated Payload Format of Error Responses # {#sec-updated-error-responses}
 
 This section deprecates the original payload format of error responses conveying an error code, when CBOR is used to encode message payloads in the ACE framework. That format is referred to, e.g., when defining the error responses of {{Sections 5.8.3 and 5.9.3 of RFC9200}}.
@@ -924,6 +897,32 @@ When the ACE framework is used with CBOR for encoding message payloads, the foll
 * It is RECOMMENDED that authorization servers, clients, and resource servers support the payload format defined in this section.
 
 * Authorization servers, clients, and resource servers that support the payload format defined in this section MUST use it when composing an outgoing error response that conveys an error code.
+
+# Updated Requirements on Profiles of ACE # {#sec-updated-requirements}
+
+{{Section C of RFC9200}} compiles a list of requirements on the profiles of ACE. This document amends two of those requirements as follows.
+
+The text of the fifth requirement
+
+{:quote}
+> Specify the security protocol the client and RS must use to protect their communication (e.g., OSCORE or DTLS). This must provide encryption and integrity and replay protection (Section 5.8.4.3).
+
+is replaced by the following text:
+
+{:quote}
+> Specify the security protocol the client and RS must use to protect their communication (e.g., OSCORE or DTLS). In combination with the used communication protocol, this must provide encryption, integrity and replay protection, and a binding between requests and responses (Section 5.8.4.3 and Section 6.5).
+
+The text of the tenth requirement
+
+{:quote}
+> Specify the communication and security protocol for interactions between the client and AS. This must provide encryption, integrity protection, replay protection, and a binding between requests and responses (Sections 5 and 5.8).
+
+is replaced by the following text:
+
+{:quote}
+> Specify the communication and security protocol for interactions between the client and AS. The combined use of those protocols must provide encryption, integrity protection, replay protection, and a binding between requests and responses (Sections 5 and 5.8).
+
+At the time of writing, all the profiles of ACE that are published as RFC (i.e., {{RFC9202}}{{RFC9203}}{{RFC9431}}) already comply with the two updated requirements as formulated above.
 
 # Security Considerations
 
@@ -1222,6 +1221,8 @@ ace-error = 2
 * Fixes and presentation improvements in the IANA considerations.
 
 * Updated references.
+
+* Revised order of some sections.
 
 * Editorial fixes and improvements.
 
