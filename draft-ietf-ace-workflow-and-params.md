@@ -61,6 +61,7 @@ normative:
   RFC9201:
   RFC9202:
   RFC9203:
+  RFC9277:
   RFC9290:
   RFC9430:
   RFC9431:
@@ -87,6 +88,7 @@ normative:
     target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
 
 informative:
+  RFC9594:
   I-D.ietf-ace-group-oscore-profile:
   I-D.ietf-ace-authcred-dtls-profile:
 
@@ -135,7 +137,7 @@ This document updates {{RFC9200}} as follows.
 
   This extends the semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint defined in {{RFC9201}} and therefore updates {{RFC9201}}.
 
-* It extends the error handling at the AS, for which it defines a new error code that the AS can use for error responses sent to the client, after failing to verify the proof of possesssion of the client's private key when processing an access token request (see {{sec-error-failed-pop}}).
+* It extends the error handling at the AS, for which it defines a new error code that the AS can use for error responses sent to the client, after failing to verify the proof of possession of the client's private key when processing an access token request (see {{sec-error-failed-pop}}).
 
 * It deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads in the ACE framework. For such error responses, it defines a new payload format according to the problem-details format specified in {{RFC9290}} (see {{sec-updated-error-responses}}).
 
@@ -530,21 +532,85 @@ Consistent with the value of the "token_upload" parameter in the access token re
 
 ## to_rs and from_rs {#sec-to_rs-from_rs}
 
-This section defines the additional parameters "to_rs" and "from_rs". The "to_rs" parameter can be used in an access token request sent by C to the token endpoint at the AS. The "from_rs" parameter can be used in an access token response sent by the AS, in reply to a request to the token endpoint from C.
+The rest of this section defines the additional parameters "to_rs" (see {{sec-to_rs}}) and "from_rs" (see {{sec-from_rs}}).
 
-* The "to_rs" parameter is OPTIONAL in an access token request. The presence of this parameter indicates that C wishes the AS to relay the information specified therein to the RS, when the AS uploads the issued access token to the RS per the SDC workflow defined in {{sec-workflow}}. This parameter MUST NOT be present if the "token_upload" parameter defined in {{sec-token_upload}} is not present in the access token request.
+The "to_rs" parameter can be used in an access token request sent by C to the token endpoint at the AS. The "from_rs" parameter can be used in an access token response sent by the AS, in reply to a request to the token endpoint from C.
 
-  If present, this parameter specifies the information that C wishes the AS to relay to the RS, when uploading the access token to the RS on behalf of C. If considered together with the access token, this information is expected to consist in what C would have uploaded to the authz-info endpoint at the RS, if uploading the access token per the original workflow. When the access token request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
+The semantics and encoding of the information specified in the two parameters depend on the specific profile of ACE and application used.
 
-* The "from_rs" parameter is OPTIONAL in an access token response. The presence of this parameter indicates that the AS is relaying the information specified therein to C, which the AS has received from the RS after having successfully uploaded the access token to the RS per the SDC workflow defined in {{sec-workflow}}. This parameter MUST NOT be present if the "token_upload" parameter defined in {{sec-token_upload}} is not present with value 0 in the access token response.
+For instance, when using the OSCORE profile of ACE {{RFC9203}}, C and RS can use the two parameters to exchange the expected nonces and identifiers via the AS. {{sec-to_rs-from_rs-oscore-profile}} describes how the two parameters are used when the OSCORE profile of ACE is used, thereby effectively enabling the use of the SDC workflow for that profile.
 
-  If present, this parameter specifies the information that the AS is relaying to C from the RS, following the successful upload of the access token to the RS on behalf of C. This information is expected to consist in what C would have received in a successful response from the authz-info endpoint at the RS, if uploading the access token per the original workflow. When the access token response is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
+### to_rs {#sec-to_rs}
 
-The semantics and encoding of the information specified in the parameters "to_rs" and "from_rs" depend on the specific profile of ACE used. {{sec-to_rs-from_rs-oscore-profile}} defines those for when these parameters are used with the OSCORE profile {{RFC9203}}.
+The "to_rs" parameter is OPTIONAL in an access token request. The presence of this parameter indicates that:
+
+* C wishes the AS to relay the information specified therein to the RS, when the AS uploads the issued access token to the RS per the SDC workflow defined in {{sec-workflow}}; and
+
+* C wishes the AS to relay information received from the RS to C, after having successfully uploaded the access token to the RS per the SDC workflow defined in {{sec-workflow}}.
+
+This parameter MUST NOT be present if the "token_upload" parameter defined in {{sec-token_upload}} is not present in the access token request. Also, this parameter MUST NOT be present if the requested access token is not the first one of a new token series, i.e., if C is asking the AS for a new access token in the same token series that dynamically updates access rights.
+
+If C wishes that the AS relays information from the RS after successfully uploading the access token, but does not have any information to be relayed to the RS, then this parameter MUST specify the CBOR simple value `null` (0xf6).
+
+Otherwise, this parameter specifies the information that C wishes the AS to relay to the RS, when uploading the access token to the RS on behalf of C.
+
+Such information consists in what C would provide to the RS in addition to the access token, by sending a POST request to the authz-info endpoint in case the original workflow was used.
+
+When composing the parameter "to_rs", C considers the same information and MUST wrap it in a data structure STRUCT, by using the same method that it employs when using the original workflow. For example, with reference to the OSCORE profile of ACE {{RFC9203}}, such a method composes STRUCT as a CBOR map, which has to be sent as payload of a request with Content-Format "application/ace+cbor".
+
+After that, C builds a CBOR byte string STR, whose value is the binary representation of STRUCT.
+
+If and only if the request to the authz-info endpoint has to be sent with a Content-Format ct different from the one specified by the profile of ACE used, then C MUST tag the CBOR byte string STR (see {{Section 3.4 of RFC8949}}). The tag number TN MUST be the one associated with the Content-Format ct and is determined according to the technique described in {{Section B of RFC9277}}. For example, the Content-Format "application/ace+cbor" has Content-Format ID 19 and therefore has 1668546836 as its associated tag number.
+
+When the access token request is encoded in CBOR, the value of the "to_rs" parameter is the (tagged) CBOR byte string STR.
+
+When the access token request is encoded in JSON, the value of the "to_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see {{Section 5 of RFC4648}}).
+
+If the "to_rs" parameter specifies a value different from the CBOR simple value `null` (0xf6), the AS proceeds as follows when composing the POST request to send to the authz-info endpoint on behalf of C:
+
+1. The AS sets the Content-Format of the request to be either:
+
+   * the one specified by the profile of ACE used and for which the access token is issued, if the CBOR byte string STR is not tagged; or, otherwise
+
+   * the one associated with the tag number TN of the tagged CBOR byte string STR conveyed by the "to_rs" parameter.
+
+2. The AS retrieves the structure STRUCT from the "to_rs" parameter and extends it by adding the issued access token, consistently with the Content-Format determined at the previous step.
+
+   For example, if the Content-Format to use is "application/ace+cbor", STRUCT is a CBOR map and the access token is included therein as an entry that has: as map key, 1 encoded as a CBOR integer; as map value, a CBOR byte string whose value is the binary representation of the access token.
+
+Tagging the CBOR byte string as defined above ensures that the AS can relay the information specified in the "to_rs" parameter as intended by C, i.e., by sending to the authz-info endpoint a POST request that has the correct Content-Format and conveys the correct payload.
+
+As a case in point, using the DTLS profile of ACE {{RFC9202}} typically results in a POST request to the authz-info endpoint with Content-Format "application/cwt", per {{Section 5.10 of RFC9200}}. However, the DTLS profile of ACE can be combined with application profiles of {{RFC9594}}. In such a case, the POST request might convey both the access token and additional parameters from C (e.g., "sign_info" defined in {{Section 3.3 of RFC9594}}), which requires the request to have Content-Format "application/ace+cbor" (see {{Section 3.3 of RFC9594}}).
+
+### from_rs {#sec-from_rs}
+
+The "from_rs" parameter is OPTIONAL in an access token response. The presence of this parameter indicates that the AS is relaying the information specified therein to C, which the AS has received from the RS after having successfully uploaded the access token to the RS per the SDC workflow defined in {{sec-workflow}}.
+
+This parameter MUST be present if and only if both the following conditions apply:
+
+* The "token_upload" parameter defined in {{sec-token_upload}} is present with value 0 in the access token response.
+
+* The "to_rs" parameter was present in the access token request corresponding to the access token response.
+
+This parameter specifies the information that the AS is relaying to C from the RS, following the successful upload of the access token to the RS on behalf of C.
+
+Such information consists in what C would receive in a successful response from the authz-info endpoint, if the access token was uploaded per the original workflow.
+
+When composing the parameter "from_rs", the AS builds a CBOR byte string STR as follows:
+
+* If the successful response from the authz-info endpoint does not include a payload, then STR is the empty CBOR byte string (0x40); otherwise
+
+* The value of STR is the payload of the successful response from the authz-info endpoint.
+
+  If and only if the response specifies a given Content-Format ct (i.e., by means of the CoAP Content-Format Option), then the AS MUST tag the CBOR byte string STR (see {{Section 3.4 of RFC8949}}). The tag number TN MUST be the one associated with the Content-Format ct and is determined according to the technique described in {{Section B of RFC9277}}.
+
+When the access token response is encoded in CBOR, the value of the "from_rs" parameter is the (tagged) CBOR byte string STR.
+
+When the access token response is encoded in JSON, the value of the "from_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see {{Section 5 of RFC4648}}).
 
 ### Use with the OSCORE Profile {#sec-to_rs-from_rs-oscore-profile}
 
-This section defines the semantics and encoding of the information specified in the parameters "to_rs" and "from_rs" when used with the OSCORE profile {{RFC9203}}, thereby effectively enabling the use of the SDC workflow for that profile.
+This section describes how to use the parameters "to_rs" and "from_rs" when the OSCORE profile of ACE {{RFC9203}} is used.
 
 The value of the "to_rs" parameter is the binary representation of a CBOR map C_MAP composed of two fields:
 
@@ -1038,7 +1104,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 * Name: to_rs
 * CBOR Key: TBD (value between 1 and 255)
-* Value Type: byte string
+* Value Type: Null or byte string or \#6.\<uint\>(bstr)
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
 
@@ -1246,6 +1312,8 @@ ace-error = 2
 ## Version -04 to -05 ## {#sec-04-05}
 
 * Error handling and error code for failed PoP verification at the AS.
+
+* Extended definition of the parameters "to_rs" and "from_rs".
 
 * Fixes and presentation improvements in the IANA considerations.
 
