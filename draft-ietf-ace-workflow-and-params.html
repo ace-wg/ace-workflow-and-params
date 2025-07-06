@@ -1957,6 +1957,16 @@ If and only if the response specifies a given Content-Format ct (i.e., by means 
           </ul>
 <p id="section-3.3.2-8">When the access token response is encoded in CBOR, the value of the "from_rs" parameter is the (tagged) CBOR byte string STR.<a href="#section-3.3.2-8" class="pilcrow">¶</a></p>
 <p id="section-3.3.2-9">When the access token response is encoded in JSON, the value of the "from_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>).<a href="#section-3.3.2-9" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-10">When C receives from the AS the successful access token response specifying the "token_upload" parameter with value 0, C retrieves from the "from_rs" parameter the information relayed by the AS, just like when retrieving that information from a 2.01 (Created) response with Content-Format ct that C receives from the RS when using the original workflow.<a href="#section-3.3.2-10" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-11">In particular, if the CBOR byte string STR is not the empty CBOR byte string (0x40), C considers as the Content-Format ct either:<a href="#section-3.3.2-11" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.3.2-12.1">
+              <p id="section-3.3.2-12.1.1">the one specified by the profile of ACE used, if the CBOR byte string STR conveyed by the "from_rs" parameter is not tagged; or, otherwise<a href="#section-3.3.2-12.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-3.3.2-12.2">
+              <p id="section-3.3.2-12.2.1">the one associated with the tag number TN of the tagged CBOR byte string STR conveyed by the "from_rs" parameter.<a href="#section-3.3.2-12.2.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
 </section>
 </div>
 <div id="sec-to_rs-from_rs-oscore-profile">
