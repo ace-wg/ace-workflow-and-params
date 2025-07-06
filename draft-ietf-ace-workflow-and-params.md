@@ -608,6 +608,14 @@ When the access token response is encoded in CBOR, the value of the "from_rs" pa
 
 When the access token response is encoded in JSON, the value of the "from_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see {{Section 5 of RFC4648}}).
 
+When C receives from the AS the successful access token response specifying the "token_upload" parameter with value 0, C retrieves from the "from_rs" parameter the information relayed by the AS, just like when retrieving that information from a 2.01 (Created) response with Content-Format ct that C receives from the RS when using the original workflow.
+
+In particular, if the CBOR byte string STR is not the empty CBOR byte string (0x40), C considers as the Content-Format ct either:
+
+* the one specified by the profile of ACE used, if the CBOR byte string STR conveyed by the "from_rs" parameter is not tagged; or, otherwise
+
+* the one associated with the tag number TN of the tagged CBOR byte string STR conveyed by the "from_rs" parameter.
+
 ### Use with the OSCORE Profile {#sec-to_rs-from_rs-oscore-profile}
 
 This section describes how to use the parameters "to_rs" and "from_rs" when the OSCORE profile of ACE {{RFC9203}} is used.
