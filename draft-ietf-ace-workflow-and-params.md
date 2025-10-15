@@ -926,7 +926,7 @@ Typically, the PoP key in question is the client's public key. In such a case, a
 
 The AS might have previously achieved proof of possession of the private key in question, e.g., from previous interactions with the client or through out-of-band means. Alternatively, a profile of ACE might define how the AS verifies a PoP evidence that the client computes and provides to the AS by means of a parameter included in the access token request (e.g., see {{I-D.ietf-ace-group-oscore-profile}}).
 
-Irrespective of the method used, if the AS fails to verify the proof of possession of the client's private key, then the AS MUST reject the access token request and MUST reply with an error response (see {{Section 5.8.3 of RFC9200}}). The error response MUST have a response code equivalent to the CoAP code 4.00 (Bad Request) and MUST include the error code "failed_pop_verification".The error code and its CBOR abbreviation are registered in {{iana-oauth-extensions-errors}} and {{iana-oauth-error-code-cbor-mappings}}, respectively.
+Irrespective of the method used, if the AS fails to verify the proof of possession of the client's private key, then the AS MUST reject the access token request and MUST reply with an error response (see {{Section 5.8.3 of RFC9200}}). The error response MUST have a response code equivalent to the CoAP code 4.00 (Bad Request) and MUST include the error code "failed_pop_verification". The error code and its CBOR abbreviation are registered in {{iana-oauth-extensions-errors}} and {{iana-oauth-error-code-cbor-mappings}}, respectively.
 
 # Updated Payload Format of Error Responses # {#sec-updated-error-responses}
 
@@ -1029,7 +1029,7 @@ Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC n
 IANA is asked to add the following entries to the "OAuth Parameters" registry within the "OAuth Parameters" registry group.
 
 * Name: token_upload
-* Parameter Usage Location: token request and token response
+* Parameter Usage Location: token request, token response
 * Change Controller: IETF
 * Reference: {{&SELF}}
 
@@ -1078,7 +1078,7 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry wi
 <br>
 
 * Name: token_series_id
-* Parameter Usage Location: token request and token response
+* Parameter Usage Location: token request, token response
 * Change Controller: IETF
 * Reference: {{&SELF}}
 
@@ -1316,6 +1316,10 @@ ace-error = 2
 
 # Document Updates # {#sec-document-updates}
 {:removeinrfc}
+
+## Version -05 to -06 ## {#sec-05-06}
+
+* Editorial fixes and improvements.
 
 ## Version -04 to -05 ## {#sec-04-05}
 
