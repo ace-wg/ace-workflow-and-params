@@ -6,8 +6,8 @@ ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Updates: 9200, 9201, 9202, 9203, 9431 (if                    G. Selander
          approved)                                           Ericsson AB
-Intended status: Standards Track                             6 July 2025
-Expires: 7 January 2026
+Intended status: Standards Track                         15 October 2025
+Expires: 18 April 2026
 
 
 Short Distribution Chain (SDC) Workflow and New OAuth Parameters for the
@@ -68,7 +68,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 7 January 2026.
+   This Internet-Draft will expire on 18 April 2026.
 
 Copyright Notice
 
@@ -136,11 +136,12 @@ Table of Contents
      B.2.  Further New Parameters to Consider
    Appendix C.  CDDL Model
    Appendix D.  Document Updates
-     D.1.  Version -04 to -05
-     D.2.  Version -03 to -04
-     D.3.  Version -02 to -03
-     D.4.  Version -01 to -02
-     D.5.  Version -00 to -01
+     D.1.  Version -05 to -06
+     D.2.  Version -04 to -05
+     D.3.  Version -03 to -04
+     D.4.  Version -02 to -03
+     D.5.  Version -01 to -02
+     D.6.  Version -00 to -01
    Acknowledgments
    Authors' Addresses
 
@@ -1720,8 +1721,8 @@ Table of Contents
    the access token request and MUST reply with an error response (see
    Section 5.8.3 of [RFC9200]).  The error response MUST have a response
    code equivalent to the CoAP code 4.00 (Bad Request) and MUST include
-   the error code "failed_pop_verification".The error code and its CBOR
-   abbreviation are registered in Section 10.5 and Section 10.6,
+   the error code "failed_pop_verification".  The error code and its
+   CBOR abbreviation are registered in Section 10.5 and Section 10.6,
    respectively.
 
 7.  Updated Payload Format of Error Responses
@@ -1889,7 +1890,7 @@ Table of Contents
 
    *  Name: token_upload
 
-   *  Parameter Usage Location: token request and token response
+   *  Parameter Usage Location: token request, token response
 
    *  Change Controller: IETF
 
@@ -1959,7 +1960,7 @@ Table of Contents
 
    *  Name: token_series_id
 
-   *  Parameter Usage Location: token request and token response
+   *  Parameter Usage Location: token request, token response
 
    *  Change Controller: IETF
 
@@ -2204,9 +2205,9 @@ Table of Contents
               Security for Constrained Environments (OSCORE) Profile for
               Authentication and Authorization for Constrained
               Environments (ACE)", Work in Progress, Internet-Draft,
-              draft-ietf-ace-edhoc-oscore-profile-07, 3 March 2025,
+              draft-ietf-ace-edhoc-oscore-profile-08, 7 July 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              edhoc-oscore-profile-07>.
+              edhoc-oscore-profile-08>.
 
    [IANA.Hash.Algorithms]
               IANA, "Named Information Hash Algorithm Registry",
@@ -2366,9 +2367,9 @@ Table of Contents
               Layer Security (DTLS) Profile for Authentication and
               Authorization for Constrained Environments (ACE)", Work in
               Progress, Internet-Draft, draft-ietf-ace-authcred-dtls-
-              profile-01, 3 March 2025,
+              profile-02, 7 July 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              authcred-dtls-profile-01>.
+              authcred-dtls-profile-02>.
 
    [I-D.ietf-ace-group-oscore-profile]
               Tiloca, M., Höglund, R., and F. Palombini, "The Group
@@ -2376,9 +2377,9 @@ Table of Contents
               (Group OSCORE) Profile of the Authentication and
               Authorization for Constrained Environments (ACE)
               Framework", Work in Progress, Internet-Draft, draft-ietf-
-              ace-group-oscore-profile-04, 3 March 2025,
+              ace-group-oscore-profile-05, 3 September 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              group-oscore-profile-04>.
+              group-oscore-profile-05>.
 
    [RFC9594]  Palombini, F. and M. Tiloca, "Key Provisioning for Group
               Communication Using Authentication and Authorization for
@@ -2524,7 +2525,11 @@ Appendix D.  Document Updates
 
    This section is to be removed before publishing as an RFC.
 
-D.1.  Version -04 to -05
+D.1.  Version -05 to -06
+
+   *  Editorial fixes and improvements.
+
+D.2.  Version -04 to -05
 
    *  Error handling and error code for failed PoP verification at the
       AS.
@@ -2539,7 +2544,7 @@ D.1.  Version -04 to -05
 
    *  Editorial fixes and improvements.
 
-D.2.  Version -03 to -04
+D.3.  Version -03 to -04
 
    *  Updated document title.
 
@@ -2562,7 +2567,7 @@ D.2.  Version -03 to -04
 
    *  Editorial fixes and improvements.
 
-D.3.  Version -02 to -03
+D.4.  Version -02 to -03
 
    *  Defined parameter and claim "token_series_id".
 
@@ -2586,7 +2591,7 @@ D.3.  Version -02 to -03
 
    *  Clarifications and editorial improvements.
 
-D.4.  Version -01 to -02
+D.5.  Version -01 to -02
 
    *  CBOR diagnostic notation uses placeholders from a CDDL model.
 
@@ -2603,7 +2608,7 @@ D.4.  Version -01 to -02
 
    *  Clarifications and editorial improvements.
 
-D.5.  Version -00 to -01
+D.6.  Version -00 to -01
 
    *  Definition of the "token series" moved to the "Terminology"
       section.
