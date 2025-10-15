@@ -576,7 +576,9 @@ If the "to_rs" parameter is present and specifies a value different from the CBO
 
 2. The AS retrieves the structure STRUCT from STR and extends STRUCT by adding the issued access token, consistently with the profile of ACE used and the Content-Format determined at the previous step.
 
-   For example, when using the OSCORE profile of ACE {{RFC9203}} and the Content-Format to use is "application/ace+cbor", STRUCT is a CBOR map and the access token is included therein as an entry that has: as map key, 1 encoded as a CBOR integer; as map value, a CBOR byte string whose value is the binary representation of the access token.
+   For example, when using the OSCORE profile of ACE {{RFC9203}} and thus the Content-Format to use is "application/ace+cbor", STRUCT is a CBOR map and the access token is included therein as an entry that has: as map key, 1 encoded as a CBOR integer; as map value, a CBOR byte string whose value is the binary representation of the access token.
+
+Clearly, the two steps above require the AS to understand the structure STRUCT and its semantics. In turn, such an understanding builds on the AS supporting the profile of ACE used and the Content-Format to use as determined at Step 1. In the expected cases, the AS is realistically able to perform the two steps. If the AS finds itself unable to perform the two steps, then the AS would simply not upload the access token to the RS on behalf of C. In such a case, the AS replies to C with a succesful access token response to C, which includes the "access_token" parameter specifying the issued access token and does not include the "token_upload" parameter (see {{sec-token_upload}}).
 
 Tagging the CBOR byte string as defined above ensures that the AS can relay the information specified in the "to_rs" parameter as intended by C, i.e., by sending to the authz-info endpoint a POST request that has the correct Content-Format and conveys the correct payload.
 
@@ -1356,6 +1358,8 @@ ace-error = 2
 {:removeinrfc}
 
 ## Version -05 to -06 ## {#sec-05-06}
+
+* Clarified practical requirements at the AS for processing the "to_rs" parameter.
 
 * IANA considerations: update in the "Parameter Usage Location" column for some entries of the "OAuth Parameters" registry.
 
