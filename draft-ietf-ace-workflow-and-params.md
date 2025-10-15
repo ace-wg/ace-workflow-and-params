@@ -169,7 +169,7 @@ CBOR {{RFC8949}} and CDDL {{RFC8610}} are used in this document. CDDL predefined
 
 Examples throughout this document are expressed in CBOR diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Appendix G of RFC8610}}. Diagnostic notation comments are often used to provide a textual representation of the parameters' keys and values.
 
-In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. For example, {e'audience2' : \["rs1", "rs2"\]} stands for {53 : \["rs1", "rs2"\]}.
+In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. For example, {e'audience2' : \["rs1", "rs2"\]} stands for {54 : \["rs1", "rs2"\]}.
 
 Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in {{fig-cddl-model}} of {{sec-cddl-model}}. Finally, please delete this note.
 
@@ -1294,14 +1294,14 @@ The following discusses possible, further new parameters that can be defined for
 
 ~~~~~~~~~~~~~~~~~~~~ CDDL
 ; OAuth Parameters CBOR Mappings
-token_upload = 48
-token_hash = 49
-to_rs = 50
-from_rs = 51
-rs_cnf2 = 52
-audience2 = 53
-anchor_cnf = 54
-token_series_id_param = 55
+token_upload = 49
+token_hash = 50
+to_rs = 51
+from_rs = 52
+rs_cnf2 = 53
+audience2 = 54
+anchor_cnf = 55
+token_series_id_param = 56
 
 ; CBOR Web Token (CWT) Claims
 token_series_id_claim = 42
@@ -1318,6 +1318,8 @@ ace-error = 2
 {:removeinrfc}
 
 ## Version -05 to -06 ## {#sec-05-06}
+
+* Adjusted abbreviations in the CDDL model to avoid collisions.
 
 * Editorial fixes and improvements.
 
