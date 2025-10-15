@@ -23,19 +23,20 @@ Abstract
    authorization server (AS) can use for uploading an access token to a
    resource server on behalf of the client. (2) For the OAuth 2.0 token
    endpoint, it defines new parameters and encodings and it extends the
-   semantics of the "ace_profile" parameter. (3) It defines how the
-   client and the AS can coordinate on the exchange of the client's and
-   resource server's public authentication credentials, when those can
-   be transported by value or identified by reference; this extends the
-   semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint,
-   thus updating RFC 9201. (4) It extends the error handling at the AS,
-   for which it defines a new error code. (5) It deprecates the original
-   payload format of error responses conveying an error code, when CBOR
-   is used to encode message payloads.  For those responses, it defines
-   a new payload format aligned with RFC 9290, thus updating in this
-   respect also the profiles defined in RFC 9202, RFC 9203, and RFC
-   9431. (6) It amends two of the requirements on profiles of the
-   framework.
+   semantics of the "ace_profile" parameter. (3) For the OAuth 2.0
+   authz-info endpoint, it defines a new parameter and its encoding. (4)
+   It defines how the client and the AS can coordinate on the exchange
+   of the client's and resource server's public authentication
+   credentials, when those can be transported by value or identified by
+   reference; this extends the semantics of the "rs_cnf" parameter for
+   the OAuth 2.0 token endpoint, thus updating RFC 9201. (5) It extends
+   the error handling at the AS, for which it defines a new error code.
+   (6) It deprecates the original payload format of error responses
+   conveying an error code, when CBOR is used to encode message
+   payloads.  For those responses, it defines a new payload format
+   aligned with RFC 9290, thus updating in this respect also the
+   profiles defined in RFC 9202, RFC 9203, and RFC 9431. (7) It amends
+   two of the requirements on profiles of the framework.
 
 About This Document
 
@@ -89,6 +90,7 @@ Table of Contents
    1.  Introduction
      1.1.  Terminology
    2.  The Short Distribution Chain (SDC) Workflow
+     2.1.  Token Upload
    3.  New Parameters
      3.1.  token_upload
        3.1.1.  Examples
@@ -104,6 +106,7 @@ Table of Contents
      3.5.  anchor_cnf
        3.5.1.  Example
      3.6.  token_series_id
+     3.7.  updated_rights
    4.  Updated "ace_profile" Parameter
    5.  Coordinating on the Exchange of Public Authentication
            Credentials
@@ -222,6 +225,12 @@ Table of Contents
          access token in the same token series that dynamically updates
          access rights.  A corresponding access token claim, namely
          "token_series_id", is also defined.
+
+      -  "updated_rights", used by the AS to provide the RS with an
+         indication that an access token uploaded per the SDC workflow
+         is not the first one of a new token series, i.e., that the AS
+         has issued the access token for dynamically updating the access
+         rights of C.
 
    *  It extends the semantics of the "ace_profile" parameter for the
       OAuth 2.0 token endpoint at the authorization server defined in
@@ -474,6 +483,10 @@ Table of Contents
    resources, in accordance with the access tokens already issued and
    uploaded by the AS.
 
+2.1.  Token Upload
+
+   TBD
+
 3.  New Parameters
 
    The rest of this section defines a number of additional parameters
@@ -533,13 +546,13 @@ Table of Contents
       encoded as CBOR unsigned integers.
 
       -  If the token upload to the RS was not successful, then the
-         "token_upload" parameter MUST specify the value 1.
+         "token_upload" parameter MUST encode the value 1.
 
          In this case, the access token response MUST include the
          "access_token" parameter specifying the issued access token.
 
       -  If the token upload at the RS was successful, then the
-         "token_upload" parameter MUST specify the value 0.
+         "token_upload" parameter MUST encode the value 0.
 
          In this case, the access token response can include additional
          parameters as defined below, depending on the value of the
@@ -940,7 +953,7 @@ Table of Contents
 
    If C wishes that the AS relays information from the RS after
    successfully uploading the access token but C does not have any
-   information to be relayed to the RS, then this parameter MUST specify
+   information to be relayed to the RS, then this parameter MUST encode
    the CBOR simple value null (0xf6).
 
    Otherwise, this parameter specifies the information that C wishes the
@@ -1537,6 +1550,56 @@ Table of Contents
    profile [RFC9203], and in the EDHOC and OSCORE profile
    [I-D.ietf-ace-edhoc-oscore-profile].
 
+3.7.  updated_rights
+
+   This section defines the additional "updated_rights" parameter.  The
+   parameter can be used in a POST request sent by the AS to the authz-
+   info endpoint, when the AS uploads an access token to the RS per the
+   SDC workflow defined in Section 2.  The "updated_rights" parameter
+   MUST NOT be included in the POST request to the authz-info endpoint
+   sent by C per the original workflow defined in [RFC9200].
+
+   In the POST request from the AS, the "updated_rights" parameter is
+   REQUIRED if the uploaded access token is not the first one of a new
+   token series, i.e., if the AS has issued the access token for
+   dynamically updating the access rights of C.  Otherwise, the
+   "updated_rights" parameter MUST NOT be present.
+
+   When including the "updated_rights" parameter, the POST request MUST
+   have Content-Format "application/ace+cbor" and its payload MUST be
+   formatted as a CBOR map.  In particular, the CBOR map MUST include
+   the "updated_rights" parameter encoding the CBOR simple value true
+   (0xf5), together with the "access_token" parameter specifying the
+   access token.
+
+   Note that this request deviates from the POST request defined in
+   [RFC9200], although such a deviation can occur in some profiles of
+   ACE (e.g., see Section 4.1 of [RFC9203]) or in application profiles
+   of [RFC9594].
+
+   When the RS receives a protected POST request to the authz-info
+   endpoint from the AS and the request conveys the "updated_rights"
+   parameter encoding the CBOR simple value true (0xf5), the RS is
+   ensured that the access token conveyed in the request is not the
+   first one of a new token series.
+
+   In case the request conveys the "updated_rights" parameter and any of
+   the following conditions applies, the RS MUST reject the request and
+   MUST reply with an error response that has a response code equivalent
+   to the CoAP code 4.00 (Bad Request):
+
+   *  The request is not protected or it is not originated by the AS.
+
+   *  The parameter does not encode the CBOR simple value true (0xf5).
+
+   When the RS receives a protected POST request to the authz-info
+   endpoint from the AS and the request does not convey the
+   "updated_rights" parameter, the RS is ensured that the access token
+   conveyed in the request is the first one of a new token series.
+
+   The processing of the POST request from the AS is defined in
+   Section 2.1.
+
 4.  Updated "ace_profile" Parameter
 
    This section extends the semantics of the "ace_profile" parameter
@@ -1570,9 +1633,9 @@ Table of Contents
       In case the AS replies to C with a successful access token
       response (see Section 5.8.2 of [RFC9200]), then the response MAY
       include the "ace_profile" parameter.  If it is included in the
-      access token response, the "ace_profile" parameter MUST specify
-      the same profile identifier that was specified by the
-      "ace_profile" parameter of the corresponding access token request.
+      access token response, the "ace_profile" parameter MUST encode the
+      same profile identifier that was specified by the "ace_profile"
+      parameter of the corresponding access token request.
 
 5.  Coordinating on the Exchange of Public Authentication Credentials
 
@@ -1980,6 +2043,16 @@ Table of Contents
 
 
 
+   *  Name: updated_rights
+
+   *  Parameter Usage Location: as-rs request
+
+   *  Change Controller: IETF
+
+   *  Reference: [RFC-XXXX]
+
+
+
    In the same registry, IANA is asked to update the entries for the
    following OAuth parameters identified by their name, so that the
    content of the "Parameter Usage Location" column and of the
@@ -2124,6 +2197,18 @@ Table of Contents
    *  CBOR Key: TBD (value between 1 and 255)
 
    *  Value Type: byte string
+
+   *  Reference: [RFC-XXXX]
+
+   *  Original Specification: [RFC-XXXX]
+
+
+
+   *  Name: updated_rights
+
+   *  CBOR Key: TBD (value between 1 and 255)
+
+   *  Value Type: True
 
    *  Reference: [RFC-XXXX]
 
@@ -2577,6 +2662,8 @@ Appendix D.  Document Updates
    This section is to be removed before publishing as an RFC.
 
 D.1.  Version -05 to -06
+
+   *  Defined the new "updated_rights" parameter.
 
    *  Clarified practical requirements at the AS for processing the
       "to_rs" parameter.
