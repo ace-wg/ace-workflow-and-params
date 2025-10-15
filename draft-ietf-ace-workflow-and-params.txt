@@ -313,7 +313,7 @@ Table of Contents
    In the CBOR diagnostic notation used in this document, constructs of
    the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME
    in the CDDL model shown in Figure 11 of Appendix C.  For example,
-   {e'audience2' : ["rs1", "rs2"]} stands for {53 : ["rs1", "rs2"]}.
+   {e'audience2' : ["rs1", "rs2"]} stands for {54 : ["rs1", "rs2"]}.
 
    Note to RFC Editor: Please delete the paragraph immediately preceding
    this note.  Also, in the CBOR diagnostic notation used in this
@@ -2501,14 +2501,14 @@ Appendix C.  CDDL Model
    This section is to be removed before publishing as an RFC.
 
    ; OAuth Parameters CBOR Mappings
-   token_upload = 48
-   token_hash = 49
-   to_rs = 50
-   from_rs = 51
-   rs_cnf2 = 52
-   audience2 = 53
-   anchor_cnf = 54
-   token_series_id_param = 55
+   token_upload = 49
+   token_hash = 50
+   to_rs = 51
+   from_rs = 52
+   rs_cnf2 = 53
+   audience2 = 54
+   anchor_cnf = 55
+   token_series_id_param = 56
 
    ; CBOR Web Token (CWT) Claims
    token_series_id_claim = 42
@@ -2526,6 +2526,8 @@ Appendix D.  Document Updates
    This section is to be removed before publishing as an RFC.
 
 D.1.  Version -05 to -06
+
+   *  Adjusted abbreviations in the CDDL model to avoid collisions.
 
    *  Editorial fixes and improvements.
 

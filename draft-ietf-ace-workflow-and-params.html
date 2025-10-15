@@ -1435,7 +1435,7 @@ Profiles of ACE can provide their extended and specialized definition, e.g., by 
         </ul>
 <p id="section-1.1-8">CBOR <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> and CDDL <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> are used in this document. CDDL predefined type names, especially bstr for CBOR byte strings and tstr for CBOR text strings, are used extensively in this document.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
 <p id="section-1.1-9">Examples throughout this document are expressed in CBOR diagnostic notation as defined in <span><a href="https://rfc-editor.org/rfc/rfc8949#section-8" class="relref">Section 8</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>. Diagnostic notation comments are often used to provide a textual representation of the parameters' keys and values.<a href="#section-1.1-9" class="pilcrow">¶</a></p>
-<p id="section-1.1-10">In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 11</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. For example, {e'audience2' : ["rs1", "rs2"]} stands for {53 : ["rs1", "rs2"]}.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
+<p id="section-1.1-10">In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 11</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. For example, {e'audience2' : ["rs1", "rs2"]} stands for {54 : ["rs1", "rs2"]}.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
 <p id="section-1.1-11">Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 11</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix C</a>. Finally, please delete this note.<a href="#section-1.1-11" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -3196,14 +3196,14 @@ This is useful in profiles of ACE where C can re-upload the same access token to
         <div class="alignLeft art-CDDL art-text artwork" id="appendix-C-2.1">
 <pre>
 ; OAuth Parameters CBOR Mappings
-token_upload = 48
-token_hash = 49
-to_rs = 50
-from_rs = 51
-rs_cnf2 = 52
-audience2 = 53
-anchor_cnf = 54
-token_series_id_param = 55
+token_upload = 49
+token_hash = 50
+to_rs = 51
+from_rs = 52
+rs_cnf2 = 53
+audience2 = 54
+anchor_cnf = 55
+token_series_id_param = 56
 
 ; CBOR Web Token (CWT) Claims
 token_series_id_claim = 42
@@ -3234,7 +3234,10 @@ ace-error = 2
         </h3>
 <ul class="normal">
 <li class="normal" id="appendix-D.1-1.1">
-            <p id="appendix-D.1-1.1.1">Editorial fixes and improvements.<a href="#appendix-D.1-1.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-D.1-1.1.1">Adjusted abbreviations in the CDDL model to avoid collisions.<a href="#appendix-D.1-1.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-D.1-1.2">
+            <p id="appendix-D.1-1.2.1">Editorial fixes and improvements.<a href="#appendix-D.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
