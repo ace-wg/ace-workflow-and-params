@@ -1084,11 +1084,49 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry wi
 
 <br>
 
-In the same registry, IANA is asked to update the entry for "rs_cnf" to be as follows:
+In the same registry, IANA is asked to update the entries for the following OAuth parameters identified by their name, so that the content of the "Parameter Usage Location" column and of the "Reference" column is as below:
 
-* The "Parameter Usage Location" column specifies "token request, token response".
+* rs_cnf
 
-* The "Reference" column specifies "\[RFC9201, Section 5\]\[RFC-XXXX, {{sec-cred-rs-value}}\]".
+  * Parameter Usage Location: token request, token response
+
+  * Reference: \[RFC9201, Section 5\]\[RFC-XXXX, {{sec-cred-rs-value}}\]
+
+* nonce1
+
+  * Parameter Usage Location: client-rs request, as-rs request
+
+  * Reference: \[RFC9203\]\[RFC-XXXX\]
+
+* nonce2
+
+  * Parameter Usage Location: rs-client response, rs-as response
+
+  * Reference: \[RFC9203\]\[RFC-XXXX\]
+
+* ace_client_recipientid
+
+  * Parameter Usage Location: client-rs request, as-rs request
+
+  * Reference: \[RFC9203\]\[RFC-XXXX\]
+
+* ace_server_recipientid
+
+  * Parameter Usage Location: rs-client response, rs-as response
+
+  * Reference: \[RFC9203\]\[RFC-XXXX\]
+
+* sign_info
+
+  * Parameter Usage Location: client-rs request, rs-client response, as-rs request, rs-as response
+
+  * Reference: \[RFC9594\]\[RFC-XXXX\]
+
+* kdcchallenge
+
+  * Parameter Usage Location: rs-client response, rs-as response
+
+  * Reference: \[RFC9594\]\[RFC-XXXX\]
 
 ## OAuth Parameters CBOR Mappings Registry ## {#iana-oauth-cbor-mappings}
 
@@ -1158,11 +1196,11 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 <br>
 
-In the same registry, IANA is asked to update the entry for "rs_cnf" to be as follows:
+In the same registry, IANA is asked to update the entry for the OAuth parameter with name "rs_cnf", so that the content of the "Value Type" column and of the "Reference" column is as below:
 
-* The "Value Type" column specifies "True or False or Null or map".
+* Value Type: True or False or Null or map
 
-* The "Reference" column specifies "\[RFC9201, Section 3.2\]\[RFC-XXXX, {{sec-cred-rs-value}}\]".
+* Reference: \[RFC9201, Section 3.2\]\[RFC-XXXX, {{sec-cred-rs-value}}\]
 
 ## JSON Web Token Claims Registry ## {#iana-token-json-claims}
 
@@ -1318,6 +1356,8 @@ ace-error = 2
 {:removeinrfc}
 
 ## Version -05 to -06 ## {#sec-05-06}
+
+* IANA considerations: update in the "Parameter Usage Location" column for some entries of the "OAuth Parameters" registry.
 
 * Adjusted abbreviations in the CDDL model to avoid collisions.
 
