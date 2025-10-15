@@ -560,7 +560,7 @@ When composing the parameter "to_rs", C considers the same information and MUST 
 
 After that, C builds a CBOR byte string STR, whose value is the binary representation of STRUCT.
 
-If and only if the request to the authz-info endpoint has to be sent with a Content-Format ct different from the one specified by the profile of ACE used, then C MUST tag the CBOR byte string STR (see {{Section 3.4 of RFC8949}}). The tag number TN MUST be the one associated with the Content-Format ct and is determined according to the technique described in {{Section B of RFC9277}}. For example, the Content-Format "application/ace+cbor" has Content-Format ID 19 and therefore has 1668546836 as its associated tag number.
+If and only if the request to the authz-info endpoint has to be sent with a Content-Format ct different from the one employed in the profile of ACE used, then C MUST tag the CBOR byte string STR (see {{Section 3.4 of RFC8949}}). The tag number TN MUST be the one associated with the Content-Format ct and is determined according to the technique described in {{Section B of RFC9277}}. For example, the Content-Format "application/ace+cbor" has Content-Format ID 19 and therefore has 1668546836 as its associated tag number.
 
 When the access token request is encoded in CBOR, the value of the "to_rs" parameter is the (tagged) CBOR byte string STR.
 
@@ -570,7 +570,7 @@ If the "to_rs" parameter is present and specifies a value different from the CBO
 
 1. The AS sets the Content-Format of the request to be either:
 
-   * the one specified by the profile of ACE used, if the CBOR byte string STR conveyed by the "to_rs" parameter is not tagged; or, otherwise
+   * the one employed in the profile of ACE used, if the CBOR byte string STR conveyed by the "to_rs" parameter is not tagged; or, otherwise
 
    * the one associated with the tag number TN of the tagged CBOR byte string STR conveyed by the "to_rs" parameter.
 
@@ -612,7 +612,7 @@ When C receives from the AS the successful access token response specifying the 
 
 In particular, if the CBOR byte string STR is not the empty CBOR byte string (0x40), C considers as the Content-Format ct either:
 
-* the one specified by the profile of ACE used, if the CBOR byte string STR conveyed by the "from_rs" parameter is not tagged; or, otherwise
+* the one employed in the profile of ACE used, if the CBOR byte string STR conveyed by the "from_rs" parameter is not tagged; or, otherwise
 
 * the one associated with the tag number TN of the tagged CBOR byte string STR conveyed by the "from_rs" parameter.
 
@@ -681,7 +681,7 @@ Consistent with the value of the "token_upload" parameter in the access token re
    {
         e'token_upload' : 0,
              e'from_rs' : h'a2182a4825a8991cd700ac01182c420000',
-     / ace_profile / 38 : / coap_oscore / 2,
+     / ace_profile / 38 : 2 / coap_oscore /,
        / expires_in / 2 : 3600,
        / cnf /        8 : {
          / osc / 4 : {
