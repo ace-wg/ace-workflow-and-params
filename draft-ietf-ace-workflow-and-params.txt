@@ -132,19 +132,14 @@ Table of Contents
    Appendix A.  Benefits for ACE Profiles
      A.1.  DTLS Profile
      A.2.  EDHOC and OSCORE Profile
-   Appendix B.  Open Points
-     B.1.  SDC Workflow
-       B.1.1.  Prevent Ambiguities in the Dynamic Update of Access
-               Rights
-     B.2.  Further New Parameters to Consider
-   Appendix C.  CDDL Model
-   Appendix D.  Document Updates
-     D.1.  Version -05 to -06
-     D.2.  Version -04 to -05
-     D.3.  Version -03 to -04
-     D.4.  Version -02 to -03
-     D.5.  Version -01 to -02
-     D.6.  Version -00 to -01
+   Appendix B.  CDDL Model
+   Appendix C.  Document Updates
+     C.1.  Version -05 to -06
+     C.2.  Version -04 to -05
+     C.3.  Version -03 to -04
+     C.4.  Version -02 to -03
+     C.5.  Version -01 to -02
+     C.6.  Version -00 to -01
    Acknowledgments
    Authors' Addresses
 
@@ -321,14 +316,14 @@ Table of Contents
 
    In the CBOR diagnostic notation used in this document, constructs of
    the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME
-   in the CDDL model shown in Figure 11 of Appendix C.  For example,
+   in the CDDL model shown in Figure 11 of Appendix B.  For example,
    {e'audience2' : ["rs1", "rs2"]} stands for {54 : ["rs1", "rs2"]}.
 
    Note to RFC Editor: Please delete the paragraph immediately preceding
    this note.  Also, in the CBOR diagnostic notation used in this
    document, please replace the constructs of the form e'SOME_NAME' with
    the value assigned to SOME_NAME in the CDDL model shown in Figure 11
-   of Appendix C.  Finally, please delete this note.
+   of Appendix B.  Finally, please delete this note.
 
 2.  The Short Distribution Chain (SDC) Workflow
 
@@ -2688,60 +2683,7 @@ A.2.  EDHOC and OSCORE Profile
    in Section 3.4 as well as by the "anchor_cnf" parameter defined in
    Section 3.5.
 
-Appendix B.  Open Points
-
-B.1.  SDC Workflow
-
-   The following discusses open points related to the use of the SDC
-   workflow defined in Section 2.
-
-B.1.1.  Prevent Ambiguities in the Dynamic Update of Access Rights
-
-   In some profiles of ACE, C can request a new access token to update
-   its access rights, while preserving the same secure association with
-   the RS.  The new access token supersedes the current one stored at
-   the RS, as they are both part of the same token series.
-
-   When using the original workflow, C uploads the new access token to
-   the RS by protecting the message exchange through the secure
-   association with the RS.  This allows the RS to determine that the
-   upload of such access token is for updating the access rights of C.
-
-   When using the SDC workflow, the AS uploads the new access token to
-   the RS also when an update of access rights for C is to be performed.
-   This message exchange is protected through the secure association
-   between the AS and the RS.
-
-   In this latter case, even though the access token claim
-   "token_series_id" defined in Section 3.6 provides the RS with an
-   explicit indication for recognizing a stored access token as
-   belonging to an ongoing token series, such a process might still lead
-   to ambiguities.
-
-   For example, the RS might have deleted a stored access token due to
-   memory limitations.  This effectively terminates the corresponding
-   token series, which is however impractical for the RS to remember
-   indefinitely.  Consequently, if the AS uploads to the RS a new access
-   token belonging to the same token series, the RS would erroneously
-   interpret it to be the first access token of a new series.
-
-   This can be avoided by relying on a new "updated_rights" parameter,
-   which the AS can include in a POST request to the authz-info endpoint
-   when uploading to the RS an access token for dynamically updating the
-   access rights of C (see Appendix B.2).
-
-B.2.  Further New Parameters to Consider
-
-   The following discusses possible, further new parameters that can be
-   defined for addressing the open points raised earlier in Appendix B.
-
-   *  "updated_rights" - When using the SDC workflow and issuing an
-      access token for dynamically updating the access rights of C, the
-      AS specifies this parameter in the request sent to the RS for
-      uploading the access token on behalf of C (see Appendix B.1.1).
-      This parameter encodes the CBOR simple value true (0xf5).
-
-Appendix C.  CDDL Model
+Appendix B.  CDDL Model
 
    This section is to be removed before publishing as an RFC.
 
@@ -2766,11 +2708,11 @@ Appendix C.  CDDL Model
 
                            Figure 11: CDDL model
 
-Appendix D.  Document Updates
+Appendix C.  Document Updates
 
    This section is to be removed before publishing as an RFC.
 
-D.1.  Version -05 to -06
+C.1.  Version -05 to -06
 
    *  Defined dynamic update of access rights in the SDC workflow.
 
@@ -2784,9 +2726,11 @@ D.1.  Version -05 to -06
 
    *  Adjusted abbreviations in the CDDL model to avoid collisions.
 
+   *  Removed appendix with placeholder ideas.
+
    *  Editorial fixes and improvements.
 
-D.2.  Version -04 to -05
+C.2.  Version -04 to -05
 
    *  Error handling and error code for failed PoP verification at the
       AS.
@@ -2801,7 +2745,7 @@ D.2.  Version -04 to -05
 
    *  Editorial fixes and improvements.
 
-D.3.  Version -03 to -04
+C.3.  Version -03 to -04
 
    *  Updated document title.
 
@@ -2824,7 +2768,7 @@ D.3.  Version -03 to -04
 
    *  Editorial fixes and improvements.
 
-D.4.  Version -02 to -03
+C.4.  Version -02 to -03
 
    *  Defined parameter and claim "token_series_id".
 
@@ -2848,7 +2792,7 @@ D.4.  Version -02 to -03
 
    *  Clarifications and editorial improvements.
 
-D.5.  Version -01 to -02
+C.5.  Version -01 to -02
 
    *  CBOR diagnostic notation uses placeholders from a CDDL model.
 
@@ -2865,7 +2809,7 @@ D.5.  Version -01 to -02
 
    *  Clarifications and editorial improvements.
 
-D.6.  Version -00 to -01
+C.6.  Version -00 to -01
 
    *  Definition of the "token series" moved to the "Terminology"
       section.
