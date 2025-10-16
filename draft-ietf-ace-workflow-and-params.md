@@ -264,7 +264,31 @@ The SDC workflow is also suitable for deployments where clients are not aware of
 
 ## Token Upload # {#sec-as-token-upload}
 
-TBD
+When using the original workflow defined in {{RFC9200}}, there are two typical cases concerning the upload of the access token to the RS from C.
+
+* The first case considers the upload of the first access token in a token series. While details depend on the specific profile of ACE used, such an access token is typically uploaded through an unprotected POST request to the authz-info endpoint.
+
+* The second case considers the upload of an access token that is not the first in its token series, i.e., the AS has issued the access token for dynamically updating the access rights of C. The intent is also for C and the RS to preserve the same secure communication association that they currently share and that is associated with the token series in question.
+
+  Such an access token is uploaded through a POST request to the authz-info endpoint, which is protected by means of the secure communication association that is shared between C and the RS. If the new access token is accepted by the RS, the new access token supersedes the one currently stored for the token series in question, and it becomes associated with the corresponding secure communication association that is shared between C and the RS.
+
+However, if the AS uploads the access token to the RS on behalf of C as per the SDC workflow, the upload of the access token always rely on a protected POST request from the AS to the authz-info endpoint. In particular, the request is protected with the secure communication association shared between the AS and the RS.
+
+When receiving a POST request to the authz-info endpoint that is specifically protected through the secure communication association shared with the AS, the RS proceeds as follows. In particular, the RS leverages the explicit indication provided by the AS through the "updated_rights" parameter defined in {{sec-updated_rights}}, which is included in the request in the case of dynamic update of access rights.
+
+* If the request does not include the "updated_rights" parameter, the RS processes the request and the access token therein like it would when receiving the request from C and according to the specific profile of ACE used. The access token in question is the first one in a token series.
+
+* If the request includes the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5), then the access token in question, namely T_NEW, is not the first one in its token series, i.e., it is meant to dynamically update the access rights of C, while preserving the same secure communication association that is shared between C and the RS.
+
+  In this case, the RS uses lookup information specified within T_NEW to determine whether it stores an access token T_OLD associated with C and belonging to the same token series of T_NEW. Such lookup information includes an identifier of the token series to which both T_NEW and T_OLD belong, and it can further comprise additional information elements pertaining to the specific profile of ACE used (e.g., the authentication credential of C that is bound to the access tokens of the token series).
+
+  By leveraging such lookup information, the RS checks whether it stores an access token T_OLD that belongs to the same token series of T_NEW, like it would when receiving the request from C and according to the specific profile of ACE used.
+
+  If the RS is currently storing such an old access token T_OLD, then the RS MUST supersede T_OLD by replacing the corresponding authorization information with the one specified in the new access token T_NEW. After that, the RS MUST associate T_NEW with the same secure communication association with which T_OLD was associated.
+
+  If the RS is not currently storing such an old access token T_OLD, then the RS MUST reject the POST request from the AS and MUST reply with an error response that has a response code equivalent to the CoAP code 5.00 (Internal Server Error).
+
+The explicit indication provided by the "updated_rights" parameter prevents possible ambiguous situations, where the RS might erroneously believe that an access token is the first one in a new token series (e.g., following the deletion of stored access tokens due to memory limitations).
 
 # New Parameters # {#sec-parameters}
 
@@ -864,7 +888,7 @@ This section defines the additional "updated_rights" parameter. The parameter ca
 
 In the POST request from the AS, the "updated_rights" parameter is REQUIRED if the uploaded access token is not the first one of a new token series, i.e., if the AS has issued the access token for dynamically updating the access rights of C. Otherwise, the "updated_rights" parameter MUST NOT be present.
 
-When including the "updated_rights" parameter, the POST request MUST have Content-Format "application/ace+cbor" and its payload MUST be formatted as a CBOR map. In particular, the CBOR map MUST include the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5), together with the "access_token" parameter specifying the access token.
+When including the "updated_rights" parameter, the POST request MUST have Content-Format "application/ace+cbor" and its payload MUST be formatted as a CBOR map. In particular, the CBOR map MUST include the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5), together with the "access_token" parameter specifying the access token. The CBOR map MAY include additional parameters, according to the specific profile of ACE used.
 
 Note that this request deviates from the POST request defined in {{RFC9200}}, although such a deviation can occur in some profiles of ACE (e.g., see {{Section 4.1 of RFC9203}}) or in application profiles of {{RFC9594}}.
 
@@ -888,7 +912,7 @@ In case a POST request to the authz-info endpoint conveys the "updated_rights" p
 
 If the AS receives an error response from the RS, the AS replies to C with a succesful access token response, which includes the "access_token" parameter specifying the issued access token and includes the "token_upload" parameter encoding the value 1 (see {{sec-token_upload}}).
 
-The successful processing of the POST request to the authz-info endpoint from the AS is defined in {{sec-as-token-upload}}.
+The processing of the POST request to the authz-info endpoint from the AS is further described in {{sec-as-token-upload}}.
 
 # Updated "ace_profile" Parameter # {#sec-updated-ace-profile-parameter}
 
@@ -1411,6 +1435,8 @@ ace-error = 2
 {:removeinrfc}
 
 ## Version -05 to -06 ## {#sec-05-06}
+
+* Defined dynamic update of access rights in the SDC workflow.
 
 * Defined the new "updated_rights" parameter.
 
