@@ -1380,32 +1380,6 @@ When the EDHOC and OSCORE profile is used {{I-D.ietf-ace-edhoc-oscore-profile}},
 
 This is enabled by the parameters "rs_cnf2" and "audience2" defined in {{sec-rs_cnf2-audience2}} as well as by the "anchor_cnf" parameter defined in {{sec-anchor_cnf}}.
 
-# Open Points # {#sec-open-points}
-
-## SDC Workflow # {#sec-open-points-workflow}
-
-The following discusses open points related to the use of the SDC workflow defined in {{sec-workflow}}.
-
-### Prevent Ambiguities in the Dynamic Update of Access Rights # {#sec-open-points-workflow-dynamic-access-rights}
-
-In some profiles of ACE, C can request a new access token to update its access rights, while preserving the same secure association with the RS. The new access token supersedes the current one stored at the RS, as they are both part of the same token series.
-
-When using the original workflow, C uploads the new access token to the RS by protecting the message exchange through the secure association with the RS. This allows the RS to determine that the upload of such access token is for updating the access rights of C.
-
-When using the SDC workflow, the AS uploads the new access token to the RS also when an update of access rights for C is to be performed. This message exchange is protected through the secure association between the AS and the RS.
-
-In this latter case, even though the access token claim "token_series_id" defined in {{sec-token_series_id}} provides the RS with an explicit indication for recognizing a stored access token as belonging to an ongoing token series, such a process might still lead to ambiguities.
-
-For example, the RS might have deleted a stored access token due to memory limitations. This effectively terminates the corresponding token series, which is however impractical for the RS to remember indefinitely. Consequently, if the AS uploads to the RS a new access token belonging to the same token series, the RS would erroneously interpret it to be the first access token of a new series.
-
-This can be avoided by relying on a new "updated_rights" parameter, which the AS can include in a POST request to the authz-info endpoint when uploading to the RS an access token for dynamically updating the access rights of C (see {{sec-more-parameters}}).
-
-## Further New Parameters to Consider # {#sec-more-parameters}
-
-The following discusses possible, further new parameters that can be defined for addressing the open points raised earlier in {{sec-open-points}}.
-
-* "updated_rights" - When using the SDC workflow and issuing an access token for dynamically updating the access rights of C, the AS specifies this parameter in the request sent to the RS for uploading the access token on behalf of C (see {{sec-open-points-workflow-dynamic-access-rights}}). This parameter encodes the CBOR simple value `true` (0xf5).
-
 # CDDL Model # {#sec-cddl-model}
 {:removeinrfc}
 
@@ -1445,6 +1419,8 @@ ace-error = 2
 * IANA considerations: update in the "Parameter Usage Location" column for some entries of the "OAuth Parameters" registry.
 
 * Adjusted abbreviations in the CDDL model to avoid collisions.
+
+* Removed appendix with placeholder ideas.
 
 * Editorial fixes and improvements.
 
