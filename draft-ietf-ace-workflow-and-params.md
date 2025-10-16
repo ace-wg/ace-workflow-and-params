@@ -608,7 +608,7 @@ If the "to_rs" parameter is present and specifies a value different from the CBO
 
    For example, when using the OSCORE profile of ACE {{RFC9203}} and thus the Content-Format to use is "application/ace+cbor", STRUCT is a CBOR map and the access token is included therein as an entry that has: as map key, 1 encoded as a CBOR integer; as map value, a CBOR byte string whose value is the binary representation of the access token.
 
-Clearly, performing the two steps above requires the AS to understand the structure STRUCT and its semantics. In turn, such an understanding builds on the AS supporting the profile of ACE used and the Content-Format to use as determined at Step 1. In the expected cases, the AS is realistically able to perform the two steps. If the AS finds itself unable to perform the two steps, then the AS would simply not upload the access token to the RS on behalf of C. In such a case, the AS replies to C with a succesful access token response to C, which includes the "access_token" parameter specifying the issued access token and does not include the "token_upload" parameter (see {{sec-token_upload}}).
+Clearly, performing the two steps above requires the AS to understand the structure STRUCT and its semantics. In turn, such an understanding builds on the AS supporting the profile of ACE used and the Content-Format to use as determined at Step 1. In the expected cases, the AS is realistically able to perform the two steps. If the AS finds itself unable to perform the two steps, then the AS would simply not upload the access token to the RS on behalf of C. In such a case, the AS replies to C with a successful access token response to C, which includes the "access_token" parameter specifying the issued access token and does not include the "token_upload" parameter (see {{sec-token_upload}}).
 
 Tagging the CBOR byte string as defined above ensures that the AS can relay the information specified in the "to_rs" parameter as intended by C, i.e., by sending to the authz-info endpoint a POST request that has the correct Content-Format and conveys the correct payload.
 
@@ -890,7 +890,7 @@ In the POST request from the AS, the "updated_rights" parameter is REQUIRED if t
 
 When including the "updated_rights" parameter, the POST request MUST have Content-Format "application/ace+cbor" and its payload MUST be formatted as a CBOR map. In particular, the CBOR map MUST include the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5), together with the "access_token" parameter specifying the access token. The CBOR map MAY include additional parameters, according to the specific profile of ACE used.
 
-Note that this request deviates from the POST request defined in {{RFC9200}}, although such a deviation can occur in some profiles of ACE (e.g., see {{Section 4.1 of RFC9203}}) or in application profiles of {{RFC9594}}.
+Note that this request deviates from the POST request defined in {{RFC9200}}, although such a deviation can already occur in some profiles of ACE (e.g., see {{Section 4.1 of RFC9203}}) or in application profiles of {{RFC9594}}.
 
 When the RS receives a protected POST request to the authz-info endpoint from the AS and the request does not convey the "updated_rights" parameter, the RS is ensured that the access token conveyed in the request is the first one of a new token series.
 
@@ -910,7 +910,7 @@ In case a POST request to the authz-info endpoint conveys the "updated_rights" p
 
 * The "updated_rights" parameter does not encode the CBOR simple value `true` (0xf5).
 
-If the AS receives an error response from the RS, the AS replies to C with a succesful access token response, which includes the "access_token" parameter specifying the issued access token and includes the "token_upload" parameter encoding the value 1 (see {{sec-token_upload}}).
+If the AS receives an error response from the RS, the AS replies to C with a successful access token response, which includes the "access_token" parameter specifying the issued access token and includes the "token_upload" parameter encoding the value 1 (see {{sec-token_upload}}).
 
 The processing of the POST request to the authz-info endpoint from the AS is further described in {{sec-as-token-upload}}.
 
