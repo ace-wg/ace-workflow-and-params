@@ -97,7 +97,7 @@ entity:
 
 --- abstract
 
-This document updates the Authentication and Authorization for Constrained Environments Framework (ACE, RFC 9200) as follows. (1) It defines the Short Distribution Chain (SDC) workflow that the authorization server (AS) can use for uploading an access token to a resource server on behalf of the client. (2) For the OAuth 2.0 token endpoint, it defines new parameters and encodings and it extends the semantics of the "ace_profile" parameter. (3) For the OAuth 2.0 authz-info endpoint, it defines a new parameter and its encoding. (4) It defines how the client and the AS can coordinate on the exchange of the client's and resource server's public authentication credentials, when those can be transported by value or identified by reference; this extends the semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint, thus updating RFC 9201. (5) It extends the error handling at the AS, for which it defines a new error code. (6) It deprecates the original payload format of error responses conveying an error code, when CBOR is used to encode message payloads. For those responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles defined in RFC 9202, RFC 9203, and RFC 9431. (7) It amends two of the requirements on profiles of the framework.
+This document updates the Authentication and Authorization for Constrained Environments framework (ACE, RFC 9200) as follows. (1) It defines the Short Distribution Chain (SDC) workflow that the authorization server (AS) can use for uploading an access token to a resource server on behalf of the client. (2) For the OAuth 2.0 token endpoint, it defines new parameters and encodings and it extends the semantics of the "ace_profile" parameter. (3) For the OAuth 2.0 authz-info endpoint, it defines a new parameter and its encoding. (4) It defines how the client and the AS can coordinate on the exchange of the client's and resource server's public authentication credentials, when those can be transported by value or identified by reference; this extends the semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint, thus updating RFC 9201. (5) It extends the error handling at the AS, for which it defines a new error code. (6) It deprecates the original payload format of error responses conveying an error code, when CBOR is used to encode message payloads. For those responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles defined in RFC 9202, RFC 9203, and RFC 9431. (7) It amends two of the requirements on profiles of the framework.
 
 --- middle
 
@@ -107,13 +107,13 @@ The Authentication and Authorization for Constrained Environments (ACE) framewor
 
 The framework has as main building blocks the OAuth 2.0 framework {{RFC6749}}, the Constrained Application Protocol (CoAP) {{RFC7252}} for message transfer, Concise Binary Object Representation (CBOR) {{RFC8949}} for compact encoding, and CBOR Object Signing and Encryption (COSE) {{RFC9052}}{{RFC9053}} for self-contained protection of access tokens. In addition, separate profile documents define in detail how the participants in the ACE architecture communicate, especially as to the security protocols that they use.
 
-This document updates {{RFC9200}} as follows.
+The present document updates {{RFC9200}} as follows.
 
-* It defines the Short Distribution Chain (SDC) workflow for the ACE framework (see {{sec-workflow}}), according to which the AS uploads the access token to the RS on behalf of C and then informs C about the outcome. The SDC workflow is especially convenient in deployments where the communication leg between C and the RS is constrained, but the communication leg between the AS and the RS is not.
+* It defines the Short Distribution Chain (SDC) workflow for the ACE framework (see {{sec-workflow}} of the present document), according to which the AS uploads the access token to the RS on behalf of C and then informs C about the outcome. The SDC workflow is especially convenient in deployments where the communication leg between C and the RS is constrained, but the communication leg between the AS and the RS is not.
 
-  The SDC workflow has no ambition to replace the original workflow defined in {{RFC9200}}. The AS can use one workflow or the other depending, for example, on the specific RS for which an access token has been issued and the nature of the communication leg with that RS.
+  The SDC workflow has no ambition to replace the original workflow defined in {{RFC9200}}. The AS can use one workflow or the other, depending, for example, on the specific RS for which an access token has been issued and the nature of the communication leg with that RS.
 
-* It defines new parameters and encodings for the OAuth 2.0 token endpoint at the AS (see {{sec-parameters}}). These include:
+* It defines new parameters and encodings for the OAuth 2.0 token endpoint at the AS (see {{sec-parameters}} of the present document). These include:
 
   - "token_upload", used by C to inform the AS that it opts in to use the SDC workflow and by the AS to inform C about the outcome of the token uploading to the RS per the SDC workflow.
 
@@ -121,37 +121,37 @@ This document updates {{RFC9200}} as follows.
 
   - "to_rs", used by C to provide the AS with information to relay to the RS, upon asking the AS to upload the access token to the RS per the SDC workflow. Its specific use with the OSCORE profile {{RFC9203}} is also described, as effectively enabling the use of the SDC workflow for that profile.
 
-  - "from_rs", used by the AS to provide C with information to relay from the RS, after the AS has successfully uploaded the access token to the RS per the SDC workflow. Its specific use with the OSCORE profile {{RFC9203}} is also described, as effectively enabling the use of SDC workflow for that profile.
+  - "from_rs", used by the AS to provide C with information to relay from the RS, after the AS has successfully uploaded the access token to the RS per the SDC workflow. Its specific use with the OSCORE profile {{RFC9203}} is also described, as effectively enabling the use of the SDC workflow for that profile.
 
   - "rs_cnf2", used by the AS to provide C with the public keys of the RSs in the group-audience for which the access token is issued (see {{Section 6.9 of RFC9200}}).
 
   - "audience2", used by the AS to provide C with the identifiers of the RSs in the group-audience for which the access token is issued.
 
-  - "anchor_cnf", used by the AS to provide C with the public keys of trust anchors, which C can use to validate the public key of an RS (e.g., as provided in the "rs_cnf" parameter defined in {{RFC9201}} or in the "rs_cnf2" parameter defined in this document).
+  - "anchor_cnf", used by the AS to provide C with the public keys of trust anchors, which C can use to validate the public key of an RS (e.g., as provided in the "rs_cnf" parameter defined in {{RFC9201}} or in the "rs_cnf2" parameter defined in the present document).
 
   - "token_series_id", used by the AS to provide C with the identifier of a token series and by C to ask the AS for a new access token in the same token series that dynamically updates access rights. A corresponding access token claim, namely "token_series_id", is also defined.
 
   * "updated_rights", used by the AS to provide the RS with an indication that an access token uploaded per the SDC workflow is not the first one of a new token series, i.e., that the AS has issued the access token for dynamically updating the access rights of C.
 
-* It extends the semantics of the "ace_profile" parameter for the OAuth 2.0 token endpoint at the authorization server defined in {{RFC9200}} (see {{sec-updated-ace-profile-parameter}}).
+* It extends the semantics of the "ace_profile" parameter for the OAuth 2.0 token endpoint at the authorization server defined in {{RFC9200}} (see {{sec-updated-ace-profile-parameter}} of the present document).
 
-* It defines how C and the AS can coordinate on the exchange of the client's and resource server's public authentication credentials, when those can be transported by value or identified by reference in the access token request and response (see {{sec-coord-exchanged-cred}}).
+* It defines how C and the AS can coordinate on the exchange of the client's and resource server's public authentication credentials, when those can be transported by value or identified by reference in the access token request and response (see {{sec-coord-exchanged-cred}} of the present document).
 
-  This extends the semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint defined in {{RFC9201}} and therefore updates {{RFC9201}}.
+  This extends the semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint defined in {{Section 3.2 of RFC9201}}. Therefore, it updates {{RFC9201}}.
 
-* It extends the error handling at the AS, for which it defines a new error code that the AS can use for error responses sent to the client, after failing to verify the proof of possession of the client's private key when processing an access token request (see {{sec-error-failed-pop}}).
+* It extends the error handling at the AS, for which it defines a new error code that the AS can use for error responses sent to the client, after failing to verify the proof of possession of the client's private key when processing an access token request (see {{sec-error-failed-pop}} of the present document).
 
-* It deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads in the ACE framework. For such error responses, it defines a new payload format according to the problem-details format specified in {{RFC9290}} (see {{sec-updated-error-responses}}).
+* It deprecates the original payload format of error responses that convey an error code, when CBOR is used to encode message payloads in the ACE framework. For such error responses, it defines a new payload format according to the problem-details format specified in {{RFC9290}} (see {{sec-updated-error-responses}} of the present document).
 
   In this respect, it also updates the profiles of the ACE framework defined in {{RFC9202}}, {{RFC9203}}, and {{RFC9431}}.
 
-* It amends two of the requirements on profiles of the ACE framework originally compiled in {{Section C of RFC9200}} (see {{sec-updated-requirements}}).
+* It amends two of the requirements on profiles of the ACE framework originally compiled in {{Section C of RFC9200}} (see {{sec-updated-requirements}} of the present document).
 
 ## Terminology ## {#terminology}
 
 {::boilerplate bcp14-tagged}
 
-Readers are expected to be familiar with the terms and concepts described in the ACE framework for Authentication and Authorization {{RFC9200}}{{RFC9201}}, as well as with terms and concepts related to CBOR Web Tokens (CWTs) {{RFC8392}} and CWT Confirmation Methods {{RFC8747}}.
+Readers are expected to be familiar with the terms and concepts related to the ACE framework for Authentication and Authorization {{RFC9200}}{{RFC9201}}, as well as with terms and concepts related to CBOR Web Tokens (CWTs) {{RFC8392}} and CWT Confirmation Methods {{RFC8747}}.
 
 The terminology for entities in the considered architecture is defined in OAuth 2.0 {{RFC6749}}. In particular, this includes client (C), resource server (RS), and authorization server (AS).
 
@@ -165,7 +165,7 @@ Furthermore, this document uses the following terms.
 
   Profiles of ACE can provide their extended and specialized definition, e.g., by further taking into account the public authentication credentials of C and the RS.
 
-* Token hash: identifier of an access token, in binary format encoding. The token hash has no relation to other access token identifiers possibly used, such as the 'cti' (CWT ID) claim of CBOR Web Tokens (CWTs) {{RFC8392}}.
+* Token hash: identifier of an access token, in binary format encoding. The token hash has no relation with other access token identifiers possibly used, such as the 'cti' (CWT ID) claim of CWTs {{RFC8392}}.
 
 CBOR {{RFC8949}} and CDDL {{RFC8610}} are used in this document. CDDL predefined type names, especially bstr for CBOR byte strings and tstr for CBOR text strings, are used extensively in this document.
 
@@ -181,7 +181,7 @@ As defined in {{Section 4 of RFC9200}}, the ACE framework relies on its basic pr
 
 That is, the client first sends an access token request to the token endpoint at the AS (Step A), specifying permissions that it seeks to obtain for accessing protected resources at the RS, possibly together with information on its own public authentication credential.
 
-Then, if the request has been successfully verified, authenticated, and authorized, the AS replies to the client (Step B), providing an access token and possibly additional parameters as access information including the actually granted permissions.
+Then, if the request is successfully verified, authenticated, and authorized, the AS replies to the client with an access token response (Step B), providing an access token and possibly additional parameters as access information including the actually granted permissions.
 
 Finally, the client uploads the access token to the RS and, consistently with the permissions granted according to the access token, accesses a resource at the RS (Step C), which replies with the result of the resource access (Step F). Details about what protocol the client and the RS use to establish a secure association, mutually authenticate, and secure their communications are defined in the specific profile of ACE used, e.g., {{RFC9202}}{{RFC9203}}{{RFC9431}}{{I-D.ietf-ace-edhoc-oscore-profile}}{{I-D.ietf-ace-group-oscore-profile}}.
 
@@ -240,23 +240,23 @@ More specifically, the SDC workflow consists of the following steps.
 
 * Step A - Like in the original workflow, the client sends an access token request to the token endpoint at the AS, with the additional indication that it opts in to use the SDC workflow.
 
-  As defined in {{sec-token_upload}}, this information is conveyed to the AS by means of the "token_upload" parameter. The parameter also specifies what the AS has to return in the access token response at Step B, following a successful uploading of the access token from the AS to the RS.
+  As defined in {{sec-token_upload}}, this indication is provided to the AS by means of the "token_upload" parameter included in the access token request. The parameter also specifies what the AS has to return in the access token response at Step B, following a successful uploading of the access token from the AS to the RS.
 
 * Step A1 - This new step consists of the AS uploading the access token to the RS, typically at the authz-info endpoint, just like the client does in the original workflow.
 
 * Step A2 - This new step consists of the RS replying to the AS, following the uploading of the access token at Step A1.
 
-* Step B - In the access token response, the AS tells the client that it has attempted to upload the access token to the RS, specifying the outcome of the token uploading based on the reply received from the RS at Step A2.
+* Step B - In the access token response, the AS informs the client that it has attempted to upload the access token to the RS, specifying the outcome of the token uploading based on the reply received from the RS at Step A2.
 
-  As defined in {{sec-token_upload}}, this information is conveyed to the client by means of the "token_upload" parameter included in the access token response. If the token uploading has failed, the access token response also includes the access token. Otherwise, the access token response includes information consistent with what was specified by the "token_upload" parameter of the access token request at Step A.
+  As defined in {{sec-token_upload}}, this information is provided to the client by means of the "token_upload" parameter included in the access token response. If the token uploading has failed, the access token response also includes the access token. Otherwise, the access token response includes information consistent with what was specified by the "token_upload" parameter of the access token request at Step A.
 
 * Step C1 - This step occurs only if the token uploading from the AS has failed, and the AS has provided the client with the access token at Step B. In such a case, the client uploads the access token to the RS just like at Step C of the original workflow.
 
 * Step C2 - The client attempts to access a protected resource at the RS, according to the permissions granted per the access token and specified by the AS as access information at Step B.
 
-* Steps D, E, and F are as in the original workflow.
+* Steps D, E, and F are like in the original workflow.
 
-The SDC workflow has no ambition to replace the original workflow defined in {{RFC9200}}. The AS can use one workflow or the other depending, for example, on the specific RS for which the access token has been issued and the nature of the communication leg with that RS.
+The SDC workflow has no ambition to replace the original workflow defined in {{RFC9200}}. The AS can use one workflow or the other, depending, for example, on the specific RS for which the access token has been issued and the nature of the communication leg with that RS.
 
 When using the SDC workflow, all the communications between the AS and the RS MUST be protected, consistent with {{Sections 5.8.4.3 and 6.5 of RFC9200}}. Unlike in the original workflow, this results in protecting also the uploading of the first access token in a token series, i.e., in addition to the uploading of the following access tokens in the token series for dynamically updating the access rights of the client.
 
@@ -284,7 +284,7 @@ When receiving a POST request to the authz-info endpoint that is specifically pr
 
   By leveraging such lookup information, the RS checks whether it stores an access token T_OLD that belongs to the same token series of T_NEW, like it would when receiving the request from C and according to the specific profile of ACE used.
 
-  If the RS is currently storing such an old access token T_OLD, then the RS MUST supersede T_OLD by replacing the corresponding authorization information with the one specified in the new access token T_NEW. After that, the RS MUST associate T_NEW with the same secure communication association with which T_OLD was associated.
+  If the RS is currently storing such an old access token T_OLD and successfully validates the access token T_NEW, then the RS MUST supersede T_OLD by replacing the corresponding authorization information with the one specified in the new access token T_NEW. After that, the RS MUST associate T_NEW with the same secure communication association with which T_OLD was associated.
 
   If the RS is not currently storing such an old access token T_OLD, then the RS MUST reject the POST request from the AS and MUST reply with an error response that has a response code equivalent to the CoAP code 5.00 (Internal Server Error).
 
@@ -292,15 +292,15 @@ The explicit indication provided by the "updated_rights" parameter prevents poss
 
 # New Parameters # {#sec-parameters}
 
-The rest of this section defines a number of additional parameters and encodings for the OAuth 2.0 token endpoint at the AS.
+The rest of this section defines a number of additional parameters and encodings for the OAuth 2.0 token endpoint at the AS (see {{Section 5.8 of RFC9200}}) and for the OAuth 2.0 authz-info endpoint at the RS (see {{Section 5.10.1 of RFC9200}}).
 
 ## token_upload {#sec-token_upload}
 
-This section defines the additional "token_upload" parameter. The parameter can be used in an access token request sent by C to the token endpoint at the AS, as well as in the successful access token response sent as reply by the AS.
+This section defines the additional "token_upload" parameter. The parameter can be used in an access token request sent by C to the token endpoint at the AS (see {{Section 5.8.1 of RFC9200}}), as well as in the access token response sent as a reply by the AS (see {{Section 5.8.2 of RFC9200}}).
 
 * The "token_upload" parameter is OPTIONAL in an access token request. The presence of this parameter indicates that C opts in to use the SDC workflow defined in {{sec-workflow}}, whose actual use for uploading the issued access token to the RS is an exclusive prerogative of the AS.
 
-  This parameter can take one of the following integer values. When the access token request is encoded in CBOR, those values are encoded as CBOR unsigned integers. The value of the parameter determines whether the follow-up successful access token response will have to include certain information, in case the AS has successfully uploaded the access token to the RS.
+  This parameter can take one of the following integer values. When the access token request is encoded in CBOR, those values are encoded as CBOR unsigned integers. The value of the parameter determines whether the follow-up access token response will have to include certain information, in case the AS has successfully uploaded the access token to the RS.
 
   - 0: The access token response will have to include neither the access token nor its corresponding token hash.
 
@@ -310,7 +310,7 @@ This section defines the additional "token_upload" parameter. The parameter can 
 
   If the AS supports the SDC workflow and the access token request includes the "token_upload" parameter with value 0, 1, or 2, then the AS MAY use the SDC workflow to upload the access token to the RS on behalf of C. Otherwise, following that access token request, the AS MUST NOT use the SDC workflow.
 
-* The "token_upload" parameter is REQUIRED in a successful access token response with response code 2.01 (Created), if both the following conditions apply. Otherwise, the "token_upload" parameter MUST NOT be present.
+* The "token_upload" parameter is REQUIRED in an access token response, if both the following conditions apply. Otherwise, the "token_upload" parameter MUST NOT be present.
 
   - The corresponding access token request included the "token_upload" parameter, with value 0, 1, or 2.
 
@@ -471,11 +471,11 @@ Note that, even though the AS has failed to upload the access token to the RS, t
 
 ## token_hash {#sec-token_hash}
 
-This section defines the additional "token_hash" parameter. The parameter can be used in a successful access token response sent as reply by the AS to C.
+This section defines the additional "token_hash" parameter. The parameter can be used in an access token response sent by the AS (see {{Section 5.8.2 of RFC9200}}), in reply to an access token request sent to the token endpoint by C.
 
 The following refers to the base64url encoding without padding (see {{Section 5 of RFC4648}}) and denotes as "binary representation" of a text string the corresponding UTF-8 encoding {{RFC3629}}, which is the implied charset used in JSON (see {{Section 8.1 of RFC8259}}).
 
-The "token_hash" parameter is REQUIRED in a successful access token response with response code 2.01 (Created), if both the following conditions apply. Otherwise, the "token_hash" parameter MUST NOT be present.
+The "token_hash" parameter is REQUIRED in an access token response, if both the following conditions apply. Otherwise, the "token_hash" parameter MUST NOT be present.
 
 * The corresponding access token request included the "token_upload" parameter with value 1.
 
@@ -564,11 +564,11 @@ Consistent with the value of the "token_upload" parameter in the access token re
 
 The rest of this section defines the additional parameters "to_rs" (see {{sec-to_rs}}) and "from_rs" (see {{sec-from_rs}}).
 
-The "to_rs" parameter can be used in an access token request sent by C to the token endpoint at the AS. The "from_rs" parameter can be used in an access token response sent by the AS, in reply to a request to the token endpoint from C.
+The "to_rs" parameter can be used in an access token request sent by C to the token endpoint at the AS (see {{Section 5.8.1 of RFC9200}}). The "from_rs" parameter can be used in an access token response sent by the AS (see {{Section 5.8.2 of RFC9200}}), in reply to an access token request sent to the token endpoint by C.
 
 The semantics and encoding of the information specified in the two parameters depend on the specific profile of ACE and application used.
 
-For instance, when using the OSCORE profile of ACE {{RFC9203}}, C and RS can use the two parameters to exchange the expected nonces and identifiers via the AS. {{sec-to_rs-from_rs-oscore-profile}} describes how the two parameters are used when the OSCORE profile of ACE is used, thereby effectively enabling the use of the SDC workflow for that profile.
+For instance, when using the OSCORE profile {{RFC9203}}, C and RS can use the two parameters to exchange the expected nonces and identifiers via the AS. {{sec-to_rs-from_rs-oscore-profile}} describes how the two parameters are used when the OSCORE profile is used, thereby effectively enabling the use of the SDC workflow for that profile.
 
 ### to_rs {#sec-to_rs}
 
@@ -600,7 +600,7 @@ If the "to_rs" parameter is present and specifies a value different from the CBO
 
 1. The AS sets the Content-Format of the request to be either:
 
-   * the one employed in the profile of ACE used, if the CBOR byte string STR conveyed by the "to_rs" parameter is not tagged; or, otherwise
+   * the one employed in the profile of ACE used, if the CBOR byte string STR conveyed by the "to_rs" parameter is not tagged; or, otherwise,
 
    * the one associated with the tag number TN of the tagged CBOR byte string STR conveyed by the "to_rs" parameter.
 
@@ -608,7 +608,7 @@ If the "to_rs" parameter is present and specifies a value different from the CBO
 
    For example, when using the OSCORE profile of ACE {{RFC9203}} and thus the Content-Format to use is "application/ace+cbor", STRUCT is a CBOR map and the access token is included therein as an entry that has: as map key, 1 encoded as a CBOR integer; as map value, a CBOR byte string whose value is the binary representation of the access token.
 
-Clearly, performing the two steps above requires the AS to understand the structure STRUCT and its semantics. In turn, such an understanding builds on the AS supporting the profile of ACE used and the Content-Format to use as determined at Step 1. In the expected cases, the AS is realistically able to perform the two steps. If the AS finds itself unable to perform the two steps, then the AS would simply not upload the access token to the RS on behalf of C. In such a case, the AS replies to C with a successful access token response to C, which includes the "access_token" parameter specifying the issued access token and does not include the "token_upload" parameter (see {{sec-token_upload}}).
+Clearly, performing the two steps above requires the AS to understand the structure STRUCT and its semantics. In turn, such an understanding builds on the AS supporting the profile of ACE used and the Content-Format to use as determined at Step 1. In the expected cases, the AS is realistically able to perform the two steps. If the AS finds itself unable to perform the two steps, then the AS would simply not upload the access token to the RS on behalf of C. In such a case, the AS replies to C with an access token response, which includes the "access_token" parameter specifying the issued access token and does not include the "token_upload" parameter (see {{sec-token_upload}}).
 
 Tagging the CBOR byte string as defined above ensures that the AS can relay the information specified in the "to_rs" parameter as intended by C, i.e., by sending to the authz-info endpoint a POST request that has the correct Content-Format and conveys the correct payload.
 
@@ -630,7 +630,7 @@ Such information consists in what C would receive in a successful response from 
 
 When composing the parameter "from_rs", the AS builds a CBOR byte string STR as follows:
 
-* If the successful response from the authz-info endpoint does not include a payload, then STR is the empty CBOR byte string (0x40); otherwise
+* If the successful response from the authz-info endpoint does not include a payload, then STR is the empty CBOR byte string (0x40); otherwise,
 
 * The value of STR is the payload of the successful response from the authz-info endpoint.
 
@@ -640,11 +640,11 @@ When the access token response is encoded in CBOR, the value of the "from_rs" pa
 
 When the access token response is encoded in JSON, the value of the "from_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see {{Section 5 of RFC4648}}).
 
-When C receives from the AS the successful access token response specifying the "token_upload" parameter with value 0, C retrieves from the "from_rs" parameter the information relayed by the AS, just like when retrieving that information from a 2.01 (Created) response with Content-Format ct that C receives from the RS when using the original workflow.
+When C receives from the AS the access token response specifying the "token_upload" parameter with value 0, C retrieves from the "from_rs" parameter the information relayed by the AS, just like when retrieving that information from a successful response with Content-Format ct that C receives from the RS when using the original workflow.
 
 In particular, if the CBOR byte string STR is not the empty CBOR byte string (0x40), C considers as the Content-Format ct either:
 
-* the one employed in the profile of ACE used, if the CBOR byte string STR conveyed by the "from_rs" parameter is not tagged; or, otherwise
+* the one employed in the profile of ACE used, if the CBOR byte string STR conveyed by the "from_rs" parameter is not tagged; or, otherwise,
 
 * the one associated with the tag number TN of the tagged CBOR byte string STR conveyed by the "from_rs" parameter.
 
@@ -654,17 +654,17 @@ This section describes how to use the parameters "to_rs" and "from_rs" when the 
 
 Within the access token request from C to the AS, the value of the "to_rs" parameter is a CBOR byte string, whose value is the binary representation of a CBOR map C_MAP composed of two fields:
 
-* A field with the CBOR unsigned integer 40 as map key and with value the nonce N1 generated by C, encoded a CBOR byte string (see {{Section 4.1 of RFC9203}}).
+* A field with the CBOR integer 40 as map key and with value the nonce N1 generated by C, encoded a CBOR byte string (see {{Section 4.1 of RFC9203}}).
 
-* A field with the CBOR unsigned integer 43 as map key and with value the Recipient ID ID1 generated by C, encoded as a CBOR byte string (see {{Section 4.1 of RFC9203}}).
+* A field with the CBOR integer 43 as map key and with value the Recipient ID ID1 generated by C, encoded as a CBOR byte string (see {{Section 4.1 of RFC9203}}).
 
 When building the POST request for uploading the access token to the authz-info endpoint at the RS, the AS sets the Content-Format of the request to "application/ace+cbor" and composes the request payload as specified in {{Section 4.1 of RFC9203}}. In particular, the CBOR map specified as payload includes:
 
-* The "access_token" field, with value the access token to upload encoded as a CBOR byte string and with the CBOR unsigned integer 1 as map key.
+* The "access_token" field, with value the access token to upload encoded as a CBOR byte string and with the CBOR integer 1 as map key.
 
-* The "nonce1" field, with value the same CBOR byte string specified by the field of C_MAP that has the CBOR unsigned integer 40 as map key.
+* The "nonce1" field, with value the same CBOR byte string specified by the field of C_MAP that has the CBOR integer 40 as map key.
 
-* The "ace_client_recipientid" field, with value the same CBOR byte string specified by the field of C_MAP that has the CBOR unsigned integer 43 as map key.
+* The "ace_client_recipientid" field, with value the same CBOR byte string specified by the field of C_MAP that has the CBOR integer 43 as map key.
 
 If the upload of the access token to the RS from the AS is successful, the RS replies to the AS with a 2.01 (Created) response, which has Content-Format "application/ace+cbor" and whose payload is a CBOR map RS_MAP that includes:
 
@@ -674,11 +674,11 @@ If the upload of the access token to the RS from the AS is successful, the RS re
 
 Within the access token response from the AS to C, the value of the "from_rs" parameter is a CBOR byte string, whose value is the binary representation of a CBOR map composed of two elements:
 
-* A field with the CBOR unsigned integer 42 as map key and with value the same CBOR byte string specified by the "nonce2" field of RS_MAP.
+* A field with the CBOR integer 42 as map key and with value the same CBOR byte string specified by the "nonce2" field of RS_MAP.
 
-* A field with the CBOR unsigned integer 44 as map key and with value the same CBOR byte string specified by the "ace_server_recipientid" field of RS_MAP.
+* A field with the CBOR integer 44 as map key and with value the same CBOR byte string specified by the "ace_server_recipientid" field of RS_MAP.
 
-When C receives from the AS the successful access token response specifying the "token_upload" parameter with value 0, C retrieves the nonce N2 and the Recipient ID ID2 from the "from_rs" parameter, just like when retrieving those from a 2.01 (Created) response received from the RS when using the original workflow.
+When C receives from the AS the access token response specifying the "token_upload" parameter with value 0, C retrieves the nonce N2 and the Recipient ID ID2 from the "from_rs" parameter, just like when retrieving those from a 2.01 (Created) response received from the RS when using the original workflow.
 
 {{fig-example-AS-to-C-token-upload-oscore-profile}} shows an example where the OSCORE profile is used, with first an access token request from C to the AS and then an access token response from the AS to C, following the issue of an access token bound to a symmetric PoP key.
 
@@ -723,31 +723,31 @@ Consistent with the value of the "token_upload" parameter in the access token re
        }
    }
 ~~~~~~~~~~~
-{: #fig-example-AS-to-C-token-upload-oscore-profile title="Example of Access Token Request-Response Exchange where the OSCORE Profile is Used. Following a successful uploading of the access token from the AS to the RS, the access token response includes the \"token_upload\" parameter but not the access token, which is bound to a symmetric key and was uploaded to the RS by the AS. C and the RS exchange N1, ID1, N2, and ID2 via the AS by means of the parameters \"to_rs\" and \"from_rs\""}
+{: #fig-example-AS-to-C-token-upload-oscore-profile title="Example of Access Token Request-Response Exchange where the OSCORE Profile is Used. Following a successful uploading of the access token from the AS to the RS, the access token response includes the \"token_upload\" parameter but not the access token, which is bound to a symmetric key and was uploaded to the RS by the AS. C and the RS exchange N1, ID1, N2, and ID2 via the AS by means of the parameters \"to_rs\" and \"from_rs\"."}
 
 ## rs_cnf2 and audience2 {#sec-rs_cnf2-audience2}
 
-This section defines the additional parameters "rs_cnf2" and "audience2" for an access token response, sent by the AS in reply to a request to the token endpoint from C.
+This section defines the additional parameters "rs_cnf2" and "audience2". The two parameters can be used in an access token response sent by the AS (see {{Section 5.8.2 of RFC9200}}), in reply to an access token request sent to the token endpoint by C.
 
-* The "rs_cnf2" parameter is OPTIONAL if the token type is "pop", asymmetric keys are used, and the access token is issued for an audience that includes multiple RSs (i.e., a group-audience, see {{Section 6.9 of RFC9200}}). Otherwise, the "rs_cnf2" parameter MUST NOT be present.
+* The "rs_cnf2" parameter is OPTIONAL in an access token response, if the token type is "pop", asymmetric keys are used, and the access token is issued for an audience that includes multiple RSs (i.e., a group-audience, see {{Section 6.9 of RFC9200}}). Otherwise, the "rs_cnf2" parameter MUST NOT be present.
 
-  This parameter specifies information about the public keys used by the RSs of a group-audience for authenticating themselves to C. It is used in case the binding between the public keys and the corresponding RS identities are not established through other means. If this parameter is absent, either the RSs in the group-audience do not use a public key, or the AS knows that the RSs can authenticate themselves to C without additional information.
+  This parameter specifies information about the public keys used by the RSs of the group-audience for authenticating themselves to C. It is used in case the binding between the public keys and the corresponding RS identities are not established through other means. If this parameter is absent, either the RSs in the group-audience do not use a public key, or the AS knows that the RSs can authenticate themselves to C without additional information.
 
-  If present, this parameter MUST encode a non-empty CBOR array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. Each element of the CBOR array specifies the public key of one RS in the group-audience, and MUST follow the syntax and semantics of the "cnf" claim either from {{Section 3.1 of RFC8747}} for CBOR-based interactions, or from {{Section 3.1 of RFC7800}} for JSON-based interactions. It is not required that all the elements of the CBOR array rely on the same confirmation method.
+  If present, this parameter MUST encode a non-empty CBOR array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. Each element of the CBOR array specifies the public key of an RS in the group-audience, and MUST follow the syntax and semantics of the "cnf" claim either from {{Section 3.1 of RFC8747}} for CBOR-based interactions, or from {{Section 3.1 of RFC7800}} for JSON-based interactions. It is not required that all the elements of the CBOR array rely on the same confirmation method.
 
   Any of the public keys may be provided together with information such as the public key algorithm and use (e.g., specified by means of the parameters "alg" and "key_ops" in a COSE_Key structure). If such information is specified, a client MUST NOT use a public key that is incompatible with the profile of ACE used or with the PoP algorithm according to that information. An RS MUST reject a proof of possession that relies on such a key and MUST reply with a response code equivalent to the CoAP code 4.00 (Bad Request).
 
-* The "audience2" parameter is OPTIONAL and specifies the identifiers of the RSs in the group-audience for which the access token is issued.
+* The "audience2" parameter is OPTIONAL in an access token response, and it specifies the identifiers of the RSs in the group-audience for which the access token is issued.
 
-  If present, this parameter MUST encode a non-empty CBOR array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. Each element of the CBOR array in the "audience2" parameter MUST be a CBOR text string, with value the identifier of one RS in the group-audience.
+  If present, this parameter MUST encode a non-empty CBOR array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. Each element of the CBOR array in the "audience2" parameter MUST be a CBOR text string, with value the identifier of an RS in the group-audience.
 
   The element of the CBOR array referring to an RS in the group-audience SHOULD have the same value that would be used to identify that RS through the "audience" parameter of an access token request to the AS (see {{Section 5.8.1 of RFC9200}}) and of an access token response from the AS (see {{Section 5.8.2 of RFC9200}}), when requesting and issuing an access token for that individual RS.
 
-  The "audience2" parameter is REQUIRED if the "rs_cnf2" parameter is present. In such a case, the i-th element of the CBOR array in the "audience2" parameter MUST be the identifier of the RS whose public key is specified as the i-th element of the CBOR array in the "rs_cnf2" parameter.
+  The "audience2" parameter is REQUIRED if the "rs_cnf2" parameter is present. In such a case, the i-th element of the CBOR array in the "audience2" parameter MUST be the identifier of the RS whose public key is specified by the i-th element of the CBOR array in the "rs_cnf2" parameter.
 
 ### Example
 
-{{fig-example-AS-to-C-rs_cnf2}} shows an example of access token response from the AS to C, following the issue of an access token for a group-audience composed of two RSs "rs1" and "rs2" and bound to C's public key as asymmetric PoP key. The access token response includes the access token as well as the parameters "audience2" and "rs_cnf2". These specify the public key of the two RSs as intended recipients of the access token and the identifiers of those two RSs, respectively.
+{{fig-example-AS-to-C-rs_cnf2}} shows an example of access token response from the AS to C, following the issue of an access token for a group-audience composed of two RSs, namely "rs1" and "rs2", and bound to C's public key as an asymmetric PoP key. The access token response includes the access token as well as the parameters "audience2" and "rs_cnf2". These parameters specify the public key of the two RSs as the intended recipients of the access token and the identifiers of those two RSs, respectively.
 
 ~~~~~~~~~~~
    Access token response
@@ -790,9 +790,9 @@ This section defines the additional parameters "rs_cnf2" and "audience2" for an 
 
 ## anchor_cnf {#sec-anchor_cnf}
 
-This section defines the additional "anchor_cnf" parameter for an access token response, sent by the AS in reply to a request to the token endpoint from C.
+This section defines the additional "anchor_cnf" parameter. The parameter can be used in an access token response sent by the AS (see {{Section 5.8.2 of RFC9200}}), in reply to an access token request sent to the token endpoint by C.
 
-The "anchor_cnf" parameter is OPTIONAL if the token type is "pop" and asymmetric keys are used. Otherwise, the "anchor_cnf" parameter MUST NOT be present.
+The "anchor_cnf" parameter is OPTIONAL in an access token response, if the token type is "pop" and asymmetric keys are used. Otherwise, the "anchor_cnf" parameter MUST NOT be present.
 
 This parameter specifies information about the public keys of trust anchors, which C can use to validate the public key of the RS/RSs included in the audience for which the access token is issued. This parameter can be used when the access token is issued for an audience including one RS or multiple RSs.
 
@@ -802,7 +802,7 @@ If present, this parameter MUST encode a non-empty CBOR array that MUST be treat
 
 Any of the public keys conveyed in the "anchor_cnf" parameter may be provided together with information such as the public key algorithm and use (e.g., specified by means of the parameters "alg" and "key_ops" in a COSE_Key structure). If such information is specified, a client MUST NOT use a public key that is incompatible with the profile of ACE used or with the public keys to validate and the way to validate those.
 
-The presence of this parameter does not require that the access token response also includes the "rs_cnf" parameter defined in {{RFC9201}} or the "rs_cnf2" parameter defined in {{sec-rs_cnf2-audience2}} of this document. That is, C may be able to obtain the public keys of the RS/RSs for which the access token is issued through other means.
+The presence of this parameter does not require that the access token response also includes the "rs_cnf" parameter defined in {{RFC9201}} or the "rs_cnf2" parameter defined in {{sec-rs_cnf2-audience2}} of the present document. That is, C may be able to obtain the public keys of the RS/RSs for which the access token is issued through other means.
 
 When the access token response includes both the "anchor_cnf" parameter and the "audience2" parameter defined in {{sec-rs_cnf2-audience2}}, then C MUST make sure that a public key PK_RS is associated with an RS identified by an element of "audience2", before using any of the public keys specified in "anchor_cnf" to validate PK_RS.
 
@@ -810,11 +810,11 @@ When the access token response includes the "anchor_cnf" parameter but not the "
 
 ### Example
 
-{{fig-example-AS-to-C-anchor_cnf}} shows an example of access token response from the AS to C, following the issue of an access token for a group-audience and bound to C's public key as asymmetric PoP key.
+{{fig-example-AS-to-C-anchor_cnf}} shows an example of access token response from the AS to C, following the issue of an access token for a group-audience and bound to C's public key as an asymmetric PoP key.
 
 The identifier of the group-audience was specified by the "audience" parameter of the access token request to the AS, is specified by the "aud" claim of the issued access token, and is not repeated in the access token response from the AS.
 
-The access token response includes the "anchor_cnf" parameter. This specifies the public key of a trust anchor that C can use to validate the public keys of any RS with which the access token is going to be used. By means of the CWT confirmation method "x5chain" defined in {{I-D.ietf-ace-edhoc-oscore-profile}}, the public key of the trust anchor is here conveyed within an X.509 certificate {{RFC5280}} used as public authentication credential for that trust anchor.
+The access token response includes the "anchor_cnf" parameter. This specifies the public key of a trust anchor that C can use to validate the public keys of any RS with which the access token is going to be used. By means of the CWT confirmation method "x5chain" defined in {{I-D.ietf-ace-edhoc-oscore-profile}}, the public key of the trust anchor is here conveyed within an X.509 certificate {{RFC5280}} used as the public authentication credential for that trust anchor.
 
 ~~~~~~~~~~~
    Access token response
@@ -856,11 +856,11 @@ The access token response includes the "anchor_cnf" parameter. This specifies th
 
 ## token_series_id {#sec-token_series_id}
 
-This section defines the additional "token_series_id" parameter. The parameter can be used in an access token request sent by C to the token endpoint at the AS as well as in the successful access token response sent as reply by the AS.
+This section defines the additional "token_series_id" parameter. The parameter can be used in an access token request sent by C to the token endpoint at the AS (see {{Section 5.8.1 of RFC9200}}), as well as in the access token response sent as a reply by the AS (see {{Section 5.8.2 of RFC9200}}).
 
 * The "token_series_id" parameter is OPTIONAL in an access token request. The presence of this parameter indicates that C wishes to obtain a new access token for dynamically updating its access rights. That is, the new access token is intended to be the next one in an active token series and to supersede the latest access token in that token series. This parameter MUST NOT be present if the requested access token is the first one of a new token series.
 
-  If present, this parameter specifies the identifier of the token series that the new access token is intended to extend. The identifier does not change throughout the lifetime of the token series and was provided to C in the successful access token response that the AS sent when issuing the first access token in that token series. When the access token request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
+  If present, this parameter specifies the identifier of the token series that the new access token is intended to extend. The identifier does not change throughout the lifetime of the token series and was provided to C in the access token response that the AS sent when issuing the first access token in that token series. When the access token request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
 
 * The "token_series_id" parameter is OPTIONAL in an access token response. This parameter MUST NOT be present if the issued access token is not the first one of the token series it belongs to.
 
@@ -880,13 +880,13 @@ If the AS relies on the "token_series_id" parameter to exchange the identifier o
 
 If a profile of ACE relies on a construct that uses different parameters/claims to transport the identifier of a token series, then the new "token_series_id" parameter and "token_series_id" claim MUST NOT be used when using that profile.
 
-For example, a number of parameters/claims are already used to transport information that acts de facto as identifier of token series, in the PSK mode of the DTLS profile {{RFC9202}}, in the OSCORE profile {{RFC9203}}, and in the EDHOC and OSCORE profile {{I-D.ietf-ace-edhoc-oscore-profile}}.
+For example, a number of parameters/claims are already used to transport information that acts as de facto identifier of token series, in the PSK mode of the DTLS profile {{RFC9202}}, in the OSCORE profile {{RFC9203}}, and in the EDHOC and OSCORE profile {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
 ## updated_rights {#sec-updated_rights}
 
-This section defines the additional "updated_rights" parameter. The parameter can be used in a POST request sent by the AS to the authz-info endpoint, when the AS uploads an access token to the RS per the SDC workflow defined in {{sec-workflow}}. The "updated_rights" parameter MUST NOT be included in the POST request to the authz-info endpoint sent by C per the original workflow defined in {{RFC9200}}.
+This section defines the additional "updated_rights" parameter. The parameter can be used in a POST request sent by the AS to the authz-info endpoint at the RS (see {{Section 5.10.1 of RFC9200}}), when the AS uploads an access token to the RS per the SDC workflow defined in {{sec-workflow}} of the present document. The "updated_rights" parameter MUST NOT be included in the POST request to the authz-info endpoint sent by C per the original workflow defined in {{RFC9200}}.
 
-In the POST request from the AS, the "updated_rights" parameter is REQUIRED if the uploaded access token is not the first one of a new token series, i.e., if the AS has issued the access token for dynamically updating the access rights of C. Otherwise, the "updated_rights" parameter MUST NOT be present.
+The "updated_rights" parameter is REQUIRED in the POST request sent by the AS to the authz-info endpoint at the RS, if the uploaded access token is not the first one of a new token series, i.e., if the AS has issued the access token for dynamically updating the access rights of C. Otherwise, the "updated_rights" parameter MUST NOT be present.
 
 When including the "updated_rights" parameter, the POST request MUST have Content-Format "application/ace+cbor" and its payload MUST be formatted as a CBOR map. In particular, the CBOR map MUST include the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5), together with the "access_token" parameter specifying the access token. The CBOR map MAY include additional parameters, according to the specific profile of ACE used.
 
@@ -898,11 +898,11 @@ When the RS receives a protected POST request to the authz-info endpoint from th
 
 Taking advantage of such explicit indication requires the RS to support the Content-Format "application/ace+cbor" and the "updated_rights" parameter.
 
-If the RS does not support the Content-Format "application/ace+cbor", the RS rejects the POST request from the AS and replies with an error response that has a response code equivalent to the CoAP code 4.15 (Unsupported Content-Format). Note that, irrespective of the profile of ACE used, the RS supports the Content-Format "application/ace+cbor" if it implements token introspection (see {{Section 5.9 of RFC9200}}).
+If the RS does not support the Content-Format "application/ace+cbor", the RS rejects the POST request from the AS and replies with an error response that has a response code equivalent to the CoAP code 4.15 (Unsupported Content-Format). Note that, irrespective of the profile of ACE used, the RS supports the Content-Format "application/ace+cbor" if it implements token introspection as defined in {{Section 5.9 of RFC9200}}.
 
-If the RS supports the Content-Format "application/ace+cbor" but does not support the "updated_rights" parameter, the RS MUST reject the POST request from the AS and MUST reply with an error response that has a response code equivalent to the CoAP code 4.00 (Bad Request).
+If the RS supports the Content-Format "application/ace+cbor" but does not support the "updated_rights" parameter, the RS rejects the POST request from the AS and replies with an error response that has a response code equivalent to the CoAP code 4.00 (Bad Request).
 
-In case a POST request to the authz-info endpoint conveys the "updated_rights" parameter, the RS supports the parameter, and any of the following conditions applies, the RS MUST reject the request and MUST reply with an error response that has a response code equivalent to the CoAP code 4.00 (Bad Request):
+In case a POST request to the authz-info endpoint includes the "updated_rights" parameter, the RS supports the parameter, and any of the following conditions applies, the RS MUST reject the request and MUST reply with an error response that has a response code equivalent to the CoAP code 4.00 (Bad Request):
 
 * The request is not protected.
 
@@ -910,13 +910,13 @@ In case a POST request to the authz-info endpoint conveys the "updated_rights" p
 
 * The "updated_rights" parameter does not encode the CBOR simple value `true` (0xf5).
 
-If the AS receives an error response from the RS, the AS replies to C with a successful access token response, which includes the "access_token" parameter specifying the issued access token and includes the "token_upload" parameter encoding the value 1 (see {{sec-token_upload}}).
+If the AS receives an error response from the RS, the AS replies to C with an access token response, which includes the "access_token" parameter specifying the issued access token and includes the "token_upload" parameter encoding the value 1 (see {{sec-token_upload}}).
 
-The processing of the POST request to the authz-info endpoint from the AS is further described in {{sec-as-token-upload}}.
+The processing of the POST request sent to the authz-info endpoint by the AS is further described in {{sec-as-token-upload}}.
 
 # Updated "ace_profile" Parameter # {#sec-updated-ace-profile-parameter}
 
-This section extends the semantics of the "ace_profile" parameter defined in {{RFC9200}} for the OAuth 2.0 token endpoint at the authorization server.
+This section extends the semantics of the "ace_profile" parameter defined in {{RFC9200}} for the OAuth 2.0 token endpoint at the AS.
 
 In addition to what is specified in {{Sections 5.8.1, 5.8.2, and 5.8.4.3 of RFC9200}}, the following applies.
 
@@ -928,7 +928,7 @@ In addition to what is specified in {{Sections 5.8.1, 5.8.2, and 5.8.4.3 of RFC9
 
   In case the AS issues an access token to C, the access token MUST be per the profile whose identifier was specified by the "ace_profile" parameter in the access token request.
 
-  In case the AS replies to C with a successful access token response (see {{Section 5.8.2 of RFC9200}}), then the response MAY include the "ace_profile" parameter. If it is included in the access token response, the "ace_profile" parameter MUST encode the same profile identifier that was specified by the "ace_profile" parameter of the corresponding access token request.
+  In case the AS replies to C with an access token response (see {{Section 5.8.2 of RFC9200}}), then the response MAY include the "ace_profile" parameter. If it is included in the access token response, the "ace_profile" parameter MUST encode the same profile identifier that was specified by the "ace_profile" parameter of the corresponding access token request.
 
 # Coordinating on the Exchange of Public Authentication Credentials # {#sec-coord-exchanged-cred}
 
@@ -958,23 +958,23 @@ When C receives an access token response and this includes the "req_cnf" or "req
 
 Conversely, if the response includes the "rs_cnf" or "rs_cnf2" parameter specifying the authentication credential(s) of the RS(s) by value, it might happen that C has already been storing those credential(s), unbeknown to the AS. In fact, it would have been sufficient that the "rs_cnf" or "rs_cnf2" parameter identified the credential(s) by reference, or that neither parameter was included in the response.
 
-The following extends the semantics of the "rs_cnf" parameter defined in {{RFC9201}}, so that C can include the "rs_cnf" parameter in an access token request. When doing so, C instructs the AS about whether and how the successful access token response should specify the authentication credential(s) of the RS(s) belonging to the targeted audience.
+The following extends the semantics of the "rs_cnf" parameter defined in {{Section 3.2 of RFC9201}}, so that C can include the "rs_cnf" parameter in an access token request. When doing so, C instructs the AS about whether and how the access token response should specify the authentication credential(s) of the RS(s) belonging to the targeted audience.
 
 Per its extended semantics, the "rs_cnf" parameter is also OPTIONAL to include in an access token request for requesting the first access token in a token series, if the token type is "pop" and asymmetric keys are used. Otherwise, the parameter MUST NOT be included in an access token request.
 
 When C includes the "rs_cnf" parameter in an access token request, the parameter MUST have one of the following encodings.
 
-* If the parameter specifies the CBOR simple value `true` (0xf5), then it instructs the AS to include in the successful access token response the "rs_cnf" or "rs_cnf2" parameter, specifying the authentication credential(s) of the RS(s) by value.
+* If the parameter specifies the CBOR simple value `true` (0xf5), then it instructs the AS to include in the access token response the "rs_cnf" or "rs_cnf2" parameter, specifying the authentication credential(s) of the RS(s) by value.
 
-  In the successful access token response, each pertaining authentication credential MUST be specified by value.
+  In the access token response, each pertaining authentication credential MUST be specified by value.
 
-* If the parameter specifies the CBOR simple value `false` (0xf4), then it instructs the AS to include in the successful access token response the "rs_cnf" or "rs_cnf2" parameter, specifying the authentication credential(s) of the RS(s) by reference.
+* If the parameter specifies the CBOR simple value `false` (0xf4), then it instructs the AS to include in the access token response the "rs_cnf" or "rs_cnf2" parameter, specifying the authentication credential(s) of the RS(s) by reference.
 
-  In the successful access token response, each pertaining authentication credential MUST be specified by reference, or alternatively by value only in case that was not possible.
+  In the access token response, each pertaining authentication credential MUST be specified by reference, or alternatively by value only in case that was not possible for the AS to attain.
 
-* If the parameter specifies the CBOR simple value `null` (0xf6), then it instructs the AS to omit the "rs_cnf" and "rs_cnf2" parameters from the successful access token response.
+* If the parameter specifies the CBOR simple value `null` (0xf6), then it instructs the AS to omit the "rs_cnf" and "rs_cnf2" parameters from the access token response.
 
-  In the successful access token response, the "rs_cnf" and "rs_cnf2" parameters MUST NOT be included.
+  In the access token response, the "rs_cnf" and "rs_cnf2" parameters MUST NOT be included.
 
 If the AS is not able to comply in the first two cases above, then the AS MUST reject the request and MUST reply with an error response. The error response MUST have a response code equivalent to the CoAP code 5.00 (Internal Server Error).
 
@@ -1002,13 +1002,13 @@ Such error responses MUST have Content-Format set to "application/concise-proble
 
 * It MUST include the Custom Problem Detail entry "ace-error" registered in {{iana-problem-details}} of this document.
 
-  This entry is formatted as a CBOR map including only one field, namely "error-code". The map key for the "error-code" field is the CBOR unsigned integer with value 0. The value of the "error-code" field is a CBOR integer specifying the error code associated with the occurred error. This value is taken from the "CBOR Value" column of the "OAuth Error Code CBOR Mappings" registry {{ACE.OAuth.Error.Code.CBOR.Mappings}}.
+  This entry is formatted as a CBOR map including only one field, namely "error-code". The map key for the "error-code" field is the CBOR integer with value 0. The value of the "error-code" field is a CBOR integer specifying the error code associated with the occurred error. This value is taken from the "CBOR Value" column of the "OAuth Error Code CBOR Mappings" registry {{ACE.OAuth.Error.Code.CBOR.Mappings}}.
 
-  The new payload format MUST use the "error-code" field in order to convey the same information that the original payload format conveys through the "error" parameter (see, e.g., {{Sections 5.8.3 and 5.9.3 of RFC9200}}).
+  The "error-code" field conveys the same information that the original payload format conveys through the "error" parameter (see, e.g., {{Sections 5.8.3 and 5.9.3 of RFC9200}}).
 
   The CDDL notation {{RFC8610}} of the "ace-error" entry is given below.
 
-~~~~~~~~~~~ CDDL
+~~~~~~~~~~~ cddl
    ace-error = {
      &(error-code: 0) => int
    }
@@ -1020,11 +1020,11 @@ Such error responses MUST have Content-Format set to "application/concise-proble
 
     The diagnostic text is intended for software engineers as well as for device and network operators in order to aid in debugging and provide context for possible intervention. The diagnostic message SHOULD be logged by the sender of the error response. The "detail" entry is unlikely to be relevant in an unattended setup where human intervention is not expected.
 
-    The new payload format MUST use the Standard Problem Detail entry "detail" in order to convey the same information that the original payload format conveys through the "error_description" parameter (see, e.g., {{Sections 5.8.3 and 5.9.3 of RFC9200}}).
+    When the Standard Problem Detail entry "detail" is included, it conveys the same information that the original payload format conveys through the "error_description" parameter (see, e.g., {{Sections 5.8.3 and 5.9.3 of RFC9200}}).
 
    * "instance" (map key -3): its value is a URI reference identifying the specific occurrence of the error (see {{Section 2 of RFC9290}}).
 
-     The new payload format MUST use the Standard Problem Detail entry "instance" in order to convey the same information that the original payload format conveys through the "error_uri" parameter (see, e.g., {{Sections 5.8.3 and 5.9.3 of RFC9200}}).
+     When the Standard Problem Detail entry "instance" is included, it conveys the same information that the original payload format conveys through the "error_uri" parameter (see, e.g., {{Sections 5.8.3 and 5.9.3 of RFC9200}}).
 
 An example of an error response using the problem-details format is shown in {{fig-example-error-response}}.
 
@@ -1358,7 +1358,7 @@ For any profile of ACE, the following holds.
 
   - To inform the AS about C opting in to use the SDC workflow.
 
-  - To request the AS that the follow-up successful access token response includes certain information, if the AS has successfully uploaded the access token to the RS.
+  - To request the AS that the follow-up access token response includes certain information, if the AS has successfully uploaded the access token to the RS.
 
   - To inform C that the AS has attempted to upload the issued access token to the RS, specifying whether the uploading has succeeded or failed.
 
@@ -1372,13 +1372,13 @@ For any profile of ACE, the following holds.
 
 When the RPK mode of the DTLS profile is used (see {{Section 3.2 of RFC9202}}), it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs.
 
-This is enabled by the parameters "rs_cnf2" and "audience2" defined in {{sec-rs_cnf2-audience2}} as well as by the "anchor_cnf" parameter defined in {{sec-anchor_cnf}}. This seamlessly applies also if the profile uses Transport Layer Security (TLS) {{RFC8446}} as defined in {{RFC9430}}.
+This is enabled by the parameters "rs_cnf2" and "audience2" defined in {{sec-rs_cnf2-audience2}}, as well as by the "anchor_cnf" parameter defined in {{sec-anchor_cnf}}. This seamlessly applies also if the profile uses Transport Layer Security (TLS) {{RFC8446}} as defined in {{RFC9430}}.
 
 ## EDHOC and OSCORE Profile
 
 When the EDHOC and OSCORE profile is used {{I-D.ietf-ace-edhoc-oscore-profile}}, it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs.
 
-This is enabled by the parameters "rs_cnf2" and "audience2" defined in {{sec-rs_cnf2-audience2}} as well as by the "anchor_cnf" parameter defined in {{sec-anchor_cnf}}.
+This is enabled by the parameters "rs_cnf2" and "audience2" defined in {{sec-rs_cnf2-audience2}}, as well as by the "anchor_cnf" parameter defined in {{sec-anchor_cnf}}.
 
 # CDDL Model # {#sec-cddl-model}
 {:removeinrfc}
@@ -1407,6 +1407,16 @@ ace-error = 2
 
 # Document Updates # {#sec-document-updates}
 {:removeinrfc}
+
+## Version -06 to -07 ## {#sec-06-07}
+
+* Clarifications:
+
+  * Access token responses are successful by definition.
+
+  * Successful response in general vs. response with 2.01 code.
+
+* Editorial fixes and improvements.
 
 ## Version -05 to -06 ## {#sec-05-06}
 
