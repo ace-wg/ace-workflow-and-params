@@ -2684,32 +2684,32 @@ Payload:
 <p id="section-10.1-20">In the same registry, IANA is asked to update the entries for the following OAuth parameters identified by their name, so that the content of the "Parameter Usage Location" column and of the "Reference" column is as below:<a href="#section-10.1-20" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1-21.1">
-            <p id="section-10.1-21.1.1">rs_cnf<a href="#section-10.1-21.1.1" class="pilcrow">¶</a></p>
+            <p id="section-10.1-21.1.1">access_token<a href="#section-10.1-21.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1-21.1.2.1">
-                <p id="section-10.1-21.1.2.1.1">Parameter Usage Location: token request, token response<a href="#section-10.1-21.1.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-10.1-21.1.2.1.1">Parameter Usage Location: authorization response, token response, as-rs request<a href="#section-10.1-21.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-10.1-21.1.2.2">
-                <p id="section-10.1-21.1.2.2.1">Reference: [RFC9201, Section 5][RFC-XXXX, <a href="#sec-cred-rs-value" class="auto internal xref">Section 5.2</a>]<a href="#section-10.1-21.1.2.2.1" class="pilcrow">¶</a></p>
+                <p id="section-10.1-21.1.2.2.1">Reference: [RFC6749][RFC-XXXX]<a href="#section-10.1-21.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
           <li class="normal" id="section-10.1-21.2">
-            <p id="section-10.1-21.2.1">nonce1<a href="#section-10.1-21.2.1" class="pilcrow">¶</a></p>
+            <p id="section-10.1-21.2.1">rs_cnf<a href="#section-10.1-21.2.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1-21.2.2.1">
-                <p id="section-10.1-21.2.2.1.1">Parameter Usage Location: client-rs request, as-rs request<a href="#section-10.1-21.2.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-10.1-21.2.2.1.1">Parameter Usage Location: token request, token response<a href="#section-10.1-21.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-10.1-21.2.2.2">
-                <p id="section-10.1-21.2.2.2.1">Reference: [RFC9203][RFC-XXXX]<a href="#section-10.1-21.2.2.2.1" class="pilcrow">¶</a></p>
+                <p id="section-10.1-21.2.2.2.1">Reference: [RFC9201, Section 5][RFC-XXXX, <a href="#sec-cred-rs-value" class="auto internal xref">Section 5.2</a>]<a href="#section-10.1-21.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
           <li class="normal" id="section-10.1-21.3">
-            <p id="section-10.1-21.3.1">nonce2<a href="#section-10.1-21.3.1" class="pilcrow">¶</a></p>
+            <p id="section-10.1-21.3.1">nonce1<a href="#section-10.1-21.3.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1-21.3.2.1">
-                <p id="section-10.1-21.3.2.1.1">Parameter Usage Location: rs-client response, rs-as response<a href="#section-10.1-21.3.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-10.1-21.3.2.1.1">Parameter Usage Location: client-rs request, as-rs request<a href="#section-10.1-21.3.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-10.1-21.3.2.2">
                 <p id="section-10.1-21.3.2.2.1">Reference: [RFC9203][RFC-XXXX]<a href="#section-10.1-21.3.2.2.1" class="pilcrow">¶</a></p>
@@ -2717,10 +2717,10 @@ Payload:
             </ul>
 </li>
           <li class="normal" id="section-10.1-21.4">
-            <p id="section-10.1-21.4.1">ace_client_recipientid<a href="#section-10.1-21.4.1" class="pilcrow">¶</a></p>
+            <p id="section-10.1-21.4.1">nonce2<a href="#section-10.1-21.4.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1-21.4.2.1">
-                <p id="section-10.1-21.4.2.1.1">Parameter Usage Location: client-rs request, as-rs request<a href="#section-10.1-21.4.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-10.1-21.4.2.1.1">Parameter Usage Location: rs-client response, rs-as response<a href="#section-10.1-21.4.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-10.1-21.4.2.2">
                 <p id="section-10.1-21.4.2.2.1">Reference: [RFC9203][RFC-XXXX]<a href="#section-10.1-21.4.2.2.1" class="pilcrow">¶</a></p>
@@ -2728,10 +2728,10 @@ Payload:
             </ul>
 </li>
           <li class="normal" id="section-10.1-21.5">
-            <p id="section-10.1-21.5.1">ace_server_recipientid<a href="#section-10.1-21.5.1" class="pilcrow">¶</a></p>
+            <p id="section-10.1-21.5.1">ace_client_recipientid<a href="#section-10.1-21.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1-21.5.2.1">
-                <p id="section-10.1-21.5.2.1.1">Parameter Usage Location: rs-client response, rs-as response<a href="#section-10.1-21.5.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-10.1-21.5.2.1.1">Parameter Usage Location: client-rs request, as-rs request<a href="#section-10.1-21.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-10.1-21.5.2.2">
                 <p id="section-10.1-21.5.2.2.1">Reference: [RFC9203][RFC-XXXX]<a href="#section-10.1-21.5.2.2.1" class="pilcrow">¶</a></p>
@@ -2739,24 +2739,35 @@ Payload:
             </ul>
 </li>
           <li class="normal" id="section-10.1-21.6">
-            <p id="section-10.1-21.6.1">sign_info<a href="#section-10.1-21.6.1" class="pilcrow">¶</a></p>
+            <p id="section-10.1-21.6.1">ace_server_recipientid<a href="#section-10.1-21.6.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1-21.6.2.1">
-                <p id="section-10.1-21.6.2.1.1">Parameter Usage Location: client-rs request, rs-client response, as-rs request, rs-as response<a href="#section-10.1-21.6.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-10.1-21.6.2.1.1">Parameter Usage Location: rs-client response, rs-as response<a href="#section-10.1-21.6.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-10.1-21.6.2.2">
-                <p id="section-10.1-21.6.2.2.1">Reference: [RFC9594][RFC-XXXX]<a href="#section-10.1-21.6.2.2.1" class="pilcrow">¶</a></p>
+                <p id="section-10.1-21.6.2.2.1">Reference: [RFC9203][RFC-XXXX]<a href="#section-10.1-21.6.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
           <li class="normal" id="section-10.1-21.7">
-            <p id="section-10.1-21.7.1">kdcchallenge<a href="#section-10.1-21.7.1" class="pilcrow">¶</a></p>
+            <p id="section-10.1-21.7.1">sign_info<a href="#section-10.1-21.7.1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1-21.7.2.1">
-                <p id="section-10.1-21.7.2.1.1">Parameter Usage Location: rs-client response, rs-as response<a href="#section-10.1-21.7.2.1.1" class="pilcrow">¶</a></p>
+                <p id="section-10.1-21.7.2.1.1">Parameter Usage Location: client-rs request, rs-client response, as-rs request, rs-as response<a href="#section-10.1-21.7.2.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-10.1-21.7.2.2">
                 <p id="section-10.1-21.7.2.2.1">Reference: [RFC9594][RFC-XXXX]<a href="#section-10.1-21.7.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-10.1-21.8">
+            <p id="section-10.1-21.8.1">kdcchallenge<a href="#section-10.1-21.8.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-10.1-21.8.2.1">
+                <p id="section-10.1-21.8.2.1.1">Parameter Usage Location: rs-client response, rs-as response<a href="#section-10.1-21.8.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-10.1-21.8.2.2">
+                <p id="section-10.1-21.8.2.2.1">Reference: [RFC9594][RFC-XXXX]<a href="#section-10.1-21.8.2.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
@@ -3375,7 +3386,10 @@ ace-error = 2
             </ul>
 </li>
           <li class="normal" id="appendix-C.1-1.2">
-            <p id="appendix-C.1-1.2.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.2.1">IANA considerations: update entry for "access_token" in the "OAuth Parameters" registry.<a href="#appendix-C.1-1.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-C.1-1.3">
+            <p id="appendix-C.1-1.3.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
