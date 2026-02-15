@@ -1157,6 +1157,12 @@ IANA is asked to add the following entries to the "OAuth Parameters" registry wi
 
 In the same registry, IANA is asked to update the entries for the following OAuth parameters identified by their name, so that the content of the "Parameter Usage Location" column and of the "Reference" column is as below:
 
+* access_token
+
+  * Parameter Usage Location: authorization response, token response, as-rs request
+
+  * Reference: \[RFC6749\]\[RFC-XXXX\]
+
 * rs_cnf
 
   * Parameter Usage Location: token request, token response
@@ -1415,6 +1421,8 @@ ace-error = 2
   * Access token responses are successful by definition.
 
   * Successful response in general vs. response with 2.01 code.
+
+* IANA considerations: update entry for "access_token" in the "OAuth Parameters" registry.
 
 * Editorial fixes and improvements.
 
