@@ -129,7 +129,7 @@ The present document updates {{RFC9200}} as follows.
 
   - "anchor_cnf", used by the AS to provide C with the public keys of trust anchors, which C can use to validate the public key of an RS (e.g., as provided in the "rs_cnf" parameter defined in {{RFC9201}} or in the "rs_cnf2" parameter defined in the present document).
 
-  - "token_series_id", used by the AS to provide C with the identifier of a token series and by C to ask the AS for a new access token in the same token series that dynamically updates access rights. A corresponding access token claim, namely "token_series_id", is also defined.
+  - "token_series_id", used by the AS to provide C with the binary identifier of a token series and by C to ask the AS for a new access token in the same token series that dynamically updates access rights. A corresponding access token claim, namely "token_series_id", is also defined.
 
   * "updated_rights", used by the AS to provide the RS with an indication that an access token uploaded per the SDC workflow is not the first one of a new token series, i.e., that the AS has issued the access token for dynamically updating the access rights of C.
 
@@ -580,11 +580,15 @@ The "to_rs" parameter is OPTIONAL to include in an access token request. The pre
 
 The "to_rs" parameter MUST NOT be included if the "token_upload" parameter defined in {{sec-token_upload}} is not included in the access token request. Also, this parameter MUST NOT be included if the requested access token is not the first one of a new token series, i.e., if C is asking the AS for a new access token in the same token series that dynamically updates access rights.
 
-If C wishes that the AS relays information from the RS after successfully uploading the access token but C does not have any information to be relayed to the RS, then this parameter MUST encode the CBOR simple value `null` (0xf6).
+If C wishes that the AS relays information from the RS after successfully uploading the access token, but C does not have any information to be relayed to the RS, then the following applies:
+
+* When the access token request is encoded in CBOR, then the "to_rs" parameter MUST encode the CBOR simple value `null` (0xf6).
+
+* When the access token request is encoded in JSON, then the "to_rs" parameter MUST have value `null`.
 
 Otherwise, this parameter specifies the information that C wishes the AS to relay to the RS, when uploading the access token to the RS on behalf of C.
 
-Such information consists in what C would provide to the RS in addition to the access token, by sending a POST request to the authz-info endpoint in case the original workflow was used.
+Such information consists in what C would provide to the RS in addition to the access token, if the original workflow was used and a POST request encoded in CBOR was sent to the authz-info endpoint at the RS.
 
 When composing the parameter "to_rs", C considers the same information and MUST wrap it in a data structure STRUCT, by using the same method that it employs when using the original workflow. For example, with reference to the OSCORE profile of ACE {{RFC9203}}, such a method composes STRUCT as a CBOR map, which has to be sent as payload of a request with Content-Format "application/ace+cbor".
 
@@ -596,7 +600,7 @@ When the access token request is encoded in CBOR, the value of the "to_rs" param
 
 When the access token request is encoded in JSON, the value of the "to_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see {{Section 5 of RFC4648}}).
 
-If the "to_rs" parameter is included and specifies a value different from the CBOR simple value `null` (0xf6), the AS proceeds as follows when composing the POST request to send to the authz-info endpoint on behalf of C:
+If the "to_rs" parameter is included, and it specifies a value different from the CBOR simple value `null` (0xf6) when the access token request is encoded in CBOR or from `null` when the access token request is encoded in JSON, then the AS proceeds as follows when composing the POST request to send to the authz-info endpoint on behalf of C:
 
 1. The AS sets the Content-Format of the request to be either:
 
@@ -626,7 +630,7 @@ The "from_rs" parameter MUST be included in an access token response if both the
 
 This parameter specifies the information that the AS is relaying to C from the RS, following the successful upload of the access token to the RS on behalf of C.
 
-Such information consists in what C would receive in a successful response from the authz-info endpoint, if the access token was uploaded per the original workflow.
+Such information consists in what C would receive from the RS, if the original workflow was used and the RS sent a successful response encoded in CBOR, in reply to a POST request to the authz-info endpoint.
 
 When composing the parameter "from_rs", the AS builds a CBOR byte string STR as follows:
 
@@ -735,7 +739,9 @@ This section defines the additional parameters "rs_cnf2" and "audience2". The tw
 
   This parameter specifies information about the public keys used by the RSs of the group-audience for authenticating themselves to C. It is used in case the binding between the public keys and the corresponding RS identities are not established through other means. If this parameter is absent, either the RSs in the group-audience do not use a public key, or the AS knows that the RSs can authenticate themselves to C without additional information.
 
-  If included, this parameter MUST encode a non-empty CBOR array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. Each element of the CBOR array specifies the public key of an RS in the group-audience, and MUST follow the syntax and semantics of the "cnf" claim either from {{Section 3.1 of RFC8747}} for CBOR-based interactions, or from {{Section 3.1 of RFC7800}} for JSON-based interactions. It is not required that all the elements of the CBOR array rely on the same confirmation method.
+  If included, this parameter MUST encode a non-empty array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. The array is encoded as a CBOR array or a JSON array, depending on whether the access token response is encoded in CBOR or JSON, respectively.
+
+  Each element of the array specifies the public key of an RS in the group-audience, and MUST follow the syntax and semantics of the "cnf" claim either from {{Section 3.1 of RFC8747}} for CBOR-based interactions, or from {{Section 3.1 of RFC7800}} for JSON-based interactions. It is not required that all the elements of the array rely on the same confirmation method.
 
   Any of the public keys may be provided together with information such as the public key algorithm and use (e.g., specified by means of the parameters "alg" and "key_ops" in a COSE_Key structure). If such information is specified, a client MUST NOT use a public key that is incompatible with the profile of ACE used or with the PoP algorithm according to that information. An RS MUST reject a proof of possession that relies on such a key and MUST reply with a response code equivalent to the CoAP code 4.00 (Bad Request).
 
@@ -743,11 +749,13 @@ This section defines the additional parameters "rs_cnf2" and "audience2". The tw
 
   The "audience2" parameter MUST NOT be included if the issued access token is not the first one of a new token series.
 
-  If included, this parameter MUST encode a non-empty CBOR array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. Each element of the CBOR array in the "audience2" parameter MUST be a CBOR text string, with value the identifier of an RS in the group-audience.
+  If included, this parameter MUST encode a non-empty array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. The array is encoded as a CBOR array or a JSON array, depending on whether the access token response is encoded in CBOR or JSON, respectively.
 
-  The element of the CBOR array referring to an RS in the group-audience SHOULD have the same value that would be used to identify that RS through the "audience" parameter of an access token request to the AS (see {{Section 5.8.1 of RFC9200}}) and of an access token response from the AS (see {{Section 5.8.2 of RFC9200}}), when requesting and issuing an access token for that individual RS.
+  Each element of the array in the "audience2" parameter specifies the identifier of an RS in the group-audience. The value of each element of the array is encoded as a CBOR text string or a JSON string, depending on whether the access token response is encoded in CBOR or JSON, respectively.
 
-  The "audience2" parameter MUST be included if the "rs_cnf2" parameter is included. In such a case, the i-th element of the CBOR array in the "audience2" parameter MUST be the identifier of the RS whose public key is specified by the i-th element of the CBOR array in the "rs_cnf2" parameter.
+  The element of the array referring to an RS in the group-audience SHOULD have the same value that would be used to identify that RS through the "audience" parameter of an access token request to the AS (see {{Section 5.8.1 of RFC9200}}) and of an access token response from the AS (see {{Section 5.8.2 of RFC9200}}), when requesting and issuing an access token for that individual RS.
+
+  The "audience2" parameter MUST be included if the "rs_cnf2" parameter is included. In such a case, the i-th element of the array in the "audience2" parameter MUST be the identifier of the RS whose public key is specified by the i-th element of the array in the "rs_cnf2" parameter.
 
 ### Example
 
@@ -804,7 +812,9 @@ This parameter specifies information about the public keys of trust anchors, whi
 
 If this parameter is absent, either the RS/RSs in the audience do not use a public key, or the AS knows that C can validate the public key of such RS/RSs without additional information (e.g., C has already obtained the required public keys of the involved trust anchors from the AS or through other means).
 
-If included, this parameter MUST encode a non-empty CBOR array that MUST be treated as a set, i.e., the order of its elements has no meaning. Each element of the CBOR array specifies the public key of one trust anchor, which can be used to validate the public key of at least one RS included in the audience for which the access token is issued. Each element of the CBOR array MUST follow the syntax and semantics of the "cnf" claim either from {{Section 3.1 of RFC8747}} for CBOR-based interactions, or from {{Section 3.1 of RFC7800}} for JSON-based interactions. It is not required that all the elements of the CBOR array rely on the same confirmation method.
+If included, this parameter MUST encode a non-empty array that MUST be treated as a set, i.e., the order of its elements has no meaning. Each element of the array specifies the public key of one trust anchor, which can be used to validate the public key of at least one RS included in the audience for which the access token is issued. The array is encoded as a CBOR array or a JSON array, depending on whether the access token response is encoded in CBOR or JSON, respectively.
+
+Each element of the array MUST follow the syntax and semantics of the "cnf" claim either from {{Section 3.1 of RFC8747}} for CBOR-based interactions, or from {{Section 3.1 of RFC7800}} for JSON-based interactions. It is not required that all the elements of the array rely on the same confirmation method.
 
 Any of the public keys conveyed in the "anchor_cnf" parameter may be provided together with information such as the public key algorithm and use (e.g., specified by means of the parameters "alg" and "key_ops" in a COSE_Key structure). If such information is specified, a client MUST NOT use a public key that is incompatible with the profile of ACE used or with the public keys to validate and the way to validate those.
 
@@ -864,17 +874,23 @@ The access token response includes the "anchor_cnf" parameter. This specifies th
 
 This section defines the additional "token_series_id" parameter. The parameter can be used in an access token request sent by C to the token endpoint at the AS (see {{Section 5.8.1 of RFC9200}}), as well as in the access token response sent as a reply by the AS (see {{Section 5.8.2 of RFC9200}}).
 
+The following refers to the base64url encoding without padding (see {{Section 5 of RFC4648}}).
+
 * The "token_series_id" parameter is OPTIONAL to include in an access token request. The presence of this parameter indicates that C wishes to obtain a new access token for dynamically updating its access rights. That is, the new access token is intended to be the next one in an active token series and to supersede the latest access token in that token series.
 
   The "token_series_id" parameter MUST NOT be included in an access token request, if the requested access token is the first one of a new token series.
 
-  If included, this parameter specifies the identifier of the token series that the new access token is intended to extend. The identifier does not change throughout the lifetime of the token series and was provided to C in the access token response that the AS sent when issuing the first access token in that token series. When the access token request is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
+  If included, this parameter specifies the binary identifier of the token series that the new access token is intended to extend. The identifier does not change throughout the lifetime of the token series and was provided to C in the access token response that the AS sent when issuing the first access token in that token series.
+
+  When the access token request is encoded in CBOR, this parameter is a CBOR byte string, with value the identifier of the token series. When the access token request is encoded in JSON, this parameter has as value the base64url-encoded text string that encodes the identifier of the token series.
 
 * The "token_series_id" parameter is OPTIONAL to include in an access token response.
 
   The "token_series_id" parameter MUST NOT be included in an access token response, if the issued access token is not the first one of a new token series.
 
-  If included, this parameter specifies the identifier of the token series to which the issued access token belongs. When the access token response is encoded in CBOR, the value of this parameter is encoded as a CBOR byte string.
+  If included, this parameter specifies the binary identifier of the token series to which the issued access token belongs.
+
+  When the access token response is encoded in CBOR, this parameter is a CBOR byte string, with value the identifier of the token series. When the access token request is encoded in JSON, this parameter has as value the base64url-encoded text string that encodes the identifier of the token series.
 
 If the AS relies on the "token_series_id" parameter to exchange the identifier of token series with clients, then the following applies.
 
@@ -886,7 +902,11 @@ If the AS relies on the "token_series_id" parameter to exchange the identifier o
 
 * An issued access token that belongs to a token series MUST include the identifier of that token series. This allows the RS to identify the latest access token in the token series to be superseded by the issued access token.
 
-  In particular, each of such access tokens MUST include a claim specifying the identifier of the token series to which the access token belongs. When CWTs are used as access tokens, this information MUST be transported in the "token_series_id" claim registered in {{iana-token-cwt-claims}}.
+  In particular, each of such access tokens MUST include a claim specifying the identifier of the token series to which the access token belongs.
+
+  When CWTs are used as access tokens, this information MUST be transported in the "token_series_id" claim registered in {{iana-token-cwt-claims}}, which has the same semantics as the "token_series_id" parameter of an access token response encoded in CBOR.
+
+  When JWTs are used as access tokens, this information MUST be transported in the "token_series_id" claim registered in {{iana-token-json-claims}}, which has the same semantics as the "token_series_id" parameter of an access token response encoded in JSON.
 
 If a profile of ACE relies on a construct that uses different parameters/claims to transport the identifier of a token series, then the new "token_series_id" parameter and "token_series_id" claim MUST NOT be used when using that profile.
 
@@ -898,7 +918,13 @@ This section defines the additional "updated_rights" parameter. The parameter ca
 
 The "updated_rights" parameter MUST be included in the POST request sent by the AS to the authz-info endpoint at the RS, if the uploaded access token is not the first one of a new token series, i.e., if the AS has issued the access token for dynamically updating the access rights of C. Otherwise, the "updated_rights" parameter MUST NOT be included.
 
-When including the "updated_rights" parameter, the POST request MUST have Content-Format "application/ace+cbor" and its payload MUST be formatted as a CBOR map. In particular, the CBOR map MUST include the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5), together with the "access_token" parameter specifying the access token. The CBOR map MAY include additional parameters, according to the specific profile of ACE used.
+When including the "updated_rights" parameter, the following applies:
+
+* If the POST request in encoded in CBOR, the request MUST have media type "application/ace+cbor" and its payload MUST be formatted as a CBOR map. In particular, the CBOR map MUST include the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5), together with the "access_token" parameter specifying the access token. The CBOR map MAY include additional parameters, according to the specific profile of ACE used.
+
+* If the POST request in encoded in JSON, the request MUST have media type "application/ace+json" and its payload MUST be formatted as a JSON object. In particular, the JSON object MUST include the "updated_rights" parameter with value `true`, together with the "access_token" parameter specifying the access token. The JSON object MAY include additional parameters, according to the specific profile of ACE used.
+
+The rest of this section focuses on interactions with the authz-info endpoint at the RS where messages are encoded in CBOR. The same as described below holds in case such messages are encoded in JSON, with the difference that the "updated_rights" parameter with value `true` can be present within a JSON object conveyed by a POST request to the  authz-info endpoint.
 
 Note that this request deviates from the POST request defined in {{RFC9200}}, although such a deviation can already occur in some profiles of ACE (e.g., see {{Section 4.1 of RFC9203}}) or in application profiles of {{RFC9594}}.
 
@@ -976,7 +1002,7 @@ The following extends the semantics of the "rs_cnf" parameter defined in {{Secti
 
 Per its extended semantics, the "rs_cnf" parameter is also OPTIONAL to include in an access token request when requesting the first access token in a token series, if the token type is "pop" and asymmetric keys are used. In any other case, the parameter MUST NOT be included in an access token request.
 
-When C includes the "rs_cnf" parameter in an access token request, the parameter MUST have one of the following encodings.
+When C includes the "rs_cnf" parameter in an access token request encoded in CBOR, the parameter MUST have one of the following encodings.
 
 * If the parameter specifies the CBOR simple value `true` (0xf5), then it instructs the AS to include in the access token response the "rs_cnf" or "rs_cnf2" parameter, specifying the authentication credential(s) of the RS(s) by value.
 
@@ -990,15 +1016,17 @@ When C includes the "rs_cnf" parameter in an access token request, the parameter
 
   In the access token response, the "rs_cnf" and "rs_cnf2" parameters MUST NOT be included.
 
+If the access token request is encoded in JSON, the same as above applies, with the difference that the "rs_cnf" parameter specifies as appropriate the corresponding JSON values `true`, `false`, or `null`.
+
 If the AS is not able to comply in the first two cases above, then the AS MUST reject the request and MUST reply with an error response. The error response MUST have a response code equivalent to the CoAP code 5.00 (Internal Server Error).
 
 Irrespective of what "rs_cnf" specifies in the access token request, C MUST rely on the authentication credential(s) specified by the parameter "rs_cnf" or "rs_cnf2" in the access token response, as those that are used by the RS(s) to authenticate.
 
 If C does not currently store the authentication credential(s) of the RS(s), then the following applies:
 
-* C MUST NOT include the "rs_cnf" parameter specifying the CBOR simple value `null` (0xf6) in an access token request.
+* C MUST NOT include the "rs_cnf" parameter specifying the CBOR simple value `null` (0xf6) in an access token request encoded in CBOR, or the value `null` in an access token request encoded in JSON.
 
-* C SHOULD NOT include the "rs_cnf" parameter specifying the CBOR simple value `false` (0xf4) in an access token request. Exceptions apply if C is confident that it can later acquire and validate the authentication credential(s) of the RS(s) by other means, e.g., by using the references provided by the AS for retrieval from a trusted repository.
+* C SHOULD NOT include the "rs_cnf" parameter specifying the CBOR simple value `false` (0xf4) in an access token request encoded in CBOR, or the value `false` in an access token request encoded in JSON. Exceptions apply if C is confident that it can later acquire and validate the authentication credential(s) of the RS(s) by other means, e.g., by using the references provided by the AS for retrieval from a trusted repository.
 
 # Failed Verification of Proof of Possession at the AS # {#sec-error-failed-pop}
 
@@ -1437,6 +1465,8 @@ ace-error = 2
 * Updated requirements for using "rs_cnf" in an access token request.
 
 * More precise requirements on including/omitting parameters in access token request and response.
+
+* Specified parameter encoding when messages are encoded in JSON.
 
 * Clarifications:
 
