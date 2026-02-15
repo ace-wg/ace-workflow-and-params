@@ -1882,8 +1882,17 @@ Table of Contents
    those that are used by the RS(s) to authenticate.
 
    If C does not currently store the authentication credential(s) of the
-   RS(s), then C MUST NOT include the "rs_cnf" parameter specifying the
-   CBOR simple value null (0xf6) in an access token request.
+   RS(s), then the following applies:
+
+   *  C MUST NOT include the "rs_cnf" parameter specifying the CBOR
+      simple value null (0xf6) in an access token request.
+
+   *  C SHOULD NOT include the "rs_cnf" parameter specifying the CBOR
+      simple value false (0xf4) in an access token request.  Exceptions
+      apply if C is confident that it can later acquire and validate the
+      authentication credential(s) of the RS(s) by other means, e.g., by
+      using the references provided by the AS for retrieval from a
+      trusted repository.
 
 6.  Failed Verification of Proof of Possession at the AS
 
@@ -2730,6 +2739,9 @@ Appendix C.  Document Updates
    This section is to be removed before publishing as an RFC.
 
 C.1.  Version -06 to -07
+
+   *  Updated requirements for using "rs_cnf" in an access token
+      request.
 
    *  Clarifications:
 
