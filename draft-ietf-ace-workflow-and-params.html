@@ -1050,7 +1050,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca &amp; Selander</td>
-<td class="center">Expires 19 August 2026</td>
+<td class="center">Expires 20 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1066,12 +1066,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc9200" class="eref">9200</a>, <a href="https://www.rfc-editor.org/rfc/rfc9201" class="eref">9201</a>, <a href="https://www.rfc-editor.org/rfc/rfc9202" class="eref">9202</a>, <a href="https://www.rfc-editor.org/rfc/rfc9203" class="eref">9203</a>, <a href="https://www.rfc-editor.org/rfc/rfc9431" class="eref">9431</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-02-15" class="published">15 February 2026</time>
+<time datetime="2026-02-16" class="published">16 February 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-08-19">19 August 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-20">20 August 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1124,7 +1124,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 19 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 20 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1548,33 +1548,26 @@ As defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1
 <p id="section-2.1-1">When using the original workflow defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, there are two typical cases concerning the upload of the access token to the RS from C.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2.1-2.1">
-            <p id="section-2.1-2.1.1">The first case considers the upload of the first access token in a token series. While details depend on the specific profile of ACE used, such an access token is typically uploaded through an unprotected POST request to the authz-info endpoint.<a href="#section-2.1-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-2.1-2.1.1">The first case consists in the upload of the first access token in a token series. While details depend on the specific profile of ACE used, such an access token is typically uploaded through an unprotected POST request to the authz-info endpoint.<a href="#section-2.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-2.1-2.2">
-            <p id="section-2.1-2.2.1">The second case considers the upload of an access token that is not the first in its token series, i.e., the AS has issued the access token for dynamically updating the access rights of C. The intent is also for C and the RS to preserve the same secure communication association that they currently share and that is associated with the token series in question.<a href="#section-2.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-2.1-2.2.1">The second case consists in the upload of an access token that is not the first in its token series, i.e., the AS has issued the access token for dynamically updating the access rights of C.<a href="#section-2.1-2.2.1" class="pilcrow">¶</a></p>
 <p id="section-2.1-2.2.2">
-Such an access token is uploaded through a POST request to the authz-info endpoint, which is protected by means of the secure communication association that is shared between C and the RS. If the new access token is accepted by the RS, the new access token supersedes the one currently stored for the token series in question, and it becomes associated with the corresponding secure communication association that is shared between C and the RS.<a href="#section-2.1-2.2.2" class="pilcrow">¶</a></p>
+The intent is also for C and the RS to preserve the same secure communication association that they currently share and that is associated with the token series in question.<a href="#section-2.1-2.2.2" class="pilcrow">¶</a></p>
+<p id="section-2.1-2.2.3">
+Such an access token is uploaded through a POST request to the authz-info endpoint, which is protected by means of the secure communication association that is shared between C and the RS. If the new access token is accepted by the RS, the new access token supersedes the one currently stored for the token series in question, and it becomes associated with the corresponding secure communication association that is shared between C and the RS.<a href="#section-2.1-2.2.3" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-2.1-3">However, if the AS uploads the access token to the RS on behalf of C as per the SDC workflow, the upload of the access token always rely on a protected POST request from the AS to the authz-info endpoint. In particular, the request is protected with the secure communication association shared between the AS and the RS.<a href="#section-2.1-3" class="pilcrow">¶</a></p>
 <p id="section-2.1-4">When receiving a POST request to the authz-info endpoint that is specifically protected through the secure communication association shared with the AS, the RS proceeds as follows. In particular, the RS leverages the explicit indication provided by the AS through the "updated_rights" parameter defined in <a href="#sec-updated_rights" class="auto internal xref">Section 3.7</a>, which is included in the request in the case of dynamic update of access rights.<a href="#section-2.1-4" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-2.1-5.1">
-            <p id="section-2.1-5.1.1">If the request does not include the "updated_rights" parameter, the RS processes the request and the access token therein like it would when receiving the request from C and according to the specific profile of ACE used. The access token in question is the first one in a token series.<a href="#section-2.1-5.1.1" class="pilcrow">¶</a></p>
+            <p id="section-2.1-5.1.1">If the POST request does not include the "updated_rights" parameter, the access token in question is the first one in a token series. Consequently, the RS processes the request and the access token therein like it would when receiving the request from C and according to the specific profile of ACE used.<a href="#section-2.1-5.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-2.1-5.2">
-            <p id="section-2.1-5.2.1">If the request includes the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5), then the access token in question, namely T_NEW, is not the first one in its token series, i.e., it is meant to dynamically update the access rights of C, while preserving the same secure communication association that is shared between C and the RS.<a href="#section-2.1-5.2.1" class="pilcrow">¶</a></p>
-<p id="section-2.1-5.2.2">
-In this case, the RS uses lookup information specified within T_NEW to determine whether it stores an access token T_OLD associated with C and belonging to the same token series of T_NEW. Such lookup information includes an identifier of the token series to which both T_NEW and T_OLD belong, and it can further comprise additional information elements pertaining to the specific profile of ACE used (e.g., the authentication credential of C that is bound to the access tokens of the token series).<a href="#section-2.1-5.2.2" class="pilcrow">¶</a></p>
-<p id="section-2.1-5.2.3">
-By leveraging such lookup information, the RS checks whether it stores an access token T_OLD that belongs to the same token series of T_NEW, like it would when receiving the request from C and according to the specific profile of ACE used.<a href="#section-2.1-5.2.3" class="pilcrow">¶</a></p>
-<p id="section-2.1-5.2.4">
-If the RS is currently storing such an old access token T_OLD and successfully validates the access token T_NEW, then the RS <span class="bcp14">MUST</span> supersede T_OLD by replacing the corresponding authorization information with the one specified in the new access token T_NEW. After that, the RS <span class="bcp14">MUST</span> associate T_NEW with the same secure communication association with which T_OLD was associated.<a href="#section-2.1-5.2.4" class="pilcrow">¶</a></p>
-<p id="section-2.1-5.2.5">
-If the RS is not currently storing such an old access token T_OLD, then the RS <span class="bcp14">MUST</span> reject the POST request from the AS and <span class="bcp14">MUST</span> reply with an error response that has a response code equivalent to the CoAP code 5.00 (Internal Server Error).<a href="#section-2.1-5.2.5" class="pilcrow">¶</a></p>
+            <p id="section-2.1-5.2.1">If the POST request includes the "updated_rights" parameter encoding a specific value, the access token in question is not the first one in a token series, i.e., it is meant to dynamically update the access rights of C, while preserving the same secure communication association that is shared between C and the RS. The processing of the POST request at the RS in this case is defined in <a href="#sec-updated_rights" class="auto internal xref">Section 3.7</a>.<a href="#section-2.1-5.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-2.1-6">The explicit indication provided by the "updated_rights" parameter prevents possible ambiguous situations, where the RS might erroneously believe that an access token is the first one in a new token series (e.g., following the deletion of stored access tokens due to memory limitations).<a href="#section-2.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2335,15 +2328,15 @@ When JWTs are used as access tokens, this information <span class="bcp14">MUST</
 <p id="section-3.7-3">When including the "updated_rights" parameter, the following applies:<a href="#section-3.7-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.7-4.1">
-            <p id="section-3.7-4.1.1">If the POST request in encoded in CBOR, the request <span class="bcp14">MUST</span> have media type "application/ace+cbor" and its payload <span class="bcp14">MUST</span> be formatted as a CBOR map. In particular, the CBOR map <span class="bcp14">MUST</span> include the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5), together with the "access_token" parameter specifying the access token. The CBOR map <span class="bcp14">MAY</span> include additional parameters, according to the specific profile of ACE used.<a href="#section-3.7-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.7-4.1.1">If the POST request is encoded in CBOR, the request <span class="bcp14">MUST</span> have media type "application/ace+cbor" and its payload <span class="bcp14">MUST</span> be formatted as a CBOR map. In particular, the CBOR map <span class="bcp14">MUST</span> include the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5), together with the "access_token" parameter specifying the access token. The CBOR map <span class="bcp14">MAY</span> include additional parameters, according to the specific profile of ACE used.<a href="#section-3.7-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.7-4.2">
-            <p id="section-3.7-4.2.1">If the POST request in encoded in JSON, the request <span class="bcp14">MUST</span> have media type "application/ace+json" and its payload <span class="bcp14">MUST</span> be formatted as a JSON object. In particular, the JSON object <span class="bcp14">MUST</span> include the "updated_rights" parameter with value <code>true</code>, together with the "access_token" parameter specifying the access token. The JSON object <span class="bcp14">MAY</span> include additional parameters, according to the specific profile of ACE used.<a href="#section-3.7-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.7-4.2.1">If the POST request is encoded in JSON, the request <span class="bcp14">MUST</span> have media type "application/ace+json" and its payload <span class="bcp14">MUST</span> be formatted as a JSON object. In particular, the JSON object <span class="bcp14">MUST</span> include the "updated_rights" parameter with value <code>true</code>, together with the "access_token" parameter specifying the access token. The JSON object <span class="bcp14">MAY</span> include additional parameters, according to the specific profile of ACE used.<a href="#section-3.7-4.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.7-5">The rest of this section focuses on interactions with the authz-info endpoint at the RS where messages are encoded in CBOR. The same as described below holds in case such messages are encoded in JSON, with the difference that the "updated_rights" parameter with value <code>true</code> can be present within a JSON object conveyed by a POST request to the  authz-info endpoint.<a href="#section-3.7-5" class="pilcrow">¶</a></p>
-<p id="section-3.7-6">Note that this request deviates from the POST request defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, although such a deviation can already occur in some profiles of ACE (e.g., see <span><a href="https://rfc-editor.org/rfc/rfc9203#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>) or in application profiles of <span>[<a href="#RFC9594" class="cite xref">RFC9594</a>]</span>.<a href="#section-3.7-6" class="pilcrow">¶</a></p>
-<p id="section-3.7-7">When the RS receives a protected POST request to the authz-info endpoint from the AS and the request does not convey the "updated_rights" parameter, the RS is ensured that the access token conveyed in the request is the first one of a new token series.<a href="#section-3.7-7" class="pilcrow">¶</a></p>
+<p id="section-3.7-5">Note that this request deviates from the POST request defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, although such a deviation can already occur in some profiles of ACE (e.g., see <span><a href="https://rfc-editor.org/rfc/rfc9203#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>) or in application profiles of <span>[<a href="#RFC9594" class="cite xref">RFC9594</a>]</span>.<a href="#section-3.7-5" class="pilcrow">¶</a></p>
+<p id="section-3.7-6">The rest of this section focuses on interactions with the authz-info endpoint at the RS where messages are encoded in CBOR. The same as described below holds in case such messages are encoded in JSON and have media type "application/ace+json", with the difference that the "updated_rights" parameter with value <code>true</code> can be present within a JSON object conveyed by a POST request to the  authz-info endpoint.<a href="#section-3.7-6" class="pilcrow">¶</a></p>
+<p id="section-3.7-7">When the RS receives a protected POST request to the authz-info endpoint from the AS and the request does not convey the "updated_rights" parameter, the RS is ensured that the access token conveyed in the request is the first one of a new token series, and processes it accordingly (see <a href="#sec-as-token-upload" class="auto internal xref">Section 2.1</a>).<a href="#section-3.7-7" class="pilcrow">¶</a></p>
 <p id="section-3.7-8">When the RS receives a protected POST request to the authz-info endpoint from the AS and the request conveys the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5), the RS is ensured that the access token conveyed in the request is not the first one of a new token series.<a href="#section-3.7-8" class="pilcrow">¶</a></p>
 <p id="section-3.7-9">Taking advantage of such explicit indication requires the RS to support the Content-Format "application/ace+cbor" and the "updated_rights" parameter.<a href="#section-3.7-9" class="pilcrow">¶</a></p>
 <p id="section-3.7-10">If the RS does not support the Content-Format "application/ace+cbor", the RS rejects the POST request from the AS and replies with an error response that has a response code equivalent to the CoAP code 4.15 (Unsupported Content-Format). Note that, irrespective of the profile of ACE used, the RS supports the Content-Format "application/ace+cbor" if it implements token introspection as defined in <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.9" class="relref">Section 5.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>.<a href="#section-3.7-10" class="pilcrow">¶</a></p>
@@ -2360,8 +2353,14 @@ When JWTs are used as access tokens, this information <span class="bcp14">MUST</
             <p id="section-3.7-13.3.1">The "updated_rights" parameter does not encode the CBOR simple value <code>true</code> (0xf5).<a href="#section-3.7-13.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-3.7-14">If the AS receives an error response from the RS, the AS replies to C with an access token response, which includes the "access_token" parameter specifying the issued access token and includes the "token_upload" parameter encoding the value 1 (see <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a>).<a href="#section-3.7-14" class="pilcrow">¶</a></p>
-<p id="section-3.7-15">The processing of the POST request sent to the authz-info endpoint by the AS is further described in <a href="#sec-as-token-upload" class="auto internal xref">Section 2.1</a>.<a href="#section-3.7-15" class="pilcrow">¶</a></p>
+<p id="section-3.7-14">If none of the error conditions above applies and the request is valid, then the RS leverages the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5) as an indication from the AS that the access token conveyed in the POST request, namely T_NEW, is not the first one in its token series. That is, the access token is meant to dynamically update the access rights of C, while preserving the same secure communication association that is shared between C and the RS.<a href="#section-3.7-14" class="pilcrow">¶</a></p>
+<p id="section-3.7-15">In this case, the RS uses lookup information specified within T_NEW to determine whether it stores an access token T_OLD associated with C and belonging to the same token series of T_NEW. Such lookup information includes an identifier of the token series to which both T_NEW and T_OLD belong, and it can further comprise additional information elements pertaining to the specific profile of ACE used (e.g., the authentication credential of C that is bound to the access tokens of the token series).<a href="#section-3.7-15" class="pilcrow">¶</a></p>
+<p id="section-3.7-16">By leveraging such lookup information, the RS checks whether it stores an access token T_OLD that belongs to the same token series of T_NEW, like it would when receiving the request from C and according to the specific profile of ACE used.<a href="#section-3.7-16" class="pilcrow">¶</a></p>
+<p id="section-3.7-17">If the RS is currently storing such an old access token T_OLD and successfully validates the access token T_NEW, then the RS <span class="bcp14">MUST</span> supersede T_OLD by replacing the corresponding authorization information with the one specified in the new access token T_NEW. After that, the RS <span class="bcp14">MUST</span> associate T_NEW with the same secure communication association with which T_OLD was associated.<a href="#section-3.7-17" class="pilcrow">¶</a></p>
+<p id="section-3.7-18">If the RS is not currently storing such an old access token T_OLD, then the RS <span class="bcp14">MUST</span> reject the POST request from the AS and <span class="bcp14">MUST</span> reply with an error response that has a response code equivalent to the CoAP code 5.00 (Internal Server Error).<a href="#section-3.7-18" class="pilcrow">¶</a></p>
+<p id="section-3.7-19">The explicit indication provided by the "updated_rights" parameter prevents possible ambiguous situations, where the RS might erroneously believe that the access token conveyed in the POST request is the first one in a new token series (e.g., following the deletion of stored access tokens due to memory limitations). --- Editor's note: elaborate more in the "Security Considerations" section.<a href="#section-3.7-19" class="pilcrow">¶</a></p>
+<p id="section-3.7-20">If the AS receives an error response from the RS, the AS replies to C with an access token response, which includes the "access_token" parameter specifying the access token T_NEW and the "token_upload" parameter encoding the value 1 (see <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a>).<a href="#section-3.7-20" class="pilcrow">¶</a></p>
+<p id="section-3.7-21">In case the RS replied to the AS with an error response and could not find the old access token T_OLD to supersede with T_NEW, the RS does not have anymore the secure communication association that was previously shared with C and associated with T_OLD. After receiving from the AS the access token response including the access token T_NEW, C will send a protected POST request including T_NEW to the authz-info endpoint at the RS, according to the original workflow. Since the RS does not store T_OLD and does not have the corresponding secure communication association used by C to protect the POST request, the RS replies to C with an unprotected error response. After that, C can send a new access token request to the token endpoint at the AS, asking for a new access token in a new token series.<a href="#section-3.7-21" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -3437,21 +3436,27 @@ ace-error = 2
             <p id="appendix-C.1-1.3.1">Specified parameter encoding when messages are encoded in JSON.<a href="#appendix-C.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-C.1-1.4">
-            <p id="appendix-C.1-1.4.1">Clarifications:<a href="#appendix-C.1-1.4.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="appendix-C.1-1.4.2.1">
-                <p id="appendix-C.1-1.4.2.1.1">Access token responses are successful by definition.<a href="#appendix-C.1-1.4.2.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.4.1">Moved content on dynamic update of access rights to the section about the "updated_rights" parameter.<a href="#appendix-C.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
-              <li class="normal" id="appendix-C.1-1.4.2.2">
-                <p id="appendix-C.1-1.4.2.2.1">Successful response in general vs. response with 2.01 code.<a href="#appendix-C.1-1.4.2.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="appendix-C.1-1.5">
+            <p id="appendix-C.1-1.5.1">Clarifications:<a href="#appendix-C.1-1.5.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-C.1-1.5.2.1">
+                <p id="appendix-C.1-1.5.2.1.1">Access token responses are successful by definition.<a href="#appendix-C.1-1.5.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="appendix-C.1-1.5.2.2">
+                <p id="appendix-C.1-1.5.2.2.1">Successful response in general vs. response with 2.01 code.<a href="#appendix-C.1-1.5.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="appendix-C.1-1.5.2.3">
+                <p id="appendix-C.1-1.5.2.3.1">Explained the case where the RS has forgotten the access token to supersede.<a href="#appendix-C.1-1.5.2.3.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 </li>
-          <li class="normal" id="appendix-C.1-1.5">
-            <p id="appendix-C.1-1.5.1">IANA considerations: update entry for "access_token" in the "OAuth Parameters" registry.<a href="#appendix-C.1-1.5.1" class="pilcrow">¶</a></p>
-</li>
           <li class="normal" id="appendix-C.1-1.6">
-            <p id="appendix-C.1-1.6.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.6.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.6.1">IANA considerations: update entry for "access_token" in the "OAuth Parameters" registry.<a href="#appendix-C.1-1.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-C.1-1.7">
+            <p id="appendix-C.1-1.7.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.7.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
