@@ -6,8 +6,8 @@ ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Updates: 9200, 9201, 9202, 9203, 9431 (if                    G. Selander
          approved)                                           Ericsson AB
-Intended status: Standards Track                        16 February 2026
-Expires: 20 August 2026
+Intended status: Standards Track                        17 February 2026
+Expires: 21 August 2026
 
 
 Short Distribution Chain (SDC) Workflow and New OAuth Parameters for the
@@ -69,7 +69,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 August 2026.
+   This Internet-Draft will expire on 21 August 2026.
 
 Copyright Notice
 
@@ -2506,7 +2506,7 @@ Table of Contents
 
    *  Change Controller: IETF
 
-   *  Reference: Section 3.6 of [RFC-XXXX]
+   *  Reference: [RFC-XXXX, Section 3.6]
 
 10.5.  OAuth Extensions Error Registry
 
@@ -2521,7 +2521,7 @@ Table of Contents
 
    *  Change Controller: IETF
 
-   *  Reference: Section 5 of [RFC-XXXX]
+   *  Reference: [RFC-XXXX, Section 5]
 
 
 
@@ -2533,7 +2533,7 @@ Table of Contents
 
    *  Change Controller: IETF
 
-   *  Reference: Section 6 of [RFC-XXXX]
+   *  Reference: [RFC-XXXX, Section 6]
 
 10.6.  OAuth Error Code CBOR Mappings Registry
 
@@ -2574,7 +2574,7 @@ Table of Contents
 
    *  Change Controller: IETF
 
-   *  Reference: Section 7 of [RFC-XXXX]
+   *  Reference: [RFC-XXXX, Section 7]
 
 11.  References
 
