@@ -1356,7 +1356,7 @@ IANA is asked to add the following entry to the "CBOR Web Token (CWT) Claims" re
 * Claim Key: TBD (value between 1 and 255)
 * Claim Value Type: byte string
 * Change Controller: IETF
-* Reference: {{sec-token_series_id}} of {{&SELF}}
+* Reference: \[RFC-XXXX, {{sec-token_series_id}}\]
 
 ## OAuth Extensions Error Registry ## {#iana-oauth-extensions-errors}
 
@@ -1366,7 +1366,7 @@ IANA is asked to add the following entries to the "OAuth Extensions Error Regist
 * Usage Location: token error response
 * Protocol Extension: {{&SELF}}
 * Change Controller: IETF
-* Reference: {{sec-coord-exchanged-cred}} of {{&SELF}}
+* Reference: \[RFC-XXXX, {{sec-coord-exchanged-cred}}\]
 
 <br>
 
@@ -1374,7 +1374,7 @@ IANA is asked to add the following entries to the "OAuth Extensions Error Regist
 * Usage Location: token error response
 * Protocol Extension: {{&SELF}}
 * Change Controller: IETF
-* Reference: {{sec-error-failed-pop}} of {{&SELF}}
+* Reference: \[RFC-XXXX, {{sec-error-failed-pop}}\]
 
 ## OAuth Error Code CBOR Mappings Registry ## {#iana-oauth-error-code-cbor-mappings}
 
@@ -1400,7 +1400,7 @@ IANA is asked to register the following entry in the "Custom Problem Detail Keys
 * Name: ace-error
 * Brief Description: Carry ACE {{RFC9200}} problem details in a Concise Problem Details data item.
 * Change Controller: IETF
-* Reference: {{sec-updated-error-responses}} of {{&SELF}}
+* Reference: \[RFC-XXXX, {{sec-updated-error-responses}}\]
 
 --- back
 
