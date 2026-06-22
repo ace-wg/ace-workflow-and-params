@@ -1082,7 +1082,7 @@ Payload:
 ~~~~~~~~~~~
 {: #fig-example-error-response title="Example of Error Response with Problem Details."}
 
-When the ACE framework is used with CBOR for encoding message payloads, the following applies.
+When the ACE framework is used with CBOR for encoding message payloads, the following applies:
 
 * It is RECOMMENDED that authorization servers, clients, and resource servers support the payload format defined in this section.
 
@@ -1116,7 +1116,7 @@ At the time of writing, all the profiles of ACE that are published as RFC (i.e.,
 
 # Security Considerations
 
-The same security considerations from the ACE framework for Authentication and Authorization {{RFC9200}} apply to this document, together with those from the specific profile of ACE used, e.g., {{RFC9202}}{{RFC9203}}{{RFC9431}}{{I-D.ietf-ace-edhoc-oscore-profile}}{{I-D.ietf-ace-group-oscore-profile}}{{RFC9431}}.
+The same security considerations from the ACE framework for Authentication and Authorization {{RFC9200}} apply to this document, together with those from the specific profile of ACE used.
 
 When using the problem-details format defined in {{RFC9290}} for error responses, then the privacy and security considerations from {{Sections 4 and 5 of RFC9290}} also apply.
 
