@@ -2444,13 +2444,13 @@ In the access token response, the "rs_cnf" and "rs_cnf2" parameters <span class=
 <p id="section-5.2-7">If the access token request is encoded in JSON, the same as above applies, with the difference that the "rs_cnf" parameter specifies as appropriate the corresponding JSON values <code>true</code>, <code>false</code>, or <code>null</code>.<a href="#section-5.2-7" class="pilcrow">¶</a></p>
 <p id="section-5.2-8">If the AS is not able to comply in the first two cases above, then the AS <span class="bcp14">MUST</span> reject the request and <span class="bcp14">MUST</span> reply with an error response. The error response <span class="bcp14">MUST</span> have a response code equivalent to the CoAP code 5.00 (Internal Server Error).<a href="#section-5.2-8" class="pilcrow">¶</a></p>
 <p id="section-5.2-9">Irrespective of what "rs_cnf" specifies in the access token request, the parameter "rs_cnf" or "rs_cnf2" in the access token response specifies the authentication credential(s) used by the RS(s) to authenticate.<a href="#section-5.2-9" class="pilcrow">¶</a></p>
-<p id="section-5.2-10">If C does not currently store the authentication credential(s) of the RS(s), then the following applies:<a href="#section-5.2-10" class="pilcrow">¶</a></p>
+<p id="section-5.2-10">In the case that C includes the "rs_cnf" parameter in the access token request and C does not currently store the authentication credential(s) of the RS(s) in the targeted audience, then the following applies:<a href="#section-5.2-10" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-5.2-11.1">
-            <p id="section-5.2-11.1.1">C <span class="bcp14">MUST NOT</span> include the "rs_cnf" parameter specifying the CBOR simple value <code>null</code> (0xf6) in an access token request encoded in CBOR, or the value <code>null</code> in an access token request encoded in JSON.<a href="#section-5.2-11.1.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-11.1.1">The "rs_cnf" parameter <span class="bcp14">MUST NOT</span> specify the CBOR simple value <code>null</code> (0xf6) if the access token request is encoded in CBOR, or the value <code>null</code> if the access token request is encoded in JSON.<a href="#section-5.2-11.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.2-11.2">
-            <p id="section-5.2-11.2.1">C <span class="bcp14">SHOULD NOT</span> include the "rs_cnf" parameter specifying the CBOR simple value <code>false</code> (0xf4) in an access token request encoded in CBOR, or the value <code>false</code> in an access token request encoded in JSON. Exceptions apply if C is confident that it can later acquire and validate the authentication credential(s) of the RS(s) by other means, e.g., by using the references provided by the AS for retrieval from a trusted repository.<a href="#section-5.2-11.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-11.2.1">The "rs_cnf" parameter <span class="bcp14">SHOULD NOT</span> specify the CBOR simple value <code>false</code> (0xf4) if the access token request is encoded in CBOR, or the value <code>false</code> if the access token request is encoded in JSON. Exceptions apply if C is confident that it can later acquire and validate the authentication credential(s) of the RS(s) by other means, e.g., by using the references provided by the AS for retrieval from a trusted repository.<a href="#section-5.2-11.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
@@ -3422,7 +3422,15 @@ ace-error = 2
         </h3>
 <ul class="normal">
 <li class="normal" id="appendix-C.1-1.1">
-            <p id="appendix-C.1-1.1.1">Clarified relation between "token_upload" and use of RFC 9770.<a href="#appendix-C.1-1.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.1.1">Clarifications:<a href="#appendix-C.1-1.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-C.1-1.1.2.1">
+                <p id="appendix-C.1-1.1.2.1.1">Relation between "token_upload" and use of RFC 9770.<a href="#appendix-C.1-1.1.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="appendix-C.1-1.1.2.2">
+                <p id="appendix-C.1-1.1.2.2.1">Values to avoid for "rs_cnf" in an access token request in some contexts.<a href="#appendix-C.1-1.1.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
 </li>
           <li class="normal" id="appendix-C.1-1.2">
             <p id="appendix-C.1-1.2.1">Fully decouple the "to_rs" parameter from the "from_rs" parameter.<a href="#appendix-C.1-1.2.1" class="pilcrow">¶</a></p>
