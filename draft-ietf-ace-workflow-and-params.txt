@@ -89,6 +89,7 @@ Table of Contents
 
    1.  Introduction
      1.1.  Terminology
+     1.2.  Notations
    2.  The Short Distribution Chain (SDC) Workflow
      2.1.  Token Upload
    3.  New Parameters
@@ -155,7 +156,7 @@ Table of Contents
    resource server (RS), and finally accesses protected resources at the
    RS according to the permissions specified in the access token.
 
-   The framework has as main building blocks the OAuth 2.0 framework
+   The ACE framework has as main building blocks the OAuth 2.0 framework
    [RFC6749], the Constrained Application Protocol (CoAP) [RFC7252] for
    message transfer, Concise Binary Object Representation (CBOR)
    [RFC8949] for compact encoding, and CBOR Object Signing and
@@ -312,9 +313,9 @@ Table of Contents
       identifiers possibly used, such as the 'cti' (CWT ID) claim of
       CWTs [RFC8392].
 
-   CBOR [RFC8949] and CDDL [RFC8610] are used in this document.  CDDL
-   predefined type names, especially bstr for CBOR byte strings and tstr
-   for CBOR text strings, are used extensively in this document.
+1.2.  Notations
+
+   CBOR [RFC8949] and CDDL [RFC8610] are used in this document.
 
    Examples throughout this document are expressed in CBOR diagnostic
    notation as defined in Section 8 of [RFC8949] and Appendix G of
@@ -565,8 +566,8 @@ Table of Contents
       the access token request is encoded in CBOR, those values are
       encoded as CBOR unsigned integers.  The value of the parameter
       determines whether the follow-up access token response will have
-      to include certain information, in case the AS has successfully
-      uploaded the access token to the RS.
+      to include certain information, in the case that the AS has
+      successfully uploaded the access token to the RS.
 
       -  0: The access token response will have to include neither the
          access token nor its corresponding token hash.
@@ -640,8 +641,8 @@ Table of Contents
 
    The access token request specifies the "token_upload" parameter with
    value 0.  That is, C indicates that it requires neither the access
-   token nor the corresponding token hash from the AS, in case the AS
-   successfully uploads the access token to the RS.
+   token nor the corresponding token hash from the AS, in the case that
+   the AS successfully uploads the access token to the RS.
 
    The access token response specifies the "token_upload" parameter with
    value 0, which indicates that the AS has successfully uploaded the
@@ -698,8 +699,8 @@ Table of Contents
 
    The access token request specifies the "token_upload" parameter with
    value 2.  That is, C indicates that it requires the access token from
-   the AS, even in case the AS successfully uploads the access token to
-   the RS.
+   the AS, even in the case that the AS successfully uploads the access
+   token to the RS.
 
    The access token response specifies the "token_upload" parameter with
    value 0, which indicates that the AS has successfully uploaded the
@@ -760,8 +761,8 @@ Table of Contents
 
    The access token request specifies the "token_upload" parameter with
    value 0.  That is, C indicates that it requires neither the access
-   token nor the corresponding token hash from the AS, in case the AS
-   successfully uploads the access token to the RS.
+   token nor the corresponding token hash from the AS, in the case that
+   the AS successfully uploads the access token to the RS.
 
    In this example, the access token response includes the
    "token_upload" parameter with value 1, which indicates that the AS
@@ -875,9 +876,9 @@ Table of Contents
       -  HASH_INPUT is the binary representation of HASH_INPUT_TEXT.
 
    *  If the access token response is encoded in JSON, then HASH_INPUT
-      is the binary representation of the text string conveyed by the
-      "access_token" parameter, if this was included in the access token
-      response.
+      is the binary representation of the text string that would be
+      conveyed by the "access_token" parameter, if this was included in
+      the access token response.
 
    Once determined HASH_INPUT as defined above, a hash value of
    HASH_INPUT is generated as per Section 6 of [RFC6920].  The resulting
@@ -910,8 +911,8 @@ Table of Contents
 
    The access token request specifies the "token_upload" parameter with
    value 1.  That is, C indicates that it requires the token hash
-   corresponding to the access token from the AS, in case the AS
-   successfully uploads the access token to the RS.
+   corresponding to the access token from the AS, in the case that the
+   AS successfully uploads the access token to the RS.
 
    The access token response specifies the "token_upload" parameter with
    value 0, which indicates that the AS has successfully uploaded the
