@@ -6,8 +6,8 @@ ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Updates: 9200, 9201, 9202, 9203, 9431 (if                    G. Selander
          approved)                                           Ericsson AB
-Intended status: Standards Track                        17 February 2026
-Expires: 21 August 2026
+Intended status: Standards Track                            22 June 2026
+Expires: 24 December 2026
 
 
 Short Distribution Chain (SDC) Workflow and New OAuth Parameters for the
@@ -69,7 +69,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 21 August 2026.
+   This Internet-Draft will expire on 24 December 2026.
 
 Copyright Notice
 
@@ -134,13 +134,14 @@ Table of Contents
      A.2.  EDHOC and OSCORE Profile
    Appendix B.  CDDL Model
    Appendix C.  Document Updates
-     C.1.  Version -06 to -07
-     C.2.  Version -05 to -06
-     C.3.  Version -04 to -05
-     C.4.  Version -03 to -04
-     C.5.  Version -02 to -03
-     C.6.  Version -01 to -02
-     C.7.  Version -00 to -01
+     C.1.  Version -07 to -08
+     C.2.  Version -06 to -07
+     C.3.  Version -05 to -06
+     C.4.  Version -04 to -05
+     C.5.  Version -03 to -04
+     C.6.  Version -02 to -03
+     C.7.  Version -01 to -02
+     C.8.  Version -00 to -01
    Acknowledgments
    Authors' Addresses
 
@@ -353,8 +354,8 @@ Table of Contents
    result of the resource access (Step F).  Details about what protocol
    the client and the RS use to establish a secure association, mutually
    authenticate, and secure their communications are defined in the
-   specific profile of ACE used, e.g., [RFC9202][RFC9203][RFC9431][I-D.i
-   etf-ace-edhoc-oscore-profile][I-D.ietf-ace-group-oscore-profile].
+   specific profile of ACE used, e.g.,
+   [RFC9202][RFC9203][RFC9431][I-D.ietf-ace-edhoc-oscore-profile][I-D.ietf-ace-group-oscore-profile].
 
    Further interactions are possible between the AS and the RS, i.e.,
    the exchange of an introspection request and response where the AS
@@ -2184,9 +2185,8 @@ Table of Contents
 
    The same security considerations from the ACE framework for
    Authentication and Authorization [RFC9200] apply to this document,
-   together with those from the specific profile of ACE used, e.g., [RFC
-   9202][RFC9203][RFC9431][I-D.ietf-ace-edhoc-oscore-profile][I-D.ietf-a
-   ce-group-oscore-profile][RFC9431].
+   together with those from the specific profile of ACE used, e.g.,
+   [RFC9202][RFC9203][RFC9431][I-D.ietf-ace-edhoc-oscore-profile][I-D.ietf-ace-group-oscore-profile][RFC9431].
 
    When using the problem-details format defined in [RFC9290] for error
    responses, then the privacy and security considerations from Sections
@@ -2591,14 +2591,14 @@ Table of Contents
               Security for Constrained Environments (OSCORE) Profile for
               Authentication and Authorization for Constrained
               Environments (ACE)", Work in Progress, Internet-Draft,
-              draft-ietf-ace-edhoc-oscore-profile-09, 20 October 2025,
+              draft-ietf-ace-edhoc-oscore-profile-10, 1 March 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              edhoc-oscore-profile-09>.
+              edhoc-oscore-profile-10>.
 
    [IANA.Hash.Algorithms]
               IANA, "Named Information Hash Algorithm Registry",
               <https://www.iana.org/assignments/named-information/named-
-              information.xhtml>.
+              information.xhtml#hash-alg>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -2763,9 +2763,9 @@ Table of Contents
               (Group OSCORE) Profile of the Authentication and
               Authorization for Constrained Environments (ACE)
               Framework", Work in Progress, Internet-Draft, draft-ietf-
-              ace-group-oscore-profile-05, 3 September 2025,
+              ace-group-oscore-profile-06, 2 March 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
-              group-oscore-profile-05>.
+              group-oscore-profile-06>.
 
    [RFC9594]  Palombini, F. and M. Tiloca, "Key Provisioning for Group
               Communication Using Authentication and Authorization for
@@ -2858,7 +2858,11 @@ Appendix C.  Document Updates
 
    This section is to be removed before publishing as an RFC.
 
-C.1.  Version -06 to -07
+C.1.  Version -07 to -08
+
+   *  Editorial fixes and improvements.
+
+C.2.  Version -06 to -07
 
    *  Updated requirements for using "rs_cnf" in an access token
       request.
@@ -2885,7 +2889,7 @@ C.1.  Version -06 to -07
 
    *  Editorial fixes and improvements.
 
-C.2.  Version -05 to -06
+C.3.  Version -05 to -06
 
    *  Defined dynamic update of access rights in the SDC workflow.
 
@@ -2903,7 +2907,7 @@ C.2.  Version -05 to -06
 
    *  Editorial fixes and improvements.
 
-C.3.  Version -04 to -05
+C.4.  Version -04 to -05
 
    *  Error handling and error code for failed PoP verification at the
       AS.
@@ -2918,7 +2922,7 @@ C.3.  Version -04 to -05
 
    *  Editorial fixes and improvements.
 
-C.4.  Version -03 to -04
+C.5.  Version -03 to -04
 
    *  Updated document title.
 
@@ -2941,7 +2945,7 @@ C.4.  Version -03 to -04
 
    *  Editorial fixes and improvements.
 
-C.5.  Version -02 to -03
+C.6.  Version -02 to -03
 
    *  Defined parameter and claim "token_series_id".
 
@@ -2965,7 +2969,7 @@ C.5.  Version -02 to -03
 
    *  Clarifications and editorial improvements.
 
-C.6.  Version -01 to -02
+C.7.  Version -01 to -02
 
    *  CBOR diagnostic notation uses placeholders from a CDDL model.
 
@@ -2982,7 +2986,7 @@ C.6.  Version -01 to -02
 
    *  Clarifications and editorial improvements.
 
-C.7.  Version -00 to -01
+C.8.  Version -00 to -01
 
    *  Definition of the "token series" moved to the "Terminology"
       section.
