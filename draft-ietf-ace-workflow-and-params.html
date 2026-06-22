@@ -1930,54 +1930,36 @@ In this case, the access token response can include additional parameters as def
           <h4 id="name-to_rs">
 <a href="#section-3.3.1" class="section-number selfRef">3.3.1. </a><a href="#name-to_rs" class="section-name selfRef">to_rs</a>
           </h4>
-<p id="section-3.3.1-1">The "to_rs" parameter is <span class="bcp14">OPTIONAL</span> to include in an access token request. The presence of this parameter indicates that:<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-1">The "to_rs" parameter is <span class="bcp14">OPTIONAL</span> to include in an access token request. The presence of this parameter indicates that C wishes the AS to relay the information specified therein to the RS, when the AS uploads the issued access token to the RS per the SDC workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>.<a href="#section-3.3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-2">The "to_rs" parameter <span class="bcp14">MUST NOT</span> be included if the "token_upload" parameter defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a> is not included in the access token request. Also, this parameter <span class="bcp14">MUST NOT</span> be included if the requested access token is not the first one of a new token series, i.e., if C is asking the AS for a new access token in the same token series that dynamically updates access rights.<a href="#section-3.3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-3">The information specified in the "to_rs" parameter consists in what C would provide to the RS in addition to the access token, if the original workflow was used and a POST request encoded in CBOR was sent to the authz-info endpoint at the RS.<a href="#section-3.3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-4">When composing the parameter "to_rs", C considers the same information and <span class="bcp14">MUST</span> wrap it in a data structure STRUCT, by using the same method that it employs when using the original workflow. For example, with reference to the OSCORE profile of ACE <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, such a method composes STRUCT as a CBOR map, which has to be sent as payload of a request with Content-Format "application/ace+cbor".<a href="#section-3.3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-5">After that, C builds a CBOR byte string STR, whose value is the binary representation of STRUCT.<a href="#section-3.3.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-6">If and only if the request to the authz-info endpoint has to be sent with a Content-Format ct different from the one employed in the profile of ACE used, then C <span class="bcp14">MUST</span> tag the CBOR byte string STR (see <span><a href="https://rfc-editor.org/rfc/rfc8949#section-3.4" class="relref">Section 3.4</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>). The tag number TN <span class="bcp14">MUST</span> be the one associated with the Content-Format ct and is determined according to the technique described in <span><a href="https://rfc-editor.org/rfc/rfc9277#appendix-B" class="relref">Appendix B</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>. For example, the Content-Format "application/ace+cbor" has Content-Format ID 19 and therefore has 1668546836 as its associated tag number.<a href="#section-3.3.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-7">When the access token request is encoded in CBOR, the value of the "to_rs" parameter is the (tagged) CBOR byte string STR.<a href="#section-3.3.1-7" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-8">When the access token request is encoded in JSON, the value of the "to_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>).<a href="#section-3.3.1-8" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-9">If the "to_rs" parameter is included, the AS proceeds as follows when composing the POST request to send to the authz-info endpoint on behalf of C:<a href="#section-3.3.1-9" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-3.3.1-10">
+<li id="section-3.3.1-10.1">
+              <p id="section-3.3.1-10.1.1">The AS sets the Content-Format of the request to be either:<a href="#section-3.3.1-10.1.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.3.1-2.1">
-              <p id="section-3.3.1-2.1.1">C wishes the AS to relay the information specified therein to the RS, when the AS uploads the issued access token to the RS per the SDC workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>; and<a href="#section-3.3.1-2.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3.1-10.1.2.1">
+                  <p id="section-3.3.1-10.1.2.1.1">the one employed in the profile of ACE used, if the CBOR byte string STR conveyed by the "to_rs" parameter is not tagged; or, otherwise,<a href="#section-3.3.1-10.1.2.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.3.1-2.2">
-              <p id="section-3.3.1-2.2.1">C wishes the AS to relay information received from the RS to C, after having successfully uploaded the access token to the RS per the SDC workflow defined in <a href="#sec-workflow" class="auto internal xref">Section 2</a>.<a href="#section-3.3.1-2.2.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-<p id="section-3.3.1-3">The "to_rs" parameter <span class="bcp14">MUST NOT</span> be included if the "token_upload" parameter defined in <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a> is not included in the access token request. Also, this parameter <span class="bcp14">MUST NOT</span> be included if the requested access token is not the first one of a new token series, i.e., if C is asking the AS for a new access token in the same token series that dynamically updates access rights.<a href="#section-3.3.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-4">If C wishes that the AS relays information from the RS after successfully uploading the access token, but C does not have any information to be relayed to the RS, then the following applies:<a href="#section-3.3.1-4" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.3.1-5.1">
-              <p id="section-3.3.1-5.1.1">When the access token request is encoded in CBOR, then the "to_rs" parameter <span class="bcp14">MUST</span> encode the CBOR simple value <code>null</code> (0xf6).<a href="#section-3.3.1-5.1.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-3.3.1-5.2">
-              <p id="section-3.3.1-5.2.1">When the access token request is encoded in JSON, then the "to_rs" parameter <span class="bcp14">MUST</span> have value <code>null</code>.<a href="#section-3.3.1-5.2.1" class="pilcrow">¶</a></p>
-</li>
-          </ul>
-<p id="section-3.3.1-6">Otherwise, this parameter specifies the information that C wishes the AS to relay to the RS, when uploading the access token to the RS on behalf of C.<a href="#section-3.3.1-6" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-7">Such information consists in what C would provide to the RS in addition to the access token, if the original workflow was used and a POST request encoded in CBOR was sent to the authz-info endpoint at the RS.<a href="#section-3.3.1-7" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-8">When composing the parameter "to_rs", C considers the same information and <span class="bcp14">MUST</span> wrap it in a data structure STRUCT, by using the same method that it employs when using the original workflow. For example, with reference to the OSCORE profile of ACE <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, such a method composes STRUCT as a CBOR map, which has to be sent as payload of a request with Content-Format "application/ace+cbor".<a href="#section-3.3.1-8" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-9">After that, C builds a CBOR byte string STR, whose value is the binary representation of STRUCT.<a href="#section-3.3.1-9" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-10">If and only if the request to the authz-info endpoint has to be sent with a Content-Format ct different from the one employed in the profile of ACE used, then C <span class="bcp14">MUST</span> tag the CBOR byte string STR (see <span><a href="https://rfc-editor.org/rfc/rfc8949#section-3.4" class="relref">Section 3.4</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>). The tag number TN <span class="bcp14">MUST</span> be the one associated with the Content-Format ct and is determined according to the technique described in <span><a href="https://rfc-editor.org/rfc/rfc9277#appendix-B" class="relref">Appendix B</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>. For example, the Content-Format "application/ace+cbor" has Content-Format ID 19 and therefore has 1668546836 as its associated tag number.<a href="#section-3.3.1-10" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-11">When the access token request is encoded in CBOR, the value of the "to_rs" parameter is the (tagged) CBOR byte string STR.<a href="#section-3.3.1-11" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-12">When the access token request is encoded in JSON, the value of the "to_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>).<a href="#section-3.3.1-12" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-13">If the "to_rs" parameter is included, and it specifies a value different from the CBOR simple value <code>null</code> (0xf6) when the access token request is encoded in CBOR or from <code>null</code> when the access token request is encoded in JSON, then the AS proceeds as follows when composing the POST request to send to the authz-info endpoint on behalf of C:<a href="#section-3.3.1-13" class="pilcrow">¶</a></p>
-<ol start="1" type="1" class="normal type-1" id="section-3.3.1-14">
-<li id="section-3.3.1-14.1">
-              <p id="section-3.3.1-14.1.1">The AS sets the Content-Format of the request to be either:<a href="#section-3.3.1-14.1.1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.3.1-14.1.2.1">
-                  <p id="section-3.3.1-14.1.2.1.1">the one employed in the profile of ACE used, if the CBOR byte string STR conveyed by the "to_rs" parameter is not tagged; or, otherwise,<a href="#section-3.3.1-14.1.2.1.1" class="pilcrow">¶</a></p>
-</li>
-                <li class="normal" id="section-3.3.1-14.1.2.2">
-                  <p id="section-3.3.1-14.1.2.2.1">the one associated with the tag number TN of the tagged CBOR byte string STR conveyed by the "to_rs" parameter.<a href="#section-3.3.1-14.1.2.2.1" class="pilcrow">¶</a></p>
+                <li class="normal" id="section-3.3.1-10.1.2.2">
+                  <p id="section-3.3.1-10.1.2.2.1">the one associated with the tag number TN of the tagged CBOR byte string STR conveyed by the "to_rs" parameter.<a href="#section-3.3.1-10.1.2.2.1" class="pilcrow">¶</a></p>
 </li>
               </ul>
 </li>
-            <li id="section-3.3.1-14.2">
-              <p id="section-3.3.1-14.2.1">The AS retrieves the structure STRUCT from STR and extends STRUCT by adding the issued access token, consistently with the profile of ACE used and the Content-Format determined at the previous step.<a href="#section-3.3.1-14.2.1" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-14.2.2">
-For example, when using the OSCORE profile of ACE <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span> and thus the Content-Format to use is "application/ace+cbor", STRUCT is a CBOR map and the access token is included therein as an entry that has: as map key, 1 encoded as a CBOR integer; as map value, a CBOR byte string whose value is the binary representation of the access token.<a href="#section-3.3.1-14.2.2" class="pilcrow">¶</a></p>
+            <li id="section-3.3.1-10.2">
+              <p id="section-3.3.1-10.2.1">The AS retrieves the structure STRUCT from STR and extends STRUCT by adding the issued access token, consistent with the profile of ACE used and the Content-Format determined at the previous step.<a href="#section-3.3.1-10.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-10.2.2">
+For example, when using the OSCORE profile of ACE <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span> and thus the Content-Format to use is "application/ace+cbor", STRUCT is a CBOR map and the access token is included therein as an entry that has: as map key, 1 encoded as a CBOR integer; as map value, a CBOR byte string whose value is the binary representation of the access token.<a href="#section-3.3.1-10.2.2" class="pilcrow">¶</a></p>
 </li>
           </ol>
-<p id="section-3.3.1-15">Clearly, performing the two steps above requires the AS to understand the structure STRUCT and its semantics. In turn, such an understanding builds on the AS supporting the profile of ACE used and the Content-Format to use as determined at Step 1. In the expected cases, the AS is realistically able to perform the two steps. If the AS finds itself unable to perform the two steps, then the AS would simply not upload the access token to the RS on behalf of C. In such a case, the AS replies to C with an access token response, which includes the "access_token" parameter specifying the issued access token and does not include the "token_upload" parameter (see <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a>).<a href="#section-3.3.1-15" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-16">Tagging the CBOR byte string as defined above ensures that the AS can relay the information specified in the "to_rs" parameter as intended by C, i.e., by sending to the authz-info endpoint a POST request that has the correct Content-Format and conveys the correct payload.<a href="#section-3.3.1-16" class="pilcrow">¶</a></p>
-<p id="section-3.3.1-17">As a case in point, using the DTLS profile of ACE <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span> typically results in a POST request to the authz-info endpoint with Content-Format "application/cwt", as per <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.10" class="relref">Section 5.10</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>. However, the DTLS profile of ACE can be combined with application profiles of <span>[<a href="#RFC9594" class="cite xref">RFC9594</a>]</span>. In such a case, the POST request might convey both the access token and additional parameters from C (e.g., "sign_info" defined in <span><a href="https://rfc-editor.org/rfc/rfc9594#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9594" class="cite xref">RFC9594</a>]</span>), which requires the request to have Content-Format "application/ace+cbor" (see <span><a href="https://rfc-editor.org/rfc/rfc9594#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9594" class="cite xref">RFC9594</a>]</span>).<a href="#section-3.3.1-17" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-11">Clearly, performing the two steps above requires the AS to understand the structure STRUCT and its semantics. In turn, such an understanding builds on the AS supporting the profile of ACE used and the Content-Format to use as determined at Step 1. In the expected cases, the AS is realistically able to perform the two steps. If the AS finds itself unable to perform the two steps, then the AS would simply not upload the access token to the RS on behalf of C. In such a case, the AS replies to C with an access token response, which includes the "access_token" parameter specifying the issued access token and does not include the "token_upload" parameter (see <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a>).<a href="#section-3.3.1-11" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-12">Tagging the CBOR byte string as defined above ensures that the AS can relay the information specified in the "to_rs" parameter as intended by C, i.e., by sending to the authz-info endpoint a POST request that has the correct Content-Format and conveys the correct payload.<a href="#section-3.3.1-12" class="pilcrow">¶</a></p>
+<p id="section-3.3.1-13">As a case in point, using the DTLS profile of ACE <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span> typically results in a POST request to the authz-info endpoint with Content-Format "application/cwt", as per <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.10" class="relref">Section 5.10</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>. However, the DTLS profile of ACE can be combined with application profiles of <span>[<a href="#RFC9594" class="cite xref">RFC9594</a>]</span>. In such a case, the POST request might convey both the access token and additional parameters from C (e.g., "sign_info" defined in <span><a href="https://rfc-editor.org/rfc/rfc9594#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9594" class="cite xref">RFC9594</a>]</span>), which requires the request to have Content-Format "application/ace+cbor" (see <span><a href="https://rfc-editor.org/rfc/rfc9594#section-3.3" class="relref">Section 3.3</a> of [<a href="#RFC9594" class="cite xref">RFC9594</a>]</span>).<a href="#section-3.3.1-13" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-from_rs">
@@ -1989,35 +1971,34 @@ For example, when using the OSCORE profile of ACE <span>[<a href="#RFC9203" clas
 <p id="section-3.3.2-2">The "from_rs" parameter <span class="bcp14">MUST</span> be included in an access token response if both the following conditions apply. Otherwise, it <span class="bcp14">MUST NOT</span> be included.<a href="#section-3.3.2-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.3.2-3.1">
-              <p id="section-3.3.2-3.1.1">The corresponding access token request included the "to_rs" parameter (see <a href="#sec-to_rs" class="auto internal xref">Section 3.3.1</a>).<a href="#section-3.3.2-3.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3.3.2-3.1.1">The corresponding access token request included the "token_upload" parameter (see <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a>).<a href="#section-3.3.2-3.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.3.2-3.2">
               <p id="section-3.3.2-3.2.1">The access token response includes the "token_upload" parameter with value 0 (see <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a>). That is, the AS has successfully uploaded the issued access token to the RS, as per the SDC workflow.<a href="#section-3.3.2-3.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.3.2-4">This parameter specifies the information that the AS is relaying to C from the RS, following the successful upload of the access token to the RS on behalf of C.<a href="#section-3.3.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.3.2-5">Such information consists in what C would receive from the RS, if the original workflow was used and the RS sent a successful response encoded in CBOR, in reply to a POST request to the authz-info endpoint.<a href="#section-3.3.2-5" class="pilcrow">¶</a></p>
-<p id="section-3.3.2-6">When composing the parameter "from_rs", the AS builds a CBOR byte string STR as follows:<a href="#section-3.3.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-4">The information specified in the "from_rs" parameter consists in what C would receive from the RS, if the original workflow was used and the RS sent a successful response encoded in CBOR, in reply to a POST request to the authz-info endpoint.<a href="#section-3.3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-5">When composing the parameter "from_rs", the AS builds a CBOR byte string STR as follows:<a href="#section-3.3.2-5" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.3.2-7.1">
-              <p id="section-3.3.2-7.1.1">If the successful response from the authz-info endpoint does not include a payload, then STR is the empty CBOR byte string (0x40); otherwise,<a href="#section-3.3.2-7.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3.2-6.1">
+              <p id="section-3.3.2-6.1.1">If the successful response from the authz-info endpoint does not include a payload, then STR is the empty CBOR byte string (0x40); otherwise,<a href="#section-3.3.2-6.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.3.2-7.2">
-              <p id="section-3.3.2-7.2.1">The value of STR is the payload of the successful response from the authz-info endpoint.<a href="#section-3.3.2-7.2.1" class="pilcrow">¶</a></p>
-<p id="section-3.3.2-7.2.2">
-If and only if the response specifies a given Content-Format ct (i.e., by means of the CoAP Content-Format Option), then the AS <span class="bcp14">MUST</span> tag the CBOR byte string STR (see <span><a href="https://rfc-editor.org/rfc/rfc8949#section-3.4" class="relref">Section 3.4</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>). The tag number TN <span class="bcp14">MUST</span> be the one associated with the Content-Format ct and is determined according to the technique described in <span><a href="https://rfc-editor.org/rfc/rfc9277#appendix-B" class="relref">Appendix B</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-3.3.2-7.2.2" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.3.2-6.2">
+              <p id="section-3.3.2-6.2.1">The value of STR is the payload of the successful response from the authz-info endpoint.<a href="#section-3.3.2-6.2.1" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-6.2.2">
+If and only if the response specifies a given Content-Format ct (i.e., by means of the CoAP Content-Format Option), then the AS <span class="bcp14">MUST</span> tag the CBOR byte string STR (see <span><a href="https://rfc-editor.org/rfc/rfc8949#section-3.4" class="relref">Section 3.4</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span>). The tag number TN <span class="bcp14">MUST</span> be the one associated with the Content-Format ct and is determined according to the technique described in <span><a href="https://rfc-editor.org/rfc/rfc9277#appendix-B" class="relref">Appendix B</a> of [<a href="#RFC9277" class="cite xref">RFC9277</a>]</span>.<a href="#section-3.3.2-6.2.2" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.3.2-8">When the access token response is encoded in CBOR, the value of the "from_rs" parameter is the (tagged) CBOR byte string STR.<a href="#section-3.3.2-8" class="pilcrow">¶</a></p>
-<p id="section-3.3.2-9">When the access token response is encoded in JSON, the value of the "from_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>).<a href="#section-3.3.2-9" class="pilcrow">¶</a></p>
-<p id="section-3.3.2-10">When C receives from the AS the access token response specifying the "token_upload" parameter with value 0, C retrieves from the "from_rs" parameter the information relayed by the AS, just like when retrieving that information from a successful response with Content-Format ct that C receives from the RS when using the original workflow.<a href="#section-3.3.2-10" class="pilcrow">¶</a></p>
-<p id="section-3.3.2-11">In particular, if the CBOR byte string STR is not the empty CBOR byte string (0x40), C considers as the Content-Format ct either:<a href="#section-3.3.2-11" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-7">When the access token response is encoded in CBOR, the value of the "from_rs" parameter is the (tagged) CBOR byte string STR.<a href="#section-3.3.2-7" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-8">When the access token response is encoded in JSON, the value of the "from_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see <span><a href="https://rfc-editor.org/rfc/rfc4648#section-5" class="relref">Section 5</a> of [<a href="#RFC4648" class="cite xref">RFC4648</a>]</span>).<a href="#section-3.3.2-8" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-9">When C receives from the AS the access token response specifying the "token_upload" parameter with value 0, C retrieves from the "from_rs" parameter the information relayed by the AS, just like when retrieving that information from a successful response with Content-Format ct that C receives from the RS when using the original workflow.<a href="#section-3.3.2-9" class="pilcrow">¶</a></p>
+<p id="section-3.3.2-10">In particular, if the CBOR byte string STR is not the empty CBOR byte string (0x40), C considers as the Content-Format ct either:<a href="#section-3.3.2-10" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.3.2-12.1">
-              <p id="section-3.3.2-12.1.1">the one employed in the profile of ACE used, if the CBOR byte string STR conveyed by the "from_rs" parameter is not tagged; or, otherwise,<a href="#section-3.3.2-12.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.3.2-11.1">
+              <p id="section-3.3.2-11.1.1">the one employed in the profile of ACE used, if the CBOR byte string STR conveyed by the "from_rs" parameter is not tagged; or, otherwise,<a href="#section-3.3.2-11.1.1" class="pilcrow">¶</a></p>
 </li>
-            <li class="normal" id="section-3.3.2-12.2">
-              <p id="section-3.3.2-12.2.1">the one associated with the tag number TN of the tagged CBOR byte string STR conveyed by the "from_rs" parameter.<a href="#section-3.3.2-12.2.1" class="pilcrow">¶</a></p>
+            <li class="normal" id="section-3.3.2-11.2">
+              <p id="section-3.3.2-11.2.1">the one associated with the tag number TN of the tagged CBOR byte string STR conveyed by the "from_rs" parameter.<a href="#section-3.3.2-11.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </section>
@@ -2888,7 +2869,7 @@ Payload:
             <p id="section-10.2-6.2.1">CBOR Key: TBD (value between 1 and 255)<a href="#section-10.2-6.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-10.2-6.3">
-            <p id="section-10.2-6.3.1">Value Type: Null or byte string or #6.&lt;uint&gt;(bstr)<a href="#section-10.2-6.3.1" class="pilcrow">¶</a></p>
+            <p id="section-10.2-6.3.1">Value Type: byte string or #6.&lt;uint&gt;(bstr)<a href="#section-10.2-6.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-10.2-6.4">
             <p id="section-10.2-6.4.1">Reference: [RFC-XXXX]<a href="#section-10.2-6.4.1" class="pilcrow">¶</a></p>
@@ -3439,7 +3420,10 @@ ace-error = 2
         </h3>
 <ul class="normal">
 <li class="normal" id="appendix-C.1-1.1">
-            <p id="appendix-C.1-1.1.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.1.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.1.1">Fully decouple the "to_rs" parameter from the "from_rs" parameter.<a href="#appendix-C.1-1.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-C.1-1.2">
+            <p id="appendix-C.1-1.2.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
