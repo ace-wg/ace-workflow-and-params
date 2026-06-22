@@ -719,11 +719,11 @@ This section defines the additional parameters "rs_cnf2" and "audience2". The tw
 
   Also, the "rs_cnf2" parameter MUST NOT be included if the issued access token is not the first one of a new token series.
 
-  This parameter specifies information about the public keys used by the RSs of the group-audience for authenticating themselves to C. It is used in case the binding between the public keys and the corresponding RS identities are not established through other means. If this parameter is absent, either the RSs in the group-audience do not use a public key, or the AS knows that the RSs can authenticate themselves to C without additional information.
+  This parameter specifies information about the public keys used by the RSs of the group-audience for authenticating themselves to C. It is used in the case that the binding between the public keys and the corresponding RS identities are not established through other means. If this parameter is absent, either the RSs in the group-audience do not use a public key, or the AS knows that the RSs can authenticate themselves to C without additional information.
 
   If included, this parameter MUST encode a non-empty array of N elements, where N is the number of RSs in the group-audience for which the access token is issued. The array is encoded as a CBOR array or a JSON array, depending on whether the access token response is encoded in CBOR or JSON, respectively.
 
-  Each element of the array specifies the public key of an RS in the group-audience, and MUST follow the syntax and semantics of the "cnf" claim either from {{Section 3.1 of RFC8747}} for CBOR-based interactions, or from {{Section 3.1 of RFC7800}} for JSON-based interactions. It is not required that all the elements of the array rely on the same confirmation method.
+  Each element of the array specifies the public key of an RS in the group-audience, and it MUST follow the syntax and semantics of the "cnf" claim either from {{Section 3.1 of RFC8747}} for CBOR-based interactions, or from {{Section 3.1 of RFC7800}} for JSON-based interactions. It is not required that all the elements of the array rely on the same confirmation method.
 
   Any of the public keys may be provided together with information such as the public key algorithm and use (e.g., specified by means of the parameters "alg" and "key_ops" in a COSE_Key structure). If such information is specified, a client MUST NOT use a public key that is incompatible with the profile of ACE used or with the PoP algorithm according to that information. An RS MUST reject a proof of possession that relies on such a key and MUST reply with a response code equivalent to the CoAP code 4.00 (Bad Request).
 
@@ -741,7 +741,7 @@ This section defines the additional parameters "rs_cnf2" and "audience2". The tw
 
 ### Example
 
-{{fig-example-AS-to-C-rs_cnf2}} shows an example of access token response from the AS to C, following the issue of an access token for a group-audience composed of two RSs, namely "rs1" and "rs2", and bound to C's public key as an asymmetric PoP key. The access token response includes the access token as well as the parameters "audience2" and "rs_cnf2". These parameters specify the public key of the two RSs as the intended recipients of the access token and the identifiers of those two RSs, respectively.
+{{fig-example-AS-to-C-rs_cnf2}} shows an example of access token response from the AS to C, following the issue of an access token for a group-audience composed of two RSs, namely "rs1" and "rs2", and bound to C's public key as an asymmetric PoP key. The access token response includes the access token as well as the parameters "audience2" and "rs_cnf2". These parameters specify the public keys of the two RSs as the intended recipients of the access token and the identifiers of those two RSs, respectively.
 
 ~~~~~~~~~~~
    Access token response
@@ -886,9 +886,9 @@ If the AS relies on the "token_series_id" parameter to exchange the identifier o
 
   In particular, each of such access tokens MUST include a claim specifying the identifier of the token series to which the access token belongs.
 
-  When CWTs are used as access tokens, this information MUST be transported in the "token_series_id" claim registered in {{iana-token-cwt-claims}}, which has the same semantics as the "token_series_id" parameter of an access token response encoded in CBOR.
+  When CWTs are used as access tokens, such claim can be the "token_series_id" claim registered in {{iana-token-cwt-claims}}, which has the same semantics as the "token_series_id" parameter of an access token response encoded in CBOR.
 
-  When JWTs are used as access tokens, this information MUST be transported in the "token_series_id" claim registered in {{iana-token-json-claims}}, which has the same semantics as the "token_series_id" parameter of an access token response encoded in JSON.
+  When JWTs are used as access tokens, such claim can be the "token_series_id" claim registered in {{iana-token-json-claims}}, which has the same semantics as the "token_series_id" parameter of an access token response encoded in JSON.
 
 If a profile of ACE relies on a construct that uses different parameters/claims to transport the identifier of a token series, then the new "token_series_id" parameter and "token_series_id" claim MUST NOT be used when using that profile.
 
@@ -908,9 +908,9 @@ When including the "updated_rights" parameter, the following applies:
 
 Note that this request deviates from the POST request defined in {{RFC9200}}, although such a deviation can already occur in some profiles of ACE (e.g., see {{Section 4.1 of RFC9203}}) or in application profiles of {{RFC9594}}.
 
-The rest of this section focuses on interactions with the authz-info endpoint at the RS where messages are encoded in CBOR. The same as described below holds in case such messages are encoded in JSON and have media type "application/ace+json", with the difference that the "updated_rights" parameter with value `true` can be present within a JSON object conveyed by a POST request to the  authz-info endpoint.
+The rest of this section focuses on interactions with the authz-info endpoint at the RS where messages are encoded in CBOR. The same as described below holds in the case that such messages are encoded in JSON and have media type "application/ace+json", with the difference that the "updated_rights" parameter with value `true` can be present within a JSON object conveyed by a POST request to the  authz-info endpoint.
 
-When the RS receives a protected POST request to the authz-info endpoint from the AS and the request does not convey the "updated_rights" parameter, the RS is ensured that the access token conveyed in the request is the first one of a new token series, and processes it accordingly (see {{sec-as-token-upload}}).
+When the RS receives a protected POST request to the authz-info endpoint from the AS and the request does not convey the "updated_rights" parameter, the RS is ensured that the access token conveyed in the request is the first one of a new token series, which the RS processes accordingly (see {{sec-as-token-upload}}).
 
 When the RS receives a protected POST request to the authz-info endpoint from the AS and the request conveys the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5), the RS is ensured that the access token conveyed in the request is not the first one of a new token series.
 
@@ -920,7 +920,7 @@ If the RS does not support the Content-Format "application/ace+cbor", the RS rej
 
 If the RS supports the Content-Format "application/ace+cbor" but does not support the "updated_rights" parameter, the RS rejects the POST request from the AS and replies with an error response that has a response code equivalent to the CoAP code 4.00 (Bad Request).
 
-In case a POST request to the authz-info endpoint includes the "updated_rights" parameter, the RS supports the parameter, and any of the following conditions applies, the RS MUST reject the request and MUST reply with an error response that has a response code equivalent to the CoAP code 4.00 (Bad Request):
+In the case that a POST request to the authz-info endpoint includes the "updated_rights" parameter, the RS supports the parameter, and any of the following conditions applies, then the RS MUST reject the request and MUST reply with an error response that has a response code equivalent to the CoAP code 4.00 (Bad Request):
 
 * The request is not protected.
 
@@ -942,7 +942,7 @@ The explicit indication provided by the "updated_rights" parameter prevents poss
 
 If the AS receives an error response from the RS, the AS replies to C with an access token response, which includes the "access_token" parameter specifying the access token T_NEW and the "token_upload" parameter encoding the value 1 (see {{sec-token_upload}}).
 
-In case the RS replied to the AS with an error response and could not find the old access token T_OLD to supersede with T_NEW, the RS does not have anymore the secure communication association that was previously shared with C and associated with T_OLD. After receiving from the AS the access token response including the access token T_NEW, C will send a protected POST request including T_NEW to the authz-info endpoint at the RS, according to the original workflow. Since the RS does not store T_OLD and does not have the corresponding secure communication association used by C to protect the POST request, the RS replies to C with an unprotected error response. After that, C can send a new access token request to the token endpoint at the AS, asking for a new access token in a new token series.
+In the case that the RS replied to the AS with an error response and could not find the old access token T_OLD to supersede with T_NEW, the RS does not have anymore the secure communication association that was previously shared with C and associated with T_OLD. After receiving from the AS the access token response including the access token T_NEW, C will send a protected POST request including T_NEW to the authz-info endpoint at the RS, according to the original workflow. Since the RS does not store T_OLD and does not have the corresponding secure communication association used by C to protect the POST request, the RS replies to C with an unprotected error response. After that, C can send a new access token request to the token endpoint at the AS, asking for a new access token in a new token series.
 
 # Updated "ace_profile" Parameter # {#sec-updated-ace-profile-parameter}
 
@@ -1004,7 +1004,7 @@ When C includes the "rs_cnf" parameter in an access token request encoded in CBO
 
 * If the parameter specifies the CBOR simple value `false` (0xf4), then it instructs the AS to include in the access token response the "rs_cnf" or "rs_cnf2" parameter, specifying the authentication credential(s) of the RS(s) by reference.
 
-  In the access token response, each pertaining authentication credential MUST be specified by reference, or alternatively by value only in case that was not possible for the AS to attain.
+  In the access token response, each pertaining authentication credential MUST be specified by reference, or alternatively by value only if that was not possible for the AS to attain.
 
 * If the parameter specifies the CBOR simple value `null` (0xf6), then it instructs the AS to omit the "rs_cnf" and "rs_cnf2" parameters from the access token response.
 
@@ -1014,7 +1014,7 @@ If the access token request is encoded in JSON, the same as above applies, with 
 
 If the AS is not able to comply in the first two cases above, then the AS MUST reject the request and MUST reply with an error response. The error response MUST have a response code equivalent to the CoAP code 5.00 (Internal Server Error).
 
-Irrespective of what "rs_cnf" specifies in the access token request, C MUST rely on the authentication credential(s) specified by the parameter "rs_cnf" or "rs_cnf2" in the access token response, as those that are used by the RS(s) to authenticate.
+Irrespective of what "rs_cnf" specifies in the access token request, the parameter "rs_cnf" or "rs_cnf2" in the access token response specifies the authentication credential(s) used by the RS(s) to authenticate.
 
 If C does not currently store the authentication credential(s) of the RS(s), then the following applies:
 
