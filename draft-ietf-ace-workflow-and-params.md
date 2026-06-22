@@ -78,7 +78,7 @@ normative:
       org: IANA
     date: false
     title: Named Information Hash Algorithm Registry
-    target: https://www.iana.org/assignments/named-information/named-information.xhtml
+    target: https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg
   SHA-256:
     author:
       org: NIST
@@ -1439,7 +1439,7 @@ This is enabled by the parameters "rs_cnf2" and "audience2" defined in {{sec-rs_
 # CDDL Model # {#sec-cddl-model}
 {:removeinrfc}
 
-~~~~~~~~~~~~~~~~~~~~ CDDL
+~~~~~~~~~~~~~~~~~~~~ cddl
 ; OAuth Parameters CBOR Mappings
 token_upload = 49
 token_hash = 50
@@ -1459,10 +1459,14 @@ x5chain = 24
 ; Custom Problem Detail Keys Registry
 ace-error = 2
 ~~~~~~~~~~~~~~~~~~~~
-{: #fig-cddl-model title="CDDL model" artwork-align="left"}
+{: #fig-cddl-model title="CDDL model"}
 
 # Document Updates # {#sec-document-updates}
 {:removeinrfc}
+
+## Version -07 to -08 ## {#sec-07-08}
+
+* Editorial fixes and improvements.
 
 ## Version -06 to -07 ## {#sec-06-07}
 
