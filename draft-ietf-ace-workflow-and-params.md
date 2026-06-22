@@ -566,23 +566,11 @@ For instance, when using the OSCORE profile {{RFC9203}}, C and RS can use the tw
 
 ### to_rs {#sec-to_rs}
 
-The "to_rs" parameter is OPTIONAL to include in an access token request. The presence of this parameter indicates that:
-
-* C wishes the AS to relay the information specified therein to the RS, when the AS uploads the issued access token to the RS per the SDC workflow defined in {{sec-workflow}}; and
-
-* C wishes the AS to relay information received from the RS to C, after having successfully uploaded the access token to the RS per the SDC workflow defined in {{sec-workflow}}.
+The "to_rs" parameter is OPTIONAL to include in an access token request. The presence of this parameter indicates that C wishes the AS to relay the information specified therein to the RS, when the AS uploads the issued access token to the RS per the SDC workflow defined in {{sec-workflow}}.
 
 The "to_rs" parameter MUST NOT be included if the "token_upload" parameter defined in {{sec-token_upload}} is not included in the access token request. Also, this parameter MUST NOT be included if the requested access token is not the first one of a new token series, i.e., if C is asking the AS for a new access token in the same token series that dynamically updates access rights.
 
-If C wishes that the AS relays information from the RS after successfully uploading the access token, but C does not have any information to be relayed to the RS, then the following applies:
-
-* When the access token request is encoded in CBOR, then the "to_rs" parameter MUST encode the CBOR simple value `null` (0xf6).
-
-* When the access token request is encoded in JSON, then the "to_rs" parameter MUST have value `null`.
-
-Otherwise, this parameter specifies the information that C wishes the AS to relay to the RS, when uploading the access token to the RS on behalf of C.
-
-Such information consists in what C would provide to the RS in addition to the access token, if the original workflow was used and a POST request encoded in CBOR was sent to the authz-info endpoint at the RS.
+The information specified in the "to_rs" parameter consists in what C would provide to the RS in addition to the access token, if the original workflow was used and a POST request encoded in CBOR was sent to the authz-info endpoint at the RS.
 
 When composing the parameter "to_rs", C considers the same information and MUST wrap it in a data structure STRUCT, by using the same method that it employs when using the original workflow. For example, with reference to the OSCORE profile of ACE {{RFC9203}}, such a method composes STRUCT as a CBOR map, which has to be sent as payload of a request with Content-Format "application/ace+cbor".
 
@@ -594,7 +582,7 @@ When the access token request is encoded in CBOR, the value of the "to_rs" param
 
 When the access token request is encoded in JSON, the value of the "to_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see {{Section 5 of RFC4648}}).
 
-If the "to_rs" parameter is included, and it specifies a value different from the CBOR simple value `null` (0xf6) when the access token request is encoded in CBOR or from `null` when the access token request is encoded in JSON, then the AS proceeds as follows when composing the POST request to send to the authz-info endpoint on behalf of C:
+If the "to_rs" parameter is included, the AS proceeds as follows when composing the POST request to send to the authz-info endpoint on behalf of C:
 
 1. The AS sets the Content-Format of the request to be either:
 
@@ -602,7 +590,7 @@ If the "to_rs" parameter is included, and it specifies a value different from th
 
    * the one associated with the tag number TN of the tagged CBOR byte string STR conveyed by the "to_rs" parameter.
 
-2. The AS retrieves the structure STRUCT from STR and extends STRUCT by adding the issued access token, consistently with the profile of ACE used and the Content-Format determined at the previous step.
+2. The AS retrieves the structure STRUCT from STR and extends STRUCT by adding the issued access token, consistent with the profile of ACE used and the Content-Format determined at the previous step.
 
    For example, when using the OSCORE profile of ACE {{RFC9203}} and thus the Content-Format to use is "application/ace+cbor", STRUCT is a CBOR map and the access token is included therein as an entry that has: as map key, 1 encoded as a CBOR integer; as map value, a CBOR byte string whose value is the binary representation of the access token.
 
@@ -618,13 +606,11 @@ The "from_rs" parameter is OPTIONAL to include in an access token response. The 
 
 The "from_rs" parameter MUST be included in an access token response if both the following conditions apply. Otherwise, it MUST NOT be included.
 
-* The corresponding access token request included the "to_rs" parameter (see {{sec-to_rs}}).
+* The corresponding access token request included the "token_upload" parameter (see {{sec-token_upload}}).
 
 * The access token response includes the "token_upload" parameter with value 0 (see {{sec-token_upload}}). That is, the AS has successfully uploaded the issued access token to the RS, as per the SDC workflow.
 
-This parameter specifies the information that the AS is relaying to C from the RS, following the successful upload of the access token to the RS on behalf of C.
-
-Such information consists in what C would receive from the RS, if the original workflow was used and the RS sent a successful response encoded in CBOR, in reply to a POST request to the authz-info endpoint.
+The information specified in the "from_rs" parameter consists in what C would receive from the RS, if the original workflow was used and the RS sent a successful response encoded in CBOR, in reply to a POST request to the authz-info endpoint.
 
 When composing the parameter "from_rs", the AS builds a CBOR byte string STR as follows:
 
@@ -1279,7 +1265,7 @@ IANA is asked to add the following entries to the "OAuth Parameters CBOR Mapping
 
 * Name: to_rs
 * CBOR Key: TBD (value between 1 and 255)
-* Value Type: Null or byte string or \#6.\<uint\>(bstr)
+* Value Type: byte string or \#6.\<uint\>(bstr)
 * Reference: {{&SELF}}
 * Original Specification: {{&SELF}}
 
@@ -1467,6 +1453,8 @@ ace-error = 2
 {:removeinrfc}
 
 ## Version -07 to -08 ## {#sec-07-08}
+
+* Fully decouple the "to_rs" parameter from the "from_rs" parameter.
 
 * Editorial fixes and improvements.
 
