@@ -1016,11 +1016,11 @@ If the AS is not able to comply in the first two cases above, then the AS MUST r
 
 Irrespective of what "rs_cnf" specifies in the access token request, the parameter "rs_cnf" or "rs_cnf2" in the access token response specifies the authentication credential(s) used by the RS(s) to authenticate.
 
-If C does not currently store the authentication credential(s) of the RS(s), then the following applies:
+In the case that C includes the "rs_cnf" parameter in the access token request and C does not currently store the authentication credential(s) of the RS(s) in the targeted audience, then the following applies:
 
-* C MUST NOT include the "rs_cnf" parameter specifying the CBOR simple value `null` (0xf6) in an access token request encoded in CBOR, or the value `null` in an access token request encoded in JSON.
+* The "rs_cnf" parameter MUST NOT specify the CBOR simple value `null` (0xf6) if the access token request is encoded in CBOR, or the value `null` if the access token request is encoded in JSON.
 
-* C SHOULD NOT include the "rs_cnf" parameter specifying the CBOR simple value `false` (0xf4) in an access token request encoded in CBOR, or the value `false` in an access token request encoded in JSON. Exceptions apply if C is confident that it can later acquire and validate the authentication credential(s) of the RS(s) by other means, e.g., by using the references provided by the AS for retrieval from a trusted repository.
+* The "rs_cnf" parameter SHOULD NOT specify the CBOR simple value `false` (0xf4) if the access token request is encoded in CBOR, or the value `false` if the access token request is encoded in JSON. Exceptions apply if C is confident that it can later acquire and validate the authentication credential(s) of the RS(s) by other means, e.g., by using the references provided by the AS for retrieval from a trusted repository.
 
 # Failed Verification of Proof of Possession at the AS # {#sec-error-failed-pop}
 
@@ -1456,7 +1456,11 @@ ace-error = 2
 
 ## Version -07 to -08 ## {#sec-07-08}
 
-* Clarified relation between "token_upload" and use of RFC 9770.
+* Clarifications:
+
+  * Relation between "token_upload" and use of RFC 9770.
+
+  * Values to avoid for "rs_cnf" in an access token request in some contexts.
 
 * Fully decouple the "to_rs" parameter from the "from_rs" parameter.
 
