@@ -2480,7 +2480,7 @@ In the access token response, the "rs_cnf" and "rs_cnf2" parameters <span class=
 <li class="normal" id="section-7-4.1">
           <p id="section-7-4.1.1">It <span class="bcp14">MUST</span> include the Custom Problem Detail entry "ace-error" registered in <a href="#iana-problem-details" class="auto internal xref">Section 10.7</a> of this document.<a href="#section-7-4.1.1" class="pilcrow">¶</a></p>
 <p id="section-7-4.1.2">
-This entry is formatted as a CBOR map including only one field, namely "error-code". The map key for the "error-code" field is the CBOR integer with value 0. The value of the "error-code" field is a CBOR integer specifying the error code associated with the occurred error. This value is taken from the "CBOR Value" column of the "OAuth Error Code CBOR Mappings" registry <span>[<a href="#ACE.OAuth.Error.Code.CBOR.Mappings" class="cite xref">ACE.OAuth.Error.Code.CBOR.Mappings</a>]</span>.<a href="#section-7-4.1.2" class="pilcrow">¶</a></p>
+This entry is formatted as a CBOR map including only one field, namely "error-code". The map key for the "error-code" field is the CBOR integer with value 0. The value of the "error-code" field is a CBOR integer specifying the error code associated with the occurred error. This value is taken from the "CBOR Value" column of the "OAuth Error Code CBOR Mappings" registry <span>[<a href="#IANA.OAuth.Error.Code.CBOR.Mappings" class="cite xref">IANA.OAuth.Error.Code.CBOR.Mappings</a>]</span>.<a href="#section-7-4.1.2" class="pilcrow">¶</a></p>
 <p id="section-7-4.1.3">
 The "error-code" field conveys the same information that the original payload format conveys through the "error" parameter (see, e.g., Sections <a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.3" class="relref">5.8.3</a> and <a href="https://rfc-editor.org/rfc/rfc9200#section-5.9.3" class="relref">5.9.3</a> of <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>).<a href="#section-7-4.1.3" class="pilcrow">¶</a></p>
 <p id="section-7-4.1.4">
@@ -2592,7 +2592,7 @@ Payload:
         <h3 id="name-oauth-parameters-registry">
 <a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-oauth-parameters-registry" class="section-name selfRef">OAuth Parameters Registry</a>
         </h3>
-<p id="section-10.1-1">IANA is asked to add the following entries to the "OAuth Parameters" registry within the "OAuth Parameters" registry group.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
+<p id="section-10.1-1">IANA is asked to add the following entries to the "OAuth Parameters" registry <span>[<a href="#IANA.OAuth.Parameters" class="cite xref">IANA.OAuth.Parameters</a>]</span> within the "OAuth Parameters" registry group.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.1-2.1">
             <p id="section-10.1-2.1.1">Name: token_upload<a href="#section-10.1-2.1.1" class="pilcrow">¶</a></p>
@@ -2818,7 +2818,30 @@ Payload:
 </li>
             </ul>
 </li>
+          <li class="normal" id="section-10.1-21.9">
+            <p id="section-10.1-21.9.1">ecdh_info<a href="#section-10.1-21.9.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-10.1-21.9.2.1">
+                <p id="section-10.1-21.9.2.1.1">Parameter Usage Location: client-rs request, rs-client response, as-rs request, rs-as response<a href="#section-10.1-21.9.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-10.1-21.9.2.2">
+                <p id="section-10.1-21.9.2.2.1">Reference: [RFC-ietf-ace-key-groupcomm-oscore-21][RFC-XXXX]<a href="#section-10.1-21.9.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-10.1-21.10">
+            <p id="section-10.1-21.10.1">kdc_dh_creds<a href="#section-10.1-21.10.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-10.1-21.10.2.1">
+                <p id="section-10.1-21.10.2.1.1">Parameter Usage Location: client-rs request, rs-client response, as-rs request, rs-as response<a href="#section-10.1-21.10.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-10.1-21.10.2.2">
+                <p id="section-10.1-21.10.2.2.1">Reference: [RFC-ietf-ace-key-groupcomm-oscore-21][RFC-XXXX]<a href="#section-10.1-21.10.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
         </ul>
+<p id="section-10.1-22">Note to RFC Editor: In the last two entries above, please replace all occurrences of "-ietf-ace-key-groupcomm-oscore-21" with the RFC number of that specification and delete this paragraph.<a href="#section-10.1-22" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-oauth-cbor-mappings">
@@ -2826,7 +2849,7 @@ Payload:
         <h3 id="name-oauth-parameters-cbor-mappi">
 <a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-oauth-parameters-cbor-mappi" class="section-name selfRef">OAuth Parameters CBOR Mappings Registry</a>
         </h3>
-<p id="section-10.2-1">IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group, following the procedure specified in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
+<p id="section-10.2-1">IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry <span>[<a href="#IANA.OAuth.Parameters.CBOR.Mappings" class="cite xref">IANA.OAuth.Parameters.CBOR.Mappings</a>]</span> within the "Authentication and Authorization for Constrained Environments (ACE)" registry group, following the procedure specified in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>.<a href="#section-10.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.2-2.1">
             <p id="section-10.2-2.1.1">Name: token_upload<a href="#section-10.2-2.1.1" class="pilcrow">¶</a></p>
@@ -3005,7 +3028,7 @@ Payload:
         <h3 id="name-json-web-token-claims-regis">
 <a href="#section-10.3" class="section-number selfRef">10.3. </a><a href="#name-json-web-token-claims-regis" class="section-name selfRef">JSON Web Token Claims Registry</a>
         </h3>
-<p id="section-10.3-1">IANA is asked to add the following entry to the "JSON Web Token Claims" registry within the "JSON Web Token (JWT)" registry group, following the procedure specified in <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>.<a href="#section-10.3-1" class="pilcrow">¶</a></p>
+<p id="section-10.3-1">IANA is asked to add the following entry to the "JSON Web Token Claims" registry <span>[<a href="#IANA.JSON.Web.Token.Claims" class="cite xref">IANA.JSON.Web.Token.Claims</a>]</span> within the "JSON Web Token (JWT)" registry group, following the procedure specified in <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>.<a href="#section-10.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.3-2.1">
             <p id="section-10.3-2.1.1">Claim Name: token_series_id<a href="#section-10.3-2.1.1" class="pilcrow">¶</a></p>
@@ -3027,7 +3050,7 @@ Payload:
         <h3 id="name-cbor-web-token-cwt-claims-r">
 <a href="#section-10.4" class="section-number selfRef">10.4. </a><a href="#name-cbor-web-token-cwt-claims-r" class="section-name selfRef">CBOR Web Token (CWT) Claims Registry</a>
         </h3>
-<p id="section-10.4-1">IANA is asked to add the following entry to the "CBOR Web Token (CWT) Claims" registry within the "CBOR Web Token (CWT) Claims" registry group, following the procedure specified in <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>.<a href="#section-10.4-1" class="pilcrow">¶</a></p>
+<p id="section-10.4-1">IANA is asked to add the following entry to the "CBOR Web Token (CWT) Claims" registry <span>[<a href="#IANA.CWT.Claims" class="cite xref">IANA.CWT.Claims</a>]</span> within the "CBOR Web Token (CWT) Claims" registry group, following the procedure specified in <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>.<a href="#section-10.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.4-2.1">
             <p id="section-10.4-2.1.1">Claim Name: token_series_id<a href="#section-10.4-2.1.1" class="pilcrow">¶</a></p>
@@ -3058,7 +3081,7 @@ Payload:
         <h3 id="name-oauth-extensions-error-regi">
 <a href="#section-10.5" class="section-number selfRef">10.5. </a><a href="#name-oauth-extensions-error-regi" class="section-name selfRef">OAuth Extensions Error Registry</a>
         </h3>
-<p id="section-10.5-1">IANA is asked to add the following entries to the "OAuth Extensions Error Registry" within the "OAuth Parameters" registry group.<a href="#section-10.5-1" class="pilcrow">¶</a></p>
+<p id="section-10.5-1">IANA is asked to add the following entries to the "OAuth Extensions Error Registry" <span>[<a href="#IANA.OAuth.Extensions.Error" class="cite xref">IANA.OAuth.Extensions.Error</a>]</span> within the "OAuth Parameters" registry group.<a href="#section-10.5-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.5-2.1">
             <p id="section-10.5-2.1.1">Name: unknown_credential_referenced<a href="#section-10.5-2.1.1" class="pilcrow">¶</a></p>
@@ -3101,7 +3124,7 @@ Payload:
         <h3 id="name-oauth-error-code-cbor-mappi">
 <a href="#section-10.6" class="section-number selfRef">10.6. </a><a href="#name-oauth-error-code-cbor-mappi" class="section-name selfRef">OAuth Error Code CBOR Mappings Registry</a>
         </h3>
-<p id="section-10.6-1">IANA is asked to add the following entries to the "OAuth Error Code CBOR Mappings" registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.<a href="#section-10.6-1" class="pilcrow">¶</a></p>
+<p id="section-10.6-1">IANA is asked to add the following entries to the "OAuth Error Code CBOR Mappings" registry <span>[<a href="#IANA.OAuth.Error.Code.CBOR.Mappings" class="cite xref">IANA.OAuth.Error.Code.CBOR.Mappings</a>]</span> within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.<a href="#section-10.6-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.6-2.1">
             <p id="section-10.6-2.1.1">Name: unknown_credential_referenced<a href="#section-10.6-2.1.1" class="pilcrow">¶</a></p>
@@ -3138,7 +3161,7 @@ Payload:
         <h3 id="name-custom-problem-detail-keys-">
 <a href="#section-10.7" class="section-number selfRef">10.7. </a><a href="#name-custom-problem-detail-keys-" class="section-name selfRef">Custom Problem Detail Keys Registry</a>
         </h3>
-<p id="section-10.7-1">IANA is asked to register the following entry in the "Custom Problem Detail Keys" registry within the "Constrained RESTful Environments (CoRE) Parameters" registry group.<a href="#section-10.7-1" class="pilcrow">¶</a></p>
+<p id="section-10.7-1">IANA is asked to register the following entry in the "Custom Problem Detail Keys" registry <span>[<a href="#IANA.Custom.Problem.Detail.Keys" class="cite xref">IANA.Custom.Problem.Detail.Keys</a>]</span> within the "Constrained RESTful Environments (CoRE) Parameters" registry group.<a href="#section-10.7-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-10.7-2.1">
             <p id="section-10.7-2.1.1">Key Value: TBD (value between 0 and 23)<a href="#section-10.7-2.1.1" class="pilcrow">¶</a></p>
@@ -3171,17 +3194,41 @@ Payload:
 <a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
-<dt id="ACE.OAuth.Error.Code.CBOR.Mappings">[ACE.OAuth.Error.Code.CBOR.Mappings]</dt>
-        <dd>
-<span class="refAuthor">IANA</span>, <span class="refTitle">"OAuth Error Code CBOR Mappings"</span>, <span>&lt;<a href="https://www.iana.org/assignments/ace/ace.xhtml#oauth-error-code-cbor-mappings">https://www.iana.org/assignments/ace/ace.xhtml#oauth-error-code-cbor-mappings</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="I-D.ietf-ace-edhoc-oscore-profile">[I-D.ietf-ace-edhoc-oscore-profile]</dt>
         <dd>
 <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Tiloca, M.</span>, and <span class="refAuthor">R. Höglund</span>, <span class="refTitle">"Ephemeral Diffie-Hellman Over COSE (EDHOC) and Object Security for Constrained Environments (OSCORE) Profile for Authentication and Authorization for Constrained Environments (ACE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-edhoc-oscore-profile-10</span>, <time datetime="2026-03-01" class="refDate">1 March 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-10">https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-10</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="IANA.Custom.Problem.Detail.Keys">[IANA.Custom.Problem.Detail.Keys]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"Custom Problem Detail Keys"</span>, <span>&lt;<a href="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#core-custom-problem-detail-keys">https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#core-custom-problem-detail-keys</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA.CWT.Claims">[IANA.CWT.Claims]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"CBOR Web Token (CWT) Claims"</span>, <span>&lt;<a href="https://www.iana.org/assignments/cwt/cwt.xhtml#claims-registry">https://www.iana.org/assignments/cwt/cwt.xhtml#claims-registry</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="IANA.Hash.Algorithms">[IANA.Hash.Algorithms]</dt>
         <dd>
 <span class="refAuthor">IANA</span>, <span class="refTitle">"Named Information Hash Algorithm Registry"</span>, <span>&lt;<a href="https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg">https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA.JSON.Web.Token.Claims">[IANA.JSON.Web.Token.Claims]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"JSON Web Token Claims"</span>, <span>&lt;<a href="https://www.iana.org/assignments/jwt/jwt.xhtml#claims">https://www.iana.org/assignments/jwt/jwt.xhtml#claims</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA.OAuth.Error.Code.CBOR.Mappings">[IANA.OAuth.Error.Code.CBOR.Mappings]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"OAuth Error Code CBOR Mappings"</span>, <span>&lt;<a href="https://www.iana.org/assignments/ace/ace.xhtml#oauth-error-code-cbor-mappings">https://www.iana.org/assignments/ace/ace.xhtml#oauth-error-code-cbor-mappings</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA.OAuth.Extensions.Error">[IANA.OAuth.Extensions.Error]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"OAuth Extensions Error Registry"</span>, <span>&lt;<a href="https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#extensions-error">https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#extensions-error</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA.OAuth.Parameters">[IANA.OAuth.Parameters]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"OAuth Parameters"</span>, <span>&lt;<a href="https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#parameters">https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#parameters</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA.OAuth.Parameters.CBOR.Mappings">[IANA.OAuth.Parameters.CBOR.Mappings]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"OAuth Parameters CBOR Mappings"</span>, <span>&lt;<a href="https://www.iana.org/assignments/ace/ace.xhtml#oauth-parameters-cbor-mappings">https://www.iana.org/assignments/ace/ace.xhtml#oauth-parameters-cbor-mappings</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC2119">[RFC2119]</dt>
         <dd>
@@ -3433,10 +3480,21 @@ ace-error = 2
             </ul>
 </li>
           <li class="normal" id="appendix-C.1-1.2">
-            <p id="appendix-C.1-1.2.1">Fully decouple the "to_rs" parameter from the "from_rs" parameter.<a href="#appendix-C.1-1.2.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.2.1">IANA Considerations:<a href="#appendix-C.1-1.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="appendix-C.1-1.2.2.1">
+                <p id="appendix-C.1-1.2.2.1.1">Added references to IANA registries.<a href="#appendix-C.1-1.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="appendix-C.1-1.2.2.2">
+                <p id="appendix-C.1-1.2.2.2.1">Added updates to recently registered parameters.<a href="#appendix-C.1-1.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
 </li>
           <li class="normal" id="appendix-C.1-1.3">
-            <p id="appendix-C.1-1.3.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.3.1">Fully decoupled the "to_rs" parameter from the "from_rs" parameter.<a href="#appendix-C.1-1.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-C.1-1.4">
+            <p id="appendix-C.1-1.4.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>

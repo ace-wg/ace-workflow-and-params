@@ -2053,7 +2053,7 @@ Table of Contents
       field is a CBOR integer specifying the error code associated with
       the occurred error.  This value is taken from the "CBOR Value"
       column of the "OAuth Error Code CBOR Mappings" registry
-      [ACE.OAuth.Error.Code.CBOR.Mappings].
+      [IANA.OAuth.Error.Code.CBOR.Mappings].
 
       The "error-code" field conveys the same information that the
       original payload format conveys through the "error" parameter
@@ -2184,7 +2184,8 @@ Table of Contents
 10.1.  OAuth Parameters Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters"
-   registry within the "OAuth Parameters" registry group.
+   registry [IANA.OAuth.Parameters] within the "OAuth Parameters"
+   registry group.
 
    *  Name: token_upload
 
@@ -2331,12 +2332,31 @@ Table of Contents
 
       -  Reference: [RFC9594][RFC-XXXX]
 
+   *  ecdh_info
+
+      -  Parameter Usage Location: client-rs request, rs-client
+         response, as-rs request, rs-as response
+
+      -  Reference: [RFC-ietf-ace-key-groupcomm-oscore-21][RFC-XXXX]
+
+   *  kdc_dh_creds
+
+      -  Parameter Usage Location: client-rs request, rs-client
+         response, as-rs request, rs-as response
+
+      -  Reference: [RFC-ietf-ace-key-groupcomm-oscore-21][RFC-XXXX]
+
+   Note to RFC Editor: In the last two entries above, please replace all
+   occurrences of "-ietf-ace-key-groupcomm-oscore-21" with the RFC
+   number of that specification and delete this paragraph.
+
 10.2.  OAuth Parameters CBOR Mappings Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters
-   CBOR Mappings" registry within the "Authentication and Authorization
-   for Constrained Environments (ACE)" registry group, following the
-   procedure specified in [RFC9200].
+   CBOR Mappings" registry [IANA.OAuth.Parameters.CBOR.Mappings] within
+   the "Authentication and Authorization for Constrained Environments
+   (ACE)" registry group, following the procedure specified in
+   [RFC9200].
 
    *  Name: token_upload
 
@@ -2457,8 +2477,9 @@ Table of Contents
 10.3.  JSON Web Token Claims Registry
 
    IANA is asked to add the following entry to the "JSON Web Token
-   Claims" registry within the "JSON Web Token (JWT)" registry group,
-   following the procedure specified in [RFC7519].
+   Claims" registry [IANA.JSON.Web.Token.Claims] within the "JSON Web
+   Token (JWT)" registry group, following the procedure specified in
+   [RFC7519].
 
    *  Claim Name: token_series_id
 
@@ -2471,8 +2492,9 @@ Table of Contents
 10.4.  CBOR Web Token (CWT) Claims Registry
 
    IANA is asked to add the following entry to the "CBOR Web Token (CWT)
-   Claims" registry within the "CBOR Web Token (CWT) Claims" registry
-   group, following the procedure specified in [RFC8392].
+   Claims" registry [IANA.CWT.Claims] within the "CBOR Web Token (CWT)
+   Claims" registry group, following the procedure specified in
+   [RFC8392].
 
    *  Claim Name: token_series_id
 
@@ -2491,7 +2513,8 @@ Table of Contents
 10.5.  OAuth Extensions Error Registry
 
    IANA is asked to add the following entries to the "OAuth Extensions
-   Error Registry" within the "OAuth Parameters" registry group.
+   Error Registry" [IANA.OAuth.Extensions.Error] within the "OAuth
+   Parameters" registry group.
 
    *  Name: unknown_credential_referenced
 
@@ -2518,8 +2541,9 @@ Table of Contents
 10.6.  OAuth Error Code CBOR Mappings Registry
 
    IANA is asked to add the following entries to the "OAuth Error Code
-   CBOR Mappings" registry within the "Authentication and Authorization
-   for Constrained Environments (ACE)" registry group.
+   CBOR Mappings" registry [IANA.OAuth.Error.Code.CBOR.Mappings] within
+   the "Authentication and Authorization for Constrained Environments
+   (ACE)" registry group.
 
    *  Name: unknown_credential_referenced
 
@@ -2542,8 +2566,8 @@ Table of Contents
 10.7.  Custom Problem Detail Keys Registry
 
    IANA is asked to register the following entry in the "Custom Problem
-   Detail Keys" registry within the "Constrained RESTful Environments
-   (CoRE) Parameters" registry group.
+   Detail Keys" registry [IANA.Custom.Problem.Detail.Keys] within the
+   "Constrained RESTful Environments (CoRE) Parameters" registry group.
 
    *  Key Value: TBD (value between 0 and 23)
 
@@ -2560,11 +2584,6 @@ Table of Contents
 
 11.1.  Normative References
 
-   [ACE.OAuth.Error.Code.CBOR.Mappings]
-              IANA, "OAuth Error Code CBOR Mappings",
-              <https://www.iana.org/assignments/ace/ace.xhtml#oauth-
-              error-code-cbor-mappings>.
-
    [I-D.ietf-ace-edhoc-oscore-profile]
               Selander, G., Mattsson, J. P., Tiloca, M., and R. Höglund,
               "Ephemeral Diffie-Hellman Over COSE (EDHOC) and Object
@@ -2575,10 +2594,44 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
               edhoc-oscore-profile-10>.
 
+   [IANA.Custom.Problem.Detail.Keys]
+              IANA, "Custom Problem Detail Keys",
+              <https://www.iana.org/assignments/core-parameters/core-
+              parameters.xhtml#core-custom-problem-detail-keys>.
+
+   [IANA.CWT.Claims]
+              IANA, "CBOR Web Token (CWT) Claims",
+              <https://www.iana.org/assignments/cwt/cwt.xhtml#claims-
+              registry>.
+
    [IANA.Hash.Algorithms]
               IANA, "Named Information Hash Algorithm Registry",
               <https://www.iana.org/assignments/named-information/named-
               information.xhtml#hash-alg>.
+
+   [IANA.JSON.Web.Token.Claims]
+              IANA, "JSON Web Token Claims",
+              <https://www.iana.org/assignments/jwt/jwt.xhtml#claims>.
+
+   [IANA.OAuth.Error.Code.CBOR.Mappings]
+              IANA, "OAuth Error Code CBOR Mappings",
+              <https://www.iana.org/assignments/ace/ace.xhtml#oauth-
+              error-code-cbor-mappings>.
+
+   [IANA.OAuth.Extensions.Error]
+              IANA, "OAuth Extensions Error Registry",
+              <https://www.iana.org/assignments/oauth-parameters/oauth-
+              parameters.xhtml#extensions-error>.
+
+   [IANA.OAuth.Parameters]
+              IANA, "OAuth Parameters",
+              <https://www.iana.org/assignments/oauth-parameters/oauth-
+              parameters.xhtml#parameters>.
+
+   [IANA.OAuth.Parameters.CBOR.Mappings]
+              IANA, "OAuth Parameters CBOR Mappings",
+              <https://www.iana.org/assignments/ace/ace.xhtml#oauth-
+              parameters-cbor-mappings>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
@@ -2847,7 +2900,14 @@ C.1.  Version -07 to -08
       -  Values to avoid for "rs_cnf" in an access token request in some
          contexts.
 
-   *  Fully decouple the "to_rs" parameter from the "from_rs" parameter.
+   *  IANA Considerations:
+
+      -  Added references to IANA registries.
+
+      -  Added updates to recently registered parameters.
+
+   *  Fully decoupled the "to_rs" parameter from the "from_rs"
+      parameter.
 
    *  Editorial fixes and improvements.
 
