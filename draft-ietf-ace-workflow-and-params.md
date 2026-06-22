@@ -67,18 +67,54 @@ normative:
   RFC9431:
   RFC9770:
   I-D.ietf-ace-edhoc-oscore-profile:
-  ACE.OAuth.Error.Code.CBOR.Mappings:
+  IANA.OAuth.Parameters.CBOR.Mappings:
+    author:
+      org: IANA
+    date: false
+    title: OAuth Parameters CBOR Mappings
+    target: https://www.iana.org/assignments/ace/ace.xhtml#oauth-parameters-cbor-mappings
+  IANA.JSON.Web.Token.Claims:
+    author:
+      org: IANA
+    date: false
+    title: JSON Web Token Claims
+    target: https://www.iana.org/assignments/jwt/jwt.xhtml#claims
+  IANA.CWT.Claims:
+    author:
+      org: IANA
+    date: false
+    title: CBOR Web Token (CWT) Claims
+    target: https://www.iana.org/assignments/cwt/cwt.xhtml#claims-registry
+  IANA.OAuth.Extensions.Error:
+    author:
+      org: IANA
+    date: false
+    title: OAuth Extensions Error Registry
+    target: https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#extensions-error
+  IANA.OAuth.Error.Code.CBOR.Mappings:
     author:
       org: IANA
     date: false
     title: OAuth Error Code CBOR Mappings
     target: https://www.iana.org/assignments/ace/ace.xhtml#oauth-error-code-cbor-mappings
+  IANA.Custom.Problem.Detail.Keys:
+    author:
+      org: IANA
+    date: false
+    title: Custom Problem Detail Keys
+    target: https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#core-custom-problem-detail-keys
   IANA.Hash.Algorithms:
     author:
       org: IANA
     date: false
     title: Named Information Hash Algorithm Registry
     target: https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg
+  IANA.OAuth.Parameters:
+    author:
+      org: IANA
+    date: false
+    title: OAuth Parameters
+    target: https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#parameters
   SHA-256:
     author:
       org: NIST
@@ -1042,7 +1078,7 @@ Such error responses MUST have Content-Format set to "application/concise-proble
 
 * It MUST include the Custom Problem Detail entry "ace-error" registered in {{iana-problem-details}} of this document.
 
-  This entry is formatted as a CBOR map including only one field, namely "error-code". The map key for the "error-code" field is the CBOR integer with value 0. The value of the "error-code" field is a CBOR integer specifying the error code associated with the occurred error. This value is taken from the "CBOR Value" column of the "OAuth Error Code CBOR Mappings" registry {{ACE.OAuth.Error.Code.CBOR.Mappings}}.
+  This entry is formatted as a CBOR map including only one field, namely "error-code". The map key for the "error-code" field is the CBOR integer with value 0. The value of the "error-code" field is a CBOR integer specifying the error code associated with the occurred error. This value is taken from the "CBOR Value" column of the "OAuth Error Code CBOR Mappings" registry {{IANA.OAuth.Error.Code.CBOR.Mappings}}.
 
   The "error-code" field conveys the same information that the original payload format conveys through the "error" parameter (see, e.g., {{Sections 5.8.3 and 5.9.3 of RFC9200}}).
 
@@ -1130,7 +1166,7 @@ Note to RFC Editor: Please replace all occurrences of "{{&SELF}}" with the RFC n
 
 ## OAuth Parameters Registry ## {#iana-oauth-params}
 
-IANA is asked to add the following entries to the "OAuth Parameters" registry within the "OAuth Parameters" registry group.
+IANA is asked to add the following entries to the "OAuth Parameters" registry {{IANA.OAuth.Parameters}} within the "OAuth Parameters" registry group.
 
 * Name: token_upload
 * Parameter Usage Location: token request, token response
@@ -1245,9 +1281,23 @@ In the same registry, IANA is asked to update the entries for the following OAut
 
   * Reference: \[RFC9594\]\[RFC-XXXX\]
 
+* ecdh_info
+
+  * Parameter Usage Location: client-rs request, rs-client response, as-rs request, rs-as response
+
+  * Reference: \[RFC-ietf-ace-key-groupcomm-oscore-21\]\[RFC-XXXX\]
+
+* kdc_dh_creds
+
+  * Parameter Usage Location: client-rs request, rs-client response, as-rs request, rs-as response
+
+  * Reference: \[RFC-ietf-ace-key-groupcomm-oscore-21\]\[RFC-XXXX\]
+
+Note to RFC Editor: In the last two entries above, please replace all occurrences of "-ietf-ace-key-groupcomm-oscore-21" with the RFC number of that specification and delete this paragraph.
+
 ## OAuth Parameters CBOR Mappings Registry ## {#iana-oauth-cbor-mappings}
 
-IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group, following the procedure specified in {{RFC9200}}.
+IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry {{IANA.OAuth.Parameters.CBOR.Mappings}} within the "Authentication and Authorization for Constrained Environments (ACE)" registry group, following the procedure specified in {{RFC9200}}.
 
 * Name: token_upload
 * CBOR Key: TBD (value between 1 and 255)
@@ -1329,7 +1379,7 @@ In the same registry, IANA is asked to update the entry for the OAuth parameter 
 
 ## JSON Web Token Claims Registry ## {#iana-token-json-claims}
 
-IANA is asked to add the following entry to the "JSON Web Token Claims" registry within the "JSON Web Token (JWT)" registry group, following the procedure specified in {{RFC7519}}.
+IANA is asked to add the following entry to the "JSON Web Token Claims" registry {{IANA.JSON.Web.Token.Claims}} within the "JSON Web Token (JWT)" registry group, following the procedure specified in {{RFC7519}}.
 
 *  Claim Name: token_series_id
 *  Claim Description: The identifier of a token series
@@ -1338,7 +1388,7 @@ IANA is asked to add the following entry to the "JSON Web Token Claims" registry
 
 ## CBOR Web Token (CWT) Claims Registry ## {#iana-token-cwt-claims}
 
-IANA is asked to add the following entry to the "CBOR Web Token (CWT) Claims" registry within the "CBOR Web Token (CWT) Claims" registry group, following the procedure specified in {{RFC8392}}.
+IANA is asked to add the following entry to the "CBOR Web Token (CWT) Claims" registry {{IANA.CWT.Claims}} within the "CBOR Web Token (CWT) Claims" registry group, following the procedure specified in {{RFC8392}}.
 
 * Claim Name: token_series_id
 * Claim Description: The identifier of a token series
@@ -1350,7 +1400,7 @@ IANA is asked to add the following entry to the "CBOR Web Token (CWT) Claims" re
 
 ## OAuth Extensions Error Registry ## {#iana-oauth-extensions-errors}
 
-IANA is asked to add the following entries to the "OAuth Extensions Error Registry" within the "OAuth Parameters" registry group.
+IANA is asked to add the following entries to the "OAuth Extensions Error Registry" {{IANA.OAuth.Extensions.Error}} within the "OAuth Parameters" registry group.
 
 * Name: unknown_credential_referenced
 * Usage Location: token error response
@@ -1368,7 +1418,7 @@ IANA is asked to add the following entries to the "OAuth Extensions Error Regist
 
 ## OAuth Error Code CBOR Mappings Registry ## {#iana-oauth-error-code-cbor-mappings}
 
-IANA is asked to add the following entries to the "OAuth Error Code CBOR Mappings" registry within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.
+IANA is asked to add the following entries to the "OAuth Error Code CBOR Mappings" registry {{IANA.OAuth.Error.Code.CBOR.Mappings}} within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.
 
 * Name: unknown_credential_referenced
 * CBOR Value: TBD (value between 1 and 255)
@@ -1384,7 +1434,7 @@ IANA is asked to add the following entries to the "OAuth Error Code CBOR Mapping
 
 ## Custom Problem Detail Keys Registry ## {#iana-problem-details}
 
-IANA is asked to register the following entry in the "Custom Problem Detail Keys" registry within the "Constrained RESTful Environments (CoRE) Parameters" registry group.
+IANA is asked to register the following entry in the "Custom Problem Detail Keys" registry {{IANA.Custom.Problem.Detail.Keys}} within the "Constrained RESTful Environments (CoRE) Parameters" registry group.
 
 * Key Value: TBD (value between 0 and 23)
 * Name: ace-error
@@ -1462,7 +1512,13 @@ ace-error = 2
 
   * Values to avoid for "rs_cnf" in an access token request in some contexts.
 
-* Fully decouple the "to_rs" parameter from the "from_rs" parameter.
+* IANA Considerations:
+
+  * Added references to IANA registries.
+
+  * Added updates to recently registered parameters.
+
+* Fully decoupled the "to_rs" parameter from the "from_rs" parameter.
 
 * Editorial fixes and improvements.
 
