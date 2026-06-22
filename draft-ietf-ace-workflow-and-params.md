@@ -105,7 +105,7 @@ This document updates the Authentication and Authorization for Constrained Envir
 
 The Authentication and Authorization for Constrained Environments (ACE) framework {{RFC9200}} defines an architecture to enforce access control for constrained devices. A client (C) requests an assertion of granted permissions from an authorization server (AS) in the form of an access token, then uploads the access token to the target resource server (RS), and finally accesses protected resources at the RS according to the permissions specified in the access token.
 
-The framework has as main building blocks the OAuth 2.0 framework {{RFC6749}}, the Constrained Application Protocol (CoAP) {{RFC7252}} for message transfer, Concise Binary Object Representation (CBOR) {{RFC8949}} for compact encoding, and CBOR Object Signing and Encryption (COSE) {{RFC9052}}{{RFC9053}} for self-contained protection of access tokens. In addition, separate profile documents define in detail how the participants in the ACE architecture communicate, especially as to the security protocols that they use.
+The ACE framework has as main building blocks the OAuth 2.0 framework {{RFC6749}}, the Constrained Application Protocol (CoAP) {{RFC7252}} for message transfer, Concise Binary Object Representation (CBOR) {{RFC8949}} for compact encoding, and CBOR Object Signing and Encryption (COSE) {{RFC9052}}{{RFC9053}} for self-contained protection of access tokens. In addition, separate profile documents define in detail how the participants in the ACE architecture communicate, especially as to the security protocols that they use.
 
 The present document updates {{RFC9200}} as follows.
 
@@ -167,7 +167,9 @@ Furthermore, this document uses the following terms.
 
 * Token hash: identifier of an access token, in binary format encoding. The token hash has no relation with other access token identifiers possibly used, such as the 'cti' (CWT ID) claim of CWTs {{RFC8392}}.
 
-CBOR {{RFC8949}} and CDDL {{RFC8610}} are used in this document. CDDL predefined type names, especially bstr for CBOR byte strings and tstr for CBOR text strings, are used extensively in this document.
+## Notations
+
+CBOR {{RFC8949}} and CDDL {{RFC8610}} are used in this document.
 
 Examples throughout this document are expressed in CBOR diagnostic notation as defined in {{Section 8 of RFC8949}} and {{Appendix G of RFC8610}}. Diagnostic notation comments are often used to provide a textual representation of the parameters' keys and values.
 
@@ -292,7 +294,7 @@ This section defines the additional "token_upload" parameter. The parameter can 
 
 * The "token_upload" parameter is OPTIONAL to include in an access token request. The presence of this parameter indicates that C opts in to use the SDC workflow defined in {{sec-workflow}}, whose actual use for uploading the issued access token to the RS is an exclusive prerogative of the AS.
 
-  This parameter can take one of the following integer values. When the access token request is encoded in CBOR, those values are encoded as CBOR unsigned integers. The value of the parameter determines whether the follow-up access token response will have to include certain information, in case the AS has successfully uploaded the access token to the RS.
+  This parameter can take one of the following integer values. When the access token request is encoded in CBOR, those values are encoded as CBOR unsigned integers. The value of the parameter determines whether the follow-up access token response will have to include certain information, in the case that the AS has successfully uploaded the access token to the RS.
 
   - 0: The access token response will have to include neither the access token nor its corresponding token hash.
 
@@ -328,7 +330,7 @@ This section defines the additional "token_upload" parameter. The parameter can 
 
 {{fig-example-AS-to-C-token-upload}} shows an example, with first an access token request from C to the AS and then an access token response from the AS to C, following the issue of an access token bound to a symmetric PoP key.
 
-The access token request specifies the "token_upload" parameter with value 0. That is, C indicates that it requires neither the access token nor the corresponding token hash from the AS, in case the AS successfully uploads the access token to the RS.
+The access token request specifies the "token_upload" parameter with value 0. That is, C indicates that it requires neither the access token nor the corresponding token hash from the AS, in the case that the AS successfully uploads the access token to the RS.
 
 The access token response specifies the "token_upload" parameter with value 0, which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.
 
@@ -371,7 +373,7 @@ Consistent with the value of the "token_upload" parameter in the access token re
 
 {{fig-example-AS-to-C-token-upload-success-ret-token}} shows another example, with first an access token request from C to the AS and then an access token response from the AS to C, also following the issue of an access token bound to a symmetric PoP key.
 
-The access token request specifies the "token_upload" parameter with value 2. That is, C indicates that it requires the access token from the AS, even in case the AS successfully uploads the access token to the RS.
+The access token request specifies the "token_upload" parameter with value 2. That is, C indicates that it requires the access token from the AS, even in the case that the AS successfully uploads the access token to the RS.
 
 The access token response specifies the "token_upload" parameter with value 0, which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.
 
@@ -417,7 +419,7 @@ Consistent with the value of the "token_upload" parameter in the access token re
 
 {{fig-example-AS-to-C-token-upload-failed}} shows another example, with first an access token request from C to the AS and then an access token response from the AS to C, also following the issue of an access token bound to a symmetric PoP key.
 
-The access token request specifies the "token_upload" parameter with value 0. That is, C indicates that it requires neither the access token nor the corresponding token hash from the AS, in case the AS successfully uploads the access token to the RS.
+The access token request specifies the "token_upload" parameter with value 0. That is, C indicates that it requires neither the access token nor the corresponding token hash from the AS, in the case that the AS successfully uploads the access token to the RS.
 
 In this example, the access token response includes the "token_upload" parameter with value 1, which indicates that the AS has attempted and failed to upload the access token to the RS on behalf of C. The access token response also includes the "access_token" parameter specifying the issued access token, together with the "cnf" parameter specifying the symmetric PoP key bound to the access token.
 
@@ -495,7 +497,7 @@ In particular, the input HASH_INPUT over which the token hash is computed is det
 
   - HASH_INPUT is the binary representation of HASH_INPUT_TEXT.
 
-* If the access token response is encoded in JSON, then HASH_INPUT is the binary representation of the text string conveyed by the "access_token" parameter, if this was included in the access token response.
+* If the access token response is encoded in JSON, then HASH_INPUT is the binary representation of the text string that would be conveyed by the "access_token" parameter, if this was included in the access token response.
 
 Once determined HASH_INPUT as defined above, a hash value of HASH_INPUT is generated as per {{Section 6 of RFC6920}}. The resulting output in binary format is used as the token hash. Note that the used binary format embeds the identifier of the used hash function in the first byte of the computed token hash.
 
@@ -509,7 +511,7 @@ If the AS supports the method specified in {{RFC9770}}, then the AS MUST use the
 
 {{fig-example-AS-to-C-token-hash}} shows an example, with first an access token request from C to the AS and then an access token response from the AS to C, following the issue of an access token bound to a symmetric PoP key.
 
-The access token request specifies the "token_upload" parameter with value 1. That is, C indicates that it requires the token hash corresponding to the access token from the AS, in case the AS successfully uploads the access token to the RS.
+The access token request specifies the "token_upload" parameter with value 1. That is, C indicates that it requires the token hash corresponding to the access token from the AS, in the case that the AS successfully uploads the access token to the RS.
 
 The access token response specifies the "token_upload" parameter with value 0, which indicates that the AS has successfully uploaded the access token to the RS on behalf of C.
 
