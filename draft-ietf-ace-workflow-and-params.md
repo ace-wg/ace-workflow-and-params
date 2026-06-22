@@ -1293,7 +1293,7 @@ In the same registry, IANA is asked to update the entries for the following OAut
 
   * Reference: \[RFC-ietf-ace-key-groupcomm-oscore-21\]\[RFC-XXXX\]
 
-Note to RFC Editor: In the last two entries above, please replace all occurrences of "-ietf-ace-key-groupcomm-oscore-21" with the RFC number of that specification and delete this paragraph.
+Note to RFC Editor: In the last two entries above, please replace the occurrences of "-ietf-ace-key-groupcomm-oscore-21" with the RFC number of that specification and delete this paragraph.
 
 ## OAuth Parameters CBOR Mappings Registry ## {#iana-oauth-cbor-mappings}
 
@@ -1512,11 +1512,11 @@ ace-error = 2
 
   * Values to avoid for "rs_cnf" in an access token request in some contexts.
 
-* IANA Considerations:
+* IANA considerations:
 
   * Added references to IANA registries.
 
-  * Added updates to recently registered parameters.
+  * Added updates to recently registered OAuth parameters.
 
 * Fully decoupled the "to_rs" parameter from the "from_rs" parameter.
 
