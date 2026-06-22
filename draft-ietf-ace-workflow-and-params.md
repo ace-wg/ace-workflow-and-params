@@ -298,6 +298,8 @@ This section defines the additional "token_upload" parameter. The parameter can 
 
   - 0: The access token response will have to include neither the access token nor its corresponding token hash.
 
+    It is not useful to specify the value 0 if C wishes to use the method defined in {{RFC9770}} for receiving notifications about revoked access tokens from the AS. In such case, C needs to specify one of the two alternative values 1 or 2 defined below.
+
   - 1: The access token response will have to include the token hash corresponding to the access token, but not the access token.
 
   - 2: The access token response will have to include the access token, but not the corresponding token hash.
@@ -1453,6 +1455,8 @@ ace-error = 2
 {:removeinrfc}
 
 ## Version -07 to -08 ## {#sec-07-08}
+
+* Clarified relation between "token_upload" and use of RFC 9770.
 
 * Fully decouple the "to_rs" parameter from the "from_rs" parameter.
 
