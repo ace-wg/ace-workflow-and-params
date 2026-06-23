@@ -278,7 +278,7 @@ More specifically, the SDC workflow consists of the following steps.
 
 * Step A - Like in the original workflow, the client sends an access token request to the token endpoint at the AS, with the additional indication that it opts in to use the SDC workflow.
 
-  As defined in {{sec-token_upload}}, this indication is provided to the AS by means of the "token_upload" parameter included in the access token request. The parameter also specifies what the AS has to return in the access token response at Step B, following a successful uploading of the access token from the AS to the RS.
+  As defined in {{sec-token_upload-req}}, this indication is provided to the AS by means of the "token_upload" parameter included in the access token request. The parameter also specifies what the AS has to return in the access token response at Step B, following a successful uploading of the access token from the AS to the RS.
 
 * Step A1 - This new step consists of the AS uploading the access token to the RS, typically at the authz-info endpoint, just like the client does in the original workflow.
 
@@ -286,7 +286,7 @@ More specifically, the SDC workflow consists of the following steps.
 
 * Step B - In the access token response, the AS informs the client that it has attempted to upload the access token to the RS, specifying the outcome of the token uploading based on the reply received from the RS at Step A2.
 
-  As defined in {{sec-token_upload}}, this information is provided to the client by means of the "token_upload" parameter included in the access token response. If the token uploading has failed, the access token response also includes the access token. Otherwise, the access token response includes information consistent with what was specified by the "token_upload" parameter of the access token request at Step A.
+  As defined in {{sec-token_upload-resp}}, this information is provided to the client by means of the "token_upload" parameter included in the access token response. If the token uploading has failed, the access token response also includes the access token. Otherwise, the access token response includes information consistent with what was specified by the "token_upload" parameter of the access token request at Step A.
 
 * Step C1 - This step occurs only if the token uploading from the AS has failed, and the AS has provided the client with the access token at Step B. In such a case, the client uploads the access token to the RS just like at Step C of the original workflow.
 
@@ -328,41 +328,61 @@ The rest of this section defines a number of additional parameters and encodings
 
 This section defines the additional "token_upload" parameter. The parameter can be used in an access token request sent by C to the token endpoint at the AS (see {{Section 5.8.1 of RFC9200}}), as well as in the access token response sent as a reply by the AS (see {{Section 5.8.2 of RFC9200}}).
 
-* The "token_upload" parameter is OPTIONAL to include in an access token request. The presence of this parameter indicates that C opts in to use the SDC workflow defined in {{sec-workflow}}, whose actual use for uploading the issued access token to the RS is an exclusive prerogative of the AS.
+### In the Access Token Request # {#sec-token_upload-req}
 
-  This parameter can take one of the following integer values. When the access token request is encoded in CBOR, those values are encoded as CBOR unsigned integers. The value of the parameter determines whether the follow-up access token response will have to include certain information, in the case that the AS has successfully uploaded the access token to the RS.
+The "token_upload" parameter is OPTIONAL to include in an access token request. The presence of this parameter indicates that C opts in to use the SDC workflow defined in {{sec-workflow}}, whose actual use for uploading the issued access token to the RS is an exclusive prerogative of the AS.
 
-  - 0: The access token response will have to include neither the access token nor its corresponding token hash.
+This parameter can take one of the following integer values. When the access token request is encoded in CBOR, those values are encoded as CBOR unsigned integers. The value of the parameter determines whether the follow-up access token response will have to include certain information, in the case that the AS has successfully uploaded the issued access token to the RS.
 
-    It is not useful to specify the value 0 if C wishes to use the method defined in {{RFC9770}} for receiving notifications about revoked access tokens from the AS. In such case, C needs to specify one of the two alternative values 1 or 2 defined below.
+- 0: The access token response will have to include neither the access token nor its corresponding token hash.
 
-  - 1: The access token response will have to include the token hash corresponding to the access token, but not the access token.
+  Note that is not useful to specify the value 0 if C wishes to use the method defined in {{RFC9770}} for receiving notifications about revoked access tokens from the AS. In such case, C needs to specify one of the two alternative values 1 or 2 defined below.
 
-  - 2: The access token response will have to include the access token, but not the corresponding token hash.
+- 1: The access token response will have to include the token hash corresponding to the access token, but not the access token.
 
-  If the AS supports the SDC workflow and the access token request includes the "token_upload" parameter with value 0, 1, or 2, then the AS MAY use the SDC workflow to upload the access token to the RS on behalf of C. Otherwise, following that access token request, the AS MUST NOT use the SDC workflow.
+- 2: The access token response will have to include the access token, but not the corresponding token hash.
 
-* The "token_upload" parameter MUST be included in an access token response, if both the following conditions apply. Otherwise, the "token_upload" parameter MUST NOT be included.
+If the AS supports the SDC workflow and the access token request includes the "token_upload" parameter with value 0, 1, or 2, then the AS MAY use the SDC workflow to upload the access token to the RS on behalf of C. Otherwise, following that access token request, the AS MUST NOT use the SDC workflow.
 
-  - The corresponding access token request included the "token_upload" parameter, with value 0, 1, or 2.
+### In the Access Token Response # {#sec-token_upload-resp}
 
-  - The AS has attempted to upload the issued access token to the RS as per the SDC workflow, irrespective of the result of the token upload.
+The "token_upload" parameter MUST be included in an access token response, if both the following conditions apply. Otherwise, the "token_upload" parameter MUST NOT be included.
 
-  When the "token_upload" parameter is included in the access token response, it can take one of the following integer values. When the access token response is encoded in CBOR, those values are encoded as CBOR unsigned integers.
+- The corresponding access token request included the "token_upload" parameter, with value 0, 1, or 2.
 
-  - If the token upload to the RS was not successful, then the "token_upload" parameter MUST encode the value 1.
+- The AS has attempted to upload the issued access token to the RS as per the SDC workflow, irrespective of the result of the token upload.
 
-    In this case, the access token response MUST include the "access_token" parameter specifying the issued access token.
+The following refers to three possible cases, with reference to the issued access token and the resulting access token response:
 
-  - If the token upload at the RS was successful, then the "token_upload" parameter MUST encode the value 0.
+* CASE_1 - The issued access token is the first one of a new token series, aligned with the access token request that asked for issuing the first access token of a new token series.
 
-    In this case, the access token response can include additional parameters as defined below, depending on the value of the "token_upload" parameter in the corresponding access token request.
+* CASE_2 - The issued access token is not the first one in a token series, aligned with the access token request that asked to dynamically update the access rights of C, i.e., to issue a new access token of an existing token series.
 
-    - If the "token_upload" parameter in the access token request specified the value 0, then the access token response MUST NOT include the "access_token" parameter and MUST NOT include the "token_hash" parameter defined in {{sec-token_hash}}.
+* CASE_3 - The issued access token is the first one of a new token series, although the access token request asked to dynamically update the access rights of C, i.e., to issue a new access token of an existing token series.
 
-    - If the "token_upload" parameter in the access token request specified the value 1, then the access token response MUST NOT include the "access_token" parameter and MUST include the "token_hash" parameter defined in {{sec-token_hash}}, specifying the hash corresponding to the issued access token and computed as defined in {{sec-token_hash}}.
+  {{sec-new-series-on-the-fly}} further describes this case, according to which the AS creates a new token series "on the fly", after receiving a specific error from the RS when uploading an access token originally intended for updating the access rights of C.
 
-    - If the "token_upload" parameter in the access token request specified the value 2, then the access token response MUST include the "access_token" parameter specifying the issued access token and MUST NOT include the "token_hash" parameter defined in {{sec-token_hash}}.
+When the "token_upload" parameter is included in the access token response, it can take one of the following integer values. When the access token response is encoded in CBOR, those values are encoded as CBOR unsigned integers.
+
+- If CASE_1 or CASE_2 applies and the token upload at the RS was successful, then the "token_upload" parameter MUST encode the value 0.
+
+- If CASE_1 or CASE_2 applies and the token upload at the RS was not successful, then the "token_upload" parameter MUST encode the value 1.
+
+- If CASE_3 applies and the token upload at the RS was successful, then the "token_upload" parameter MUST encode the value 2.
+
+- If CASE_3 applies and the token upload at the RS was not successful, then the "token_upload" parameter MUST encode the value 3.
+
+In the case that the "token_upload" parameter encodes the value 1 or 3, the access token response MUST include the "access_token" parameter specifying the issued access token.
+
+Instead, in the case that the "token_upload" parameter encodes the value 0 or 2, the access token response can include additional parameters as defined below, depending on the value of the "token_upload" parameter in the corresponding access token request:
+
+- If the "token_upload" parameter in the access token request specified the value 0, then the access token response MUST NOT include the "access_token" parameter and MUST NOT include the "token_hash" parameter defined in {{sec-token_hash}}.
+
+- If the "token_upload" parameter in the access token request specified the value 1, then the access token response MUST NOT include the "access_token" parameter and MUST include the "token_hash" parameter defined in {{sec-token_hash}}, specifying the hash corresponding to the issued access token and computed as defined in {{sec-token_hash}}.
+
+- If the "token_upload" parameter in the access token request specified the value 2, then the access token response MUST include the "access_token" parameter specifying the issued access token and MUST NOT include the "token_hash" parameter defined in {{sec-token_hash}}.
+
+When C receives an access token response that includes the "token_upload" parameter encoding the value 2 or 3, C is explicitly told that the issued access token is the first one of a new token series. That is, the dynamic update of access rights that was asked through the access token request has not happened, and the RS does not have the expected secure communication association shared with C anymore (see {{sec-updated_rights}}). Consequently, C takes the next steps with the RS according to the profile of ACE used, e.g., C establishes a secure communication association with the RS and bound to the issued access token.
 
 ### Examples
 
@@ -509,9 +529,9 @@ The following refers to the base64url encoding without padding (see {{Section 5 
 
 The "token_hash" parameter MUST be included in an access token response, if both the following conditions apply. Otherwise, it MUST NOT be included.
 
-* The corresponding access token request included the "token_upload" parameter with value 1 (see {{sec-token_upload}}).
+* The corresponding access token request included the "token_upload" parameter with value 1 (see {{sec-token_upload-req}}).
 
-* The access token response includes the "token_upload" parameter with value 0. That is, the AS has successfully uploaded the issued access token to the RS, as per the SDC workflow.
+* The access token response includes the "token_upload" parameter with value 0 or 2 (see {{sec-token_upload-resp}}). That is, the AS has successfully uploaded the issued access token to the RS, as per the SDC workflow.
 
 This parameter specifies the token hash corresponding to the access token issued by the AS and successfully uploaded to the RS on behalf of C. In particular:
 
@@ -644,9 +664,9 @@ The "from_rs" parameter is OPTIONAL to include in an access token response. The 
 
 The "from_rs" parameter MUST be included in an access token response if both the following conditions apply. Otherwise, it MUST NOT be included.
 
-* The corresponding access token request included the "token_upload" parameter (see {{sec-token_upload}}).
+* The corresponding access token request included the "token_upload" parameter (see {{sec-token_upload-req}}).
 
-* The access token response includes the "token_upload" parameter with value 0 (see {{sec-token_upload}}). That is, the AS has successfully uploaded the issued access token to the RS, as per the SDC workflow.
+* The access token response includes the "token_upload" parameter with value 0 or 2 (see {{sec-token_upload-resp}}). That is, the AS has successfully uploaded the issued access token to the RS, as per the SDC workflow.
 
 The information specified in the "from_rs" parameter consists in what C would receive from the RS, if the original workflow was used and the RS sent a successful response encoded in CBOR, in reply to a POST request to the authz-info endpoint.
 
@@ -662,7 +682,7 @@ When the access token response is encoded in CBOR, the value of the "from_rs" pa
 
 When the access token response is encoded in JSON, the value of the "from_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see {{Section 5 of RFC4648}}).
 
-When C receives from the AS the access token response specifying the "token_upload" parameter with value 0, C retrieves from the "from_rs" parameter the information relayed by the AS, just like when retrieving that information from a successful response with Content-Format ct that C receives from the RS when using the original workflow.
+When C receives from the AS the access token response specifying the "token_upload" parameter with value 0 or 2, C retrieves from the "from_rs" parameter the information relayed by the AS, just like when retrieving that information from a successful response with Content-Format ct that C receives from the RS when using the original workflow.
 
 In particular, if the CBOR byte string STR is not the empty CBOR byte string (0x40), C considers as the Content-Format ct either:
 
@@ -944,7 +964,9 @@ When including the "updated_rights" parameter, the following applies:
 
 Note that this request deviates from the POST request defined in {{RFC9200}}, although such a deviation can already occur in some profiles of ACE (e.g., see {{Section 4.1 of RFC9203}}) or in application profiles of {{RFC9594}}.
 
-The rest of this section focuses on interactions with the authz-info endpoint at the RS where messages are encoded in CBOR. The same as described below holds in the case that such messages are encoded in JSON and have media type "application/ace+json", with the difference that the "updated_rights" parameter with value `true` can be present within a JSON object conveyed by a POST request to the  authz-info endpoint.
+The following focuses on interactions with the authz-info endpoint at the RS where messages are encoded in CBOR. The same as described below holds in the case that such messages are encoded in JSON and have media type "application/ace+json", with the difference that the "updated_rights" parameter with value `true` can be present within a JSON object conveyed by a POST request to the  authz-info endpoint.
+
+### Processing at the RS {#sec-updated_rights-rs}
 
 When the RS receives a protected POST request to the authz-info endpoint from the AS and the request does not convey the "updated_rights" parameter, the RS is ensured that the access token conveyed in the request is the first one of a new token series, which the RS processes accordingly (see {{sec-as-token-upload}}).
 
@@ -970,15 +992,83 @@ In this case, the RS uses lookup information specified within T_NEW to determine
 
 By leveraging such lookup information, the RS checks whether it stores an access token T_OLD that belongs to the same token series of T_NEW, like it would when receiving the request from C and according to the specific profile of ACE used.
 
-If the RS is currently storing such an old access token T_OLD and successfully validates the access token T_NEW, then the RS MUST supersede T_OLD by replacing the corresponding authorization information with the one specified in the new access token T_NEW. After that, the RS MUST associate T_NEW with the same secure communication association with which T_OLD was associated.
+If the RS is currently storing such an old access token T_OLD and successfully validates the access token T_NEW, then the RS MUST supersede T_OLD by replacing the corresponding authorization information with the one specified in the new access token T_NEW. After that, the RS MUST associate T_NEW with the same secure communication association with which T_OLD was associated. Finally, the RS replies to the AS with a successful response.
 
-If the RS is not currently storing such an old access token T_OLD, then the RS MUST reject the POST request from the AS and MUST reply with an error response that has a response code equivalent to the CoAP code 5.00 (Internal Server Error).
+Instead, if the RS is not currently storing such an old access token T_OLD, then the RS MUST reject the POST request from the AS and MUST reply with an error response that has a response code equivalent to the CoAP code 5.00 (Internal Server Error). The error response is analogous to error responses sent by the AS (see {{Section 5.8.3 of RFC9200}}) and MUST include the error code "missing_old_token". The error code and its CBOR abbreviation are registered in {{iana-oauth-extensions-errors}} and {{iana-oauth-error-code-cbor-mappings}}, respectively.
 
-The explicit indication provided by the "updated_rights" parameter prevents possible ambiguous situations, where the RS might erroneously believe that the access token conveyed in the POST request is the first one in a new token series (e.g., following the deletion of stored access tokens due to memory limitations). --- Editor's note: elaborate more in the "Security Considerations" section.
+The explicit indication provided by the "updated_rights" parameter prevents possible ambiguous situations, where the RS might erroneously believe that the access token conveyed in the POST request is the first one of a new token series (e.g., following the deletion of stored access tokens due to memory limitations). --- Editor's note: elaborate more in the "Security Considerations" section.
 
-If the AS receives an error response from the RS, the AS replies to C with an access token response, which includes the "access_token" parameter specifying the access token T_NEW and the "token_upload" parameter encoding the value 1 (see {{sec-token_upload}}).
+### Follow-up at the AS {#sec-updated_rights-as}
 
-In the case that the RS replied to the AS with an error response and could not find the old access token T_OLD to supersede with T_NEW, the RS does not have anymore the secure communication association that was previously shared with C and associated with T_OLD. After receiving from the AS the access token response including the access token T_NEW, C will send a protected POST request including T_NEW to the authz-info endpoint at the RS, according to the original workflow. Since the RS does not store T_OLD and does not have the corresponding secure communication association used by C to protect the POST request, the RS replies to C with an unprotected error response. After that, C can send a new access token request to the token endpoint at the AS, asking for a new access token in a new token series.
+After sending to the authz-info endpoint a protected POST request that conveys the access token T_NEW and the "updated_rights" parameter encoding the CBOR simple value true (0xf5), the AS proceeds as follows when receiving a response from the RS.
+
+* If the AS receives a successful response, the AS replies to C with an access token response, consistent with the issue of the access token T_NEW. The access token response includes the "token_upload" parameter encoding the value 0 (see {{sec-token_upload-resp}}). Also, the access token response includes the "access_token" parameter, or the "token_hash" parameter, or none of those, depending on the value of the "token_upload" parameter in the corresponding access token request.
+
+* If the AS receives an error response that includes the error code "missing_old_token" (see {{sec-updated_rights-rs}}), the AS proceeds as defined in {{sec-new-series-on-the-fly}}.
+
+* If the AS receives any other error response, the AS replies to C with an access token response, consistent with the issue of the access token T_NEW. The access token response includes the "access_token" parameter specifying the access token T_NEW and the "token_upload" parameter encoding the value 1 (see {{sec-token_upload-resp}}).
+
+The AS MUST ignore the error code "missing_old_token", if the POST request did not convey the "updated_rights" parameter encoding the CBOR simple value true (0xf5).
+
+#### New Token Series Created on the Fly # {#sec-new-series-on-the-fly}
+
+As defined in {{sec-updated_rights-rs}}, the RS replies to the AS with an error response that includes the error code "missing_old_token", if the RS cannot find the old access token T_OLD to supersede with the access token T_NEW that the AS uploaded to the authz-info endpoint. In such case, the RS does not have anymore the secure communication association that was previously shared with C and associated with T_OLD.
+
+If the AS simply completes the issue of T_NEW and provides it to C, this would result in C sending a protected POST request including T_NEW to the authz-info endpoint at the RS, according to the original workflow. However, since the RS does not store T_OLD and does not have the corresponding secure communication association used by C to protect the POST request, the RS would reply to C with an unprotected error response. After that, C would finally send a new access token request to the token endpoint at the AS, asking for a new access token of a new token series.
+
+Instead, under the specific circumstance in question, the procedure defined below avoids that C and the RS perform such an inefficient and unsuccessful exchange. In the interest of performing this procedure, an AS that supports the SDC workflow MUST store the access token request that results in issuing the first access token of a token series, until the token series ends.
+
+After having uploaded T_NEW to the RS and received an error response that includes the error code "missing_old_token", the AS creates a new token series "on the fly", as defined below.
+
+The rest of this section uses the following notation:
+
+* T_FIRST: the first access token in the token series to which T_OLD and T_NEW belong.
+
+* REQ_STORED: the access token request that resulted in the AS issuing T_FIRST.
+
+* REQ_RECEIVED: the access token request that resulted in the AS composing T_NEW and uploading it to the RS.
+
+The AS performs the following steps.
+
+1. The AS retrieves from its local storage the access token request REQ_STORED.
+
+2. The AS composes a new access token request REQ_BUILT that is equal to REQ_STORED retrieved at Step 1, with the following differences:
+
+   * The "scope" parameter in REQ_BUILT specifies the scope that AS granted to C and indicated within the "scope" claim of T_NEW.
+
+   * The "token_upload" parameter is included and encodes the same value that was specified by the "token_upload" parameter within the access token request REQ_RECEIVED.
+
+3. The AS revokes the access tokens T_OLD and T_NEW, thus ending the token series they belong to. The AS can rely on the method defined in {{RFC9770}} to notify about the revoked access tokens.
+
+   After that, the AS deletes REQ_STORED from its local storage.
+
+4. The AS processes REQ_BUILT as if it was received from C, which results in issuing an access token T_NEXT as the first access token of a new token series. Like for T_NEW, also T_NEXT is issued to C, for the same targeted audience, and per the same profile of ACE.
+
+   Like any other access token request that results in starting a new token series, the AS stores REQ_BUILT throughout the lifetime of the new token series to which T_NEXT belongs.
+
+5. If REQ_RECEIVED does not include the "to_rs" parameter (see {{sec-to_rs}}), the AS moves to Step 6.
+
+   Otherwise, the AS replies to C with an access token response consistent with the issue of T_NEXT as the first access token of a new token series. In particular, the access token response includes the "access_token" parameter specifying the access token T_NEXT and the "token_upload" parameter encoding the value 3 (see {{sec-token_upload-resp}}). Further details about the access token response are defined later in this section.
+
+   Then, this procedure terminates.
+
+6. Per the SDC workflow, the AS uploads T_NEXT to the RS, by sending a protected POST request to the authz-info endpoint at the RS. This is identical to the case where the AS uses the SDC workflow to upload at the RS the first access token of a new token series, following an access token request that actually asks for the issue of such an access token (see {{sec-as-token-upload}}).
+
+   When receiving a response from the RS, the AS replies to C with an access token response, consistent with the issue of the access token T_NEXT. In particular, the following applies.
+
+   * If the AS receives a successful response from the RS, the access token response includes the "token_upload" parameter encoding the value 2 (see {{sec-token_upload-resp}}). Also, the access token response includes the "access_token" parameter, or the "token_hash" parameter, or none of those, depending on the value of the "token_upload" parameter in REQ_RECEIVED.
+
+   * If the AS receives an error response from the RS, the access token response includes the "access_token" parameter specifying the access token T_NEXT and the "token_upload" parameter encoding the value 3 (see {{sec-token_upload-resp}}).
+
+   Further details about the access token response are defined below.
+
+With reference to the access token response sent at Step 5 or Step 6:
+
+* The "scope" parameter has to be present if: i) it was present in REQ_RECEIVED and the access rights granted to C are different from the requested ones; or ii) it was not present in REQ_RECEIVED and the access rights granted to C are different from the default ones.
+
+* If the "scope" parameter is not present, then the granted access rights are those requested by the "scope" parameter in REQ_RECEIVED if present therein, or the default access rights otherwise.
+
+In any case, the granted access rights are specified by the issued access token T_NEXT.
 
 # Updated "ace_profile" Parameter # {#sec-updated-ace-profile-parameter}
 
@@ -990,7 +1080,7 @@ In addition to what is specified in {{Sections 5.8.1, 5.8.2, and 5.8.4.3 of RFC9
 
   The "ace_profile" parameter MUST NOT be included in an access token request, if the requested access token is not the first one of a new token series.
 
-* If the AS receives an access token request for requesting the first access token in a new token series and the request includes the "ace_profile" parameter specifying the identifier of a profile, then the AS proceeds as follows.
+* If the AS receives an access token request for requesting the first access token of a new token series and the request includes the "ace_profile" parameter specifying the identifier of a profile, then the AS proceeds as follows.
 
   In case the AS does not issue access tokens per the profile specified in the access token request, or C and the RS do not share that profile, then the AS MUST reject the request and MUST reply with an error response (see {{Section 5.8.3 of RFC9200}}). The error response MUST have a response code equivalent to the CoAP code 4.00 (Bad Request) and MUST include the error code "incompatible_ace_profiles".
 
@@ -1402,6 +1492,14 @@ IANA is asked to add the following entry to the "CBOR Web Token (CWT) Claims" re
 
 IANA is asked to add the following entries to the "OAuth Extensions Error Registry" {{IANA.OAuth.Extensions.Error}} within the "OAuth Parameters" registry group.
 
+* Name: missing_old_token
+* Usage Location: authz-info error response
+* Protocol Extension: {{&SELF}}
+* Change Controller: IETF
+* Reference: \[RFC-XXXX, {{sec-new-series-on-the-fly}}\]
+
+<br>
+
 * Name: unknown_credential_referenced
 * Usage Location: token error response
 * Protocol Extension: {{&SELF}}
@@ -1419,6 +1517,13 @@ IANA is asked to add the following entries to the "OAuth Extensions Error Regist
 ## OAuth Error Code CBOR Mappings Registry ## {#iana-oauth-error-code-cbor-mappings}
 
 IANA is asked to add the following entries to the "OAuth Error Code CBOR Mappings" registry {{IANA.OAuth.Error.Code.CBOR.Mappings}} within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.
+
+* Name: missing_old_token
+* CBOR Value: TBD (value between 1 and 255)
+* Reference: {{&SELF}}
+* Original Specification: {{&SELF}}
+
+<br>
 
 * Name: unknown_credential_referenced
 * CBOR Value: TBD (value between 1 and 255)
@@ -1505,6 +1610,8 @@ ace-error = 2
 {:removeinrfc}
 
 ## Version -07 to -08 ## {#sec-07-08}
+
+* Extended creation of "token_upload" to support the creation of token series "on-the-fly" if need be.
 
 * Clarifications:
 
