@@ -6,8 +6,8 @@ ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Updates: 9200, 9201, 9202, 9203, 9431 (if                    G. Selander
          approved)                                           Ericsson AB
-Intended status: Standards Track                            23 June 2026
-Expires: 25 December 2026
+Intended status: Standards Track                            24 June 2026
+Expires: 26 December 2026
 
 
 Short Distribution Chain (SDC) Workflow and New OAuth Parameters for the
@@ -69,7 +69,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 25 December 2026.
+   This Internet-Draft will expire on 26 December 2026.
 
 Copyright Notice
 
@@ -122,18 +122,20 @@ Table of Contents
    6.  Failed Verification of Proof of Possession at the AS
    7.  Updated Payload Format of Error Responses
    8.  Updated Requirements on Profiles of ACE
-   9.  Security Considerations
-   10. IANA Considerations
-     10.1.  OAuth Parameters Registry
-     10.2.  OAuth Parameters CBOR Mappings Registry
-     10.3.  JSON Web Token Claims Registry
-     10.4.  CBOR Web Token (CWT) Claims Registry
-     10.5.  OAuth Extensions Error Registry
-     10.6.  OAuth Error Code CBOR Mappings Registry
-     10.7.  Custom Problem Detail Keys Registry
-   11. References
-     11.1.  Normative References
-     11.2.  Informative References
+   9.  EDHOC EAD Item for Transporting a Session Identifier
+   10. Security Considerations
+   11. IANA Considerations
+     11.1.  OAuth Parameters Registry
+     11.2.  OAuth Parameters CBOR Mappings Registry
+     11.3.  JSON Web Token Claims Registry
+     11.4.  CBOR Web Token (CWT) Claims Registry
+     11.5.  OAuth Extensions Error Registry
+     11.6.  OAuth Error Code CBOR Mappings Registry
+     11.7.  Custom Problem Detail Keys Registry
+     11.8.  EDHOC External Authorization Data Registry
+   12. References
+     12.1.  Normative References
+     12.2.  Informative References
    Appendix A.  Benefits for ACE Profiles
      A.1.  DTLS Profile
      A.2.  EDHOC and OSCORE Profile
@@ -328,13 +330,13 @@ Table of Contents
 
    In the CBOR diagnostic notation used in this document, constructs of
    the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME
-   in the CDDL model shown in Figure 11 of Appendix B.  For example,
+   in the CDDL model shown in Figure 12 of Appendix B.  For example,
    {e'audience2' : ["rs1", "rs2"]} stands for {54 : ["rs1", "rs2"]}.
 
    Note to RFC Editor: Please delete the paragraph immediately preceding
    this note.  Also, in the CBOR diagnostic notation used in this
    document, please replace the constructs of the form e'SOME_NAME' with
-   the value assigned to SOME_NAME in the CDDL model shown in Figure 11
+   the value assigned to SOME_NAME in the CDDL model shown in Figure 12
    of Appendix B.  Finally, please delete this note.
 
 2.  The Short Distribution Chain (SDC) Workflow
@@ -1678,12 +1680,12 @@ Table of Contents
       token belongs.
 
       When CWTs are used as access tokens, such claim can be the
-      "token_series_id" claim registered in Section 10.4, which has the
+      "token_series_id" claim registered in Section 11.4, which has the
       same semantics as the "token_series_id" parameter of an access
       token response encoded in CBOR.
 
       When JWTs are used as access tokens, such claim can be the
-      "token_series_id" claim registered in Section 10.3, which has the
+      "token_series_id" claim registered in Section 11.3, which has the
       same semantics as the "token_series_id" parameter of an access
       token response encoded in JSON.
 
@@ -1827,8 +1829,8 @@ Table of Contents
    the CoAP code 5.00 (Internal Server Error).  The error response is
    analogous to error responses sent by the AS (see Section 5.8.3 of
    [RFC9200]) and MUST include the error code "missing_old_token".  The
-   error code and its CBOR abbreviation are registered in Section 10.5
-   and Section 10.6, respectively.
+   error code and its CBOR abbreviation are registered in Section 11.5
+   and Section 11.6, respectively.
 
    The explicit indication provided by the "updated_rights" parameter
    prevents possible ambiguous situations, where the RS might
@@ -2097,7 +2099,7 @@ Table of Contents
    MUST have a response code equivalent to the CoAP code 5.00 (Internal
    Server Error) and MUST include the error code
    "unknown_credential_referenced".  The error code and its CBOR
-   abbreviation are registered in Section 10.5 and Section 10.6,
+   abbreviation are registered in Section 11.5 and Section 11.6,
    respectively.
 
    After receiving such an error response, C can send a new access token
@@ -2220,7 +2222,7 @@ Table of Contents
    Section 5.8.3 of [RFC9200]).  The error response MUST have a response
    code equivalent to the CoAP code 4.00 (Bad Request) and MUST include
    the error code "failed_pop_verification".  The error code and its
-   CBOR abbreviation are registered in Section 10.5 and Section 10.6,
+   CBOR abbreviation are registered in Section 11.5 and Section 11.6,
    respectively.
 
 7.  Updated Payload Format of Error Responses
@@ -2242,7 +2244,7 @@ Table of Contents
    (see Section 2 of [RFC9290]).  The CBOR map is formatted as follows:
 
    *  It MUST include the Custom Problem Detail entry "ace-error"
-      registered in Section 10.7 of this document.
+      registered in Section 11.7 of this document.
 
       This entry is formatted as a CBOR map including only one field,
       namely "error-code".  The map key for the "error-code" field is
@@ -2359,7 +2361,147 @@ Table of Contents
    RFC (i.e., [RFC9202][RFC9203][RFC9431]) already comply with the two
    updated requirements as formulated above.
 
-9.  Security Considerations
+9.  EDHOC EAD Item for Transporting a Session Identifier
+
+   The authenticated key exchange protocol Ephemeral Diffie-Hellman Over
+   COSE (EDHOC) [RFC9528] defines the transport of additional External
+   Authorization Data (EAD) within an optional EAD field of the EDHOC
+   messages (see Section 3.8 of [RFC9528]).  An EAD field is composed of
+   one or multiple EAD items, each of which specifies an identifying
+   'ead_label' encoded as a CBOR integer and an optional 'ead_value'
+   encoded as a CBOR byte string.
+
+   When using the EDHOC and OSCORE profile of ACE defined in
+   [I-D.ietf-ace-edhoc-oscore-profile], C and the RS run the EDHOC
+   protocol to establish an OSCORE Security Context [RFC8613], which is
+   used to secure communications when C accesses protected resources at
+   the RS, according to the authorization information indicated in an
+   access token.  Specifically, the access token is bound to C's
+   authentication credential AUTH_CRED_C that C uses during the EDHOC
+   session for authenticating itself to the RS.
+
+   Per the EDHOC and OSCORE profile, the first access token of a token
+   series is specified by C to the RS during an EDHOC session between
+   the two peers.  To this end, Section 4.1 of
+   [I-D.ietf-ace-edhoc-oscore-profile] defines the EAD item ACE-OAuth
+   Access Token for specifying an access token by value in the EAD field
+   of an EDHOC message from C to the RS.
+
+   This section defines an alternative EAD item for specifying an access
+   token by reference, through its associated EDHOC session identifier.
+
+   The name of the EAD item is Session ID, for which the CDDL grammar is
+   shown in Figure 11.
+
+   ead_session_id = (
+     ead_label : e'ead_session_id_label',
+     ead_value : session_id
+   )
+   session_id = bstr
+
+                   Figure 11: EDHOC EAD Item Session ID.
+
+   In particular:
+
+   *  ead_label is the integer value TBD registered in Section 11.8.
+
+   *  ead_value is a CBOR byte string equal to the value of the
+      "session_id" field within the EDHOC_Information object specified
+      by the "edhoc_info" parameter of the access token response from
+      the AS, when issuing the first access token of a token series (see
+      Section 3.3 of [I-D.ietf-ace-edhoc-oscore-profile]).
+
+   Note to RFC Editor: Please replace TBD with the value registered for
+   Session ID in Section 11.8, then delete this note.
+
+   This EAD item is critical, i.e., it is used only with the negative
+   value of its ead_label, indicating that the receiving RS must
+   progress the protocol using the access token associated with the
+   identifier specified in the ead_value and with the AUTH_CRED_C used
+   in the EDHOC session, or else abort the EDHOC session (see
+   Section 3.8 of [RFC9528])
+
+   The EAD Item Session ID is useful in two circumstances:
+
+   *  When using the SDC workflow defined in Section 2, C can indicate
+      to the AS that it does not want to receive the issued access token
+      (i.e., the access token request specifies the "token_upload"
+      parameter with value 0 or 1), in the case that the AS successfully
+      uploads the access token to the RS (i.e., the access token
+      response specifies the "token_upload" parameter with value 0 or
+      2).
+
+      Even in such a case where C does not obtain the issued access
+      token, C obtains the "session_id" associated with the access token
+      and specified in the access token response.  Consequently, C can
+      still specify the access token by reference during the EDHOC
+      session with the RS, by using the EAD item Session ID.
+
+   *  After having completed an EDHOC session with the RS and while
+      still storing a valid access token, C might choose to re-run EDHOC
+      with the RS.  For example, the EDHOC session or the derived OSCORE
+      Security Context might have become invalid, or C receives
+      unprotected error responses from the RS and determines that the RS
+      has deleted the Security Context (e.g., due to memory
+      limitations).  As another example, C could want to update its
+      current secure communication association with the RS by
+      establishing a new OSCORE Security Context, specifically through a
+      new EDHOC session to leverage the exchange of ephemeral keys.
+
+      Even in such a case where C can specify the access token by value,
+      it is possible for C to instead specify the access token by
+      reference during the EDHOC session with the RS, by using the EAD
+      item Session ID as a way to reduce communication overhead.
+
+   The EAD item Session ID is used only when uploading the first access
+   token of a token series, but not for the dynamic update of access
+   rights (see Section 4.6 of [I-D.ietf-ace-edhoc-oscore-profile]).
+
+   Analogously to the EAD item ACE-OAuth Access Token defined in
+   Section 4.1 of [I-D.ietf-ace-edhoc-oscore-profile] and consistent
+   with what is defined in Section 4.2 of
+   [I-D.ietf-ace-edhoc-oscore-profile], the EAD item Session ID is used
+   to specify the access token by reference as follows:
+
+   *  If the EDHOC forward message flow is used (see Section 4.3 of
+      [I-D.ietf-ace-edhoc-oscore-profile]), the EAD item is included in
+      the EAD_3 field of EDHOC message_3.  As per Section 4.3.3 of
+      [I-D.ietf-ace-edhoc-oscore-profile], the EAD_3 field must not
+      include multiple EAD items specifying the access token.
+
+   *  Instead, if the EDHOC reverse message flow is used (see
+      Section 4.4 of [I-D.ietf-ace-edhoc-oscore-profile]), the EAD item
+      is included in the EAD_4 field of EDHOC message_4.  As per
+      Section 4.4.5 of [I-D.ietf-ace-edhoc-oscore-profile], the EAD_4
+      field must not include multiple EAD items specifying the access
+      token.
+
+   A client or resource server MUST support the EAD item Session ID if
+   it both supports the SDC workflow and implements the EDHOC and OSCORE
+   profile of ACE.
+
+   Consequently, C is ensured that RS supports the EAD item Session ID
+   when C receives an access token response specifying the
+   "token_upload" parameter with value 0 or 2, following the issue of an
+   access token for accessing protected resources at the RS.  Besides
+   that, C can learn about RS' support for the EAD item through
+   indications from the AS within the EDHOC_Information object specified
+   by the "edhoc_info" parameter of the access token response, or by
+   using other means such as, for example, those defined in
+   [I-D.ietf-lake-app-profiles].
+
+   Example: assuming that ead_label is 2 and that the value of the
+   "session_id" field within the EDHOC_Information object specified by
+   the "edhoc_info" parameter of the access token response from the AS
+   is equal to h'01fc', the critical EAD item is as follows:
+
+   -2, h'01fc'
+
+   Note to RFC Editor: Please replace the value of the ead_label with
+   the value registered for Session ID in Section 11.8, then delete this
+   note.
+
+10.  Security Considerations
 
    The same security considerations from the ACE framework for
    Authentication and Authorization [RFC9200] apply to this document,
@@ -2371,14 +2513,14 @@ Table of Contents
 
    Editor's note: add more security considerations.
 
-10.  IANA Considerations
+11.  IANA Considerations
 
    This document has the following actions for IANA.
 
    Note to RFC Editor: Please replace all occurrences of "[RFC-XXXX]"
    with the RFC number of this specification and delete this paragraph.
 
-10.1.  OAuth Parameters Registry
+11.1.  OAuth Parameters Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters"
    registry [IANA.OAuth.Parameters] within the "OAuth Parameters"
@@ -2547,7 +2689,7 @@ Table of Contents
    occurrences of "-ietf-ace-key-groupcomm-oscore-21" with the RFC
    number of that specification and delete this paragraph.
 
-10.2.  OAuth Parameters CBOR Mappings Registry
+11.2.  OAuth Parameters CBOR Mappings Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters
    CBOR Mappings" registry [IANA.OAuth.Parameters.CBOR.Mappings] within
@@ -2671,7 +2813,7 @@ Table of Contents
 
    *  Reference: [RFC9201, Section 3.2][RFC-XXXX, Section 5.2]
 
-10.3.  JSON Web Token Claims Registry
+11.3.  JSON Web Token Claims Registry
 
    IANA is asked to add the following entry to the "JSON Web Token
    Claims" registry [IANA.JSON.Web.Token.Claims] within the "JSON Web
@@ -2686,7 +2828,7 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
-10.4.  CBOR Web Token (CWT) Claims Registry
+11.4.  CBOR Web Token (CWT) Claims Registry
 
    IANA is asked to add the following entry to the "CBOR Web Token (CWT)
    Claims" registry [IANA.CWT.Claims] within the "CBOR Web Token (CWT)
@@ -2707,7 +2849,7 @@ Table of Contents
 
    *  Reference: [RFC-XXXX, Section 3.6]
 
-10.5.  OAuth Extensions Error Registry
+11.5.  OAuth Extensions Error Registry
 
    IANA is asked to add the following entries to the "OAuth Extensions
    Error Registry" [IANA.OAuth.Extensions.Error] within the "OAuth
@@ -2747,7 +2889,7 @@ Table of Contents
 
    *  Reference: [RFC-XXXX, Section 6]
 
-10.6.  OAuth Error Code CBOR Mappings Registry
+11.6.  OAuth Error Code CBOR Mappings Registry
 
    IANA is asked to add the following entries to the "OAuth Error Code
    CBOR Mappings" registry [IANA.OAuth.Error.Code.CBOR.Mappings] within
@@ -2782,7 +2924,7 @@ Table of Contents
 
    *  Original Specification: [RFC-XXXX]
 
-10.7.  Custom Problem Detail Keys Registry
+11.7.  Custom Problem Detail Keys Registry
 
    IANA is asked to register the following entry in the "Custom Problem
    Detail Keys" registry [IANA.Custom.Problem.Detail.Keys] within the
@@ -2799,9 +2941,24 @@ Table of Contents
 
    *  Reference: [RFC-XXXX, Section 7]
 
-11.  References
+11.8.  EDHOC External Authorization Data Registry
 
-11.1.  Normative References
+   IANA is asked to add the following entry to the "EDHOC External
+   Authorization Data" registry [IANA.EDHOC.External.Authorization.Data]
+   within the "Ephemeral Diffie-Hellman Over COSE (EDHOC)" registry
+   group.
+
+   *  Name: Session ID
+
+   *  Label: TBD (value between 1 and 23)
+
+   *  Description: The identifier of an EDHOC session
+
+   *  Reference: [RFC-XXXX], Section 9
+
+12.  References
+
+12.1.  Normative References
 
    [I-D.ietf-ace-edhoc-oscore-profile]
               Selander, G., Mattsson, J. P., Tiloca, M., and R. Höglund,
@@ -2822,6 +2979,11 @@ Table of Contents
               IANA, "CBOR Web Token (CWT) Claims",
               <https://www.iana.org/assignments/cwt/cwt.xhtml#claims-
               registry>.
+
+   [IANA.EDHOC.External.Authorization.Data]
+              IANA, "EDHOC External Authorization Data",
+              <https://www.iana.org/assignments/edhoc/edhoc.xhtml#edhoc-
+              ead>.
 
    [IANA.Hash.Algorithms]
               IANA, "Named Information Hash Algorithm Registry",
@@ -2985,6 +3147,11 @@ Table of Contents
               DOI 10.17487/RFC9431, July 2023,
               <https://www.rfc-editor.org/rfc/rfc9431>.
 
+   [RFC9528]  Selander, G., Preuß Mattsson, J., and F. Palombini,
+              "Ephemeral Diffie-Hellman Over COSE (EDHOC)", RFC 9528,
+              DOI 10.17487/RFC9528, March 2024,
+              <https://www.rfc-editor.org/rfc/rfc9528>.
+
    [RFC9770]  Tiloca, M., Palombini, F., Echeverria, S., and G. Lewis,
               "Notification of Revoked Access Tokens in the
               Authentication and Authorization for Constrained
@@ -2997,7 +3164,7 @@ Table of Contents
               <https://nvlpubs.nist.gov/nistpubs/FIPS/
               NIST.FIPS.180-4.pdf>.
 
-11.2.  Informative References
+12.2.  Informative References
 
    [I-D.ietf-ace-authcred-dtls-profile]
               Tiloca, M. and J. P. Mattsson, "Additional Formats of
@@ -3018,6 +3185,19 @@ Table of Contents
               ace-group-oscore-profile-06, 2 March 2026,
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
               group-oscore-profile-06>.
+
+   [I-D.ietf-lake-app-profiles]
+              Tiloca, M. and R. Höglund, "Coordinating the Use of
+              Application Profiles for Ephemeral Diffie-Hellman Over
+              COSE (EDHOC)", Work in Progress, Internet-Draft, draft-
+              ietf-lake-app-profiles-04, 2 March 2026,
+              <https://datatracker.ietf.org/doc/html/draft-ietf-lake-
+              app-profiles-04>.
+
+   [RFC8613]  Selander, G., Mattsson, J., Palombini, F., and L. Seitz,
+              "Object Security for Constrained RESTful Environments
+              (OSCORE)", RFC 8613, DOI 10.17487/RFC8613, July 2019,
+              <https://www.rfc-editor.org/rfc/rfc8613>.
 
    [RFC9594]  Palombini, F. and M. Tiloca, "Key Provisioning for Group
               Communication Using Authentication and Authorization for
@@ -3104,7 +3284,10 @@ Appendix B.  CDDL Model
    ; Custom Problem Detail Keys Registry
    ace-error = 2
 
-                           Figure 11: CDDL model
+   ; EDHOC External Authorization Data
+   ead_session_id_label = 2
+
+                           Figure 12: CDDL model
 
 Appendix C.  Document Updates
 
@@ -3114,6 +3297,8 @@ C.1.  Version -07 to -08
 
    *  Extended creation of "token_upload" to support the creation of
       token series "on-the-fly" if need be.
+
+   *  Defined EDHOC EAD item Session ID.
 
    *  Clarifications:
 
