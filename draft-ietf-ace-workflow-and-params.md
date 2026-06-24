@@ -1452,7 +1452,7 @@ In the same registry, IANA is asked to update the entries for the following OAut
 
   * Reference: \[RFC-ietf-ace-key-groupcomm-oscore-21\]\[RFC-XXXX\]
 
-Note to RFC Editor: In the last two entries above, please replace the occurrences of "-ietf-ace-key-groupcomm-oscore-21" with the RFC number of that specification and delete this paragraph.
+Note to RFC Editor: In the last two entries above, please replace the occurrences of "RFC-ietf-ace-key-groupcomm-oscore-21" with the RFC number of that specification and delete this paragraph.
 
 ## OAuth Parameters CBOR Mappings Registry ## {#iana-oauth-cbor-mappings}
 
