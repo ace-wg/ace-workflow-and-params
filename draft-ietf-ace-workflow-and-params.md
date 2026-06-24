@@ -65,6 +65,7 @@ normative:
   RFC9290:
   RFC9430:
   RFC9431:
+  RFC9528:
   RFC9770:
   I-D.ietf-ace-edhoc-oscore-profile:
   IANA.OAuth.Parameters.CBOR.Mappings:
@@ -115,6 +116,12 @@ normative:
     date: false
     title: OAuth Parameters
     target: https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#parameters
+  IANA.EDHOC.External.Authorization.Data:
+    author:
+      org: IANA
+    date: false
+    title: EDHOC External Authorization Data
+    target: https://www.iana.org/assignments/edhoc/edhoc.xhtml#edhoc-ead
   SHA-256:
     author:
       org: NIST
@@ -124,7 +131,9 @@ normative:
     target: https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf
 
 informative:
+  RFC8613:
   RFC9594:
+  I-D.ietf-lake-app-profiles:
   I-D.ietf-ace-group-oscore-profile:
   I-D.ietf-ace-authcred-dtls-profile:
 
@@ -1240,6 +1249,66 @@ is replaced by the following text:
 
 At the time of writing, all the profiles of ACE that are published as RFC (i.e., {{RFC9202}}{{RFC9203}}{{RFC9431}}) already comply with the two updated requirements as formulated above.
 
+# EDHOC EAD Item for Transporting a Session Identifier {#sec-ead-session-id}
+
+The authenticated key exchange protocol Ephemeral Diffie-Hellman Over COSE (EDHOC) {{RFC9528}} defines the transport of additional External Authorization Data (EAD) within an optional EAD field of the EDHOC messages (see {{Section 3.8 of RFC9528}}). An EAD field is composed of one or multiple EAD items, each of which specifies an identifying 'ead_label' encoded as a CBOR integer and an optional 'ead_value' encoded as a CBOR byte string.
+
+When using the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}, C and the RS run the EDHOC protocol to establish an OSCORE Security Context {{RFC8613}}, which is used to secure communications when C accesses protected resources at the RS, according to the authorization information indicated in an access token. Specifically, the access token is bound to C's authentication credential AUTH_CRED_C that C uses during the EDHOC session for authenticating itself to the RS.
+
+Per the EDHOC and OSCORE profile, the first access token of a token series is specified by C to the RS during an EDHOC session between the two peers. To this end, {{Section 4.1 of I-D.ietf-ace-edhoc-oscore-profile}} defines the EAD item ACE-OAuth Access Token for specifying an access token by value in the EAD field of an EDHOC message from C to the RS.
+
+This section defines an alternative EAD item for specifying an access token by reference, through its associated EDHOC session identifier.
+
+The name of the EAD item is Session ID, for which the CDDL grammar is shown in {{fig-ead-session-id}}.
+
+~~~~~~~~~~~ cddl
+ead_session_id = (
+  ead_label : e'ead_session_id_label',
+  ead_value : session_id
+)
+session_id = bstr
+~~~~~~~~~~~
+{: #fig-ead-session-id title="EDHOC EAD Item Session ID."}
+
+In particular:
+
+* ead\_label is the integer value TBD registered in {{iana-edhoc-ead}}.
+* ead\_value is a CBOR byte string equal to the value of the "session\_id" field within the EDHOC\_Information object specified by the "edhoc\_info" parameter of the access token response from the AS, when issuing the first access token of a token series (see {{Section 3.3 of I-D.ietf-ace-edhoc-oscore-profile}}).
+
+Note to RFC Editor: Please replace TBD with the value registered for Session ID in {{iana-edhoc-ead}}, then delete this note.
+
+This EAD item is critical, i.e., it is used only with the negative value of its ead\_label, indicating that the receiving RS must progress the protocol using the access token associated with the identifier specified in the ead\_value and with the AUTH_CRED_C used in the EDHOC session, or else abort the EDHOC session (see {{Section 3.8 of RFC9528}})
+
+The EAD Item Session ID is useful in two circumstances:
+
+* When using the SDC workflow defined in {{sec-workflow}}, C can indicate to the AS that it does not want to receive the issued access token (i.e., the access token request specifies the "token_upload" parameter with value 0 or 1), in the case that the AS successfully uploads the access token to the RS (i.e., the access token response specifies the "token_upload" parameter with value 0 or 2).
+
+  Even in such a case where C does not obtain the issued access token, C obtains the "session\_id" associated with the access token and specified in the access token response. Consequently, C can still specify the access token by reference during the EDHOC session with the RS, by using the EAD item Session ID.
+
+* After having completed an EDHOC session with the RS and while still storing a valid access token, C might choose to re-run EDHOC with the RS. For example, the EDHOC session or the derived OSCORE Security Context might have become invalid, or C receives unprotected error responses from the RS and determines that the RS has deleted the Security Context (e.g., due to memory limitations). As another example, C could want to update its current secure communication association with the RS by establishing a new OSCORE Security Context, specifically through a new EDHOC session to leverage the exchange of ephemeral keys.
+
+  Even in such a case where C can specify the access token by value, it is possible for C to instead specify the access token by reference during the EDHOC session with the RS, by using the EAD item Session ID as a way to reduce communication overhead.
+
+The EAD item Session ID is used only when uploading the first access token of a token series, but not for the dynamic update of access rights (see {{Section 4.6 of I-D.ietf-ace-edhoc-oscore-profile}}).
+
+Analogously to the EAD item ACE-OAuth Access Token defined in {{Section 4.1 of I-D.ietf-ace-edhoc-oscore-profile}} and consistent with what is defined in {{Section 4.2 of I-D.ietf-ace-edhoc-oscore-profile}}, the EAD item Session ID is used to specify the access token by reference as follows:
+
+* If the EDHOC forward message flow is used (see {{Section 4.3 of I-D.ietf-ace-edhoc-oscore-profile}}), the EAD item is included in the EAD_3 field of EDHOC message_3. As per {{Section 4.3.3 of I-D.ietf-ace-edhoc-oscore-profile}}, the EAD_3 field must not include multiple EAD items specifying the access token.
+
+* Instead, if the EDHOC reverse message flow is used (see {{Section 4.4 of I-D.ietf-ace-edhoc-oscore-profile}}), the EAD item is included in the EAD_4 field of EDHOC message_4. As per {{Section 4.4.5 of I-D.ietf-ace-edhoc-oscore-profile}}, the EAD_4 field must not include multiple EAD items specifying the access token.
+
+A client or resource server MUST support the EAD item Session ID if it both supports the SDC workflow and implements the EDHOC and OSCORE profile of ACE.
+
+Consequently, C is ensured that RS supports the EAD item Session ID when C receives an access token response specifying the "token_upload" parameter with value 0 or 2, following the issue of an access token for accessing protected resources at the RS. Besides that, C can learn about RS' support for the EAD item through indications from the AS within the EDHOC_Information object specified by the "edhoc_info" parameter of the access token response, or by using other means such as, for example, those defined in {{I-D.ietf-lake-app-profiles}}.
+
+Example: assuming that ead\_label is 2 and that the value of the "session\_id" field within the EDHOC\_Information object specified by the "edhoc\_info" parameter of the access token response from the AS is equal to h'01fc', the critical EAD item is as follows:
+
+~~~~~~~~~~~ cbor-diag
+-2, h'01fc'
+~~~~~~~~~~~
+
+Note to RFC Editor: Please replace the value of the ead\_label with the value registered for Session ID in {{iana-edhoc-ead}}, then delete this note.
+
 # Security Considerations
 
 The same security considerations from the ACE framework for Authentication and Authorization {{RFC9200}} apply to this document, together with those from the specific profile of ACE used.
@@ -1547,6 +1616,15 @@ IANA is asked to register the following entry in the "Custom Problem Detail Keys
 * Change Controller: IETF
 * Reference: \[RFC-XXXX, {{sec-updated-error-responses}}\]
 
+## EDHOC External Authorization Data Registry # {#iana-edhoc-ead}
+
+IANA is asked to add the following entry to the "EDHOC External Authorization Data" registry {{IANA.EDHOC.External.Authorization.Data}} within the "Ephemeral Diffie-Hellman Over COSE (EDHOC)" registry group.
+
+* Name: Session ID
+* Label: TBD (value between 1 and 23)
+* Description: The identifier of an EDHOC session
+* Reference: {{&SELF}}, {{sec-ead-session-id}}
+
 --- back
 
 # Benefits for ACE Profiles # {#sec-benefits-for-profiles}
@@ -1603,6 +1681,9 @@ x5chain = 24
 
 ; Custom Problem Detail Keys Registry
 ace-error = 2
+
+; EDHOC External Authorization Data
+ead_session_id_label = 2
 ~~~~~~~~~~~~~~~~~~~~
 {: #fig-cddl-model title="CDDL model"}
 
@@ -1612,6 +1693,8 @@ ace-error = 2
 ## Version -07 to -08 ## {#sec-07-08}
 
 * Extended creation of "token_upload" to support the creation of token series "on-the-fly" if need be.
+
+* Defined EDHOC EAD item Session ID.
 
 * Clarifications:
 
