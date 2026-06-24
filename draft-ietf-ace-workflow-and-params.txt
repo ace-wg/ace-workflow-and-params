@@ -32,11 +32,12 @@ Abstract
    the OAuth 2.0 token endpoint, thus updating RFC 9201. (5) It extends
    the error handling at the AS, for which it defines a new error code.
    (6) It deprecates the original payload format of error responses
-   conveying an error code, when CBOR is used to encode message
-   payloads.  For those responses, it defines a new payload format
-   aligned with RFC 9290, thus updating in this respect also the
-   profiles defined in RFC 9202, RFC 9203, and RFC 9431. (7) It amends
-   two of the requirements on profiles of the framework.
+   conveying an error code, when Concise Binary Object Representation
+   (CBOR) is used to encode message payloads.  For those responses, it
+   defines a new payload format aligned with RFC 9290, thus updating in
+   this respect also the profiles defined in RFC 9202, RFC 9203, and RFC
+   9431. (7) It amends two of the requirements on profiles of the
+   framework.
 
 About This Document
 
@@ -361,8 +362,9 @@ Table of Contents
    result of the resource access (Step F).  Details about what protocol
    the client and the RS use to establish a secure association, mutually
    authenticate, and secure their communications are defined in the
-   specific profile of ACE used, e.g.,
-   [RFC9202][RFC9203][RFC9431][I-D.ietf-ace-edhoc-oscore-profile][I-D.ietf-ace-group-oscore-profile].
+   specific profile of ACE used, such as [RFC9202], [RFC9203],
+   [RFC9431], [I-D.ietf-ace-edhoc-oscore-profile], or
+   [I-D.ietf-ace-group-oscore-profile].
 
    Further interactions are possible between the AS and the RS, i.e.,
    the exchange of an introspection request and response where the AS
