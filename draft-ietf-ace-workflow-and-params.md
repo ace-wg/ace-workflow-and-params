@@ -327,7 +327,7 @@ When receiving a POST request to the authz-info endpoint that is specifically pr
 
 * If the POST request does not include the "updated_rights" parameter, the access token in question is the first one in a token series. Consequently, the RS processes the request and the access token therein like it would when receiving the request from C and according to the specific profile of ACE used.
 
-* If the POST request includes the "updated_rights" parameter encoding a specific value, the access token in question is not the first one in a token series, i.e., it is meant to dynamically update the access rights of C, while preserving the same secure communication association that is shared between C and the RS. The POST request and its processing at the RS in this case is defined in {{sec-updated_rights}}.
+* If the POST request includes the "updated_rights" parameter encoding a specific value, the access token in question is not the first one in a token series, i.e., it is meant to dynamically update the access rights of C, while preserving the same secure communication association that is shared between C and the RS. The POST request and its processing at the RS in this case are defined in {{sec-updated_rights}}.
 
 # New Parameters # {#sec-parameters}
 
