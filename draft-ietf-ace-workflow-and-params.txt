@@ -546,7 +546,7 @@ Table of Contents
       first one in a token series, i.e., it is meant to dynamically
       update the access rights of C, while preserving the same secure
       communication association that is shared between C and the RS.
-      The POST request and its processing at the RS in this case is
+      The POST request and its processing at the RS in this case are
       defined in Section 3.7.
 
 3.  New Parameters
