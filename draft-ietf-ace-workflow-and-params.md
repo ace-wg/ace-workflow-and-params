@@ -357,19 +357,21 @@ If the AS supports the SDC workflow and the access token request includes the "t
 
 The "token_upload" parameter MUST be included in an access token response, if both the following conditions apply. Otherwise, the "token_upload" parameter MUST NOT be included.
 
-- The corresponding access token request included the "token_upload" parameter, with value 0, 1, or 2.
+- The corresponding access token request from C included the "token_upload" parameter, with value 0, 1, or 2.
 
-- The AS has attempted to upload the access token to the RS as per the SDC workflow, irrespective of the result of the token upload.
+- The AS has attempted to upload an access token to the RS as per the SDC workflow, irrespective of the result of the token upload.
 
-The following refers to three possible cases, with reference to the issued access token and the resulting access token response:
+The following considers three possible cases, with reference to the issued access token pertaining to the access token response:
 
-* CASE_1 - The issued access token is the first one of a new token series, aligned with the access token request that asked for issuing the first access token of a new token series.
+* CASE_1 - The issued access token is the first one of a new token series, aligned with the access token request that asked to issue the first access token of a new token series.
 
 * CASE_2 - The issued access token is not the first one in a token series, aligned with the access token request that asked to dynamically update the access rights of C, i.e., to issue a new access token of an existing token series. {{sec-updated_rights}} further describes this case.
 
 * CASE_3 - The issued access token is the first one of a new token series, although the access token request asked to dynamically update the access rights of C, i.e., to issue a new access token of an existing token series.
 
-  {{sec-new-series-on-the-fly}} further describes this case, according to which the AS creates a new token series "on the fly", after receiving a specific error from the RS when uploading an access token intended for updating the access rights of C.
+  The new token series to which the issued access token belongs is created by the AS "on the fly", when receiving a specific error code from the RS after uploading an access token intended for updating the access rights of C, as indicated in the access token request.
+
+  In this case, the AS does not upload the issued access token at the RS, and it provides the access token to C in the access token response. {{sec-new-series-on-the-fly}} further describes this case.
 
 When the "token_upload" parameter is included in the access token response, it can take one of the following integer values. When the access token response is encoded in CBOR, those values are encoded as CBOR unsigned integers.
 
@@ -377,19 +379,17 @@ When the "token_upload" parameter is included in the access token response, it c
 
 - If CASE_1 or CASE_2 applies and the token upload at the RS was not successful, then the "token_upload" parameter MUST encode the value 1.
 
-- If CASE_3 applies and the token upload at the RS was successful, then the "token_upload" parameter MUST encode the value 2.
-
-- If CASE_3 applies and the token upload at the RS was not successful, then the "token_upload" parameter MUST encode the value 3.
+- If CASE_3 applies, then the "token_upload" parameter MUST encode the value 2.
 
 When the access token targets a group-audience (see {{Section 6.9 of RFC9200}}), the same as above holds, with the following differences:
 
-* The AS stops uploading the access token to any remaining RS in the group-audience, as soon as the token upload fails at one of those RSs. Consequently,
+* The AS stops uploading an access token to any remaining RS in the group-audience, as soon as the token upload fails at one of those RSs. Consequently,
 
-* The access token response indicates that the upload of the access token was successful if and only if the token upload was successful at each RS in the group-audience.
+* The access token response indicates that the upload of an access token was successful if and only if the token upload was successful at each RS in the group-audience.
 
-In the case that the "token_upload" parameter encodes the value 1 or 3, the access token response MUST include the "access_token" parameter specifying the issued access token.
+In the case that the "token_upload" parameter encodes the value 1 or 2, the access token response MUST include the "access_token" parameter specifying the issued access token.
 
-Instead, in the case that the "token_upload" parameter encodes the value 0 or 2, the access token response can include additional parameters as defined below, depending on the value of the "token_upload" parameter in the corresponding access token request:
+Instead, in the case that the "token_upload" parameter encodes the value 0, the access token response can include additional parameters as defined below, depending on the value of the "token_upload" parameter in the corresponding access token request:
 
 - If the "token_upload" parameter in the access token request specified the value 0, then the access token response MUST NOT include the "access_token" parameter and MUST NOT include the "token_hash" parameter defined in {{sec-token_hash}}.
 
@@ -397,7 +397,7 @@ Instead, in the case that the "token_upload" parameter encodes the value 0 or 2,
 
 - If the "token_upload" parameter in the access token request specified the value 2, then the access token response MUST include the "access_token" parameter specifying the issued access token and MUST NOT include the "token_hash" parameter defined in {{sec-token_hash}}.
 
-When C receives an access token response that includes the "token_upload" parameter encoding the value 2 or 3 (see {{sec-new-series-on-the-fly}}), C is explicitly told that:
+When C receives an access token response that includes the "token_upload" parameter encoding the value 2 (see {{sec-new-series-on-the-fly}}), the AS is explicitly telling C that:
 
 * The dynamic update of access rights that was asked through the access token request did not succeed.
 
@@ -1033,9 +1033,9 @@ After sending to the authz-info endpoint a protected POST request that conveys t
 
 * If the AS receives any other error response, the AS replies to C with an access token response, consistent with the issue of the access token T_NEW. The access token response includes the "access_token" parameter specifying the access token T_NEW and the "token_upload" parameter encoding the value 1 (see {{sec-token_upload-resp}}).
 
-In the case that the access token T_NEW targets a group-audience (see {{Section 6.9 of RFC9200}}), what is specified in {{sec-token_upload-resp}} about the token upload at the RSs in the group-audience applies to T_NEW.
-
 The AS MUST ignore the error code "missing_old_token", if the POST request did not convey the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5).
+
+In the case that the access token T_NEW targets a group-audience (see {{Section 6.9 of RFC9200}}), what is specified in {{sec-token_upload-resp}} about the token upload at the RSs in the group-audience applies to T_NEW.
 
 #### New Token Series Created on the Fly # {#sec-new-series-on-the-fly}
 
@@ -1053,51 +1053,37 @@ The rest of this section uses the following notation:
 
 * REQ_STORED: the access token request that resulted in the AS issuing the first access token of the token series to which T_OLD and T_NEW belong.
 
-* REQ_RECEIVED: the access token request that resulted in the AS composing T_NEW and uploading it to the RS.
+* REQ_RECEIVED: the access token request that resulted in the AS composing T_NEW and attempting to upload it at the RS with no success.
 
 The AS performs the following steps.
 
-1. The AS retrieves from its local storage the access token request REQ_STORED. The AS also checks whether REQ_STORED includes the "to_rs" parameter (see {{sec-to_rs}}).
+1. The AS retrieves REQ_STORED from its local storage.
 
 2. The AS composes a new access token request REQ_BUILT that is equal to REQ_STORED retrieved at Step 1, with the following differences:
 
    * The "scope" parameter is present in REQ_BUILT if and only if the "scope" parameter is present in the access token request REQ_RECEIVED. If present, the "scope" parameter in REQ_BUILT specifies the same scope that is specified by the "scope" parameter within REQ_RECEIVED.
 
-   * The "token_upload" parameter is included in REQ_BUILT and encodes the same value that was specified by the "token_upload" parameter within the access token request REQ_RECEIVED.
-
-   * The parameters "to_rs" (see {{sec-to_rs}}) and "cnonce" (see {{Section 5.8.4.4 of RFC9200}}) are not included in REQ_BUILT, even in the case that they are included in REQ_STORED.
+   * The parameters "token_upload" (see {{sec-token_upload}}), "to_rs" (see {{sec-to_rs}}), and "cnonce" (see {{Section 5.8.4.4 of RFC9200}}) are not included in REQ_BUILT.
 
 3. The AS revokes the access tokens T_OLD and T_NEW, thus ending the token series they belong to. The AS can rely on the method defined in {{RFC9770}} to notify about the revoked access tokens. Then, the AS deletes REQ_STORED from its local storage.
 
-4. The AS processes REQ_BUILT as if it was received from C, which results in issuing an access token T_NEXT as the first access token of a new token series. Like for T_NEW, also T_NEXT is issued to C, for the same targeted audience, and per the same profile of ACE.
+4. The AS processes REQ_BUILT as if it was received from C.
+
+   If the AS successfully processes REQ_BUILT, the AS issues an access token T_NEXT as the first access token of a new token series. Like for T_NEW, also T_NEXT is issued to C, for the same targeted audience, and per the same profile of ACE.
 
    Like any other access token request that results in starting a new token series, the AS stores REQ_BUILT throughout the duration of the new token series to which T_NEXT belongs.
 
-5. If, at Step 1, the AS determined that REQ_STORED did not include the "to_rs" parameter, the AS moves to Step 6.
+5. The AS replies to REQ_RECEIVED with an access token response consistent with the issue of T_NEXT as the first access token of a new token series. In particular, the following applies to the access token response:
 
-   Otherwise, the AS replies to C with an access token response consistent with the issue of T_NEXT as the first access token of a new token series. In particular, the access token response includes the "access_token" parameter specifying the access token T_NEXT and the "token_upload" parameter encoding the value 3 (see {{sec-token_upload-resp}}). Further details about the access token response are defined later in this section.
+   * The "access_token" parameter is present and specifies the access token T_NEXT.
 
-   Then, this procedure terminates.
+   * The "token_upload" parameter is present and encodes the value 2 (see {{sec-token_upload-resp}}).
 
-6. Per the SDC workflow, the AS uploads T_NEXT to the RS, by sending a protected POST request to the authz-info endpoint at the RS. This is identical to the case where the AS uses the SDC workflow to upload at the RS the first access token of a new token series, following an access token request that actually asks for the issue of such an access token (see {{sec-as-token-upload}}).
+   * The "scope" parameter is present if and only if: i) it was present in REQ_BUILT and the access rights granted to C are different from the requested ones; or ii) it was not present in REQ_BUILT and the access rights granted to C are different from the default ones.
 
-   When receiving a response from the RS, the AS replies to C with an access token response, consistent with the issue of the access token T_NEXT. In particular, the following applies.
+     If the "scope" parameter is not present, then the granted access rights are those requested by the "scope" parameter in REQ_BUILT if present therein, or the default access rights otherwise.
 
-   * If the AS receives a successful response from the RS, the access token response includes the "token_upload" parameter encoding the value 2 (see {{sec-token_upload-resp}}). Also, the access token response includes the "access_token" parameter, or the "token_hash" parameter, or none of those, depending on the value of the "token_upload" parameter in REQ_BUILT.
-
-   * If the AS receives an error response from the RS, the access token response includes the "access_token" parameter specifying the access token T_NEXT and the "token_upload" parameter encoding the value 3 (see {{sec-token_upload-resp}}).
-
-   In the case that the access token T_NEXT targets a group-audience (see {{Section 6.9 of RFC9200}}), what is specified in {{sec-token_upload-resp}} about the token upload at the RSs in the group-audience applies to T_NEXT.
-
-   Further details about the access token response are defined below.
-
-With reference to the access token response sent at Step 5 or Step 6:
-
-* The "scope" parameter has to be present if: i) it was present in REQ_BUILT and the access rights granted to C are different from the requested ones; or ii) it was not present in REQ_BUILT and the access rights granted to C are different from the default ones.
-
-* If the "scope" parameter is not present, then the granted access rights are those requested by the "scope" parameter in REQ_BUILT if present therein, or the default access rights otherwise.
-
-In any case, the granted access rights are specified by the issued access token T_NEXT.
+     The granted access rights are specified by the issued access token T_NEXT.
 
 # Updated "ace_profile" Parameter # {#sec-updated-ace-profile-parameter}
 
