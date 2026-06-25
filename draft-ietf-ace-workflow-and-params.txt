@@ -654,6 +654,17 @@ Table of Contents
       successful, then the "token_upload" parameter MUST encode the
       value 3.
 
+   When the access token targets a group-audience (see Section 6.9 of
+   [RFC9200]), the same as above holds, with the following differences:
+
+   *  The AS stops uploading the access token to any remaining RS in the
+      group-audience, as soon as the token upload fails at one of those
+      RSs.  Consequently,
+
+   *  The access token response indicates that the upload of the access
+      token was successful if and only if the token upload was
+      successful at each RS in the group-audience.
+
    In the case that the "token_upload" parameter encodes the value 1 or
    3, the access token response MUST include the "access_token"
    parameter specifying the issued access token.
@@ -1878,6 +1889,10 @@ Table of Contents
       "access_token" parameter specifying the access token T_NEW and the
       "token_upload" parameter encoding the value 1 (see Section 3.1.2).
 
+   In the case that the access token T_NEW targets a group-audience (see
+   Section 6.9 of [RFC9200]), what is specified in Section 3.1.2 about
+   the token upload at the RSs in the group-audience applies to T_NEW.
+
    The AS MUST ignore the error code "missing_old_token", if the POST
    request did not convey the "updated_rights" parameter encoding the
    CBOR simple value true (0xf5).
@@ -1998,6 +2013,11 @@ Table of Contents
           token response includes the "access_token" parameter
           specifying the access token T_NEXT and the "token_upload"
           parameter encoding the value 3 (see Section 3.1.2).
+
+       In the case that the access token T_NEXT targets a group-audience
+       (see Section 6.9 of [RFC9200]), what is specified in
+       Section 3.1.2 about the token upload at the RSs in the group-
+       audience applies to T_NEXT.
 
        Further details about the access token response are defined
        below.
@@ -3314,6 +3334,9 @@ C.1.  Version -07 to -08
 
    *  Extended creation of "token_upload" to support the creation of
       token series "on-the-fly" if need be.
+
+   *  Defined successful/failed token upload from the AS when the token
+      targets a group-audience.
 
    *  Defined EDHOC EAD item Session ID.
 
