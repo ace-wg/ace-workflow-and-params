@@ -1647,23 +1647,26 @@ Note that is not useful to specify the value 0 if C wishes to use the method def
 <p id="section-3.1.2-1">The "token_upload" parameter <span class="bcp14">MUST</span> be included in an access token response, if both the following conditions apply. Otherwise, the "token_upload" parameter <span class="bcp14">MUST NOT</span> be included.<a href="#section-3.1.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.2-2.1">
-              <p id="section-3.1.2-2.1.1">The corresponding access token request included the "token_upload" parameter, with value 0, 1, or 2.<a href="#section-3.1.2-2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3.1.2-2.1.1">The corresponding access token request from C included the "token_upload" parameter, with value 0, 1, or 2.<a href="#section-3.1.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.1.2-2.2">
-              <p id="section-3.1.2-2.2.1">The AS has attempted to upload the access token to the RS as per the SDC workflow, irrespective of the result of the token upload.<a href="#section-3.1.2-2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-3.1.2-2.2.1">The AS has attempted to upload an access token to the RS as per the SDC workflow, irrespective of the result of the token upload.<a href="#section-3.1.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.1.2-3">The following refers to three possible cases, with reference to the issued access token and the resulting access token response:<a href="#section-3.1.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-3">The following considers three possible cases, with reference to the issued access token pertaining to the access token response:<a href="#section-3.1.2-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.2-4.1">
-              <p id="section-3.1.2-4.1.1">CASE_1 - The issued access token is the first one of a new token series, aligned with the access token request that asked for issuing the first access token of a new token series.<a href="#section-3.1.2-4.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3.1.2-4.1.1">CASE_1 - The issued access token is the first one of a new token series, aligned with the access token request that asked to issue the first access token of a new token series.<a href="#section-3.1.2-4.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.1.2-4.2">
               <p id="section-3.1.2-4.2.1">CASE_2 - The issued access token is not the first one in a token series, aligned with the access token request that asked to dynamically update the access rights of C, i.e., to issue a new access token of an existing token series. <a href="#sec-updated_rights" class="auto internal xref">Section 3.7</a> further describes this case.<a href="#section-3.1.2-4.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.1.2-4.3">
               <p id="section-3.1.2-4.3.1">CASE_3 - The issued access token is the first one of a new token series, although the access token request asked to dynamically update the access rights of C, i.e., to issue a new access token of an existing token series.<a href="#section-3.1.2-4.3.1" class="pilcrow">¶</a></p>
-<p id="section-3.1.2-4.3.2"><a href="#sec-new-series-on-the-fly" class="auto internal xref">Section 3.7.2.1</a> further describes this case, according to which the AS creates a new token series "on the fly", after receiving a specific error from the RS when uploading an access token intended for updating the access rights of C.<a href="#section-3.1.2-4.3.2" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-4.3.2">
+The new token series to which the issued access token belongs is created by the AS "on the fly", when receiving a specific error code from the RS after uploading an access token intended for updating the access rights of C, as indicated in the access token request.<a href="#section-3.1.2-4.3.2" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-4.3.3">
+In this case, the AS does not upload the issued access token at the RS, and it provides the access token to C in the access token response. <a href="#sec-new-series-on-the-fly" class="auto internal xref">Section 3.7.2.1</a> further describes this case.<a href="#section-3.1.2-4.3.3" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-3.1.2-5">When the "token_upload" parameter is included in the access token response, it can take one of the following integer values. When the access token response is encoded in CBOR, those values are encoded as CBOR unsigned integers.<a href="#section-3.1.2-5" class="pilcrow">¶</a></p>
@@ -1675,23 +1678,20 @@ Note that is not useful to specify the value 0 if C wishes to use the method def
               <p id="section-3.1.2-6.2.1">If CASE_1 or CASE_2 applies and the token upload at the RS was not successful, then the "token_upload" parameter <span class="bcp14">MUST</span> encode the value 1.<a href="#section-3.1.2-6.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.1.2-6.3">
-              <p id="section-3.1.2-6.3.1">If CASE_3 applies and the token upload at the RS was successful, then the "token_upload" parameter <span class="bcp14">MUST</span> encode the value 2.<a href="#section-3.1.2-6.3.1" class="pilcrow">¶</a></p>
-</li>
-            <li class="normal" id="section-3.1.2-6.4">
-              <p id="section-3.1.2-6.4.1">If CASE_3 applies and the token upload at the RS was not successful, then the "token_upload" parameter <span class="bcp14">MUST</span> encode the value 3.<a href="#section-3.1.2-6.4.1" class="pilcrow">¶</a></p>
+              <p id="section-3.1.2-6.3.1">If CASE_3 applies, then the "token_upload" parameter <span class="bcp14">MUST</span> encode the value 2.<a href="#section-3.1.2-6.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-3.1.2-7">When the access token targets a group-audience (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-6.9" class="relref">Section 6.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), the same as above holds, with the following differences:<a href="#section-3.1.2-7" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.2-8.1">
-              <p id="section-3.1.2-8.1.1">The AS stops uploading the access token to any remaining RS in the group-audience, as soon as the token upload fails at one of those RSs. Consequently,<a href="#section-3.1.2-8.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3.1.2-8.1.1">The AS stops uploading an access token to any remaining RS in the group-audience, as soon as the token upload fails at one of those RSs. Consequently,<a href="#section-3.1.2-8.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.1.2-8.2">
-              <p id="section-3.1.2-8.2.1">The access token response indicates that the upload of the access token was successful if and only if the token upload was successful at each RS in the group-audience.<a href="#section-3.1.2-8.2.1" class="pilcrow">¶</a></p>
+              <p id="section-3.1.2-8.2.1">The access token response indicates that the upload of an access token was successful if and only if the token upload was successful at each RS in the group-audience.<a href="#section-3.1.2-8.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.1.2-9">In the case that the "token_upload" parameter encodes the value 1 or 3, the access token response <span class="bcp14">MUST</span> include the "access_token" parameter specifying the issued access token.<a href="#section-3.1.2-9" class="pilcrow">¶</a></p>
-<p id="section-3.1.2-10">Instead, in the case that the "token_upload" parameter encodes the value 0 or 2, the access token response can include additional parameters as defined below, depending on the value of the "token_upload" parameter in the corresponding access token request:<a href="#section-3.1.2-10" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-9">In the case that the "token_upload" parameter encodes the value 1 or 2, the access token response <span class="bcp14">MUST</span> include the "access_token" parameter specifying the issued access token.<a href="#section-3.1.2-9" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-10">Instead, in the case that the "token_upload" parameter encodes the value 0, the access token response can include additional parameters as defined below, depending on the value of the "token_upload" parameter in the corresponding access token request:<a href="#section-3.1.2-10" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.2-11.1">
               <p id="section-3.1.2-11.1.1">If the "token_upload" parameter in the access token request specified the value 0, then the access token response <span class="bcp14">MUST NOT</span> include the "access_token" parameter and <span class="bcp14">MUST NOT</span> include the "token_hash" parameter defined in <a href="#sec-token_hash" class="auto internal xref">Section 3.2</a>.<a href="#section-3.1.2-11.1.1" class="pilcrow">¶</a></p>
@@ -1703,7 +1703,7 @@ Note that is not useful to specify the value 0 if C wishes to use the method def
               <p id="section-3.1.2-11.3.1">If the "token_upload" parameter in the access token request specified the value 2, then the access token response <span class="bcp14">MUST</span> include the "access_token" parameter specifying the issued access token and <span class="bcp14">MUST NOT</span> include the "token_hash" parameter defined in <a href="#sec-token_hash" class="auto internal xref">Section 3.2</a>.<a href="#section-3.1.2-11.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.1.2-12">When C receives an access token response that includes the "token_upload" parameter encoding the value 2 or 3 (see <a href="#sec-new-series-on-the-fly" class="auto internal xref">Section 3.7.2.1</a>), C is explicitly told that:<a href="#section-3.1.2-12" class="pilcrow">¶</a></p>
+<p id="section-3.1.2-12">When C receives an access token response that includes the "token_upload" parameter encoding the value 2 (see <a href="#sec-new-series-on-the-fly" class="auto internal xref">Section 3.7.2.1</a>), the AS is explicitly telling C that:<a href="#section-3.1.2-12" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.1.2-13.1">
               <p id="section-3.1.2-13.1.1">The dynamic update of access rights that was asked through the access token request did not succeed.<a href="#section-3.1.2-13.1.1" class="pilcrow">¶</a></p>
@@ -2444,8 +2444,8 @@ When JWTs are used as access tokens, such claim can be the "token_series_id" cla
               <p id="section-3.7.2-2.3.1">If the AS receives any other error response, the AS replies to C with an access token response, consistent with the issue of the access token T_NEW. The access token response includes the "access_token" parameter specifying the access token T_NEW and the "token_upload" parameter encoding the value 1 (see <a href="#sec-token_upload-resp" class="auto internal xref">Section 3.1.2</a>).<a href="#section-3.7.2-2.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-3.7.2-3">In the case that the access token T_NEW targets a group-audience (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-6.9" class="relref">Section 6.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), what is specified in <a href="#sec-token_upload-resp" class="auto internal xref">Section 3.1.2</a> about the token upload at the RSs in the group-audience applies to T_NEW.<a href="#section-3.7.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.7.2-4">The AS <span class="bcp14">MUST</span> ignore the error code "missing_old_token", if the POST request did not convey the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5).<a href="#section-3.7.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.7.2-3">The AS <span class="bcp14">MUST</span> ignore the error code "missing_old_token", if the POST request did not convey the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5).<a href="#section-3.7.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.7.2-4">In the case that the access token T_NEW targets a group-audience (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-6.9" class="relref">Section 6.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), what is specified in <a href="#sec-token_upload-resp" class="auto internal xref">Section 3.1.2</a> about the token upload at the RSs in the group-audience applies to T_NEW.<a href="#section-3.7.2-4" class="pilcrow">¶</a></p>
 <div id="sec-new-series-on-the-fly">
 <section id="section-3.7.2.1">
             <h5 id="name-new-token-series-created-on">
@@ -2462,13 +2462,13 @@ When JWTs are used as access tokens, such claim can be the "token_series_id" cla
                 <p id="section-3.7.2.1-7.1.1">REQ_STORED: the access token request that resulted in the AS issuing the first access token of the token series to which T_OLD and T_NEW belong.<a href="#section-3.7.2.1-7.1.1" class="pilcrow">¶</a></p>
 </li>
               <li class="normal" id="section-3.7.2.1-7.2">
-                <p id="section-3.7.2.1-7.2.1">REQ_RECEIVED: the access token request that resulted in the AS composing T_NEW and uploading it to the RS.<a href="#section-3.7.2.1-7.2.1" class="pilcrow">¶</a></p>
+                <p id="section-3.7.2.1-7.2.1">REQ_RECEIVED: the access token request that resulted in the AS composing T_NEW and attempting to upload it at the RS with no success.<a href="#section-3.7.2.1-7.2.1" class="pilcrow">¶</a></p>
 </li>
             </ul>
 <p id="section-3.7.2.1-8">The AS performs the following steps.<a href="#section-3.7.2.1-8" class="pilcrow">¶</a></p>
 <ol start="1" type="1" class="normal type-1" id="section-3.7.2.1-9">
 <li id="section-3.7.2.1-9.1">
-                <p id="section-3.7.2.1-9.1.1">The AS retrieves from its local storage the access token request REQ_STORED. The AS also checks whether REQ_STORED includes the "to_rs" parameter (see <a href="#sec-to_rs" class="auto internal xref">Section 3.3.1</a>).<a href="#section-3.7.2.1-9.1.1" class="pilcrow">¶</a></p>
+                <p id="section-3.7.2.1-9.1.1">The AS retrieves REQ_STORED from its local storage.<a href="#section-3.7.2.1-9.1.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-3.7.2.1-9.2">
                 <p id="section-3.7.2.1-9.2.1">The AS composes a new access token request REQ_BUILT that is equal to REQ_STORED retrieved at Step 1, with the following differences:<a href="#section-3.7.2.1-9.2.1" class="pilcrow">¶</a></p>
@@ -2477,10 +2477,7 @@ When JWTs are used as access tokens, such claim can be the "token_series_id" cla
                     <p id="section-3.7.2.1-9.2.2.1.1">The "scope" parameter is present in REQ_BUILT if and only if the "scope" parameter is present in the access token request REQ_RECEIVED. If present, the "scope" parameter in REQ_BUILT specifies the same scope that is specified by the "scope" parameter within REQ_RECEIVED.<a href="#section-3.7.2.1-9.2.2.1.1" class="pilcrow">¶</a></p>
 </li>
                   <li class="normal" id="section-3.7.2.1-9.2.2.2">
-                    <p id="section-3.7.2.1-9.2.2.2.1">The "token_upload" parameter is included in REQ_BUILT and encodes the same value that was specified by the "token_upload" parameter within the access token request REQ_RECEIVED.<a href="#section-3.7.2.1-9.2.2.2.1" class="pilcrow">¶</a></p>
-</li>
-                  <li class="normal" id="section-3.7.2.1-9.2.2.3">
-                    <p id="section-3.7.2.1-9.2.2.3.1">The parameters "to_rs" (see <a href="#sec-to_rs" class="auto internal xref">Section 3.3.1</a>) and "cnonce" (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.4.4" class="relref">Section 5.8.4.4</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>) are not included in REQ_BUILT, even in the case that they are included in REQ_STORED.<a href="#section-3.7.2.1-9.2.2.3.1" class="pilcrow">¶</a></p>
+                    <p id="section-3.7.2.1-9.2.2.2.1">The parameters "token_upload" (see <a href="#sec-token_upload" class="auto internal xref">Section 3.1</a>), "to_rs" (see <a href="#sec-to_rs" class="auto internal xref">Section 3.3.1</a>), and "cnonce" (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.4.4" class="relref">Section 5.8.4.4</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>) are not included in REQ_BUILT.<a href="#section-3.7.2.1-9.2.2.2.1" class="pilcrow">¶</a></p>
 </li>
                 </ul>
 </li>
@@ -2488,45 +2485,31 @@ When JWTs are used as access tokens, such claim can be the "token_series_id" cla
                 <p id="section-3.7.2.1-9.3.1">The AS revokes the access tokens T_OLD and T_NEW, thus ending the token series they belong to. The AS can rely on the method defined in <span>[<a href="#RFC9770" class="cite xref">RFC9770</a>]</span> to notify about the revoked access tokens. Then, the AS deletes REQ_STORED from its local storage.<a href="#section-3.7.2.1-9.3.1" class="pilcrow">¶</a></p>
 </li>
               <li id="section-3.7.2.1-9.4">
-                <p id="section-3.7.2.1-9.4.1">The AS processes REQ_BUILT as if it was received from C, which results in issuing an access token T_NEXT as the first access token of a new token series. Like for T_NEW, also T_NEXT is issued to C, for the same targeted audience, and per the same profile of ACE.<a href="#section-3.7.2.1-9.4.1" class="pilcrow">¶</a></p>
+                <p id="section-3.7.2.1-9.4.1">The AS processes REQ_BUILT as if it was received from C.<a href="#section-3.7.2.1-9.4.1" class="pilcrow">¶</a></p>
 <p id="section-3.7.2.1-9.4.2">
-Like any other access token request that results in starting a new token series, the AS stores REQ_BUILT throughout the duration of the new token series to which T_NEXT belongs.<a href="#section-3.7.2.1-9.4.2" class="pilcrow">¶</a></p>
+If the AS successfully processes REQ_BUILT, the AS issues an access token T_NEXT as the first access token of a new token series. Like for T_NEW, also T_NEXT is issued to C, for the same targeted audience, and per the same profile of ACE.<a href="#section-3.7.2.1-9.4.2" class="pilcrow">¶</a></p>
+<p id="section-3.7.2.1-9.4.3">
+Like any other access token request that results in starting a new token series, the AS stores REQ_BUILT throughout the duration of the new token series to which T_NEXT belongs.<a href="#section-3.7.2.1-9.4.3" class="pilcrow">¶</a></p>
 </li>
               <li id="section-3.7.2.1-9.5">
-                <p id="section-3.7.2.1-9.5.1">If, at Step 1, the AS determined that REQ_STORED did not include the "to_rs" parameter, the AS moves to Step 6.<a href="#section-3.7.2.1-9.5.1" class="pilcrow">¶</a></p>
-<p id="section-3.7.2.1-9.5.2">
-Otherwise, the AS replies to C with an access token response consistent with the issue of T_NEXT as the first access token of a new token series. In particular, the access token response includes the "access_token" parameter specifying the access token T_NEXT and the "token_upload" parameter encoding the value 3 (see <a href="#sec-token_upload-resp" class="auto internal xref">Section 3.1.2</a>). Further details about the access token response are defined later in this section.<a href="#section-3.7.2.1-9.5.2" class="pilcrow">¶</a></p>
-<p id="section-3.7.2.1-9.5.3">
-Then, this procedure terminates.<a href="#section-3.7.2.1-9.5.3" class="pilcrow">¶</a></p>
-</li>
-              <li id="section-3.7.2.1-9.6">
-                <p id="section-3.7.2.1-9.6.1">Per the SDC workflow, the AS uploads T_NEXT to the RS, by sending a protected POST request to the authz-info endpoint at the RS. This is identical to the case where the AS uses the SDC workflow to upload at the RS the first access token of a new token series, following an access token request that actually asks for the issue of such an access token (see <a href="#sec-as-token-upload" class="auto internal xref">Section 2.1</a>).<a href="#section-3.7.2.1-9.6.1" class="pilcrow">¶</a></p>
-<p id="section-3.7.2.1-9.6.2">
-When receiving a response from the RS, the AS replies to C with an access token response, consistent with the issue of the access token T_NEXT. In particular, the following applies.<a href="#section-3.7.2.1-9.6.2" class="pilcrow">¶</a></p>
+                <p id="section-3.7.2.1-9.5.1">The AS replies to REQ_RECEIVED with an access token response consistent with the issue of T_NEXT as the first access token of a new token series. In particular, the following applies to the access token response:<a href="#section-3.7.2.1-9.5.1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-3.7.2.1-9.6.3.1">
-                    <p id="section-3.7.2.1-9.6.3.1.1">If the AS receives a successful response from the RS, the access token response includes the "token_upload" parameter encoding the value 2 (see <a href="#sec-token_upload-resp" class="auto internal xref">Section 3.1.2</a>). Also, the access token response includes the "access_token" parameter, or the "token_hash" parameter, or none of those, depending on the value of the "token_upload" parameter in REQ_BUILT.<a href="#section-3.7.2.1-9.6.3.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-3.7.2.1-9.5.2.1">
+                    <p id="section-3.7.2.1-9.5.2.1.1">The "access_token" parameter is present and specifies the access token T_NEXT.<a href="#section-3.7.2.1-9.5.2.1.1" class="pilcrow">¶</a></p>
 </li>
-                  <li class="normal" id="section-3.7.2.1-9.6.3.2">
-                    <p id="section-3.7.2.1-9.6.3.2.1">If the AS receives an error response from the RS, the access token response includes the "access_token" parameter specifying the access token T_NEXT and the "token_upload" parameter encoding the value 3 (see <a href="#sec-token_upload-resp" class="auto internal xref">Section 3.1.2</a>).<a href="#section-3.7.2.1-9.6.3.2.1" class="pilcrow">¶</a></p>
+                  <li class="normal" id="section-3.7.2.1-9.5.2.2">
+                    <p id="section-3.7.2.1-9.5.2.2.1">The "token_upload" parameter is present and encodes the value 2 (see <a href="#sec-token_upload-resp" class="auto internal xref">Section 3.1.2</a>).<a href="#section-3.7.2.1-9.5.2.2.1" class="pilcrow">¶</a></p>
+</li>
+                  <li class="normal" id="section-3.7.2.1-9.5.2.3">
+                    <p id="section-3.7.2.1-9.5.2.3.1">The "scope" parameter is present if and only if: i) it was present in REQ_BUILT and the access rights granted to C are different from the requested ones; or ii) it was not present in REQ_BUILT and the access rights granted to C are different from the default ones.<a href="#section-3.7.2.1-9.5.2.3.1" class="pilcrow">¶</a></p>
+<p id="section-3.7.2.1-9.5.2.3.2">
+If the "scope" parameter is not present, then the granted access rights are those requested by the "scope" parameter in REQ_BUILT if present therein, or the default access rights otherwise.<a href="#section-3.7.2.1-9.5.2.3.2" class="pilcrow">¶</a></p>
+<p id="section-3.7.2.1-9.5.2.3.3">
+The granted access rights are specified by the issued access token T_NEXT.<a href="#section-3.7.2.1-9.5.2.3.3" class="pilcrow">¶</a></p>
 </li>
                 </ul>
-<p id="section-3.7.2.1-9.6.4">
-In the case that the access token T_NEXT targets a group-audience (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-6.9" class="relref">Section 6.9</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), what is specified in <a href="#sec-token_upload-resp" class="auto internal xref">Section 3.1.2</a> about the token upload at the RSs in the group-audience applies to T_NEXT.<a href="#section-3.7.2.1-9.6.4" class="pilcrow">¶</a></p>
-<p id="section-3.7.2.1-9.6.5">
-Further details about the access token response are defined below.<a href="#section-3.7.2.1-9.6.5" class="pilcrow">¶</a></p>
 </li>
             </ol>
-<p id="section-3.7.2.1-10">With reference to the access token response sent at Step 5 or Step 6:<a href="#section-3.7.2.1-10" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.7.2.1-11.1">
-                <p id="section-3.7.2.1-11.1.1">The "scope" parameter has to be present if: i) it was present in REQ_BUILT and the access rights granted to C are different from the requested ones; or ii) it was not present in REQ_BUILT and the access rights granted to C are different from the default ones.<a href="#section-3.7.2.1-11.1.1" class="pilcrow">¶</a></p>
-</li>
-              <li class="normal" id="section-3.7.2.1-11.2">
-                <p id="section-3.7.2.1-11.2.1">If the "scope" parameter is not present, then the granted access rights are those requested by the "scope" parameter in REQ_BUILT if present therein, or the default access rights otherwise.<a href="#section-3.7.2.1-11.2.1" class="pilcrow">¶</a></p>
-</li>
-            </ul>
-<p id="section-3.7.2.1-12">In any case, the granted access rights are specified by the issued access token T_NEXT.<a href="#section-3.7.2.1-12" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
