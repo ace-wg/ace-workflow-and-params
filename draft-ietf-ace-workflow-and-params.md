@@ -381,6 +381,12 @@ When the "token_upload" parameter is included in the access token response, it c
 
 - If CASE_3 applies and the token upload at the RS was not successful, then the "token_upload" parameter MUST encode the value 3.
 
+When the access token targets a group-audience (see {{Section 6.9 of RFC9200}}), the same as above holds, with the following differences:
+
+* The AS stops uploading the access token to any remaining RS in the group-audience, as soon as the token upload fails at one of those RSs. Consequently,
+
+* The access token response indicates that the upload of the access token was successful if and only if the token upload was successful at each RS in the group-audience.
+
 In the case that the "token_upload" parameter encodes the value 1 or 3, the access token response MUST include the "access_token" parameter specifying the issued access token.
 
 Instead, in the case that the "token_upload" parameter encodes the value 0 or 2, the access token response can include additional parameters as defined below, depending on the value of the "token_upload" parameter in the corresponding access token request:
@@ -1027,6 +1033,8 @@ After sending to the authz-info endpoint a protected POST request that conveys t
 
 * If the AS receives any other error response, the AS replies to C with an access token response, consistent with the issue of the access token T_NEW. The access token response includes the "access_token" parameter specifying the access token T_NEW and the "token_upload" parameter encoding the value 1 (see {{sec-token_upload-resp}}).
 
+In the case that the access token T_NEW targets a group-audience (see {{Section 6.9 of RFC9200}}), what is specified in {{sec-token_upload-resp}} about the token upload at the RSs in the group-audience applies to T_NEW.
+
 The AS MUST ignore the error code "missing_old_token", if the POST request did not convey the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5).
 
 #### New Token Series Created on the Fly # {#sec-new-series-on-the-fly}
@@ -1078,6 +1086,8 @@ The AS performs the following steps.
    * If the AS receives a successful response from the RS, the access token response includes the "token_upload" parameter encoding the value 2 (see {{sec-token_upload-resp}}). Also, the access token response includes the "access_token" parameter, or the "token_hash" parameter, or none of those, depending on the value of the "token_upload" parameter in REQ_BUILT.
 
    * If the AS receives an error response from the RS, the access token response includes the "access_token" parameter specifying the access token T_NEXT and the "token_upload" parameter encoding the value 3 (see {{sec-token_upload-resp}}).
+
+   In the case that the access token T_NEXT targets a group-audience (see {{Section 6.9 of RFC9200}}), what is specified in {{sec-token_upload-resp}} about the token upload at the RSs in the group-audience applies to T_NEXT.
 
    Further details about the access token response are defined below.
 
@@ -1703,6 +1713,8 @@ ead_session_id_label = 2
 ## Version -07 to -08 ## {#sec-07-08}
 
 * Extended creation of "token_upload" to support the creation of token series "on-the-fly" if need be.
+
+* Defined successful/failed token upload from the AS when the token targets a group-audience.
 
 * Defined EDHOC EAD item Session ID.
 
