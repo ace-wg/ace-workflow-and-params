@@ -6,8 +6,8 @@ ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Updates: 9200, 9201, 9202, 9203, 9431 (if                    G. Selander
          approved)                                           Ericsson AB
-Intended status: Standards Track                            25 June 2026
-Expires: 27 December 2026
+Intended status: Standards Track                            28 June 2026
+Expires: 30 December 2026
 
 
 Short Distribution Chain (SDC) Workflow and New OAuth Parameters for the
@@ -70,7 +70,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 27 December 2026.
+   This Internet-Draft will expire on 30 December 2026.
 
 Copyright Notice
 
@@ -3478,7 +3478,7 @@ Authors' Addresses
    Marco Tiloca
    RISE AB
    Isafjordsgatan 22
-   SE-16440 Kista
+   SE-164 40 Kista
    Sweden
    Email: marco.tiloca@ri.se
 
@@ -3486,6 +3486,6 @@ Authors' Addresses
    Göran Selander
    Ericsson AB
    Torshamnsgatan 23
-   SE-16440 Stockholm Kista
+   SE-164 40 Kista
    Sweden
    Email: goran.selander@ericsson.com
