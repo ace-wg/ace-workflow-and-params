@@ -558,7 +558,7 @@ The "token_hash" parameter MUST be included in an access token response, if both
 
 * The corresponding access token request included the "token_upload" parameter with value 1 (see {{sec-token_upload-req}}).
 
-* The access token response includes the "token_upload" parameter with value 0 or 2 (see {{sec-token_upload-resp}}). That is, the AS has successfully uploaded the issued access token to the RS, as per the SDC workflow.
+* The access token response includes the "token_upload" parameter with value 0 (see {{sec-token_upload-resp}}). That is, the AS has successfully uploaded the issued access token to the RS, as per the SDC workflow.
 
 This parameter specifies the token hash corresponding to the access token issued by the AS and successfully uploaded to the RS on behalf of C. In particular:
 
@@ -693,7 +693,7 @@ The "from_rs" parameter MUST be included in an access token response if both the
 
 * The corresponding access token request included the "token_upload" parameter (see {{sec-token_upload-req}}).
 
-* The access token response includes the "token_upload" parameter with value 0 or 2 (see {{sec-token_upload-resp}}). That is, the AS has successfully uploaded the issued access token to the RS, as per the SDC workflow.
+* The access token response includes the "token_upload" parameter with value 0 (see {{sec-token_upload-resp}}). That is, the AS has successfully uploaded the issued access token to the RS, as per the SDC workflow.
 
 The information specified in the "from_rs" parameter consists in what C would receive from the RS, if the original workflow was used and the RS sent a successful response encoded in CBOR, in reply to a POST request to the authz-info endpoint.
 
@@ -709,7 +709,7 @@ When the access token response is encoded in CBOR, the value of the "from_rs" pa
 
 When the access token response is encoded in JSON, the value of the "from_rs" parameter is a text string, which encodes the binary representation of the (tagged) CBOR byte string STR in base64url without padding (see {{Section 5 of RFC4648}}).
 
-When C receives from the AS the access token response specifying the "token_upload" parameter with value 0 or 2, C retrieves from the "from_rs" parameter the information relayed by the AS, just like when retrieving that information from a successful response with Content-Format ct that C receives from the RS when using the original workflow.
+When C receives from the AS the access token response specifying the "token_upload" parameter with value 0, C retrieves from the "from_rs" parameter the information relayed by the AS, just like when retrieving that information from a successful response with Content-Format ct that C receives from the RS when using the original workflow.
 
 In particular, if the CBOR byte string STR is not the empty CBOR byte string (0x40), C considers as the Content-Format ct either:
 
@@ -1289,7 +1289,7 @@ This EAD item is critical, i.e., it is used only with the negative value of its 
 
 The EAD Item Session ID is useful in two circumstances:
 
-* When using the SDC workflow defined in {{sec-workflow}}, C can indicate to the AS that it does not want to receive the issued access token (i.e., the access token request specifies the "token_upload" parameter with value 0 or 1), in the case that the AS successfully uploads the access token to the RS (i.e., the access token response specifies the "token_upload" parameter with value 0 or 2).
+* When using the SDC workflow defined in {{sec-workflow}}, C can indicate to the AS that it does not want to receive the issued access token (i.e., the access token request specifies the "token_upload" parameter with value 0 or 1), in the case that the AS successfully uploads the access token to the RS (i.e., the access token response specifies the "token_upload" parameter with value 0).
 
   Even in such a case where C does not obtain the issued access token, C obtains the "session\_id" associated with the access token and specified in the access token response. Consequently, C can still specify the access token by reference during the LAKE session with the RS, by using the EAD item Session ID.
 
@@ -1307,7 +1307,7 @@ Analogously to the EAD item ACE-OAuth Access Token defined in {{Section 4.1 of I
 
 A client or resource server MUST support the EAD item Session ID if it both supports the SDC workflow and implements the LAKE and OSCORE profile of ACE.
 
-Consequently, C is ensured that the RS supports the EAD item Session ID when C receives an access token response specifying the "token_upload" parameter with value 0 or 2, following the issue of an access token for accessing protected resources at the RS. Besides that, C can learn about the RS' support for the EAD item through indications from the AS within the LAKE_Information object specified by the "lake_info" parameter of the access token response, or by using other means such as, for example, those defined in {{I-D.ietf-lake-app-profiles}}.
+Consequently, C is ensured that the RS supports the EAD item Session ID when C receives an access token response specifying the "token_upload" parameter with value 0 and not including the "access_token" parameter, following the issue of an access token for accessing protected resources at the RS. Besides that, C can learn about the RS' support for the EAD item through indications from the AS within the LAKE_Information object specified by the "lake_info" parameter of the access token response, or by using other means such as, for example, those defined in {{I-D.ietf-lake-app-profiles}}.
 
 Example: assuming that ead\_label is 2 and that the value of the "session\_id" field within the LAKE\_Information object specified by the "lake\_info" parameter of the access token response from the AS is equal to h'01fc', the critical EAD item is as follows:
 
@@ -1701,6 +1701,8 @@ ead_session_id_label = 2
 ## Version -08 to -09 ## {#sec-08-09}
 
 * Renamed EDHOC to LAKE as appropriate.
+
+* Fixed use of "token_upload" values in access token response.
 
 * Editorial fixes and improvements.
 
