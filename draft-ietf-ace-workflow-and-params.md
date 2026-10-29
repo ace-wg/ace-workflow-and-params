@@ -212,6 +212,8 @@ Furthermore, this document uses the following terms.
 
 * Token hash: identifier of an access token, in binary format encoding. The token hash has no relation with other access token identifiers possibly used, such as the 'cti' (CWT ID) claim of CWTs {{RFC8392}}.
 
+This document uses the acronym LAKE, expanded to Lightweight Authenticated Key Exchange, to denote the protocol specified as EDHOC in {{RFC9528}}. Identifiers defined literally in {{RFC9528}} or in IANA registries (e.g., the names of the EDHOC registries themselves) are unchanged.
+
 ## Notations
 
 CBOR {{RFC8949}} and CDDL {{RFC8610}} are used in this document.
@@ -973,7 +975,7 @@ If the AS relies on the "token_series_id" parameter to exchange the identifier o
 
 If a profile of ACE relies on a construct that uses different parameters/claims to transport the identifier of a token series, then the new "token_series_id" parameter and "token_series_id" claim MUST NOT be used when using that profile.
 
-For example, a number of parameters/claims are already used to transport information that acts as de facto identifier of token series, in the PSK mode of the DTLS profile {{RFC9202}}, in the OSCORE profile {{RFC9203}}, and in the EDHOC and OSCORE profile {{I-D.ietf-ace-edhoc-oscore-profile}}.
+For example, a number of parameters/claims are already used to transport information that acts as de facto identifier of token series, in the PSK mode of the DTLS profile {{RFC9202}}, in the OSCORE profile {{RFC9203}}, and in the LAKE and OSCORE profile {{I-D.ietf-ace-edhoc-oscore-profile}}.
 
 ## updated_rights {#sec-updated_rights}
 
@@ -1107,7 +1109,7 @@ In addition to what is specified in {{Sections 5.8.1, 5.8.2, and 5.8.4.3 of RFC9
 
 # Coordinating on the Exchange of Public Authentication Credentials # {#sec-coord-exchanged-cred}
 
-In some profiles of ACE, it is possible for C and the RS to use public authentication credentials. Depending on the specific profile, the access token request and response exchanged between C and the AS can specify those authentication credentials as transported by value or instead identified by reference. For instance, this is the case in the EDHOC and OSCORE profile {{I-D.ietf-ace-edhoc-oscore-profile}} and in the DTLS profile {{RFC9202}} as extended in {{I-D.ietf-ace-authcred-dtls-profile}}.
+In some profiles of ACE, it is possible for C and the RS to use public authentication credentials. Depending on the specific profile, the access token request and response exchanged between C and the AS can specify those authentication credentials as transported by value or instead identified by reference. For instance, this is the case in the LAKE and OSCORE profile {{I-D.ietf-ace-edhoc-oscore-profile}} and in the DTLS profile {{RFC9202}} as extended in {{I-D.ietf-ace-authcred-dtls-profile}}.
 
 At some point, the AS (C) might become unable to use a credential identifier as a reference for accessing the authentication credential of C (of the RS) obtained earlier, e.g., due to having deleted the credential from its local storage. This can prevent the AS (C) from successfully processing an incoming access token request (response) that specifies the authentication credential of C (of the RS) as identified by reference. Ultimately, this can prevent the AS from issuing an access token and C from securely accessing protected resources at the RS.
 
@@ -1255,15 +1257,15 @@ is replaced by the following text:
 
 At the time of writing, all the profiles of ACE that are published as RFC (i.e., {{RFC9202}}{{RFC9203}}{{RFC9431}}) already comply with the two updated requirements as formulated above.
 
-# EDHOC EAD Item for Transporting a Session Identifier {#sec-ead-session-id}
+# LAKE EAD Item for Transporting a Session Identifier {#sec-ead-session-id}
 
-The authenticated key exchange protocol Ephemeral Diffie-Hellman Over COSE (EDHOC) {{RFC9528}} defines the transport of additional External Authorization Data (EAD) within an optional EAD field of the EDHOC messages (see {{Section 3.8 of RFC9528}}). An EAD field is composed of one or multiple EAD items, each of which specifies an identifying 'ead_label' encoded as a CBOR integer and an optional 'ead_value' encoded as a CBOR byte string.
+The Lightweight Authenticated Key Exchange (LAKE) protocol {{RFC9528}} defines the transport of additional External Authorization Data (EAD) within an optional EAD field of the LAKE messages (see {{Section 3.8 of RFC9528}}). An EAD field is composed of one or multiple EAD items, each of which specifies an identifying 'ead_label' encoded as a CBOR integer and an optional 'ead_value' encoded as a CBOR byte string.
 
-When using the EDHOC and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}, C and the RS run the EDHOC protocol to establish an OSCORE Security Context {{RFC8613}}, which is used to secure communications when C accesses protected resources at the RS, according to the authorization information indicated in an access token. Specifically, the access token is bound to C's authentication credential AUTH_CRED_C that C uses during the EDHOC session for authenticating itself to the RS.
+When using the LAKE and OSCORE profile of ACE defined in {{I-D.ietf-ace-edhoc-oscore-profile}}, C and the RS run the LAKE protocol to establish an OSCORE Security Context {{RFC8613}}, which is used to secure communications when C accesses protected resources at the RS, according to the authorization information indicated in an access token. Specifically, the access token is bound to C's authentication credential AUTH_CRED_C that C uses during the LAKE session for authenticating itself to the RS.
 
-Per the EDHOC and OSCORE profile, the first access token of a token series is specified by C to the RS during an EDHOC session between the two peers. To this end, {{Section 4.1 of I-D.ietf-ace-edhoc-oscore-profile}} defines the EAD item ACE-OAuth Access Token for specifying an access token by value in the EAD field of an EDHOC message from C to the RS.
+Per the LAKE and OSCORE profile, the first access token of a token series is specified by C to the RS during a LAKE session between the two peers. To this end, {{Section 4.1 of I-D.ietf-ace-edhoc-oscore-profile}} defines the EAD item ACE-OAuth Access Token for specifying an access token by value in the EAD field of a LAKE message from C to the RS.
 
-This section defines an alternative EAD item for specifying an access token by reference, through its associated EDHOC session identifier.
+This section defines an alternative EAD item for specifying an access token by reference, through its associated LAKE session identifier.
 
 The name of the EAD item is Session ID, for which the CDDL grammar is shown in {{fig-ead-session-id}}.
 
@@ -1274,40 +1276,40 @@ ead_session_id = (
 )
 session_id = bstr
 ~~~~~~~~~~~
-{: #fig-ead-session-id title="EDHOC EAD Item Session ID."}
+{: #fig-ead-session-id title="LAKE EAD Item Session ID."}
 
 In particular:
 
 * ead\_label is the integer value TBD registered in {{iana-edhoc-ead}}.
-* ead\_value is a CBOR byte string equal to the value of the "session\_id" field within the EDHOC\_Information object specified by the "edhoc\_info" parameter of the access token response from the AS, when issuing the first access token of a token series (see {{Section 3.3 of I-D.ietf-ace-edhoc-oscore-profile}}).
+* ead\_value is a CBOR byte string equal to the value of the "session\_id" field within the LAKE\_Information object specified by the "lake\_info" parameter of the access token response from the AS, when issuing the first access token of a token series (see {{Section 3.3 of I-D.ietf-ace-edhoc-oscore-profile}}).
 
 Note to RFC Editor: Please replace TBD with the value registered for Session ID in {{iana-edhoc-ead}}, then delete this note.
 
-This EAD item is critical, i.e., it is used only with the negative value of its ead\_label, indicating that the receiving RS must progress the protocol using the access token associated with the identifier specified in the ead\_value and with the AUTH_CRED_C used in the EDHOC session, or else abort the EDHOC session (see {{Section 3.8 of RFC9528}})
+This EAD item is critical, i.e., it is used only with the negative value of its ead\_label, indicating that the receiving RS must progress the protocol using the access token associated with the identifier specified in the ead\_value and with the AUTH_CRED_C used in the LAKE session, or else abort the LAKE session (see {{Section 3.8 of RFC9528}})
 
 The EAD Item Session ID is useful in two circumstances:
 
 * When using the SDC workflow defined in {{sec-workflow}}, C can indicate to the AS that it does not want to receive the issued access token (i.e., the access token request specifies the "token_upload" parameter with value 0 or 1), in the case that the AS successfully uploads the access token to the RS (i.e., the access token response specifies the "token_upload" parameter with value 0 or 2).
 
-  Even in such a case where C does not obtain the issued access token, C obtains the "session\_id" associated with the access token and specified in the access token response. Consequently, C can still specify the access token by reference during the EDHOC session with the RS, by using the EAD item Session ID.
+  Even in such a case where C does not obtain the issued access token, C obtains the "session\_id" associated with the access token and specified in the access token response. Consequently, C can still specify the access token by reference during the LAKE session with the RS, by using the EAD item Session ID.
 
-* After having completed an EDHOC session with the RS and while still storing a valid access token, C might choose to re-run EDHOC with the RS. For example, the EDHOC session or the derived OSCORE Security Context might have become invalid, or C receives unprotected error responses from the RS and determines that the RS has deleted the Security Context (e.g., due to memory limitations). As another example, C could want to update its current secure communication association with the RS by establishing a new OSCORE Security Context, specifically through a new EDHOC session to leverage the exchange of ephemeral keys.
+* After having completed a LAKE session with the RS and while still storing a valid access token, C might choose to re-run LAKE with the RS. For example, the LAKE session or the derived OSCORE Security Context might have become invalid, or C receives unprotected error responses from the RS and determines that the RS has deleted the Security Context (e.g., due to memory limitations). As another example, C could want to update its current secure communication association with the RS by establishing a new OSCORE Security Context, specifically through a new LAKE session to leverage the exchange of ephemeral keys.
 
-  Even in such a case where C can specify the access token by value, it is possible for C to instead specify the access token by reference during the EDHOC session with the RS, by using the EAD item Session ID as a way to reduce communication overhead.
+  Even in such a case where C can specify the access token by value, it is possible for C to instead specify the access token by reference during the LAKE session with the RS, by using the EAD item Session ID as a way to reduce communication overhead.
 
 The EAD item Session ID is used only when uploading the first access token of a token series, but not for the dynamic update of access rights (see {{Section 4.6 of I-D.ietf-ace-edhoc-oscore-profile}}).
 
 Analogously to the EAD item ACE-OAuth Access Token defined in {{Section 4.1 of I-D.ietf-ace-edhoc-oscore-profile}} and consistent with what is defined in {{Section 4.2 of I-D.ietf-ace-edhoc-oscore-profile}}, the EAD item Session ID is used to specify the access token by reference as follows:
 
-* If the EDHOC forward message flow is used (see {{Section 4.3 of I-D.ietf-ace-edhoc-oscore-profile}}), the EAD item is included in the EAD_3 field of EDHOC message_3. As per {{Section 4.3.3 of I-D.ietf-ace-edhoc-oscore-profile}}, the EAD_3 field must not include multiple EAD items specifying the access token.
+* If the LAKE forward message flow is used (see {{Section 4.3 of I-D.ietf-ace-edhoc-oscore-profile}}), the EAD item is included in the EAD_3 field of LAKE message_3. As per {{Section 4.3.3 of I-D.ietf-ace-edhoc-oscore-profile}}, the EAD_3 field must not include multiple EAD items specifying the access token.
 
-* Instead, if the EDHOC reverse message flow is used (see {{Section 4.4 of I-D.ietf-ace-edhoc-oscore-profile}}), the EAD item is included in the EAD_4 field of EDHOC message_4. As per {{Section 4.4.5 of I-D.ietf-ace-edhoc-oscore-profile}}, the EAD_4 field must not include multiple EAD items specifying the access token.
+* Instead, if the LAKE reverse message flow is used (see {{Section 4.4 of I-D.ietf-ace-edhoc-oscore-profile}}), the EAD item is included in the EAD_4 field of LAKE message_4. As per {{Section 4.4.5 of I-D.ietf-ace-edhoc-oscore-profile}}, the EAD_4 field must not include multiple EAD items specifying the access token.
 
-A client or resource server MUST support the EAD item Session ID if it both supports the SDC workflow and implements the EDHOC and OSCORE profile of ACE.
+A client or resource server MUST support the EAD item Session ID if it both supports the SDC workflow and implements the LAKE and OSCORE profile of ACE.
 
-Consequently, C is ensured that RS supports the EAD item Session ID when C receives an access token response specifying the "token_upload" parameter with value 0 or 2, following the issue of an access token for accessing protected resources at the RS. Besides that, C can learn about RS' support for the EAD item through indications from the AS within the EDHOC_Information object specified by the "edhoc_info" parameter of the access token response, or by using other means such as, for example, those defined in {{I-D.ietf-lake-app-profiles}}.
+Consequently, C is ensured that RS supports the EAD item Session ID when C receives an access token response specifying the "token_upload" parameter with value 0 or 2, following the issue of an access token for accessing protected resources at the RS. Besides that, C can learn about RS' support for the EAD item through indications from the AS within the LAKE_Information object specified by the "lake_info" parameter of the access token response, or by using other means such as, for example, those defined in {{I-D.ietf-lake-app-profiles}}.
 
-Example: assuming that ead\_label is 2 and that the value of the "session\_id" field within the EDHOC\_Information object specified by the "edhoc\_info" parameter of the access token response from the AS is equal to h'01fc', the critical EAD item is as follows:
+Example: assuming that ead\_label is 2 and that the value of the "session\_id" field within the LAKE\_Information object specified by the "lake\_info" parameter of the access token response from the AS is equal to h'01fc', the critical EAD item is as follows:
 
 ~~~~~~~~~~~ cbor-diag
 -2, h'01fc'
@@ -1628,7 +1630,7 @@ IANA is asked to add the following entry to the "EDHOC External Authorization Da
 
 * Name: Session ID
 * Label: TBD (value between 1 and 23)
-* Description: The identifier of an EDHOC session
+* Description: The identifier of a LAKE session
 * Reference: {{&SELF}}, {{sec-ead-session-id}}
 
 --- back
@@ -1659,9 +1661,9 @@ When the RPK mode of the DTLS profile is used (see {{Section 3.2 of RFC9202}}), 
 
 This is enabled by the parameters "rs_cnf2" and "audience2" defined in {{sec-rs_cnf2-audience2}}, as well as by the "anchor_cnf" parameter defined in {{sec-anchor_cnf}}. This seamlessly applies also if the profile uses Transport Layer Security (TLS) {{RFC8446}} as defined in {{RFC9430}}.
 
-## EDHOC and OSCORE Profile
+## LAKE and OSCORE Profile
 
-When the EDHOC and OSCORE profile is used {{I-D.ietf-ace-edhoc-oscore-profile}}, it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs.
+When the LAKE and OSCORE profile is used {{I-D.ietf-ace-edhoc-oscore-profile}}, it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs.
 
 This is enabled by the parameters "rs_cnf2" and "audience2" defined in {{sec-rs_cnf2-audience2}}, as well as by the "anchor_cnf" parameter defined in {{sec-anchor_cnf}}.
 
@@ -1695,6 +1697,10 @@ ead_session_id_label = 2
 
 # Document Updates # {#sec-document-updates}
 {:removeinrfc}
+
+## Version -08 to -09 ## {#sec-08-09}
+
+* Renamed EDHOC to LAKE as appropriate.
 
 ## Version -07 to -08 ## {#sec-07-08}
 
