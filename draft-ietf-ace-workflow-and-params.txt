@@ -17,9 +17,10 @@ Short Distribution Chain (SDC) Workflow and New OAuth Parameters for the
 
 Abstract
 
-   This document updates the Authentication and Authorization for
-   Constrained Environments framework (ACE, RFC 9200) as follows. (1) It
-   defines the Short Distribution Chain (SDC) workflow that the
+   The specification RFC 9200 defines the Authentication and
+   Authorization for Constrained Environments (ACE) framework.  This
+   document updates the ACE framework and therefore RFC 9200 as follows.
+   (1) It defines the Short Distribution Chain (SDC) workflow that the
    authorization server (AS) can use for uploading an access token to a
    resource server on behalf of the client. (2) For the OAuth 2.0 token
    endpoint, it defines new parameters and encodings and it extends the
@@ -113,7 +114,7 @@ Table of Contents
      3.7.  updated_rights
        3.7.1.  Processing at the RS
        3.7.2.  Follow-up at the AS
-   4.  Updated "ace_profile" Parameter
+   4.  Updated ace_profile Parameter
    5.  Coordinating on the Exchange of Public Authentication
            Credentials
      5.1.  Instructing C on How to Provide its Authentication
@@ -364,7 +365,7 @@ Table of Contents
    permissions.
 
    Finally, the client uploads the access token to the RS and,
-   consistently with the permissions granted according to the access
+   consistent with the permissions granted according to the access
    token, accesses a resource at the RS (Step C), which replies with the
    result of the resource access (Step F).  Details about what protocol
    the client and the RS use to establish a secure association, mutually
@@ -467,10 +468,10 @@ Table of Contents
       what was specified by the "token_upload" parameter of the access
       token request at Step A.
 
-   *  Step C1 - This step occurs only if the token uploading from the AS
-      has failed, and the AS has provided the client with the access
-      token at Step B.  In such a case, the client uploads the access
-      token to the RS just like at Step C of the original workflow.
+   *  Step C1 - This step occurs if the token uploading from the AS has
+      failed, and the AS has provided the client with the access token
+      at Step B.  In such a case, the client uploads the access token to
+      the RS just like at Step C of the original workflow.
 
    *  Step C2 - The client attempts to access a protected resource at
       the RS, according to the permissions granted per the access token
@@ -589,9 +590,9 @@ Table of Contents
    *  0: The access token response will have to include neither the
       access token nor its corresponding token hash.
 
-      Note that is not useful to specify the value 0 if C wishes to use
-      the method defined in [RFC9770] for receiving notifications about
-      revoked access tokens from the AS.  In such case, C needs to
+      Note that it is not useful to specify the value 0 if C wishes to
+      use the method defined in [RFC9770] for receiving notifications
+      about revoked access tokens from the AS.  In such case, C needs to
       specify one of the two alternative values 1 or 2 defined below.
 
    *  1: The access token response will have to include the token hash
@@ -977,7 +978,7 @@ Table of Contents
 
    The specific hash function used MUST be collision resistant on byte
    strings and MUST be selected from the "Named Information Hash
-   Algorithm Registry" [IANA.Hash.Algorithms].  Consistent with the
+   Algorithm Registry" [Hash.Algorithms].  Consistent with the
    compliance requirements in Section 2 of [RFC6920], the hash function
    sha-256 as specified in [SHA-256] is mandatory to implement.
 
@@ -1472,7 +1473,7 @@ Table of Contents
       Max-Age: 3600
       Payload:
       {
-        / access_token / 1 : b64'SlAV32hk...12',
+        / access_token / 1 : h'd08343a1...4819',
           / (full CWT elided for brevity;
              CWT contains the client's RPK in the "cnf" claim) /
         / expires_in /   2 : 3600,
@@ -1600,7 +1601,7 @@ Table of Contents
       Max-Age: 3600
       Payload:
       {
-        / access_token / 1 : b64'SlAV32hk...12',
+        / access_token / 1 : h'd08343a1...4819',
           / (full CWT elided for brevity;
              CWT contains the client's RPK in the "cnf" claim) /
         / expires_in /   2 : 3600,
@@ -1695,11 +1696,11 @@ Table of Contents
       and the audience for which the access token is issued,
       respectively.  The AS MUST take into account both ongoing and
       ended token series for selecting a new TS_ID that complies with
-      the above requirements.
+      the requirements above.
 
-      Note that the ACE profile is not part of the triple, hence the
-      requirement spans across all the ACE profiles that the AS and its
-      registered clients/RSs support.
+      Note that the ACE profile used is not part of the triple, hence
+      the requirement spans across all the ACE profiles that the AS and
+      its registered clients/RSs support.
 
    *  An issued access token that belongs to a token series MUST include
       the identifier of that token series.  This allows the RS to
@@ -1847,12 +1848,12 @@ Table of Contents
    to the specific profile of ACE used.
 
    If the RS is currently storing such an old access token T_OLD and
-   successfully validates the access token T_NEW, then the RS MUST
-   supersede T_OLD by replacing the corresponding authorization
-   information with the one specified in the new access token T_NEW.
-   After that, the RS MUST associate T_NEW with the same secure
-   communication association with which T_OLD was associated.  Finally,
-   the RS replies to the AS with a successful response.
+   successfully validates the access token T_NEW, then the new access
+   token T_NEW supersedes T_OLD, i.e., the RS MUST replace the
+   authorization information specified in T_OLD with that specified in
+   T_NEW, and it MUST associate T_NEW with the same secure communication
+   association with which T_OLD was associated.  Finally, the RS replies
+   to the AS with a successful response.
 
    Instead, if the RS is not currently storing such an old access token
    T_OLD, then the RS MUST reject the POST request from the AS and MUST
@@ -1909,7 +1910,7 @@ Table of Contents
 
    As defined in Section 3.7.1, the RS replies to the AS with an error
    response that includes the error code "missing_old_token", if the RS
-   cannot find the old access token T_OLD to supersede with the access
+   cannot find the old access token T_OLD to be superseded by the access
    token T_NEW that the AS uploaded to the authz-info endpoint.
 
    Profiles of ACE typically prescribe that, in such case, the RS does
@@ -2006,7 +2007,7 @@ Table of Contents
           The granted access rights are specified by the issued access
           token T_NEXT.
 
-4.  Updated "ace_profile" Parameter
+4.  Updated ace_profile Parameter
 
    This section extends the semantics of the "ace_profile" parameter
    defined in [RFC9200] for the OAuth 2.0 token endpoint at the AS.
@@ -2028,24 +2029,24 @@ Table of Contents
       the "ace_profile" parameter specifying the identifier of a
       profile, then the AS proceeds as follows.
 
-      In case the AS does not issue access tokens per the profile
-      specified in the access token request, or C and the RS do not
-      share that profile, then the AS MUST reject the request and MUST
-      reply with an error response (see Section 5.8.3 of [RFC9200]).
-      The error response MUST have a response code equivalent to the
-      CoAP code 4.00 (Bad Request) and MUST include the error code
-      "incompatible_ace_profiles".
+      In the case that the AS does not issue access tokens per the
+      profile specified in the access token request, or C and the RS do
+      not share that profile, then the AS MUST reject the request and
+      MUST reply with an error response (see Section 5.8.3 of
+      [RFC9200]).  The error response MUST have a response code
+      equivalent to the CoAP code 4.00 (Bad Request) and MUST include
+      the error code "incompatible_ace_profiles".
 
-      In case the AS issues an access token to C, the access token MUST
-      be per the profile whose identifier was specified by the
-      "ace_profile" parameter in the access token request.
+      In the case that the AS issues an access token to C, the access
+      token MUST be per the profile whose identifier was specified by
+      the "ace_profile" parameter in the access token request.
 
-      In case the AS replies to C with an access token response (see
-      Section 5.8.2 of [RFC9200]), then the response MAY include the
-      "ace_profile" parameter.  If it is included in the access token
-      response, the "ace_profile" parameter MUST encode the same profile
-      identifier that was specified by the "ace_profile" parameter of
-      the corresponding access token request.
+      In the case that the AS replies to C with an access token response
+      (see Section 5.8.2 of [RFC9200]), then the response MAY include
+      the "ace_profile" parameter.  If it is included in the access
+      token response, the "ace_profile" parameter MUST encode the same
+      profile identifier that was specified by the "ace_profile"
+      parameter of the corresponding access token request.
 
       The "ace_profile" parameter MUST NOT be included in the access
       token response, if the issued access token is not the first one of
@@ -2259,7 +2260,7 @@ Table of Contents
       field is a CBOR integer specifying the error code associated with
       the occurred error.  This value is taken from the "CBOR Value"
       column of the "OAuth Error Code CBOR Mappings" registry
-      [IANA.OAuth.Error.Code.CBOR.Mappings].
+      [OAuth.Error.Code.CBOR.Mappings].
 
       The "error-code" field conveys the same information that the
       original payload format conveys through the "error" parameter
@@ -2461,7 +2462,7 @@ Table of Contents
 
    The EAD item Session ID is used only when uploading the first access
    token of a token series, but not for the dynamic update of access
-   rights (see Section 4.6 of [I-D.ietf-ace-edhoc-oscore-profile]).
+   rights (see Section 4.7 of [I-D.ietf-ace-edhoc-oscore-profile]).
 
    Analogously to the EAD item ACE-OAuth Access Token defined in
    Section 4.1 of [I-D.ietf-ace-edhoc-oscore-profile] and consistent
@@ -2485,11 +2486,11 @@ Table of Contents
    it both supports the SDC workflow and implements the LAKE and OSCORE
    profile of ACE.
 
-   Consequently, C is ensured that RS supports the EAD item Session ID
-   when C receives an access token response specifying the
+   Consequently, C is ensured that the RS supports the EAD item Session
+   ID when C receives an access token response specifying the
    "token_upload" parameter with value 0 or 2, following the issue of an
    access token for accessing protected resources at the RS.  Besides
-   that, C can learn about RS' support for the EAD item through
+   that, C can learn about the RS' support for the EAD item through
    indications from the AS within the LAKE_Information object specified
    by the "lake_info" parameter of the access token response, or by
    using other means such as, for example, those defined in
@@ -2508,13 +2509,13 @@ Table of Contents
 
 10.  Security Considerations
 
-   The same security considerations from the ACE framework for
-   Authentication and Authorization [RFC9200] apply to this document,
-   together with those from the specific profile of ACE used.
+   The same security considerations from the ACE framework [RFC9200]
+   apply to this document, together with those from the specific profile
+   of ACE used.
 
    When using the problem-details format defined in [RFC9290] for error
-   responses, then the privacy and security considerations from Sections
-   4 and 5 of [RFC9290] also apply.
+   responses, the privacy and security considerations from Sections 4
+   and 5 of [RFC9290] also apply.
 
    Editor's note: add more security considerations.
 
@@ -2528,8 +2529,8 @@ Table of Contents
 11.1.  OAuth Parameters Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters"
-   registry [IANA.OAuth.Parameters] within the "OAuth Parameters"
-   registry group.
+   registry [OAuth.Parameters] within the "OAuth Parameters" registry
+   group.
 
    *  Name: token_upload
 
@@ -2697,10 +2698,9 @@ Table of Contents
 11.2.  OAuth Parameters CBOR Mappings Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters
-   CBOR Mappings" registry [IANA.OAuth.Parameters.CBOR.Mappings] within
-   the "Authentication and Authorization for Constrained Environments
-   (ACE)" registry group, following the procedure specified in
-   [RFC9200].
+   CBOR Mappings" registry [OAuth.Parameters.CBOR.Mappings] within the
+   "Authentication and Authorization for Constrained Environments (ACE)"
+   registry group, following the procedure specified in [RFC9200].
 
    *  Name: token_upload
 
@@ -2821,8 +2821,8 @@ Table of Contents
 11.3.  JSON Web Token Claims Registry
 
    IANA is asked to add the following entry to the "JSON Web Token
-   Claims" registry [IANA.JSON.Web.Token.Claims] within the "JSON Web
-   Token (JWT)" registry group, following the procedure specified in
+   Claims" registry [JSON.Web.Token.Claims] within the "JSON Web Token
+   (JWT)" registry group, following the procedure specified in
    [RFC7519].
 
    *  Claim Name: token_series_id
@@ -2836,7 +2836,7 @@ Table of Contents
 11.4.  CBOR Web Token (CWT) Claims Registry
 
    IANA is asked to add the following entry to the "CBOR Web Token (CWT)
-   Claims" registry [IANA.CWT.Claims] within the "CBOR Web Token (CWT)
+   Claims" registry [CWT.Claims] within the "CBOR Web Token (CWT)
    Claims" registry group, following the procedure specified in
    [RFC8392].
 
@@ -2857,7 +2857,7 @@ Table of Contents
 11.5.  OAuth Extensions Error Registry
 
    IANA is asked to add the following entries to the "OAuth Extensions
-   Error Registry" [IANA.OAuth.Extensions.Error] within the "OAuth
+   Error Registry" [OAuth.Extensions.Error] within the "OAuth
    Parameters" registry group.
 
    *  Name: missing_old_token
@@ -2897,9 +2897,9 @@ Table of Contents
 11.6.  OAuth Error Code CBOR Mappings Registry
 
    IANA is asked to add the following entries to the "OAuth Error Code
-   CBOR Mappings" registry [IANA.OAuth.Error.Code.CBOR.Mappings] within
-   the "Authentication and Authorization for Constrained Environments
-   (ACE)" registry group.
+   CBOR Mappings" registry [OAuth.Error.Code.CBOR.Mappings] within the
+   "Authentication and Authorization for Constrained Environments (ACE)"
+   registry group.
 
    *  Name: missing_old_token
 
@@ -2932,7 +2932,7 @@ Table of Contents
 11.7.  Custom Problem Detail Keys Registry
 
    IANA is asked to register the following entry in the "Custom Problem
-   Detail Keys" registry [IANA.Custom.Problem.Detail.Keys] within the
+   Detail Keys" registry [Custom.Problem.Detail.Keys] within the
    "Constrained RESTful Environments (CoRE) Parameters" registry group.
 
    *  Key Value: TBD (value between 0 and 23)
@@ -2949,7 +2949,7 @@ Table of Contents
 11.8.  EDHOC External Authorization Data Registry
 
    IANA is asked to add the following entry to the "EDHOC External
-   Authorization Data" registry [IANA.EDHOC.External.Authorization.Data]
+   Authorization Data" registry [EDHOC.External.Authorization.Data]
    within the "Ephemeral Diffie-Hellman Over COSE (EDHOC)" registry
    group.
 
@@ -2965,6 +2965,26 @@ Table of Contents
 
 12.1.  Normative References
 
+   [Custom.Problem.Detail.Keys]
+              IANA, "Custom Problem Detail Keys",
+              <https://www.iana.org/assignments/core-parameters/core-
+              parameters.xhtml#core-custom-problem-detail-keys>.
+
+   [CWT.Claims]
+              IANA, "CBOR Web Token (CWT) Claims",
+              <https://www.iana.org/assignments/cwt/cwt.xhtml#claims-
+              registry>.
+
+   [EDHOC.External.Authorization.Data]
+              IANA, "EDHOC External Authorization Data",
+              <https://www.iana.org/assignments/edhoc/edhoc.xhtml#edhoc-
+              ead>.
+
+   [Hash.Algorithms]
+              IANA, "Named Information Hash Algorithm Registry",
+              <https://www.iana.org/assignments/named-information/named-
+              information.xhtml#hash-alg>.
+
    [I-D.ietf-ace-edhoc-oscore-profile]
               Selander, G., Mattsson, J. P., Tiloca, M., and R. Höglund,
               "Lightweight Authenticated Key Exchange (LAKE) and Object
@@ -2976,46 +2996,26 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-ace-
               edhoc-oscore-profile-12>.
 
-   [IANA.Custom.Problem.Detail.Keys]
-              IANA, "Custom Problem Detail Keys",
-              <https://www.iana.org/assignments/core-parameters/core-
-              parameters.xhtml#core-custom-problem-detail-keys>.
-
-   [IANA.CWT.Claims]
-              IANA, "CBOR Web Token (CWT) Claims",
-              <https://www.iana.org/assignments/cwt/cwt.xhtml#claims-
-              registry>.
-
-   [IANA.EDHOC.External.Authorization.Data]
-              IANA, "EDHOC External Authorization Data",
-              <https://www.iana.org/assignments/edhoc/edhoc.xhtml#edhoc-
-              ead>.
-
-   [IANA.Hash.Algorithms]
-              IANA, "Named Information Hash Algorithm Registry",
-              <https://www.iana.org/assignments/named-information/named-
-              information.xhtml#hash-alg>.
-
-   [IANA.JSON.Web.Token.Claims]
+   [JSON.Web.Token.Claims]
               IANA, "JSON Web Token Claims",
               <https://www.iana.org/assignments/jwt/jwt.xhtml#claims>.
 
-   [IANA.OAuth.Error.Code.CBOR.Mappings]
+   [OAuth.Error.Code.CBOR.Mappings]
               IANA, "OAuth Error Code CBOR Mappings",
               <https://www.iana.org/assignments/ace/ace.xhtml#oauth-
               error-code-cbor-mappings>.
 
-   [IANA.OAuth.Extensions.Error]
+   [OAuth.Extensions.Error]
               IANA, "OAuth Extensions Error Registry",
               <https://www.iana.org/assignments/oauth-parameters/oauth-
               parameters.xhtml#extensions-error>.
 
-   [IANA.OAuth.Parameters]
+   [OAuth.Parameters]
               IANA, "OAuth Parameters",
               <https://www.iana.org/assignments/oauth-parameters/oauth-
               parameters.xhtml#parameters>.
 
-   [IANA.OAuth.Parameters.CBOR.Mappings]
+   [OAuth.Parameters.CBOR.Mappings]
               IANA, "OAuth Parameters CBOR Mappings",
               <https://www.iana.org/assignments/ace/ace.xhtml#oauth-
               parameters-cbor-mappings>.
@@ -3074,10 +3074,6 @@ Table of Contents
    [RFC8392]  Jones, M., Wahlstroem, E., Erdtman, S., and H. Tschofenig,
               "CBOR Web Token (CWT)", RFC 8392, DOI 10.17487/RFC8392,
               May 2018, <https://www.rfc-editor.org/rfc/rfc8392>.
-
-   [RFC8446]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
-              Version 1.3", RFC 8446, DOI 10.17487/RFC8446, August 2018,
-              <https://www.rfc-editor.org/rfc/rfc8446>.
 
    [RFC8610]  Birkholz, H., Vigano, C., and C. Bormann, "Concise Data
               Definition Language (CDDL): A Notational Convention to
@@ -3164,6 +3160,10 @@ Table of Contents
               Environments (ACE) Framework", RFC 9770,
               DOI 10.17487/RFC9770, June 2025,
               <https://www.rfc-editor.org/rfc/rfc9770>.
+
+   [RFC9846]  Rescorla, E., "The Transport Layer Security (TLS) Protocol
+              Version 1.3", RFC 9846, DOI 10.17487/RFC9846, July 2026,
+              <https://www.rfc-editor.org/rfc/rfc9846>.
 
    [SHA-256]  NIST, "Secure Hash Standard", NIST FIPS PUB 180-4, DOI
               10.6028/NIST.FIPS.180-4 , August 2015,
@@ -3254,7 +3254,7 @@ A.1.  DTLS Profile
    This is enabled by the parameters "rs_cnf2" and "audience2" defined
    in Section 3.4, as well as by the "anchor_cnf" parameter defined in
    Section 3.5.  This seamlessly applies also if the profile uses
-   Transport Layer Security (TLS) [RFC8446] as defined in [RFC9430].
+   Transport Layer Security (TLS) [RFC9846] as defined in [RFC9430].
 
 A.2.  LAKE and OSCORE Profile
 
@@ -3302,6 +3302,8 @@ Appendix C.  Document Updates
 C.1.  Version -08 to -09
 
    *  Renamed EDHOC to LAKE as appropriate.
+
+   *  Editorial fixes and improvements.
 
 C.2.  Version -07 to -08
 

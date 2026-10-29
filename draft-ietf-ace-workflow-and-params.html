@@ -8,7 +8,7 @@
 <meta content="Marco Tiloca" name="author">
 <meta content="Göran Selander" name="author">
 <meta content="
-       This document updates the Authentication and Authorization for Constrained Environments framework (ACE, RFC 9200) as follows. (1) It defines the Short Distribution Chain (SDC) workflow that the authorization server (AS) can use for uploading an access token to a resource server on behalf of the client. (2) For the OAuth 2.0 token endpoint, it defines new parameters and encodings and it extends the semantics of the &quot;ace_profile&quot; parameter. (3) For the OAuth 2.0 authz-info endpoint, it defines a new parameter and its encoding. (4) It defines how the client and the AS can coordinate on the exchange of the client's and resource server's public authentication credentials, when those can be transported by value or identified by reference; this extends the semantics of the &quot;rs_cnf&quot; parameter for the OAuth 2.0 token endpoint, thus updating RFC 9201. (5) It extends the error handling at the AS, for which it defines a new error code. (6) It deprecates the original payload format of error responses conveying an error code, when Concise Binary Object Representation (CBOR) is used to encode message payloads. For those responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles defined in RFC 9202, RFC 9203, and RFC 9431. (7) It amends two of the requirements on profiles of the framework. 
+       The specification RFC 9200 defines the Authentication and Authorization for Constrained Environments (ACE) framework. This document updates the ACE framework and therefore RFC 9200 as follows. (1) It defines the Short Distribution Chain (SDC) workflow that the authorization server (AS) can use for uploading an access token to a resource server on behalf of the client. (2) For the OAuth 2.0 token endpoint, it defines new parameters and encodings and it extends the semantics of the &quot;ace_profile&quot; parameter. (3) For the OAuth 2.0 authz-info endpoint, it defines a new parameter and its encoding. (4) It defines how the client and the AS can coordinate on the exchange of the client's and resource server's public authentication credentials, when those can be transported by value or identified by reference; this extends the semantics of the &quot;rs_cnf&quot; parameter for the OAuth 2.0 token endpoint, thus updating RFC 9201. (5) It extends the error handling at the AS, for which it defines a new error code. (6) It deprecates the original payload format of error responses conveying an error code, when Concise Binary Object Representation (CBOR) is used to encode message payloads. For those responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles defined in RFC 9202, RFC 9203, and RFC 9431. (7) It amends two of the requirements on profiles of the framework. 
     " name="description">
 <meta content="xml2rfc 3.34.1" name="generator">
 <meta content="Internet-Draft" name="keyword">
@@ -1084,7 +1084,7 @@ svg {
 <h1 id="title">Short Distribution Chain (SDC) Workflow and New OAuth Parameters for the Authentication and Authorization for Constrained Environments (ACE) Framework</h1>
 <section id="section-abstract">
       <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
-<p id="section-abstract-1">This document updates the Authentication and Authorization for Constrained Environments framework (ACE, RFC 9200) as follows. (1) It defines the Short Distribution Chain (SDC) workflow that the authorization server (AS) can use for uploading an access token to a resource server on behalf of the client. (2) For the OAuth 2.0 token endpoint, it defines new parameters and encodings and it extends the semantics of the "ace_profile" parameter. (3) For the OAuth 2.0 authz-info endpoint, it defines a new parameter and its encoding. (4) It defines how the client and the AS can coordinate on the exchange of the client's and resource server's public authentication credentials, when those can be transported by value or identified by reference; this extends the semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint, thus updating RFC 9201. (5) It extends the error handling at the AS, for which it defines a new error code. (6) It deprecates the original payload format of error responses conveying an error code, when Concise Binary Object Representation (CBOR) is used to encode message payloads. For those responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles defined in RFC 9202, RFC 9203, and RFC 9431. (7) It amends two of the requirements on profiles of the framework.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-1">The specification RFC 9200 defines the Authentication and Authorization for Constrained Environments (ACE) framework. This document updates the ACE framework and therefore RFC 9200 as follows. (1) It defines the Short Distribution Chain (SDC) workflow that the authorization server (AS) can use for uploading an access token to a resource server on behalf of the client. (2) For the OAuth 2.0 token endpoint, it defines new parameters and encodings and it extends the semantics of the "ace_profile" parameter. (3) For the OAuth 2.0 authz-info endpoint, it defines a new parameter and its encoding. (4) It defines how the client and the AS can coordinate on the exchange of the client's and resource server's public authentication credentials, when those can be transported by value or identified by reference; this extends the semantics of the "rs_cnf" parameter for the OAuth 2.0 token endpoint, thus updating RFC 9201. (5) It extends the error handling at the AS, for which it defines a new error code. (6) It deprecates the original payload format of error responses conveying an error code, when Concise Binary Object Representation (CBOR) is used to encode message payloads. For those responses, it defines a new payload format aligned with RFC 9290, thus updating in this respect also the profiles defined in RFC 9202, RFC 9203, and RFC 9431. (7) It amends two of the requirements on profiles of the framework.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1243,7 +1243,7 @@ svg {
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
-            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-updated-ace_profile-paramet" class="internal xref">Updated "ace_profile" Parameter</a></p>
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-updated-ace_profile-paramet" class="internal xref">Updated ace_profile Parameter</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
             <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-coordinating-on-the-exchang" class="internal xref">Coordinating on the Exchange of Public Authentication Credentials</a></p>
@@ -1481,7 +1481,7 @@ Profiles of ACE can provide their extended and specialized definition, e.g., by 
 <p id="section-2-1">As defined in <span><a href="https://rfc-editor.org/rfc/rfc9200#section-4" class="relref">Section 4</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, the ACE framework relies on its basic protocol workflow shown in <a href="#fig-old-workflow" class="auto internal xref">Figure 1</a>.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">That is, the client first sends an access token request to the token endpoint at the AS (Step A), specifying permissions that it seeks to obtain for accessing protected resources at the RS, possibly together with information on its own public authentication credential.<a href="#section-2-2" class="pilcrow">¶</a></p>
 <p id="section-2-3">Then, if the request is successfully verified, authenticated, and authorized, the AS replies to the client with an access token response (Step B), providing an access token and possibly additional parameters as access information including the actually granted permissions.<a href="#section-2-3" class="pilcrow">¶</a></p>
-<p id="section-2-4">Finally, the client uploads the access token to the RS and, consistently with the permissions granted according to the access token, accesses a resource at the RS (Step C), which replies with the result of the resource access (Step F). Details about what protocol the client and the RS use to establish a secure association, mutually authenticate, and secure their communications are defined in the specific profile of ACE used, such as <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>, <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, <span>[<a href="#RFC9431" class="cite xref">RFC9431</a>]</span>, <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, or <span>[<a href="#I-D.ietf-ace-group-oscore-profile" class="cite xref">I-D.ietf-ace-group-oscore-profile</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-4">Finally, the client uploads the access token to the RS and, consistent with the permissions granted according to the access token, accesses a resource at the RS (Step C), which replies with the result of the resource access (Step F). Details about what protocol the client and the RS use to establish a secure association, mutually authenticate, and secure their communications are defined in the specific profile of ACE used, such as <span>[<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>, <span>[<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>, <span>[<a href="#RFC9431" class="cite xref">RFC9431</a>]</span>, <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, or <span>[<a href="#I-D.ietf-ace-group-oscore-profile" class="cite xref">I-D.ietf-ace-group-oscore-profile</a>]</span>.<a href="#section-2-4" class="pilcrow">¶</a></p>
 <p id="section-2-5">Further interactions are possible between the AS and the RS, i.e., the exchange of an introspection request and response where the AS validates a previously issued access token for the RS (Steps D and E).<a href="#section-2-5" class="pilcrow">¶</a></p>
 <span id="name-ace-basic-protocol-workflow"></span><div id="fig-old-workflow">
 <figure id="figure-1">
@@ -1561,7 +1561,7 @@ As defined in <a href="#sec-token_upload-req" class="auto internal xref">Section
 As defined in <a href="#sec-token_upload-resp" class="auto internal xref">Section 3.1.2</a>, this information is provided to the client by means of the "token_upload" parameter included in the access token response. If the token uploading has failed, the access token response also includes the access token. Otherwise, the access token response includes information consistent with what was specified by the "token_upload" parameter of the access token request at Step A.<a href="#section-2-11.4.2" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-11.5">
-          <p id="section-2-11.5.1">Step C1 - This step occurs only if the token uploading from the AS has failed, and the AS has provided the client with the access token at Step B. In such a case, the client uploads the access token to the RS just like at Step C of the original workflow.<a href="#section-2-11.5.1" class="pilcrow">¶</a></p>
+          <p id="section-2-11.5.1">Step C1 - This step occurs if the token uploading from the AS has failed, and the AS has provided the client with the access token at Step B. In such a case, the client uploads the access token to the RS just like at Step C of the original workflow.<a href="#section-2-11.5.1" class="pilcrow">¶</a></p>
 </li>
         <li class="normal" id="section-2-11.6">
           <p id="section-2-11.6.1">Step C2 - The client attempts to access a protected resource at the RS, according to the permissions granted per the access token and specified by the AS as access information at Step B.<a href="#section-2-11.6.1" class="pilcrow">¶</a></p>
@@ -1628,7 +1628,7 @@ Such an access token is uploaded through a POST request to the authz-info endpoi
 <li class="normal" id="section-3.1.1-3.1">
               <p id="section-3.1.1-3.1.1">0: The access token response will have to include neither the access token nor its corresponding token hash.<a href="#section-3.1.1-3.1.1" class="pilcrow">¶</a></p>
 <p id="section-3.1.1-3.1.2">
-Note that is not useful to specify the value 0 if C wishes to use the method defined in <span>[<a href="#RFC9770" class="cite xref">RFC9770</a>]</span> for receiving notifications about revoked access tokens from the AS. In such case, C needs to specify one of the two alternative values 1 or 2 defined below.<a href="#section-3.1.1-3.1.2" class="pilcrow">¶</a></p>
+Note that it is not useful to specify the value 0 if C wishes to use the method defined in <span>[<a href="#RFC9770" class="cite xref">RFC9770</a>]</span> for receiving notifications about revoked access tokens from the AS. In such case, C needs to specify one of the two alternative values 1 or 2 defined below.<a href="#section-3.1.1-3.1.2" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.1.1-3.2">
               <p id="section-3.1.1-3.2.1">1: The access token response will have to include the token hash corresponding to the access token, but not the access token.<a href="#section-3.1.1-3.2.1" class="pilcrow">¶</a></p>
@@ -1924,7 +1924,7 @@ Profiles of ACE typically prescribe that, in such case, the RS does not have any
 </li>
           </ul>
 <p id="section-3.2.1-4">Once determined HASH_INPUT as defined above, a hash value of HASH_INPUT is generated as per <span><a href="https://rfc-editor.org/rfc/rfc6920#section-6" class="relref">Section 6</a> of [<a href="#RFC6920" class="cite xref">RFC6920</a>]</span>. The resulting output in binary format is used as the token hash. Note that the used binary format embeds the identifier of the used hash function in the first byte of the computed token hash.<a href="#section-3.2.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.2.1-5">The specific hash function used <span class="bcp14">MUST</span> be collision resistant on byte strings and <span class="bcp14">MUST</span> be selected from the "Named Information Hash Algorithm Registry" <span>[<a href="#IANA.Hash.Algorithms" class="cite xref">IANA.Hash.Algorithms</a>]</span>. Consistent with the compliance requirements in <span><a href="https://rfc-editor.org/rfc/rfc6920#section-2" class="relref">Section 2</a> of [<a href="#RFC6920" class="cite xref">RFC6920</a>]</span>, the hash function sha-256 as specified in <span>[<a href="#SHA-256" class="cite xref">SHA-256</a>]</span> is mandatory to implement.<a href="#section-3.2.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.2.1-5">The specific hash function used <span class="bcp14">MUST</span> be collision resistant on byte strings and <span class="bcp14">MUST</span> be selected from the "Named Information Hash Algorithm Registry" <span>[<a href="#Hash.Algorithms" class="cite xref">Hash.Algorithms</a>]</span>. Consistent with the compliance requirements in <span><a href="https://rfc-editor.org/rfc/rfc6920#section-2" class="relref">Section 2</a> of [<a href="#RFC6920" class="cite xref">RFC6920</a>]</span>, the hash function sha-256 as specified in <span>[<a href="#SHA-256" class="cite xref">SHA-256</a>]</span> is mandatory to implement.<a href="#section-3.2.1-5" class="pilcrow">¶</a></p>
 <p id="section-3.2.1-6">The computation of token hashes defined above is aligned with that specified for the computation of token hashes in <span><a href="https://rfc-editor.org/rfc/rfc9770#section-4" class="relref">Section 4</a> of [<a href="#RFC9770" class="cite xref">RFC9770</a>]</span>, where they are used as identifiers of revoked access tokens. Therefore, given a hash algorithm and an access token, the AS computes the same corresponding token hash in either case.<a href="#section-3.2.1-6" class="pilcrow">¶</a></p>
 <p id="section-3.2.1-7">If the AS supports the method specified in <span>[<a href="#RFC9770" class="cite xref">RFC9770</a>]</span>, then the AS <span class="bcp14">MUST</span> use the same hash algorithm for computing both the token hashes to include in the "token_hash" parameter and the token hashes computed per that method to identify revoked access tokens.<a href="#section-3.2.1-7" class="pilcrow">¶</a></p>
 </section>
@@ -2220,7 +2220,7 @@ The "audience2" parameter <span class="bcp14">MUST</span> be included if the "rs
    Max-Age: 3600
    Payload:
    {
-     / access_token / 1 : b64'SlAV32hk...12',
+     / access_token / 1 : h'd08343a1...4819',
        / (full CWT elided for brevity;
           CWT contains the client's RPK in the "cnf" claim) /
      / expires_in /   2 : 3600,
@@ -2293,7 +2293,7 @@ The "audience2" parameter <span class="bcp14">MUST</span> be included if the "rs
    Max-Age: 3600
    Payload:
    {
-     / access_token / 1 : b64'SlAV32hk...12',
+     / access_token / 1 : h'd08343a1...4819',
        / (full CWT elided for brevity;
           CWT contains the client's RPK in the "cnf" claim) /
      / expires_in /   2 : 3600,
@@ -2362,9 +2362,9 @@ When the access token response is encoded in CBOR, this parameter is a CBOR byte
 <li class="normal" id="section-3.6-5.1">
             <p id="section-3.6-5.1.1">The value assigned to the identifier of a token series <span class="bcp14">MUST</span> be associated with all the access tokens issued by the AS for that token series and <span class="bcp14">MUST</span> be selected from a pool that the AS exclusively controls.<a href="#section-3.6-5.1.1" class="pilcrow">¶</a></p>
 <p id="section-3.6-5.1.2">
-In particular, the triple (TS_ID, C, AUD) <span class="bcp14">MUST</span> uniquely identify a token series and its corresponding access tokens, where TS_ID is the identifier of the token series, while C and AUD are the client and the audience for which the access token is issued, respectively. The AS <span class="bcp14">MUST</span> take into account both ongoing and ended token series for selecting a new TS_ID that complies with the above requirements.<a href="#section-3.6-5.1.2" class="pilcrow">¶</a></p>
+In particular, the triple (TS_ID, C, AUD) <span class="bcp14">MUST</span> uniquely identify a token series and its corresponding access tokens, where TS_ID is the identifier of the token series, while C and AUD are the client and the audience for which the access token is issued, respectively. The AS <span class="bcp14">MUST</span> take into account both ongoing and ended token series for selecting a new TS_ID that complies with the requirements above.<a href="#section-3.6-5.1.2" class="pilcrow">¶</a></p>
 <p id="section-3.6-5.1.3">
-Note that the ACE profile is not part of the triple, hence the requirement spans across all the ACE profiles that the AS and its registered clients/RSs support.<a href="#section-3.6-5.1.3" class="pilcrow">¶</a></p>
+Note that the ACE profile used is not part of the triple, hence the requirement spans across all the ACE profiles that the AS and its registered clients/RSs support.<a href="#section-3.6-5.1.3" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.6-5.2">
             <p id="section-3.6-5.2.1">An issued access token that belongs to a token series <span class="bcp14">MUST</span> include the identifier of that token series. This allows the RS to identify the latest access token in the token series to be superseded by the issued access token.<a href="#section-3.6-5.2.1" class="pilcrow">¶</a></p>
@@ -2423,7 +2423,7 @@ When JWTs are used as access tokens, such claim can be the "token_series_id" cla
 <p id="section-3.7.1-8">If none of the error conditions above applies and the request is valid, then the RS leverages the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5) as an indication from the AS that the access token conveyed in the POST request, namely T_NEW, is not the first one of its token series. That is, the access token is meant to dynamically update the access rights of C, while preserving the same secure communication association that is shared between C and the RS.<a href="#section-3.7.1-8" class="pilcrow">¶</a></p>
 <p id="section-3.7.1-9">In this case, the RS uses lookup information specified within T_NEW to determine whether it stores an access token T_OLD associated with C and belonging to the same token series of T_NEW. Such lookup information includes an identifier of the token series to which both T_NEW and T_OLD belong, and it can further comprise additional information elements pertaining to the specific profile of ACE used (e.g., the authentication credential of C that is bound to the access tokens of the token series).<a href="#section-3.7.1-9" class="pilcrow">¶</a></p>
 <p id="section-3.7.1-10">By leveraging such lookup information, the RS checks whether it stores an access token T_OLD that belongs to the same token series of T_NEW, like it would when receiving the request from C and according to the specific profile of ACE used.<a href="#section-3.7.1-10" class="pilcrow">¶</a></p>
-<p id="section-3.7.1-11">If the RS is currently storing such an old access token T_OLD and successfully validates the access token T_NEW, then the RS <span class="bcp14">MUST</span> supersede T_OLD by replacing the corresponding authorization information with the one specified in the new access token T_NEW. After that, the RS <span class="bcp14">MUST</span> associate T_NEW with the same secure communication association with which T_OLD was associated. Finally, the RS replies to the AS with a successful response.<a href="#section-3.7.1-11" class="pilcrow">¶</a></p>
+<p id="section-3.7.1-11">If the RS is currently storing such an old access token T_OLD and successfully validates the access token T_NEW, then the new access token T_NEW supersedes T_OLD, i.e., the RS <span class="bcp14">MUST</span> replace the authorization information specified in T_OLD with that specified in T_NEW, and it <span class="bcp14">MUST</span> associate T_NEW with the same secure communication association with which T_OLD was associated. Finally, the RS replies to the AS with a successful response.<a href="#section-3.7.1-11" class="pilcrow">¶</a></p>
 <p id="section-3.7.1-12">Instead, if the RS is not currently storing such an old access token T_OLD, then the RS <span class="bcp14">MUST</span> reject the POST request from the AS and <span class="bcp14">MUST</span> reply with an error response that has a response code equivalent to the CoAP code 5.00 (Internal Server Error). The error response is analogous to error responses sent by the AS (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.3" class="relref">Section 5.8.3</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>) and <span class="bcp14">MUST</span> include the error code "missing_old_token". The error code and its CBOR abbreviation are registered in <a href="#iana-oauth-extensions-errors" class="auto internal xref">Section 11.5</a> and <a href="#iana-oauth-error-code-cbor-mappings" class="auto internal xref">Section 11.6</a>, respectively.<a href="#section-3.7.1-12" class="pilcrow">¶</a></p>
 <p id="section-3.7.1-13">The explicit indication provided by the "updated_rights" parameter prevents possible ambiguous situations, where the RS might erroneously believe that the access token conveyed in the POST request is the first one of a new token series (e.g., following the deletion of stored access tokens due to memory limitations). --- Editor's note: elaborate more in the "Security Considerations" section.<a href="#section-3.7.1-13" class="pilcrow">¶</a></p>
 </section>
@@ -2433,7 +2433,7 @@ When JWTs are used as access tokens, such claim can be the "token_series_id" cla
           <h4 id="name-follow-up-at-the-as">
 <a href="#section-3.7.2" class="section-number selfRef">3.7.2. </a><a href="#name-follow-up-at-the-as" class="section-name selfRef">Follow-up at the AS</a>
           </h4>
-<p id="section-3.7.2-1">After sending to the authz-info endpoint a protected POST request that conveys the access token T_NEW and the "updated_rights" parameter encoding the CBOR simple value true (0xf5), the AS proceeds as follows when receiving a response from the RS.<a href="#section-3.7.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.2-1">After sending to the authz-info endpoint a protected POST request that conveys the access token T_NEW and the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5), the AS proceeds as follows when receiving a response from the RS.<a href="#section-3.7.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.7.2-2.1">
               <p id="section-3.7.2-2.1.1">If the AS receives a successful response, the AS replies to C with an access token response, consistent with the issue of the access token T_NEW. The access token response includes the "token_upload" parameter encoding the value 0 (see <a href="#sec-token_upload-resp" class="auto internal xref">Section 3.1.2</a>). Also, the access token response includes the "access_token" parameter, or the "token_hash" parameter, or none of those, depending on the value of the "token_upload" parameter in the corresponding access token request.<a href="#section-3.7.2-2.1.1" class="pilcrow">¶</a></p>
@@ -2452,7 +2452,7 @@ When JWTs are used as access tokens, such claim can be the "token_series_id" cla
             <h5 id="name-new-token-series-created-on">
 <a href="#section-3.7.2.1" class="section-number selfRef">3.7.2.1. </a><a href="#name-new-token-series-created-on" class="section-name selfRef">New Token Series Created on the Fly</a>
             </h5>
-<p id="section-3.7.2.1-1">As defined in <a href="#sec-updated_rights-rs" class="auto internal xref">Section 3.7.1</a>, the RS replies to the AS with an error response that includes the error code "missing_old_token", if the RS cannot find the old access token T_OLD to supersede with the access token T_NEW that the AS uploaded to the authz-info endpoint.<a href="#section-3.7.2.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.2.1-1">As defined in <a href="#sec-updated_rights-rs" class="auto internal xref">Section 3.7.1</a>, the RS replies to the AS with an error response that includes the error code "missing_old_token", if the RS cannot find the old access token T_OLD to be superseded by the access token T_NEW that the AS uploaded to the authz-info endpoint.<a href="#section-3.7.2.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.7.2.1-2">Profiles of ACE typically prescribe that, in such case, the RS does not have anymore the secure communication association that was previously shared with C and bound to T_OLD.<a href="#section-3.7.2.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.7.2.1-3">Therefore, if the AS simply completes the issue of T_NEW and provides it to C, this would result in C sending a protected POST request including T_NEW to the authz-info endpoint at the RS, according to the original workflow. However, since the RS does not store T_OLD and does not have the corresponding secure communication association used by C to protect the POST request, the RS would reply to C with an unprotected error response. After that, C would finally send a new access token request to the token endpoint at the AS, asking for a new access token of a new token series.<a href="#section-3.7.2.1-3" class="pilcrow">¶</a></p>
 <p id="section-3.7.2.1-4">Instead, under the specific circumstance in question, the procedure defined below avoids that C and the RS perform such an inefficient and unsuccessful exchange. In the interest of performing this procedure, an AS that supports the SDC workflow <span class="bcp14">MUST</span> store the access token request that results in issuing the first access token of a token series, until the token series ends.<a href="#section-3.7.2.1-4" class="pilcrow">¶</a></p>
@@ -2522,7 +2522,7 @@ The granted access rights are specified by the issued access token T_NEXT.<a hre
 <div id="sec-updated-ace-profile-parameter">
 <section id="section-4">
       <h2 id="name-updated-ace_profile-paramet">
-<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-updated-ace_profile-paramet" class="section-name selfRef">Updated "ace_profile" Parameter</a>
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-updated-ace_profile-paramet" class="section-name selfRef">Updated ace_profile Parameter</a>
       </h2>
 <p id="section-4-1">This section extends the semantics of the "ace_profile" parameter defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span> for the OAuth 2.0 token endpoint at the AS.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <p id="section-4-2">In addition to what is specified in Sections <a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.1" class="relref">5.8.1</a>, <a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.2" class="relref">5.8.2</a>, and <a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.4.3" class="relref">5.8.4.3</a> of <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, the following applies.<a href="#section-4-2" class="pilcrow">¶</a></p>
@@ -2535,11 +2535,11 @@ The "ace_profile" parameter <span class="bcp14">MUST NOT</span> be included in a
         <li class="normal" id="section-4-3.2">
           <p id="section-4-3.2.1">If the AS receives an access token request for requesting the first access token of a new token series and the request includes the "ace_profile" parameter specifying the identifier of a profile, then the AS proceeds as follows.<a href="#section-4-3.2.1" class="pilcrow">¶</a></p>
 <p id="section-4-3.2.2">
-In case the AS does not issue access tokens per the profile specified in the access token request, or C and the RS do not share that profile, then the AS <span class="bcp14">MUST</span> reject the request and <span class="bcp14">MUST</span> reply with an error response (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.3" class="relref">Section 5.8.3</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>). The error response <span class="bcp14">MUST</span> have a response code equivalent to the CoAP code 4.00 (Bad Request) and <span class="bcp14">MUST</span> include the error code "incompatible_ace_profiles".<a href="#section-4-3.2.2" class="pilcrow">¶</a></p>
+In the case that the AS does not issue access tokens per the profile specified in the access token request, or C and the RS do not share that profile, then the AS <span class="bcp14">MUST</span> reject the request and <span class="bcp14">MUST</span> reply with an error response (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.3" class="relref">Section 5.8.3</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>). The error response <span class="bcp14">MUST</span> have a response code equivalent to the CoAP code 4.00 (Bad Request) and <span class="bcp14">MUST</span> include the error code "incompatible_ace_profiles".<a href="#section-4-3.2.2" class="pilcrow">¶</a></p>
 <p id="section-4-3.2.3">
-In case the AS issues an access token to C, the access token <span class="bcp14">MUST</span> be per the profile whose identifier was specified by the "ace_profile" parameter in the access token request.<a href="#section-4-3.2.3" class="pilcrow">¶</a></p>
+In the case that the AS issues an access token to C, the access token <span class="bcp14">MUST</span> be per the profile whose identifier was specified by the "ace_profile" parameter in the access token request.<a href="#section-4-3.2.3" class="pilcrow">¶</a></p>
 <p id="section-4-3.2.4">
-In case the AS replies to C with an access token response (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.2" class="relref">Section 5.8.2</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), then the response <span class="bcp14">MAY</span> include the "ace_profile" parameter. If it is included in the access token response, the "ace_profile" parameter <span class="bcp14">MUST</span> encode the same profile identifier that was specified by the "ace_profile" parameter of the corresponding access token request.<a href="#section-4-3.2.4" class="pilcrow">¶</a></p>
+In the case that the AS replies to C with an access token response (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.2" class="relref">Section 5.8.2</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>), then the response <span class="bcp14">MAY</span> include the "ace_profile" parameter. If it is included in the access token response, the "ace_profile" parameter <span class="bcp14">MUST</span> encode the same profile identifier that was specified by the "ace_profile" parameter of the corresponding access token request.<a href="#section-4-3.2.4" class="pilcrow">¶</a></p>
 <p id="section-4-3.2.5">
 The "ace_profile" parameter <span class="bcp14">MUST NOT</span> be included in the access token response, if the issued access token is not the first one of a new token series.<a href="#section-4-3.2.5" class="pilcrow">¶</a></p>
 </li>
@@ -2639,7 +2639,7 @@ In the access token response, the "rs_cnf" and "rs_cnf2" parameters <span class=
 <li class="normal" id="section-7-4.1">
           <p id="section-7-4.1.1">It <span class="bcp14">MUST</span> include the Custom Problem Detail entry "ace-error" registered in <a href="#iana-problem-details" class="auto internal xref">Section 11.7</a> of this document.<a href="#section-7-4.1.1" class="pilcrow">¶</a></p>
 <p id="section-7-4.1.2">
-This entry is formatted as a CBOR map including only one field, namely "error-code". The map key for the "error-code" field is the CBOR integer with value 0. The value of the "error-code" field is a CBOR integer specifying the error code associated with the occurred error. This value is taken from the "CBOR Value" column of the "OAuth Error Code CBOR Mappings" registry <span>[<a href="#IANA.OAuth.Error.Code.CBOR.Mappings" class="cite xref">IANA.OAuth.Error.Code.CBOR.Mappings</a>]</span>.<a href="#section-7-4.1.2" class="pilcrow">¶</a></p>
+This entry is formatted as a CBOR map including only one field, namely "error-code". The map key for the "error-code" field is the CBOR integer with value 0. The value of the "error-code" field is a CBOR integer specifying the error code associated with the occurred error. This value is taken from the "CBOR Value" column of the "OAuth Error Code CBOR Mappings" registry <span>[<a href="#OAuth.Error.Code.CBOR.Mappings" class="cite xref">OAuth.Error.Code.CBOR.Mappings</a>]</span>.<a href="#section-7-4.1.2" class="pilcrow">¶</a></p>
 <p id="section-7-4.1.3">
 The "error-code" field conveys the same information that the original payload format conveys through the "error" parameter (see, e.g., Sections <a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.3" class="relref">5.8.3</a> and <a href="https://rfc-editor.org/rfc/rfc9200#section-5.9.3" class="relref">5.9.3</a> of <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>).<a href="#section-7-4.1.3" class="pilcrow">¶</a></p>
 <p id="section-7-4.1.4">
@@ -2778,7 +2778,7 @@ Even in such a case where C does not obtain the issued access token, C obtains t
 Even in such a case where C can specify the access token by value, it is possible for C to instead specify the access token by reference during the LAKE session with the RS, by using the EAD item Session ID as a way to reduce communication overhead.<a href="#section-9-12.2.2" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<p id="section-9-13">The EAD item Session ID is used only when uploading the first access token of a token series, but not for the dynamic update of access rights (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-12#section-4.6" class="relref">Section 4.6</a> of [<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>).<a href="#section-9-13" class="pilcrow">¶</a></p>
+<p id="section-9-13">The EAD item Session ID is used only when uploading the first access token of a token series, but not for the dynamic update of access rights (see <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-12#section-4.7" class="relref">Section 4.7</a> of [<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>).<a href="#section-9-13" class="pilcrow">¶</a></p>
 <p id="section-9-14">Analogously to the EAD item ACE-OAuth Access Token defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-12#section-4.1" class="relref">Section 4.1</a> of [<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span> and consistent with what is defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-12#section-4.2" class="relref">Section 4.2</a> of [<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, the EAD item Session ID is used to specify the access token by reference as follows:<a href="#section-9-14" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-9-15.1">
@@ -2789,7 +2789,7 @@ Even in such a case where C can specify the access token by value, it is possibl
 </li>
       </ul>
 <p id="section-9-16">A client or resource server <span class="bcp14">MUST</span> support the EAD item Session ID if it both supports the SDC workflow and implements the LAKE and OSCORE profile of ACE.<a href="#section-9-16" class="pilcrow">¶</a></p>
-<p id="section-9-17">Consequently, C is ensured that RS supports the EAD item Session ID when C receives an access token response specifying the "token_upload" parameter with value 0 or 2, following the issue of an access token for accessing protected resources at the RS. Besides that, C can learn about RS' support for the EAD item through indications from the AS within the LAKE_Information object specified by the "lake_info" parameter of the access token response, or by using other means such as, for example, those defined in <span>[<a href="#I-D.ietf-lake-app-profiles" class="cite xref">I-D.ietf-lake-app-profiles</a>]</span>.<a href="#section-9-17" class="pilcrow">¶</a></p>
+<p id="section-9-17">Consequently, C is ensured that the RS supports the EAD item Session ID when C receives an access token response specifying the "token_upload" parameter with value 0 or 2, following the issue of an access token for accessing protected resources at the RS. Besides that, C can learn about the RS' support for the EAD item through indications from the AS within the LAKE_Information object specified by the "lake_info" parameter of the access token response, or by using other means such as, for example, those defined in <span>[<a href="#I-D.ietf-lake-app-profiles" class="cite xref">I-D.ietf-lake-app-profiles</a>]</span>.<a href="#section-9-17" class="pilcrow">¶</a></p>
 <p id="section-9-18">Example: assuming that ead_label is 2 and that the value of the "session_id" field within the LAKE_Information object specified by the "lake_info" parameter of the access token response from the AS is equal to h'01fc', the critical EAD item is as follows:<a href="#section-9-18" class="pilcrow">¶</a></p>
 <div class="lang-cbor-diag sourcecode" id="section-9-19">
 <pre>
@@ -2804,8 +2804,8 @@ Even in such a case where C can specify the access token by value, it is possibl
       <h2 id="name-security-considerations">
 <a href="#section-10" class="section-number selfRef">10. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-10-1">The same security considerations from the ACE framework for Authentication and Authorization <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span> apply to this document, together with those from the specific profile of ACE used.<a href="#section-10-1" class="pilcrow">¶</a></p>
-<p id="section-10-2">When using the problem-details format defined in <span>[<a href="#RFC9290" class="cite xref">RFC9290</a>]</span> for error responses, then the privacy and security considerations from Sections <a href="https://rfc-editor.org/rfc/rfc9290#section-4" class="relref">4</a> and <a href="https://rfc-editor.org/rfc/rfc9290#section-5" class="relref">5</a> of <span>[<a href="#RFC9290" class="cite xref">RFC9290</a>]</span> also apply.<a href="#section-10-2" class="pilcrow">¶</a></p>
+<p id="section-10-1">The same security considerations from the ACE framework <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span> apply to this document, together with those from the specific profile of ACE used.<a href="#section-10-1" class="pilcrow">¶</a></p>
+<p id="section-10-2">When using the problem-details format defined in <span>[<a href="#RFC9290" class="cite xref">RFC9290</a>]</span> for error responses, the privacy and security considerations from Sections <a href="https://rfc-editor.org/rfc/rfc9290#section-4" class="relref">4</a> and <a href="https://rfc-editor.org/rfc/rfc9290#section-5" class="relref">5</a> of <span>[<a href="#RFC9290" class="cite xref">RFC9290</a>]</span> also apply.<a href="#section-10-2" class="pilcrow">¶</a></p>
 <p id="section-10-3">Editor's note: add more security considerations.<a href="#section-10-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2821,7 +2821,7 @@ Even in such a case where C can specify the access token by value, it is possibl
         <h3 id="name-oauth-parameters-registry">
 <a href="#section-11.1" class="section-number selfRef">11.1. </a><a href="#name-oauth-parameters-registry" class="section-name selfRef">OAuth Parameters Registry</a>
         </h3>
-<p id="section-11.1-1">IANA is asked to add the following entries to the "OAuth Parameters" registry <span>[<a href="#IANA.OAuth.Parameters" class="cite xref">IANA.OAuth.Parameters</a>]</span> within the "OAuth Parameters" registry group.<a href="#section-11.1-1" class="pilcrow">¶</a></p>
+<p id="section-11.1-1">IANA is asked to add the following entries to the "OAuth Parameters" registry <span>[<a href="#OAuth.Parameters" class="cite xref">OAuth.Parameters</a>]</span> within the "OAuth Parameters" registry group.<a href="#section-11.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-11.1-2.1">
             <p id="section-11.1-2.1.1">Name: token_upload<a href="#section-11.1-2.1.1" class="pilcrow">¶</a></p>
@@ -3078,7 +3078,7 @@ Even in such a case where C can specify the access token by value, it is possibl
         <h3 id="name-oauth-parameters-cbor-mappi">
 <a href="#section-11.2" class="section-number selfRef">11.2. </a><a href="#name-oauth-parameters-cbor-mappi" class="section-name selfRef">OAuth Parameters CBOR Mappings Registry</a>
         </h3>
-<p id="section-11.2-1">IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry <span>[<a href="#IANA.OAuth.Parameters.CBOR.Mappings" class="cite xref">IANA.OAuth.Parameters.CBOR.Mappings</a>]</span> within the "Authentication and Authorization for Constrained Environments (ACE)" registry group, following the procedure specified in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
+<p id="section-11.2-1">IANA is asked to add the following entries to the "OAuth Parameters CBOR Mappings" registry <span>[<a href="#OAuth.Parameters.CBOR.Mappings" class="cite xref">OAuth.Parameters.CBOR.Mappings</a>]</span> within the "Authentication and Authorization for Constrained Environments (ACE)" registry group, following the procedure specified in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>.<a href="#section-11.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-11.2-2.1">
             <p id="section-11.2-2.1.1">Name: token_upload<a href="#section-11.2-2.1.1" class="pilcrow">¶</a></p>
@@ -3257,7 +3257,7 @@ Even in such a case where C can specify the access token by value, it is possibl
         <h3 id="name-json-web-token-claims-regis">
 <a href="#section-11.3" class="section-number selfRef">11.3. </a><a href="#name-json-web-token-claims-regis" class="section-name selfRef">JSON Web Token Claims Registry</a>
         </h3>
-<p id="section-11.3-1">IANA is asked to add the following entry to the "JSON Web Token Claims" registry <span>[<a href="#IANA.JSON.Web.Token.Claims" class="cite xref">IANA.JSON.Web.Token.Claims</a>]</span> within the "JSON Web Token (JWT)" registry group, following the procedure specified in <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>.<a href="#section-11.3-1" class="pilcrow">¶</a></p>
+<p id="section-11.3-1">IANA is asked to add the following entry to the "JSON Web Token Claims" registry <span>[<a href="#JSON.Web.Token.Claims" class="cite xref">JSON.Web.Token.Claims</a>]</span> within the "JSON Web Token (JWT)" registry group, following the procedure specified in <span>[<a href="#RFC7519" class="cite xref">RFC7519</a>]</span>.<a href="#section-11.3-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-11.3-2.1">
             <p id="section-11.3-2.1.1">Claim Name: token_series_id<a href="#section-11.3-2.1.1" class="pilcrow">¶</a></p>
@@ -3279,7 +3279,7 @@ Even in such a case where C can specify the access token by value, it is possibl
         <h3 id="name-cbor-web-token-cwt-claims-r">
 <a href="#section-11.4" class="section-number selfRef">11.4. </a><a href="#name-cbor-web-token-cwt-claims-r" class="section-name selfRef">CBOR Web Token (CWT) Claims Registry</a>
         </h3>
-<p id="section-11.4-1">IANA is asked to add the following entry to the "CBOR Web Token (CWT) Claims" registry <span>[<a href="#IANA.CWT.Claims" class="cite xref">IANA.CWT.Claims</a>]</span> within the "CBOR Web Token (CWT) Claims" registry group, following the procedure specified in <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>.<a href="#section-11.4-1" class="pilcrow">¶</a></p>
+<p id="section-11.4-1">IANA is asked to add the following entry to the "CBOR Web Token (CWT) Claims" registry <span>[<a href="#CWT.Claims" class="cite xref">CWT.Claims</a>]</span> within the "CBOR Web Token (CWT) Claims" registry group, following the procedure specified in <span>[<a href="#RFC8392" class="cite xref">RFC8392</a>]</span>.<a href="#section-11.4-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-11.4-2.1">
             <p id="section-11.4-2.1.1">Claim Name: token_series_id<a href="#section-11.4-2.1.1" class="pilcrow">¶</a></p>
@@ -3310,7 +3310,7 @@ Even in such a case where C can specify the access token by value, it is possibl
         <h3 id="name-oauth-extensions-error-regi">
 <a href="#section-11.5" class="section-number selfRef">11.5. </a><a href="#name-oauth-extensions-error-regi" class="section-name selfRef">OAuth Extensions Error Registry</a>
         </h3>
-<p id="section-11.5-1">IANA is asked to add the following entries to the "OAuth Extensions Error Registry" <span>[<a href="#IANA.OAuth.Extensions.Error" class="cite xref">IANA.OAuth.Extensions.Error</a>]</span> within the "OAuth Parameters" registry group.<a href="#section-11.5-1" class="pilcrow">¶</a></p>
+<p id="section-11.5-1">IANA is asked to add the following entries to the "OAuth Extensions Error Registry" <span>[<a href="#OAuth.Extensions.Error" class="cite xref">OAuth.Extensions.Error</a>]</span> within the "OAuth Parameters" registry group.<a href="#section-11.5-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-11.5-2.1">
             <p id="section-11.5-2.1.1">Name: missing_old_token<a href="#section-11.5-2.1.1" class="pilcrow">¶</a></p>
@@ -3371,7 +3371,7 @@ Even in such a case where C can specify the access token by value, it is possibl
         <h3 id="name-oauth-error-code-cbor-mappi">
 <a href="#section-11.6" class="section-number selfRef">11.6. </a><a href="#name-oauth-error-code-cbor-mappi" class="section-name selfRef">OAuth Error Code CBOR Mappings Registry</a>
         </h3>
-<p id="section-11.6-1">IANA is asked to add the following entries to the "OAuth Error Code CBOR Mappings" registry <span>[<a href="#IANA.OAuth.Error.Code.CBOR.Mappings" class="cite xref">IANA.OAuth.Error.Code.CBOR.Mappings</a>]</span> within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.<a href="#section-11.6-1" class="pilcrow">¶</a></p>
+<p id="section-11.6-1">IANA is asked to add the following entries to the "OAuth Error Code CBOR Mappings" registry <span>[<a href="#OAuth.Error.Code.CBOR.Mappings" class="cite xref">OAuth.Error.Code.CBOR.Mappings</a>]</span> within the "Authentication and Authorization for Constrained Environments (ACE)" registry group.<a href="#section-11.6-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-11.6-2.1">
             <p id="section-11.6-2.1.1">Name: missing_old_token<a href="#section-11.6-2.1.1" class="pilcrow">¶</a></p>
@@ -3423,7 +3423,7 @@ Even in such a case where C can specify the access token by value, it is possibl
         <h3 id="name-custom-problem-detail-keys-">
 <a href="#section-11.7" class="section-number selfRef">11.7. </a><a href="#name-custom-problem-detail-keys-" class="section-name selfRef">Custom Problem Detail Keys Registry</a>
         </h3>
-<p id="section-11.7-1">IANA is asked to register the following entry in the "Custom Problem Detail Keys" registry <span>[<a href="#IANA.Custom.Problem.Detail.Keys" class="cite xref">IANA.Custom.Problem.Detail.Keys</a>]</span> within the "Constrained RESTful Environments (CoRE) Parameters" registry group.<a href="#section-11.7-1" class="pilcrow">¶</a></p>
+<p id="section-11.7-1">IANA is asked to register the following entry in the "Custom Problem Detail Keys" registry <span>[<a href="#Custom.Problem.Detail.Keys" class="cite xref">Custom.Problem.Detail.Keys</a>]</span> within the "Constrained RESTful Environments (CoRE) Parameters" registry group.<a href="#section-11.7-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-11.7-2.1">
             <p id="section-11.7-2.1.1">Key Value: TBD (value between 0 and 23)<a href="#section-11.7-2.1.1" class="pilcrow">¶</a></p>
@@ -3448,7 +3448,7 @@ Even in such a case where C can specify the access token by value, it is possibl
         <h3 id="name-edhoc-external-authorizatio">
 <a href="#section-11.8" class="section-number selfRef">11.8. </a><a href="#name-edhoc-external-authorizatio" class="section-name selfRef">EDHOC External Authorization Data Registry</a>
         </h3>
-<p id="section-11.8-1">IANA is asked to add the following entry to the "EDHOC External Authorization Data" registry <span>[<a href="#IANA.EDHOC.External.Authorization.Data" class="cite xref">IANA.EDHOC.External.Authorization.Data</a>]</span> within the "Ephemeral Diffie-Hellman Over COSE (EDHOC)" registry group.<a href="#section-11.8-1" class="pilcrow">¶</a></p>
+<p id="section-11.8-1">IANA is asked to add the following entry to the "EDHOC External Authorization Data" registry <span>[<a href="#EDHOC.External.Authorization.Data" class="cite xref">EDHOC.External.Authorization.Data</a>]</span> within the "Ephemeral Diffie-Hellman Over COSE (EDHOC)" registry group.<a href="#section-11.8-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-11.8-2.1">
             <p id="section-11.8-2.1.1">Name: Session ID<a href="#section-11.8-2.1.1" class="pilcrow">¶</a></p>
@@ -3478,43 +3478,43 @@ Even in such a case where C can specify the access token by value, it is possibl
 <a href="#section-12.1" class="section-number selfRef">12.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
+<dt id="Custom.Problem.Detail.Keys">[Custom.Problem.Detail.Keys]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"Custom Problem Detail Keys"</span>, <span>&lt;<a href="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#core-custom-problem-detail-keys">https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#core-custom-problem-detail-keys</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="CWT.Claims">[CWT.Claims]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"CBOR Web Token (CWT) Claims"</span>, <span>&lt;<a href="https://www.iana.org/assignments/cwt/cwt.xhtml#claims-registry">https://www.iana.org/assignments/cwt/cwt.xhtml#claims-registry</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="EDHOC.External.Authorization.Data">[EDHOC.External.Authorization.Data]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"EDHOC External Authorization Data"</span>, <span>&lt;<a href="https://www.iana.org/assignments/edhoc/edhoc.xhtml#edhoc-ead">https://www.iana.org/assignments/edhoc/edhoc.xhtml#edhoc-ead</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="Hash.Algorithms">[Hash.Algorithms]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"Named Information Hash Algorithm Registry"</span>, <span>&lt;<a href="https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg">https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="I-D.ietf-ace-edhoc-oscore-profile">[I-D.ietf-ace-edhoc-oscore-profile]</dt>
         <dd>
 <span class="refAuthor">Selander, G.</span>, <span class="refAuthor">Mattsson, J. P.</span>, <span class="refAuthor">Tiloca, M.</span>, and <span class="refAuthor">R. Höglund</span>, <span class="refTitle">"Lightweight Authenticated Key Exchange (LAKE) and Object Security for Constrained RESTful Environments (OSCORE) Profile of the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-ace-edhoc-oscore-profile-12</span>, <time datetime="2026-10-22" class="refDate">22 October 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-12">https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-12</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="IANA.Custom.Problem.Detail.Keys">[IANA.Custom.Problem.Detail.Keys]</dt>
-        <dd>
-<span class="refAuthor">IANA</span>, <span class="refTitle">"Custom Problem Detail Keys"</span>, <span>&lt;<a href="https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#core-custom-problem-detail-keys">https://www.iana.org/assignments/core-parameters/core-parameters.xhtml#core-custom-problem-detail-keys</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="IANA.CWT.Claims">[IANA.CWT.Claims]</dt>
-        <dd>
-<span class="refAuthor">IANA</span>, <span class="refTitle">"CBOR Web Token (CWT) Claims"</span>, <span>&lt;<a href="https://www.iana.org/assignments/cwt/cwt.xhtml#claims-registry">https://www.iana.org/assignments/cwt/cwt.xhtml#claims-registry</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="IANA.EDHOC.External.Authorization.Data">[IANA.EDHOC.External.Authorization.Data]</dt>
-        <dd>
-<span class="refAuthor">IANA</span>, <span class="refTitle">"EDHOC External Authorization Data"</span>, <span>&lt;<a href="https://www.iana.org/assignments/edhoc/edhoc.xhtml#edhoc-ead">https://www.iana.org/assignments/edhoc/edhoc.xhtml#edhoc-ead</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="IANA.Hash.Algorithms">[IANA.Hash.Algorithms]</dt>
-        <dd>
-<span class="refAuthor">IANA</span>, <span class="refTitle">"Named Information Hash Algorithm Registry"</span>, <span>&lt;<a href="https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg">https://www.iana.org/assignments/named-information/named-information.xhtml#hash-alg</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="IANA.JSON.Web.Token.Claims">[IANA.JSON.Web.Token.Claims]</dt>
+<dt id="JSON.Web.Token.Claims">[JSON.Web.Token.Claims]</dt>
         <dd>
 <span class="refAuthor">IANA</span>, <span class="refTitle">"JSON Web Token Claims"</span>, <span>&lt;<a href="https://www.iana.org/assignments/jwt/jwt.xhtml#claims">https://www.iana.org/assignments/jwt/jwt.xhtml#claims</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="IANA.OAuth.Error.Code.CBOR.Mappings">[IANA.OAuth.Error.Code.CBOR.Mappings]</dt>
+<dt id="OAuth.Error.Code.CBOR.Mappings">[OAuth.Error.Code.CBOR.Mappings]</dt>
         <dd>
 <span class="refAuthor">IANA</span>, <span class="refTitle">"OAuth Error Code CBOR Mappings"</span>, <span>&lt;<a href="https://www.iana.org/assignments/ace/ace.xhtml#oauth-error-code-cbor-mappings">https://www.iana.org/assignments/ace/ace.xhtml#oauth-error-code-cbor-mappings</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="IANA.OAuth.Extensions.Error">[IANA.OAuth.Extensions.Error]</dt>
+<dt id="OAuth.Extensions.Error">[OAuth.Extensions.Error]</dt>
         <dd>
 <span class="refAuthor">IANA</span>, <span class="refTitle">"OAuth Extensions Error Registry"</span>, <span>&lt;<a href="https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#extensions-error">https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#extensions-error</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="IANA.OAuth.Parameters">[IANA.OAuth.Parameters]</dt>
+<dt id="OAuth.Parameters">[OAuth.Parameters]</dt>
         <dd>
 <span class="refAuthor">IANA</span>, <span class="refTitle">"OAuth Parameters"</span>, <span>&lt;<a href="https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#parameters">https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml#parameters</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="IANA.OAuth.Parameters.CBOR.Mappings">[IANA.OAuth.Parameters.CBOR.Mappings]</dt>
+<dt id="OAuth.Parameters.CBOR.Mappings">[OAuth.Parameters.CBOR.Mappings]</dt>
         <dd>
 <span class="refAuthor">IANA</span>, <span class="refTitle">"OAuth Parameters CBOR Mappings"</span>, <span>&lt;<a href="https://www.iana.org/assignments/ace/ace.xhtml#oauth-parameters-cbor-mappings">https://www.iana.org/assignments/ace/ace.xhtml#oauth-parameters-cbor-mappings</a>&gt;</span>. </dd>
 <dd class="break"></dd>
@@ -3565,10 +3565,6 @@ Even in such a case where C can specify the access token by value, it is possibl
 <dt id="RFC8392">[RFC8392]</dt>
         <dd>
 <span class="refAuthor">Jones, M.</span>, <span class="refAuthor">Wahlstroem, E.</span>, <span class="refAuthor">Erdtman, S.</span>, and <span class="refAuthor">H. Tschofenig</span>, <span class="refTitle">"CBOR Web Token (CWT)"</span>, <span class="seriesInfo">RFC 8392</span>, <span class="seriesInfo">DOI 10.17487/RFC8392</span>, <time datetime="2018-05" class="refDate">May 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8392">https://www.rfc-editor.org/rfc/rfc8392</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8446">[RFC8446]</dt>
-        <dd>
-<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 8446</span>, <span class="seriesInfo">DOI 10.17487/RFC8446</span>, <time datetime="2018-08" class="refDate">August 2018</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8446">https://www.rfc-editor.org/rfc/rfc8446</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8610">[RFC8610]</dt>
         <dd>
@@ -3629,6 +3625,10 @@ Even in such a case where C can specify the access token by value, it is possibl
 <dt id="RFC9770">[RFC9770]</dt>
         <dd>
 <span class="refAuthor">Tiloca, M.</span>, <span class="refAuthor">Palombini, F.</span>, <span class="refAuthor">Echeverria, S.</span>, and <span class="refAuthor">G. Lewis</span>, <span class="refTitle">"Notification of Revoked Access Tokens in the Authentication and Authorization for Constrained Environments (ACE) Framework"</span>, <span class="seriesInfo">RFC 9770</span>, <span class="seriesInfo">DOI 10.17487/RFC9770</span>, <time datetime="2025-06" class="refDate">June 2025</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9770">https://www.rfc-editor.org/rfc/rfc9770</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9846">[RFC9846]</dt>
+        <dd>
+<span class="refAuthor">Rescorla, E.</span>, <span class="refTitle">"The Transport Layer Security (TLS) Protocol Version 1.3"</span>, <span class="seriesInfo">RFC 9846</span>, <span class="seriesInfo">DOI 10.17487/RFC9846</span>, <time datetime="2026-07" class="refDate">July 2026</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9846">https://www.rfc-editor.org/rfc/rfc9846</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="SHA-256">[SHA-256]</dt>
       <dd>
@@ -3706,7 +3706,7 @@ This is useful in profiles of ACE where C can re-upload the same access token to
 <a href="#appendix-A.1" class="section-number selfRef">A.1. </a><a href="#name-dtls-profile" class="section-name selfRef">DTLS Profile</a>
         </h3>
 <p id="appendix-A.1-1">When the RPK mode of the DTLS profile is used (see <span><a href="https://rfc-editor.org/rfc/rfc9202#section-3.2" class="relref">Section 3.2</a> of [<a href="#RFC9202" class="cite xref">RFC9202</a>]</span>), it becomes possible for the AS to effectively issue an access token intended to an audience that includes multiple RSs.<a href="#appendix-A.1-1" class="pilcrow">¶</a></p>
-<p id="appendix-A.1-2">This is enabled by the parameters "rs_cnf2" and "audience2" defined in <a href="#sec-rs_cnf2-audience2" class="auto internal xref">Section 3.4</a>, as well as by the "anchor_cnf" parameter defined in <a href="#sec-anchor_cnf" class="auto internal xref">Section 3.5</a>. This seamlessly applies also if the profile uses Transport Layer Security (TLS) <span>[<a href="#RFC8446" class="cite xref">RFC8446</a>]</span> as defined in <span>[<a href="#RFC9430" class="cite xref">RFC9430</a>]</span>.<a href="#appendix-A.1-2" class="pilcrow">¶</a></p>
+<p id="appendix-A.1-2">This is enabled by the parameters "rs_cnf2" and "audience2" defined in <a href="#sec-rs_cnf2-audience2" class="auto internal xref">Section 3.4</a>, as well as by the "anchor_cnf" parameter defined in <a href="#sec-anchor_cnf" class="auto internal xref">Section 3.5</a>. This seamlessly applies also if the profile uses Transport Layer Security (TLS) <span>[<a href="#RFC9846" class="cite xref">RFC9846</a>]</span> as defined in <span>[<a href="#RFC9430" class="cite xref">RFC9430</a>]</span>.<a href="#appendix-A.1-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="lake-and-oscore-profile">
@@ -3773,6 +3773,9 @@ ead_session_id_label = 2
 <ul class="normal">
 <li class="normal" id="appendix-C.1-1.1">
             <p id="appendix-C.1-1.1.1">Renamed EDHOC to LAKE as appropriate.<a href="#appendix-C.1-1.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-C.1-1.2">
+            <p id="appendix-C.1-1.2.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
