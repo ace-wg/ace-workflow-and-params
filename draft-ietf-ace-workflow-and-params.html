@@ -1467,8 +1467,8 @@ Profiles of ACE can provide their extended and specialized definition, e.g., by 
         </h3>
 <p id="section-1.2-1">CBOR <span>[<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> and CDDL <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> are used in this document.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
 <p id="section-1.2-2">Examples throughout this document are expressed in CBOR diagnostic notation as defined in <span><a href="https://rfc-editor.org/rfc/rfc8949#section-8" class="relref">Section 8</a> of [<a href="#RFC8949" class="cite xref">RFC8949</a>]</span> and <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>. Diagnostic notation comments are often used to provide a textual representation of the parameters' keys and values.<a href="#section-1.2-2" class="pilcrow">¶</a></p>
-<p id="section-1.2-3">In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 12</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix B</a>. For example, {e'audience2' : ["rs1", "rs2"]} stands for {54 : ["rs1", "rs2"]}.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
-<p id="section-1.2-4">Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 12</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix B</a>. Finally, please delete this note.<a href="#section-1.2-4" class="pilcrow">¶</a></p>
+<p id="section-1.2-3">In the CBOR diagnostic notation used in this document, constructs of the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 13</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix B</a>. For example, {e'audience2' : ["rs1", "rs2"]} stands for {54 : ["rs1", "rs2"]}.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
+<p id="section-1.2-4">Note to RFC Editor: Please delete the paragraph immediately preceding this note. Also, in the CBOR diagnostic notation used in this document, please replace the constructs of the form e'SOME_NAME' with the value assigned to SOME_NAME in the CDDL model shown in <a href="#fig-cddl-model" class="auto internal xref">Figure 13</a> of <a href="#sec-cddl-model" class="auto internal xref">Appendix B</a>. Finally, please delete this note.<a href="#section-1.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2391,14 +2391,37 @@ When JWTs are used as access tokens, such claim can be the "token_series_id" cla
 <p id="section-3.7-3">When including the "updated_rights" parameter, the following applies:<a href="#section-3.7-3" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.7-4.1">
-            <p id="section-3.7-4.1.1">If the POST request is encoded in CBOR, the request <span class="bcp14">MUST</span> have media type "application/ace+cbor" and its payload <span class="bcp14">MUST</span> be formatted as a CBOR map. In particular, the CBOR map <span class="bcp14">MUST</span> include the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5), together with the "access_token" parameter specifying the access token. The CBOR map <span class="bcp14">MAY</span> include additional parameters, according to the specific profile of ACE used.<a href="#section-3.7-4.1.1" class="pilcrow">¶</a></p>
+            <p id="section-3.7-4.1.1">If the POST request is encoded in CBOR, the request <span class="bcp14">MUST</span> have media type "application/ace+cbor" and its payload <span class="bcp14">MUST</span> be formatted as a CBOR map. In particular, the CBOR map <span class="bcp14">MUST</span> include the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5) and the "access_token" parameter specifying the access token.<a href="#section-3.7-4.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-3.7-4.2">
-            <p id="section-3.7-4.2.1">If the POST request is encoded in JSON, the request <span class="bcp14">MUST</span> have media type "application/ace+json" and its payload <span class="bcp14">MUST</span> be formatted as a JSON object. In particular, the JSON object <span class="bcp14">MUST</span> include the "updated_rights" parameter with value <code>true</code>, together with the "access_token" parameter specifying the access token. The JSON object <span class="bcp14">MAY</span> include additional parameters, according to the specific profile of ACE used.<a href="#section-3.7-4.2.1" class="pilcrow">¶</a></p>
+            <p id="section-3.7-4.2.1">If the POST request is encoded in JSON, the request <span class="bcp14">MUST</span> have media type "application/ace+json" and its payload <span class="bcp14">MUST</span> be formatted as a JSON object. In particular, the JSON object <span class="bcp14">MUST</span> include the "updated_rights" parameter with value <code>true</code> and the "access_token" parameter specifying the access token.<a href="#section-3.7-4.2.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-3.7-5">Note that this request deviates from the POST request defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, although such a deviation can already occur in some profiles of ACE (e.g., see <span><a href="https://rfc-editor.org/rfc/rfc9203#section-4.1" class="relref">Section 4.1</a> of [<a href="#RFC9203" class="cite xref">RFC9203</a>]</span>) or in application profiles of <span>[<a href="#RFC9594" class="cite xref">RFC9594</a>]</span>.<a href="#section-3.7-5" class="pilcrow">¶</a></p>
-<p id="section-3.7-6">The following focuses on interactions with the authz-info endpoint at the RS where messages are encoded in CBOR. The same as described below holds in the case that such messages are encoded in JSON and have media type "application/ace+json", with the difference that the "updated_rights" parameter with value <code>true</code> can be present within a JSON object conveyed by a POST request to the  authz-info endpoint.<a href="#section-3.7-6" class="pilcrow">¶</a></p>
+<p id="section-3.7-6"><a href="#fig-example-AS-to-RS-token" class="auto internal xref">Figure 10</a> shows an example where the AS uploads an access token at the RS on behalf of C, by sending a POST request encoded in CBOR to the authz-info endpoint at the RS. In this example, the access token dynamically updates the access rights of C by extending an existing token series, hence the request payload also conveys the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5).<a href="#section-3.7-6" class="pilcrow">¶</a></p>
+<span id="name-example-of-as-to-rs-post-re"></span><div id="fig-example-AS-to-RS-token">
+<figure id="figure-10">
+          <div class="alignLeft art-text artwork" id="section-3.7-7.1">
+<pre>
+   AS-to-RS token upload request
+
+   Header: POST (Code=0.02)
+   Uri-Host: "rs.example.com"
+   Uri-Path: "authz-info"
+   Content-Format: 19 (application/ace+cbor)
+   Payload:
+   {
+     / access_token / 1 : h'd08343a1...4819', / (full CWT elided
+                                                 for brevity) /
+      e'updated_rights' : true
+   }
+</pre>
+</div>
+<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
+<a href="#name-example-of-as-to-rs-post-re" class="selfRef">Example of AS-to-RS POST Request to the authz-info endpoint. The access token dynamically updates the access rights of C by extending an existing token series, hence the request conveys the "updated_rights" parameter with value true (0xf6).</a>
+          </figcaption></figure>
+</div>
+<p id="section-3.7-8">The following focuses on interactions with the authz-info endpoint at the RS where messages are encoded in CBOR. The same as described below holds in the case that such messages are encoded in JSON and have media type "application/ace+json", with the difference that the "updated_rights" parameter with value <code>true</code> can be present within a JSON object conveyed by a POST request to the  authz-info endpoint.<a href="#section-3.7-8" class="pilcrow">¶</a></p>
 <div id="sec-updated_rights-rs">
 <section id="section-3.7.1">
           <h4 id="name-processing-at-the-rs">
@@ -2424,7 +2447,7 @@ When JWTs are used as access tokens, such claim can be the "token_series_id" cla
 <p id="section-3.7.1-8">If none of the error conditions above applies and the request is valid, then the RS leverages the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5) as an indication from the AS that the access token conveyed in the POST request, namely T_NEW, is not the first one of its token series. That is, the access token is meant to dynamically update the access rights of C, while preserving the same secure communication association that is shared between C and the RS.<a href="#section-3.7.1-8" class="pilcrow">¶</a></p>
 <p id="section-3.7.1-9">In this case, the RS uses lookup information specified within T_NEW to determine whether it stores an access token T_OLD associated with C and belonging to the same token series of T_NEW. Such lookup information includes an identifier of the token series to which both T_NEW and T_OLD belong, and it can further comprise additional information elements pertaining to the specific profile of ACE used (e.g., the authentication credential of C that is bound to the access tokens of the token series).<a href="#section-3.7.1-9" class="pilcrow">¶</a></p>
 <p id="section-3.7.1-10">By leveraging such lookup information, the RS checks whether it stores an access token T_OLD that belongs to the same token series of T_NEW, like it would when receiving the request from C and according to the specific profile of ACE used.<a href="#section-3.7.1-10" class="pilcrow">¶</a></p>
-<p id="section-3.7.1-11">If the RS is currently storing such an old access token T_OLD and successfully validates the access token T_NEW, then the new access token T_NEW supersedes T_OLD, i.e., the RS <span class="bcp14">MUST</span> replace the authorization information specified in T_OLD with that specified in T_NEW, and it <span class="bcp14">MUST</span> associate T_NEW with the same secure communication association with which T_OLD was associated. Finally, the RS replies to the AS with a successful response.<a href="#section-3.7.1-11" class="pilcrow">¶</a></p>
+<p id="section-3.7.1-11">If the RS is currently storing such an old access token T_OLD and successfully validates the access token T_NEW, then the new access token T_NEW supersedes T_OLD, i.e., the RS <span class="bcp14">MUST</span> replace the authorization information specified in T_OLD with that specified in T_NEW, and it <span class="bcp14">MUST</span> associate T_NEW with the same secure communication association with which T_OLD was associated. Finally, the RS replies to the AS with a successful response that has a response code equivalent to the CoAP code 2.01 (Created).<a href="#section-3.7.1-11" class="pilcrow">¶</a></p>
 <p id="section-3.7.1-12">Instead, if the RS is not currently storing such an old access token T_OLD, then the RS <span class="bcp14">MUST</span> reject the POST request from the AS and <span class="bcp14">MUST</span> reply with an error response that has a response code equivalent to the CoAP code 5.00 (Internal Server Error). The error response is analogous to error responses sent by the AS (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.3" class="relref">Section 5.8.3</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>) and <span class="bcp14">MUST</span> include the error code "missing_old_token". The error code and its CBOR abbreviation are registered in <a href="#iana-oauth-extensions-errors" class="auto internal xref">Section 11.5</a> and <a href="#iana-oauth-error-code-cbor-mappings" class="auto internal xref">Section 11.6</a>, respectively.<a href="#section-3.7.1-12" class="pilcrow">¶</a></p>
 <p id="section-3.7.1-13">The explicit indication provided by the "updated_rights" parameter prevents possible ambiguous situations, where the RS might erroneously believe that the access token conveyed in the POST request is the first one of a new token series (e.g., following the deletion of stored access tokens due to memory limitations). --- Editor's note: elaborate more in the "Security Considerations" section.<a href="#section-3.7.1-13" class="pilcrow">¶</a></p>
 </section>
@@ -2673,9 +2696,9 @@ When the Standard Problem Detail entry "instance" is included, it conveys the sa
           </ul>
 </li>
       </ul>
-<p id="section-7-7">An example of an error response using the problem-details format is shown in <a href="#fig-example-error-response" class="auto internal xref">Figure 10</a>.<a href="#section-7-7" class="pilcrow">¶</a></p>
+<p id="section-7-7">An example of an error response using the problem-details format is shown in <a href="#fig-example-error-response" class="auto internal xref">Figure 11</a>.<a href="#section-7-7" class="pilcrow">¶</a></p>
 <span id="name-example-of-error-response-w"></span><div id="fig-example-error-response">
-<figure id="figure-10">
+<figure id="figure-11">
         <div class="alignLeft art-text artwork" id="section-7-8.1">
 <pre>
 Header: Bad Request (Code=4.00)
@@ -2690,7 +2713,7 @@ Payload:
 }
 </pre>
 </div>
-<figcaption><a href="#figure-10" class="selfRef">Figure 10</a>:
+<figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
 <a href="#name-example-of-error-response-w" class="selfRef">Example of Error Response with Problem Details.</a>
         </figcaption></figure>
 </div>
@@ -2739,9 +2762,9 @@ Payload:
 <p id="section-9-2">When using the LAKE and OSCORE profile of ACE defined in <span>[<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span>, C and the RS run the LAKE protocol to establish an OSCORE Security Context <span>[<a href="#RFC8613" class="cite xref">RFC8613</a>]</span>, which is used to secure communications when C accesses protected resources at the RS, according to the authorization information indicated in an access token. Specifically, the access token is bound to C's authentication credential AUTH_CRED_C that C uses during the LAKE session for authenticating itself to the RS.<a href="#section-9-2" class="pilcrow">¶</a></p>
 <p id="section-9-3">Per the LAKE and OSCORE profile, the first access token of a token series is specified by C to the RS during a LAKE session between the two peers. To this end, <span><a href="https://datatracker.ietf.org/doc/html/draft-ietf-ace-edhoc-oscore-profile-12#section-4.1" class="relref">Section 4.1</a> of [<a href="#I-D.ietf-ace-edhoc-oscore-profile" class="cite xref">I-D.ietf-ace-edhoc-oscore-profile</a>]</span> defines the EAD item ACE-OAuth Access Token for specifying an access token by value in the EAD field of a LAKE message from C to the RS.<a href="#section-9-3" class="pilcrow">¶</a></p>
 <p id="section-9-4">This section defines an alternative EAD item for specifying an access token by reference, through its associated LAKE session identifier.<a href="#section-9-4" class="pilcrow">¶</a></p>
-<p id="section-9-5">The name of the EAD item is Session ID, for which the CDDL grammar is shown in <a href="#fig-ead-session-id" class="auto internal xref">Figure 11</a>.<a href="#section-9-5" class="pilcrow">¶</a></p>
+<p id="section-9-5">The name of the EAD item is Session ID, for which the CDDL grammar is shown in <a href="#fig-ead-session-id" class="auto internal xref">Figure 12</a>.<a href="#section-9-5" class="pilcrow">¶</a></p>
 <span id="name-lake-ead-item-session-id"></span><div id="fig-ead-session-id">
-<figure id="figure-11">
+<figure id="figure-12">
         <div class="lang-cddl sourcecode" id="section-9-6.1">
 <pre>
 ead_session_id = (
@@ -2751,7 +2774,7 @@ ead_session_id = (
 session_id = bstr
 </pre>
 </div>
-<figcaption><a href="#figure-11" class="selfRef">Figure 11</a>:
+<figcaption><a href="#figure-12" class="selfRef">Figure 12</a>:
 <a href="#name-lake-ead-item-session-id" class="selfRef">LAKE EAD Item Session ID.</a>
         </figcaption></figure>
 </div>
@@ -3728,7 +3751,7 @@ This is useful in profiles of ACE where C can re-upload the same access token to
       </h2>
 <p id="appendix-B-1">This section is to be removed before publishing as an RFC.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
 <span id="name-cddl-model-2"></span><div id="fig-cddl-model">
-<figure id="figure-12">
+<figure id="figure-13">
         <div class="lang-cddl sourcecode" id="appendix-B-2.1">
 <pre>
 ; OAuth Parameters CBOR Mappings
@@ -3740,6 +3763,7 @@ rs_cnf2 = 53
 audience2 = 54
 anchor_cnf = 55
 token_series_id_param = 56
+updated_rights = 57
 
 ; CBOR Web Token (CWT) Claims
 token_series_id_claim = 42
@@ -3754,7 +3778,7 @@ ace-error = 2
 ead_session_id_label = 2
 </pre>
 </div>
-<figcaption><a href="#figure-12" class="selfRef">Figure 12</a>:
+<figcaption><a href="#figure-13" class="selfRef">Figure 13</a>:
 <a href="#name-cddl-model-2" class="selfRef">CDDL model</a>
         </figcaption></figure>
 </div>
@@ -3782,10 +3806,13 @@ ead_session_id_label = 2
             <p id="appendix-C.1-1.3.1">Used normative language on the AS creating a token series on the fly.<a href="#appendix-C.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-C.1-1.4">
-            <p id="appendix-C.1-1.4.1">SDC workflow with a group-audience: after a failed upload, the AS continues uploading the access token to any remaining RS (unless the error code "missing_old_token" is received).<a href="#appendix-C.1-1.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.4.1">Added example of AS-to-RS token upload using the "updated_rights" parameter.<a href="#appendix-C.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-C.1-1.5">
-            <p id="appendix-C.1-1.5.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.5.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.5.1">SDC workflow with a group-audience: after a failed upload, the AS continues uploading the access token to any remaining RS (unless the error code "missing_old_token" is received).<a href="#appendix-C.1-1.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-C.1-1.6">
+            <p id="appendix-C.1-1.6.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.6.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>

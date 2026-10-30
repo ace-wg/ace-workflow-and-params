@@ -339,13 +339,13 @@ Table of Contents
 
    In the CBOR diagnostic notation used in this document, constructs of
    the form e'SOME_NAME' are replaced by the value assigned to SOME_NAME
-   in the CDDL model shown in Figure 12 of Appendix B.  For example,
+   in the CDDL model shown in Figure 13 of Appendix B.  For example,
    {e'audience2' : ["rs1", "rs2"]} stands for {54 : ["rs1", "rs2"]}.
 
    Note to RFC Editor: Please delete the paragraph immediately preceding
    this note.  Also, in the CBOR diagnostic notation used in this
    document, please replace the constructs of the form e'SOME_NAME' with
-   the value assigned to SOME_NAME in the CDDL model shown in Figure 12
+   the value assigned to SOME_NAME in the CDDL model shown in Figure 13
    of Appendix B.  Finally, please delete this note.
 
 2.  The Short Distribution Chain (SDC) Workflow
@@ -1774,22 +1774,45 @@ Table of Contents
       media type "application/ace+cbor" and its payload MUST be
       formatted as a CBOR map.  In particular, the CBOR map MUST include
       the "updated_rights" parameter encoding the CBOR simple value true
-      (0xf5), together with the "access_token" parameter specifying the
-      access token.  The CBOR map MAY include additional parameters,
-      according to the specific profile of ACE used.
+      (0xf5) and the "access_token" parameter specifying the access
+      token.
 
    *  If the POST request is encoded in JSON, the request MUST have
       media type "application/ace+json" and its payload MUST be
       formatted as a JSON object.  In particular, the JSON object MUST
-      include the "updated_rights" parameter with value true, together
-      with the "access_token" parameter specifying the access token.
-      The JSON object MAY include additional parameters, according to
-      the specific profile of ACE used.
+      include the "updated_rights" parameter with value true and the
+      "access_token" parameter specifying the access token.
 
    Note that this request deviates from the POST request defined in
    [RFC9200], although such a deviation can already occur in some
    profiles of ACE (e.g., see Section 4.1 of [RFC9203]) or in
    application profiles of [RFC9594].
+
+   Figure 10 shows an example where the AS uploads an access token at
+   the RS on behalf of C, by sending a POST request encoded in CBOR to
+   the authz-info endpoint at the RS.  In this example, the access token
+   dynamically updates the access rights of C by extending an existing
+   token series, hence the request payload also conveys the
+   "updated_rights" parameter encoding the CBOR simple value true
+   (0xf5).
+
+      AS-to-RS token upload request
+
+      Header: POST (Code=0.02)
+      Uri-Host: "rs.example.com"
+      Uri-Path: "authz-info"
+      Content-Format: 19 (application/ace+cbor)
+      Payload:
+      {
+        / access_token / 1 : h'd08343a1...4819', / (full CWT elided
+                                                    for brevity) /
+         e'updated_rights' : true
+      }
+
+       Figure 10: Example of AS-to-RS POST Request to the authz-info
+     endpoint.  The access token dynamically updates the access rights
+       of C by extending an existing token series, hence the request
+       conveys the "updated_rights" parameter with value true (0xf6).
 
    The following focuses on interactions with the authz-info endpoint at
    the RS where messages are encoded in CBOR.  The same as described
@@ -1872,7 +1895,8 @@ Table of Contents
    authorization information specified in T_OLD with that specified in
    T_NEW, and it MUST associate T_NEW with the same secure communication
    association with which T_OLD was associated.  Finally, the RS replies
-   to the AS with a successful response.
+   to the AS with a successful response that has a response code
+   equivalent to the CoAP code 2.01 (Created).
 
    Instead, if the RS is not currently storing such an old access token
    T_OLD, then the RS MUST reject the POST request from the AS and MUST
@@ -2326,7 +2350,7 @@ Table of Contents
          Sections 5.8.3 and 5.9.3 of [RFC9200]).
 
    An example of an error response using the problem-details format is
-   shown in Figure 10.
+   shown in Figure 11.
 
    Header: Bad Request (Code=4.00)
    Content-Format: 257 (application/concise-problem-details+cbor)
@@ -2339,7 +2363,7 @@ Table of Contents
        }
    }
 
-         Figure 10: Example of Error Response with Problem Details.
+         Figure 11: Example of Error Response with Problem Details.
 
    When the ACE framework is used with CBOR for encoding message
    payloads, the following applies:
@@ -2420,7 +2444,7 @@ Table of Contents
    token by reference, through its associated LAKE session identifier.
 
    The name of the EAD item is Session ID, for which the CDDL grammar is
-   shown in Figure 11.
+   shown in Figure 12.
 
    ead_session_id = (
      ead_label : e'ead_session_id_label',
@@ -2428,7 +2452,7 @@ Table of Contents
    )
    session_id = bstr
 
-                    Figure 11: LAKE EAD Item Session ID.
+                    Figure 12: LAKE EAD Item Session ID.
 
    In particular:
 
@@ -3301,6 +3325,7 @@ Appendix B.  CDDL Model
    audience2 = 54
    anchor_cnf = 55
    token_series_id_param = 56
+   updated_rights = 57
 
    ; CBOR Web Token (CWT) Claims
    token_series_id_claim = 42
@@ -3314,7 +3339,7 @@ Appendix B.  CDDL Model
    ; EDHOC External Authorization Data
    ead_session_id_label = 2
 
-                           Figure 12: CDDL model
+                           Figure 13: CDDL model
 
 Appendix C.  Document Updates
 
@@ -3328,6 +3353,9 @@ C.1.  Version -08 to -09
 
    *  Used normative language on the AS creating a token series on the
       fly.
+
+   *  Added example of AS-to-RS token upload using the "updated_rights"
+      parameter.
 
    *  SDC workflow with a group-audience: after a failed upload, the AS
       continues uploading the access token to any remaining RS (unless
