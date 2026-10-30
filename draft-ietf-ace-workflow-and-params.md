@@ -987,11 +987,29 @@ The "updated_rights" parameter MUST be included in the POST request sent by the 
 
 When including the "updated_rights" parameter, the following applies:
 
-* If the POST request is encoded in CBOR, the request MUST have media type "application/ace+cbor" and its payload MUST be formatted as a CBOR map. In particular, the CBOR map MUST include the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5), together with the "access_token" parameter specifying the access token. The CBOR map MAY include additional parameters, according to the specific profile of ACE used.
+* If the POST request is encoded in CBOR, the request MUST have media type "application/ace+cbor" and its payload MUST be formatted as a CBOR map. In particular, the CBOR map MUST include the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5) and the "access_token" parameter specifying the access token.
 
-* If the POST request is encoded in JSON, the request MUST have media type "application/ace+json" and its payload MUST be formatted as a JSON object. In particular, the JSON object MUST include the "updated_rights" parameter with value `true`, together with the "access_token" parameter specifying the access token. The JSON object MAY include additional parameters, according to the specific profile of ACE used.
+* If the POST request is encoded in JSON, the request MUST have media type "application/ace+json" and its payload MUST be formatted as a JSON object. In particular, the JSON object MUST include the "updated_rights" parameter with value `true` and the "access_token" parameter specifying the access token.
 
 Note that this request deviates from the POST request defined in {{RFC9200}}, although such a deviation can already occur in some profiles of ACE (e.g., see {{Section 4.1 of RFC9203}}) or in application profiles of {{RFC9594}}.
+
+{{fig-example-AS-to-RS-token}} shows an example where the AS uploads an access token at the RS on behalf of C, by sending a POST request encoded in CBOR to the authz-info endpoint at the RS. In this example, the access token dynamically updates the access rights of C by extending an existing token series, hence the request payload also conveys the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5).
+
+~~~~~~~~~~~
+   AS-to-RS token upload request
+
+   Header: POST (Code=0.02)
+   Uri-Host: "rs.example.com"
+   Uri-Path: "authz-info"
+   Content-Format: 19 (application/ace+cbor)
+   Payload:
+   {
+     / access_token / 1 : h'd08343a1...4819', / (full CWT elided
+                                                 for brevity) /
+      e'updated_rights' : true
+   }
+~~~~~~~~~~~
+{: #fig-example-AS-to-RS-token title="Example of AS-to-RS POST Request to the authz-info endpoint. The access token dynamically updates the access rights of C by extending an existing token series, hence the request conveys the \"updated_rights\" parameter with value true (0xf6)."}
 
 The following focuses on interactions with the authz-info endpoint at the RS where messages are encoded in CBOR. The same as described below holds in the case that such messages are encoded in JSON and have media type "application/ace+json", with the difference that the "updated_rights" parameter with value `true` can be present within a JSON object conveyed by a POST request to the  authz-info endpoint.
 
@@ -1021,7 +1039,7 @@ In this case, the RS uses lookup information specified within T_NEW to determine
 
 By leveraging such lookup information, the RS checks whether it stores an access token T_OLD that belongs to the same token series of T_NEW, like it would when receiving the request from C and according to the specific profile of ACE used.
 
-If the RS is currently storing such an old access token T_OLD and successfully validates the access token T_NEW, then the new access token T_NEW supersedes T_OLD, i.e., the RS MUST replace the authorization information specified in T_OLD with that specified in T_NEW, and it MUST associate T_NEW with the same secure communication association with which T_OLD was associated. Finally, the RS replies to the AS with a successful response.
+If the RS is currently storing such an old access token T_OLD and successfully validates the access token T_NEW, then the new access token T_NEW supersedes T_OLD, i.e., the RS MUST replace the authorization information specified in T_OLD with that specified in T_NEW, and it MUST associate T_NEW with the same secure communication association with which T_OLD was associated. Finally, the RS replies to the AS with a successful response that has a response code equivalent to the CoAP code 2.01 (Created).
 
 Instead, if the RS is not currently storing such an old access token T_OLD, then the RS MUST reject the POST request from the AS and MUST reply with an error response that has a response code equivalent to the CoAP code 5.00 (Internal Server Error). The error response is analogous to error responses sent by the AS (see {{Section 5.8.3 of RFC9200}}) and MUST include the error code "missing_old_token". The error code and its CBOR abbreviation are registered in {{iana-oauth-extensions-errors}} and {{iana-oauth-error-code-cbor-mappings}}, respectively.
 
@@ -1682,6 +1700,7 @@ rs_cnf2 = 53
 audience2 = 54
 anchor_cnf = 55
 token_series_id_param = 56
+updated_rights = 57
 
 ; CBOR Web Token (CWT) Claims
 token_series_id_claim = 42
@@ -1707,6 +1726,8 @@ ead_session_id_label = 2
 * Fixed use of "token_upload" values in access token response.
 
 * Used normative language on the AS creating a token series on the fly.
+
+* Added example of AS-to-RS token upload using the "updated_rights" parameter.
 
 * SDC workflow with a group-audience: after a failed upload, the AS continues uploading the access token to any remaining RS (unless the error code "missing_old_token" is received).
 
