@@ -1043,7 +1043,7 @@ If the RS is currently storing such an old access token T_OLD and successfully v
 
 Instead, if the RS is not currently storing such an old access token T_OLD, then the RS MUST reject the POST request from the AS and MUST reply with an error response that has a response code equivalent to the CoAP code 5.00 (Internal Server Error). The error response is analogous to error responses sent by the AS (see {{Section 5.8.3 of RFC9200}}) and MUST include the error code "missing_old_token". The error code and its CBOR abbreviation are registered in {{iana-oauth-extensions-errors}} and {{iana-oauth-error-code-cbor-mappings}}, respectively.
 
-The explicit indication provided by the "updated_rights" parameter prevents possible ambiguous situations, where the RS might erroneously believe that the access token conveyed in the POST request is the first one of a new token series (e.g., following the deletion of stored access tokens due to memory limitations). --- Editor's note: elaborate more in the "Security Considerations" section.
+The explicit indication provided by the "updated_rights" parameter prevents possible ambiguous situations, where the RS might erroneously believe that the access token conveyed in the POST request is the first one of a new token series (e.g., following the deletion of stored access tokens due to memory limitations). This is further discussed in {{sec-cons-updated-right}}.
 
 ### Follow-up at the AS {#sec-updated_rights-as}
 
@@ -1343,7 +1343,21 @@ The same security considerations from the ACE framework {{RFC9200}} apply to thi
 
 When using the problem-details format defined in {{RFC9290}} for error responses, the privacy and security considerations from {{Sections 4 and 5 of RFC9290}} also apply.
 
-Editor's note: add more security considerations.
+Furthermore, the following considerations apply.
+
+## Explicit Indication of Update of Access Rights in the SDC Workflow # {#sec-cons-updated-right}
+
+According to some profiles of ACE, C can request a new access token to dynamically update its access rights, while preserving the current secure communication association shared with the RS. In such case, the new access token is intended to supersede the current one stored at the RS, as they both belong to the same token series.
+
+When using the original workflow of ACE defined in {{RFC9200}}, C uploads the new access token at the RS by protecting the message exchange through the current secure communication association shared with the RS and bound to the access token to be superseded. In fact, the use of such secure communication association allows the RS to determine that the upload of the new access token is specifically intended to updating the access rights of C.
+
+When using the SDC workflow defined in this document, the AS can upload the new access token at the RS on behalf of C, i.e., also in the case where the access token is issued to dynamically update the access rights of C. In particular, the message exchange between the AS and the RS is protected by means of a secure communication association shared between the AS and the RS, irrespective of the client for which the access token is issued.
+
+The new access token certainly provides the RS with information for recognizing the stored access token to be superseded, e.g., the "token_series_id" claim defined in {{sec-token_series_id}} or a different information element that the profile used relies on for other reasons. However, depending on the profile used, the new access token might not unambiguously indicate that it is specifically intended to extend an ongoing token series. Therefore, the upload of the new access token from the AS might lead to ambiguities.
+
+For example, the RS might have deleted a stored access token due to memory limitations. Although this effectively terminates the corresponding token series, such event is however impractical for the RS to remember indefinitely. Consequently, if the AS uploads at the RS a new access token belonging to that token series, it is possible that the RS accepts that access token and erroneously believes it to be the first one in a new token series, which contradicts the correct information available at the AS about the token series.
+
+The occurrence of such contradiction is prevented by means of the "updated_rights" parameter (see {{sec-updated_rights}}), which the AS includes in a POST request to the authz-info endpoint at the RS only when uploading an access token for dynamically updating the access rights of C.
 
 # IANA Considerations
 
@@ -1730,6 +1744,8 @@ ead_session_id_label = 2
 * Added example of AS-to-RS token upload using the "updated_rights" parameter.
 
 * SDC workflow with a group-audience: after a failed upload, the AS continues uploading the access token to any remaining RS (unless the error code "missing_old_token" is received).
+
+* Updated security considerations.
 
 * Editorial fixes and improvements.
 
