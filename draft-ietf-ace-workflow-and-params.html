@@ -1270,6 +1270,11 @@ svg {
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
             <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-explicit-indication-of-upda" class="internal xref">Explicit Indication of Update of Access Rights in the SDC Workflow</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
             <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
@@ -2449,7 +2454,7 @@ When JWTs are used as access tokens, such claim can be the "token_series_id" cla
 <p id="section-3.7.1-10">By leveraging such lookup information, the RS checks whether it stores an access token T_OLD that belongs to the same token series of T_NEW, like it would when receiving the request from C and according to the specific profile of ACE used.<a href="#section-3.7.1-10" class="pilcrow">¶</a></p>
 <p id="section-3.7.1-11">If the RS is currently storing such an old access token T_OLD and successfully validates the access token T_NEW, then the new access token T_NEW supersedes T_OLD, i.e., the RS <span class="bcp14">MUST</span> replace the authorization information specified in T_OLD with that specified in T_NEW, and it <span class="bcp14">MUST</span> associate T_NEW with the same secure communication association with which T_OLD was associated. Finally, the RS replies to the AS with a successful response that has a response code equivalent to the CoAP code 2.01 (Created).<a href="#section-3.7.1-11" class="pilcrow">¶</a></p>
 <p id="section-3.7.1-12">Instead, if the RS is not currently storing such an old access token T_OLD, then the RS <span class="bcp14">MUST</span> reject the POST request from the AS and <span class="bcp14">MUST</span> reply with an error response that has a response code equivalent to the CoAP code 5.00 (Internal Server Error). The error response is analogous to error responses sent by the AS (see <span><a href="https://rfc-editor.org/rfc/rfc9200#section-5.8.3" class="relref">Section 5.8.3</a> of [<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>) and <span class="bcp14">MUST</span> include the error code "missing_old_token". The error code and its CBOR abbreviation are registered in <a href="#iana-oauth-extensions-errors" class="auto internal xref">Section 11.5</a> and <a href="#iana-oauth-error-code-cbor-mappings" class="auto internal xref">Section 11.6</a>, respectively.<a href="#section-3.7.1-12" class="pilcrow">¶</a></p>
-<p id="section-3.7.1-13">The explicit indication provided by the "updated_rights" parameter prevents possible ambiguous situations, where the RS might erroneously believe that the access token conveyed in the POST request is the first one of a new token series (e.g., following the deletion of stored access tokens due to memory limitations). --- Editor's note: elaborate more in the "Security Considerations" section.<a href="#section-3.7.1-13" class="pilcrow">¶</a></p>
+<p id="section-3.7.1-13">The explicit indication provided by the "updated_rights" parameter prevents possible ambiguous situations, where the RS might erroneously believe that the access token conveyed in the POST request is the first one of a new token series (e.g., following the deletion of stored access tokens due to memory limitations). This is further discussed in <a href="#sec-cons-updated-right" class="auto internal xref">Section 10.1</a>.<a href="#section-3.7.1-13" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-updated_rights-as">
@@ -2830,7 +2835,20 @@ Even in such a case where C can specify the access token by value, it is possibl
       </h2>
 <p id="section-10-1">The same security considerations from the ACE framework <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span> apply to this document, together with those from the specific profile of ACE used.<a href="#section-10-1" class="pilcrow">¶</a></p>
 <p id="section-10-2">When using the problem-details format defined in <span>[<a href="#RFC9290" class="cite xref">RFC9290</a>]</span> for error responses, the privacy and security considerations from Sections <a href="https://rfc-editor.org/rfc/rfc9290#section-4" class="relref">4</a> and <a href="https://rfc-editor.org/rfc/rfc9290#section-5" class="relref">5</a> of <span>[<a href="#RFC9290" class="cite xref">RFC9290</a>]</span> also apply.<a href="#section-10-2" class="pilcrow">¶</a></p>
-<p id="section-10-3">Editor's note: add more security considerations.<a href="#section-10-3" class="pilcrow">¶</a></p>
+<p id="section-10-3">Furthermore, the following considerations apply.<a href="#section-10-3" class="pilcrow">¶</a></p>
+<div id="sec-cons-updated-right">
+<section id="section-10.1">
+        <h3 id="name-explicit-indication-of-upda">
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-explicit-indication-of-upda" class="section-name selfRef">Explicit Indication of Update of Access Rights in the SDC Workflow</a>
+        </h3>
+<p id="section-10.1-1">According to some profiles of ACE, C can request a new access token to dynamically update its access rights, while preserving the current secure communication association shared with the RS. In such case, the new access token is intended to supersede the current one stored at the RS, as they both belong to the same token series.<a href="#section-10.1-1" class="pilcrow">¶</a></p>
+<p id="section-10.1-2">When using the original workflow of ACE defined in <span>[<a href="#RFC9200" class="cite xref">RFC9200</a>]</span>, C uploads the new access token at the RS by protecting the message exchange through the current secure communication association shared with the RS and bound to the access token to be superseded. In fact, the use of such secure communication association allows the RS to determine that the upload of the new access token is specifically intended to updating the access rights of C.<a href="#section-10.1-2" class="pilcrow">¶</a></p>
+<p id="section-10.1-3">When using the SDC workflow defined in this document, the AS can upload the new access token at the RS on behalf of C, i.e., also in the case where the access token is issued to dynamically update the access rights of C. In particular, the message exchange between the AS and the RS is protected by means of a secure communication association shared between the AS and the RS, irrespective of the client for which the access token is issued.<a href="#section-10.1-3" class="pilcrow">¶</a></p>
+<p id="section-10.1-4">The new access token certainly provides the RS with information for recognizing the stored access token to be superseded, e.g., the "token_series_id" claim defined in <a href="#sec-token_series_id" class="auto internal xref">Section 3.6</a> or a different information element that the profile used relies on for other reasons. However, depending on the profile used, the new access token might not unambiguously indicate that it is specifically intended to extend an ongoing token series. Therefore, the upload of the new access token from the AS might lead to ambiguities.<a href="#section-10.1-4" class="pilcrow">¶</a></p>
+<p id="section-10.1-5">For example, the RS might have deleted a stored access token due to memory limitations. Although this effectively terminates the corresponding token series, such event is however impractical for the RS to remember indefinitely. Consequently, if the AS uploads at the RS a new access token belonging to that token series, it is possible that the RS accepts that access token and erroneously believes it to be the first one in a new token series, which contradicts the correct information available at the AS about the token series.<a href="#section-10.1-5" class="pilcrow">¶</a></p>
+<p id="section-10.1-6">The occurrence of such contradiction is prevented by means of the "updated_rights" parameter (see <a href="#sec-updated_rights" class="auto internal xref">Section 3.7</a>), which the AS includes in a POST request to the authz-info endpoint at the RS only when uploading an access token for dynamically updating the access rights of C.<a href="#section-10.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="iana-considerations">
@@ -3812,7 +3830,10 @@ ead_session_id_label = 2
             <p id="appendix-C.1-1.5.1">SDC workflow with a group-audience: after a failed upload, the AS continues uploading the access token to any remaining RS (unless the error code "missing_old_token" is received).<a href="#appendix-C.1-1.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-C.1-1.6">
-            <p id="appendix-C.1-1.6.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.6.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.6.1">Updated security considerations.<a href="#appendix-C.1-1.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-C.1-1.7">
+            <p id="appendix-C.1-1.7.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.7.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
