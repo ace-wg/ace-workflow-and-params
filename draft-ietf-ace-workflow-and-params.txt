@@ -667,11 +667,10 @@ Table of Contents
    When the access token targets a group-audience (see Section 6.9 of
    [RFC9200]), the same as above holds, with the following differences:
 
-   *  In the case that CASE_1 or CASE_2 applies, the access token
-      response includes the "token_upload" parameter encoding the value
-      0 and thus indicates that the token upload was successful, if and
-      only if the token upload was successful at each RS in the group-
-      audience.
+   *  If CASE_1 or CASE_2 applies, the access token response includes
+      the "token_upload" parameter encoding the value 0 and thus
+      indicates that the token upload was successful, if and only if the
+      token upload was successful at each RS in the group-audience.
 
    *  In the case that the token upload fails at an RS in the group-
       audience, the AS MUST continue uploading the access token at the
