@@ -1029,11 +1029,11 @@ The explicit indication provided by the "updated_rights" parameter prevents poss
 
 After sending to the authz-info endpoint a protected POST request that conveys the access token T_NEW and the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5), the AS proceeds as follows when receiving a response from the RS.
 
-* If the AS receives a successful response, the AS replies to C with an access token response, consistent with the issue of the access token T_NEW. The access token response includes the "token_upload" parameter encoding the value 0 (see {{sec-token_upload-resp}}). Also, the access token response includes the "access_token" parameter, or the "token_hash" parameter, or none of those, depending on the value of the "token_upload" parameter in the corresponding access token request.
+* If the AS receives a successful response, the AS MUST reply to C with an access token response, consistent with the issue of the access token T_NEW. The access token response includes the "token_upload" parameter encoding the value 0 (see {{sec-token_upload-resp}}). Also, the access token response includes the "access_token" parameter, or the "token_hash" parameter, or none of those, depending on the value of the "token_upload" parameter in the corresponding access token request.
 
-* If the AS receives an error response that includes the error code "missing_old_token" (see {{sec-updated_rights-rs}}), the AS proceeds as defined in {{sec-new-series-on-the-fly}}.
+* If the AS receives an error response that includes the error code "missing_old_token" (see {{sec-updated_rights-rs}}), the AS MUST proceed as defined in {{sec-new-series-on-the-fly}}.
 
-* If the AS receives any other error response, the AS replies to C with an access token response, consistent with the issue of the access token T_NEW. The access token response includes the "access_token" parameter specifying the access token T_NEW and the "token_upload" parameter encoding the value 1 (see {{sec-token_upload-resp}}).
+* If the AS receives any other error response, the AS MUST reply to C with an access token response, consistent with the issue of the access token T_NEW. The access token response includes the "access_token" parameter specifying the access token T_NEW and the "token_upload" parameter encoding the value 1 (see {{sec-token_upload-resp}}).
 
 The AS MUST ignore the error code "missing_old_token", if the POST request did not convey the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5).
 
@@ -1049,7 +1049,7 @@ Therefore, if the AS simply completes the issue of T_NEW and provides it to C, t
 
 Instead, under the specific circumstance in question, the procedure defined below avoids that C and the RS perform such an inefficient and unsuccessful exchange. In the interest of performing this procedure, an AS that supports the SDC workflow MUST store the access token request that results in issuing the first access token of a token series, until the token series ends.
 
-After having uploaded T_NEW to the RS and received an error response that includes the error code "missing_old_token", the AS creates a new token series "on the fly", as defined below.
+After having uploaded T_NEW to the RS and received an error response that includes the error code "missing_old_token", the AS MUST create a new token series "on the fly", as defined below.
 
 The rest of this section uses the following notation:
 
@@ -1703,6 +1703,8 @@ ead_session_id_label = 2
 * Renamed EDHOC to LAKE as appropriate.
 
 * Fixed use of "token_upload" values in access token response.
+
+* Used normative language on the AS creating a token series on the fly.
 
 * Editorial fixes and improvements.
 
