@@ -1046,7 +1046,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca &amp; Selander</td>
-<td class="center">Expires 2 May 2027</td>
+<td class="center">Expires 3 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1062,12 @@ svg {
 <a href="https://www.rfc-editor.org/rfc/rfc9200" class="eref">9200</a>, <a href="https://www.rfc-editor.org/rfc/rfc9201" class="eref">9201</a>, <a href="https://www.rfc-editor.org/rfc/rfc9202" class="eref">9202</a>, <a href="https://www.rfc-editor.org/rfc/rfc9203" class="eref">9203</a>, <a href="https://www.rfc-editor.org/rfc/rfc9431" class="eref">9431</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-29" class="published">29 October 2026</time>
+<time datetime="2026-10-30" class="published">30 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-05-02">2 May 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-03">3 May 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1120,7 +1120,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 2 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2436,13 +2436,13 @@ When JWTs are used as access tokens, such claim can be the "token_series_id" cla
 <p id="section-3.7.2-1">After sending to the authz-info endpoint a protected POST request that conveys the access token T_NEW and the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5), the AS proceeds as follows when receiving a response from the RS.<a href="#section-3.7.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.7.2-2.1">
-              <p id="section-3.7.2-2.1.1">If the AS receives a successful response, the AS replies to C with an access token response, consistent with the issue of the access token T_NEW. The access token response includes the "token_upload" parameter encoding the value 0 (see <a href="#sec-token_upload-resp" class="auto internal xref">Section 3.1.2</a>). Also, the access token response includes the "access_token" parameter, or the "token_hash" parameter, or none of those, depending on the value of the "token_upload" parameter in the corresponding access token request.<a href="#section-3.7.2-2.1.1" class="pilcrow">¶</a></p>
+              <p id="section-3.7.2-2.1.1">If the AS receives a successful response, the AS <span class="bcp14">MUST</span> reply to C with an access token response, consistent with the issue of the access token T_NEW. The access token response includes the "token_upload" parameter encoding the value 0 (see <a href="#sec-token_upload-resp" class="auto internal xref">Section 3.1.2</a>). Also, the access token response includes the "access_token" parameter, or the "token_hash" parameter, or none of those, depending on the value of the "token_upload" parameter in the corresponding access token request.<a href="#section-3.7.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.7.2-2.2">
-              <p id="section-3.7.2-2.2.1">If the AS receives an error response that includes the error code "missing_old_token" (see <a href="#sec-updated_rights-rs" class="auto internal xref">Section 3.7.1</a>), the AS proceeds as defined in <a href="#sec-new-series-on-the-fly" class="auto internal xref">Section 3.7.2.1</a>.<a href="#section-3.7.2-2.2.1" class="pilcrow">¶</a></p>
+              <p id="section-3.7.2-2.2.1">If the AS receives an error response that includes the error code "missing_old_token" (see <a href="#sec-updated_rights-rs" class="auto internal xref">Section 3.7.1</a>), the AS <span class="bcp14">MUST</span> proceed as defined in <a href="#sec-new-series-on-the-fly" class="auto internal xref">Section 3.7.2.1</a>.<a href="#section-3.7.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
             <li class="normal" id="section-3.7.2-2.3">
-              <p id="section-3.7.2-2.3.1">If the AS receives any other error response, the AS replies to C with an access token response, consistent with the issue of the access token T_NEW. The access token response includes the "access_token" parameter specifying the access token T_NEW and the "token_upload" parameter encoding the value 1 (see <a href="#sec-token_upload-resp" class="auto internal xref">Section 3.1.2</a>).<a href="#section-3.7.2-2.3.1" class="pilcrow">¶</a></p>
+              <p id="section-3.7.2-2.3.1">If the AS receives any other error response, the AS <span class="bcp14">MUST</span> reply to C with an access token response, consistent with the issue of the access token T_NEW. The access token response includes the "access_token" parameter specifying the access token T_NEW and the "token_upload" parameter encoding the value 1 (see <a href="#sec-token_upload-resp" class="auto internal xref">Section 3.1.2</a>).<a href="#section-3.7.2-2.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 <p id="section-3.7.2-3">The AS <span class="bcp14">MUST</span> ignore the error code "missing_old_token", if the POST request did not convey the "updated_rights" parameter encoding the CBOR simple value <code>true</code> (0xf5).<a href="#section-3.7.2-3" class="pilcrow">¶</a></p>
@@ -2456,7 +2456,7 @@ When JWTs are used as access tokens, such claim can be the "token_series_id" cla
 <p id="section-3.7.2.1-2">Profiles of ACE typically prescribe that, in such case, the RS does not have anymore the secure communication association that was previously shared with C and bound to T_OLD.<a href="#section-3.7.2.1-2" class="pilcrow">¶</a></p>
 <p id="section-3.7.2.1-3">Therefore, if the AS simply completes the issue of T_NEW and provides it to C, this would result in C sending a protected POST request including T_NEW to the authz-info endpoint at the RS, according to the original workflow. However, since the RS does not store T_OLD and does not have the corresponding secure communication association used by C to protect the POST request, the RS would reply to C with an unprotected error response. After that, C would finally send a new access token request to the token endpoint at the AS, asking for a new access token of a new token series.<a href="#section-3.7.2.1-3" class="pilcrow">¶</a></p>
 <p id="section-3.7.2.1-4">Instead, under the specific circumstance in question, the procedure defined below avoids that C and the RS perform such an inefficient and unsuccessful exchange. In the interest of performing this procedure, an AS that supports the SDC workflow <span class="bcp14">MUST</span> store the access token request that results in issuing the first access token of a token series, until the token series ends.<a href="#section-3.7.2.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.7.2.1-5">After having uploaded T_NEW to the RS and received an error response that includes the error code "missing_old_token", the AS creates a new token series "on the fly", as defined below.<a href="#section-3.7.2.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.7.2.1-5">After having uploaded T_NEW to the RS and received an error response that includes the error code "missing_old_token", the AS <span class="bcp14">MUST</span> create a new token series "on the fly", as defined below.<a href="#section-3.7.2.1-5" class="pilcrow">¶</a></p>
 <p id="section-3.7.2.1-6">The rest of this section uses the following notation:<a href="#section-3.7.2.1-6" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-3.7.2.1-7.1">
@@ -3778,7 +3778,10 @@ ead_session_id_label = 2
             <p id="appendix-C.1-1.2.1">Fixed use of "token_upload" values in access token response.<a href="#appendix-C.1-1.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-C.1-1.3">
-            <p id="appendix-C.1-1.3.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.3.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.3.1">Used normative language on the AS creating a token series on the fly.<a href="#appendix-C.1-1.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-C.1-1.4">
+            <p id="appendix-C.1-1.4.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>

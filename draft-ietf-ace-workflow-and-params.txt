@@ -6,8 +6,8 @@ ACE Working Group                                              M. Tiloca
 Internet-Draft                                                   RISE AB
 Updates: 9200, 9201, 9202, 9203, 9431 (if                    G. Selander
          approved)                                           Ericsson AB
-Intended status: Standards Track                         29 October 2026
-Expires: 2 May 2027
+Intended status: Standards Track                         30 October 2026
+Expires: 3 May 2027
 
 
 Short Distribution Chain (SDC) Workflow and New OAuth Parameters for the
@@ -71,7 +71,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 2 May 2027.
+   This Internet-Draft will expire on 3 May 2027.
 
 Copyright Notice
 
@@ -1879,9 +1879,9 @@ Table of Contents
    parameter encoding the CBOR simple value true (0xf5), the AS proceeds
    as follows when receiving a response from the RS.
 
-   *  If the AS receives a successful response, the AS replies to C with
-      an access token response, consistent with the issue of the access
-      token T_NEW.  The access token response includes the
+   *  If the AS receives a successful response, the AS MUST reply to C
+      with an access token response, consistent with the issue of the
+      access token T_NEW.  The access token response includes the
       "token_upload" parameter encoding the value 0 (see Section 3.1.2).
       Also, the access token response includes the "access_token"
       parameter, or the "token_hash" parameter, or none of those,
@@ -1889,11 +1889,11 @@ Table of Contents
       corresponding access token request.
 
    *  If the AS receives an error response that includes the error code
-      "missing_old_token" (see Section 3.7.1), the AS proceeds as
+      "missing_old_token" (see Section 3.7.1), the AS MUST proceed as
       defined in Section 3.7.2.1.
 
-   *  If the AS receives any other error response, the AS replies to C
-      with an access token response, consistent with the issue of the
+   *  If the AS receives any other error response, the AS MUST reply to
+      C with an access token response, consistent with the issue of the
       access token T_NEW.  The access token response includes the
       "access_token" parameter specifying the access token T_NEW and the
       "token_upload" parameter encoding the value 1 (see Section 3.1.2).
@@ -1935,8 +1935,8 @@ Table of Contents
    token series, until the token series ends.
 
    After having uploaded T_NEW to the RS and received an error response
-   that includes the error code "missing_old_token", the AS creates a
-   new token series "on the fly", as defined below.
+   that includes the error code "missing_old_token", the AS MUST create
+   a new token series "on the fly", as defined below.
 
    The rest of this section uses the following notation:
 
@@ -3303,6 +3303,9 @@ C.1.  Version -08 to -09
    *  Renamed EDHOC to LAKE as appropriate.
 
    *  Fixed use of "token_upload" values in access token response.
+
+   *  Used normative language on the AS creating a token series on the
+      fly.
 
    *  Editorial fixes and improvements.
 
