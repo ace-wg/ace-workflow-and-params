@@ -371,7 +371,7 @@ The following considers three possible cases, with reference to the issued acces
 
 * CASE_3 - The issued access token is the first one of a new token series, although the access token request asked to dynamically update the access rights of C, i.e., to issue a new access token of an existing token series.
 
-  The new token series to which the issued access token belongs is created by the AS "on the fly", when receiving a specific error code from the RS after uploading an access token intended for updating the access rights of C, as indicated in the access token request.
+  The new token series to which the issued access token belongs is created by the AS "on the fly", when receiving the specific error code "missing_old_token" from the RS (see {{sec-updated_rights-rs}} and {{sec-updated_rights-as}}), after uploading an access token intended for updating the access rights of C as indicated in the access token request.
 
   In this case, the AS does not upload the issued access token at the RS, and it provides the access token to C in the access token response. {{sec-new-series-on-the-fly}} further describes this case.
 
