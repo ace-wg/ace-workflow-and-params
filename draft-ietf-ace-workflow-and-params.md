@@ -385,7 +385,7 @@ When the "token_upload" parameter is included in the access token response, it c
 
 When the access token targets a group-audience (see {{Section 6.9 of RFC9200}}), the same as above holds, with the following differences:
 
-* In the case that CASE_1 or CASE_2 applies, the access token response includes the "token_upload" parameter encoding the value 0 and thus indicates that the token upload was successful, if and only if the token upload was successful at each RS in the group-audience.
+* If CASE_1 or CASE_2 applies, the access token response includes the "token_upload" parameter encoding the value 0 and thus indicates that the token upload was successful, if and only if the token upload was successful at each RS in the group-audience.
 
 * In the case that the token upload fails at an RS in the group-audience, the AS MUST continue uploading the access token at the remaining RSs in the group-audience, with the following exception: if the access token is uploaded together with the "updated_rights" parameter (see {{sec-updated_rights}}) and the token upload fails with the AS receiving an error response that includes the error code "missing_old_token" (see {{sec-updated_rights-rs}} and {{sec-updated_rights-as}}), then the AS MUST NOT upload the access token to any remaining RS in the group-audience and it creates a new token series "on the fly" (see {{sec-new-series-on-the-fly}}), i.e., CASE_3 applies.
 
