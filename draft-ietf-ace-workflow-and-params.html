@@ -1665,7 +1665,7 @@ Note that it is not useful to specify the value 0 if C wishes to use the method 
             <li class="normal" id="section-3.1.2-4.3">
               <p id="section-3.1.2-4.3.1">CASE_3 - The issued access token is the first one of a new token series, although the access token request asked to dynamically update the access rights of C, i.e., to issue a new access token of an existing token series.<a href="#section-3.1.2-4.3.1" class="pilcrow">¶</a></p>
 <p id="section-3.1.2-4.3.2">
-The new token series to which the issued access token belongs is created by the AS "on the fly", when receiving a specific error code from the RS after uploading an access token intended for updating the access rights of C, as indicated in the access token request.<a href="#section-3.1.2-4.3.2" class="pilcrow">¶</a></p>
+The new token series to which the issued access token belongs is created by the AS "on the fly", when receiving the specific error code "missing_old_token" from the RS (see <a href="#sec-updated_rights-rs" class="auto internal xref">Section 3.7.1</a> and <a href="#sec-updated_rights-as" class="auto internal xref">Section 3.7.2</a>), after uploading an access token intended for updating the access rights of C as indicated in the access token request.<a href="#section-3.1.2-4.3.2" class="pilcrow">¶</a></p>
 <p id="section-3.1.2-4.3.3">
 In this case, the AS does not upload the issued access token at the RS, and it provides the access token to C in the access token response. <a href="#sec-new-series-on-the-fly" class="auto internal xref">Section 3.7.2.1</a> further describes this case.<a href="#section-3.1.2-4.3.3" class="pilcrow">¶</a></p>
 </li>

@@ -638,9 +638,10 @@ Table of Contents
       of an existing token series.
 
       The new token series to which the issued access token belongs is
-      created by the AS "on the fly", when receiving a specific error
-      code from the RS after uploading an access token intended for
-      updating the access rights of C, as indicated in the access token
+      created by the AS "on the fly", when receiving the specific error
+      code "missing_old_token" from the RS (see Section 3.7.1 and
+      Section 3.7.2), after uploading an access token intended for
+      updating the access rights of C as indicated in the access token
       request.
 
       In this case, the AS does not upload the issued access token at
