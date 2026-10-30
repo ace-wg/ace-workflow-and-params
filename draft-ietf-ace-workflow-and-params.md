@@ -385,9 +385,9 @@ When the "token_upload" parameter is included in the access token response, it c
 
 When the access token targets a group-audience (see {{Section 6.9 of RFC9200}}), the same as above holds, with the following differences:
 
-* The AS stops uploading an access token to any remaining RS in the group-audience, as soon as the token upload fails at one of those RSs. Consequently,
+* If CASE_1 or CASE_2 applies, the access token response includes the "token_upload" parameter encoding the value 0 and thus indicates that the token upload was successful, if and only if the token upload was successful at each RS in the group-audience.
 
-* The access token response indicates that the upload of an access token was successful if and only if the token upload was successful at each RS in the group-audience.
+* In the case that the token upload fails at an RS in the group-audience, the AS MUST continue uploading the access token at the remaining RSs in the group-audience, with the following exception: if the access token is uploaded together with the "updated_rights" parameter (see {{sec-updated_rights}}) and the token upload fails with the AS receiving an error response that includes the error code "missing_old_token" (see {{sec-updated_rights-rs}} and {{sec-updated_rights-as}}), then the AS MUST NOT upload the access token to any remaining RS in the group-audience and it creates a new token series "on the fly" (see {{sec-new-series-on-the-fly}}), i.e., CASE_3 applies.
 
 In the case that the "token_upload" parameter encodes the value 1 or 2, the access token response MUST include the "access_token" parameter specifying the issued access token.
 
@@ -410,6 +410,8 @@ When C receives an access token response that includes the "token_upload" parame
 * The issued access token is the first one of a new token series.
 
 Consequently, C takes the next steps with the RS according to the profile of ACE used, e.g., C establishes a secure communication association with the RS and bound to the issued access token of the new token series.
+
+When the access token targets a group-audience, the RS that does not store an old access token is the RS that replied to the AS with an error response including the error code "missing_old_token", which results in the AS creating a new token series "on the fly" (see above). In such case, C takes the next steps with all the RSs in the group-audience according to the profile of ACE used, e.g., C establishes a secure communication association with each RS in the group-audience and bound to the issued access token of the new token series.
 
 ### Examples
 
@@ -1037,7 +1039,7 @@ After sending to the authz-info endpoint a protected POST request that conveys t
 
 The AS MUST ignore the error code "missing_old_token", if the POST request did not convey the "updated_rights" parameter encoding the CBOR simple value `true` (0xf5).
 
-In the case that the access token T_NEW targets a group-audience (see {{Section 6.9 of RFC9200}}), what is specified in {{sec-token_upload-resp}} about the token upload at the RSs in the group-audience applies to T_NEW.
+In the case that the access token T_NEW targets a group-audience (see {{Section 6.9 of RFC9200}}), what is specified in {{sec-token_upload-resp}} about the token upload at the RSs in the group-audience applies to T_NEW. In particular, the AS replies to C with an access token response after the token upload of T_NEW terminates as per what is defined in {{sec-token_upload-resp}}.
 
 #### New Token Series Created on the Fly # {#sec-new-series-on-the-fly}
 
@@ -1705,6 +1707,8 @@ ead_session_id_label = 2
 * Fixed use of "token_upload" values in access token response.
 
 * Used normative language on the AS creating a token series on the fly.
+
+* SDC workflow with a group-audience: after a failed upload, the AS continues uploading the access token to any remaining RS (unless the error code "missing_old_token" is received).
 
 * Editorial fixes and improvements.
 
