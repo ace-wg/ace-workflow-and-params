@@ -667,13 +667,21 @@ Table of Contents
    When the access token targets a group-audience (see Section 6.9 of
    [RFC9200]), the same as above holds, with the following differences:
 
-   *  The AS stops uploading an access token to any remaining RS in the
-      group-audience, as soon as the token upload fails at one of those
-      RSs.  Consequently,
+   *  If CASE_1 or CASE_2 applies, the access token response includes
+      the "token_upload" parameter encoding the value 0 and thus
+      indicates that the token upload was successful, if and only if the
+      token upload was successful at each RS in the group-audience.
 
-   *  The access token response indicates that the upload of an access
-      token was successful if and only if the token upload was
-      successful at each RS in the group-audience.
+   *  In the case that the token upload fails at an RS in the group-
+      audience, the AS MUST continue uploading the access token at the
+      remaining RSs in the group-audience, with the following exception:
+      if the access token is uploaded together with the "updated_rights"
+      parameter (see Section 3.7) and the token upload fails with the AS
+      receiving an error response that includes the error code
+      "missing_old_token" (see Section 3.7.1 and Section 3.7.2), then
+      the AS MUST NOT upload the access token to any remaining RS in the
+      group-audience and it creates a new token series "on the fly" (see
+      Section 3.7.2.1), i.e., CASE_3 applies.
 
    In the case that the "token_upload" parameter encodes the value 1 or
    2, the access token response MUST include the "access_token"
@@ -722,6 +730,16 @@ Table of Contents
    profile of ACE used, e.g., C establishes a secure communication
    association with the RS and bound to the issued access token of the
    new token series.
+
+   When the access token targets a group-audience, the RS that does not
+   store an old access token is the RS that replied to the AS with an
+   error response including the error code "missing_old_token", which
+   results in the AS creating a new token series "on the fly" (see
+   above).  In such case, C takes the next steps with all the RSs in the
+   group-audience according to the profile of ACE used, e.g., C
+   establishes a secure communication association with each RS in the
+   group-audience and bound to the issued access token of the new token
+   series.
 
 3.1.3.  Examples
 
@@ -1906,6 +1924,9 @@ Table of Contents
    In the case that the access token T_NEW targets a group-audience (see
    Section 6.9 of [RFC9200]), what is specified in Section 3.1.2 about
    the token upload at the RSs in the group-audience applies to T_NEW.
+   In particular, the AS replies to C with an access token response
+   after the token upload of T_NEW terminates as per what is defined in
+   Section 3.1.2.
 
 3.7.2.1.  New Token Series Created on the Fly
 
@@ -3307,6 +3328,10 @@ C.1.  Version -08 to -09
 
    *  Used normative language on the AS creating a token series on the
       fly.
+
+   *  SDC workflow with a group-audience: after a failed upload, the AS
+      continues uploading the access token to any remaining RS (unless
+      the error code "missing_old_token" is received).
 
    *  Editorial fixes and improvements.
 
