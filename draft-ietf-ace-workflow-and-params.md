@@ -1339,6 +1339,74 @@ Example: assuming that ead\_label is 2 and that the value of the "session\_id" f
 
 Note to RFC Editor: Please replace the value of the ead\_label with the value registered for Session ID in {{iana-edhoc-ead}}, then delete this note.
 
+# Operational Considerations
+
+This section compiles the operational considerations that hold for this document.
+
+## Logging
+
+When performing its normal operations, an AS is expected to produce timestamped logs about the following:
+
+* The reception and processing outcome of an access token request, e.g., in terms of its failure/success and issuance of an access token.
+
+* The outcome of uploading an issued access token at one or multiple RSs on behalf of the requesting client, as per the SDC workflow.
+
+* Events pertaining the lifecycle of issued access tokens (e.g., their issuance, expiration, and potential revocation) and the lifecycle of the token series to which those access tokens belong to.
+
+* The registration and deregistration of clients and RSs at the AS.
+
+Analogously, when performing its normal operations, an RS is expected to produce timestamped logs about the following:
+
+* The reception and processing outcome of an access token, e.g., in terms of its failure/success.
+
+* Events pertaining the lifecycle of processed access tokens (e.g., their rejection, acceptance, storing, and deletion).
+
+* Failed accesses to protected resources due to missing/insufficient access rights for the requesting client per the stored access tokens.
+
+Requests at the AS (e.g., from a client requesting an access token) or at the RS (e.g., for uploading an access token or for accessing a protected resource) can be effectively characterized by the transport-specific information of the request, together with the secure communication association shared with the requester as applicable.
+
+Although log entries are produced by the AS/RS, the storage, management, controlled sharing, and disposal of logs could be entrusted to a designated storage point that can be the AS/RS itself or instead a separate trusted entity.
+
+Besides what is compiled above, the AS/RS could produce additional information to log. Further details about what the AS/RS logs, with what granularity, and based on what triggering events and conditions are application-specific and left to operators to define.
+
+The AS/RS MUST NOT log any secret or confidential information pertaining to its operations. For example, this includes cryptographic secrets pertaining to (the establishment of) secure communication associations and keying material derived thereof, including own private keys associated with authentication credentials used for establishing secure communication associations.
+
+It is up to the application to specify for how long a log entry is retained from the time of its creation and until its deletion. Different retention policies could be enforced, for example, depending on the successful/failed issuance (processing) of an access token at the AS (RS), or on the secure communication association shared with the specific requester. For a given set of log entries that are grouped together according to certain criteria, the oldest log entries are expected to be those deleted first.
+
+It is out of the scope of this document what specific semantics and data model are used by the AS/RS for producing and processing the logs. Specific semantics and data models can be defined by applications and future specifications.
+
+It is expected that the logs produced are made available for secure access by authorized external management applications and operators.
+
+In particular, logged information could be retrieved in the following ways.
+
+* By accessing logs at the designated storage point through polling. This can occur in an occasional, regular, or event-driven way.
+
+* Through notifications sent by the designated storage point according to an operator-defined frequency.
+
+* Through notifications asynchronously sent by the designated storage point, throttling them in order to prevent congestion and duplication and to not create attack vectors.
+
+From the perspective of an individual management application or network operator, knowledge gained from the logged information can be useful for managing the installation, enforcement, revision, and retirement of access policies at the AS, as well as for identifying clients or RSs for which troubleshooting, upgrade, re-enrollment, eviction, or decommissioning should be considered.
+
+Some of the logged information can be privacy-sensitive. This especially holds for the metadata about clients and RSs, i.e., their addressing information and, when applicable, (identifiers of) their authentication credentials that are used to authenticate with the other parties when establishing and using a secure communication association. If external management applications and operators obtain such metadata, they become able to track a given client or RS, as to its interactions with one or multiple other clients, RSs, and/or ASes.
+
+Therefore, the logged information that is effectively provided to external management applications and operators SHOULD be redacted by the designated storage point, by omitting any privacy-sensitive information element that could enable or facilitate the impairment of clients' and RSs' privacy, e.g., by tracking those as they interact with other parties. Exceptions could apply, e.g., if the designated storage point can verify that the management application or operator in question is specifically authorized to obtain such privacy-sensitive information and appropriately entitled to obtain it according to enforced privacy policies.
+
+## Management and Distribution of Keying Material
+
+The approach used to manage and distribute keying material depend on the specific profile of ACE used, for example {{RFC9202}}{{RFC9203}}{{I-D.ietf-ace-edhoc-oscore-profile}}. In turn, the approach used depends on the specific security protocol used between clients, RSs, and ASes, which is also specified by the profile of ACE used.
+
+{{Section C of RFC9200}} compiles the list of requirements on profiles of ACE, two of which are amended in {{sec-updated-requirements}} of the present document.
+
+Irrespective of the specific profile used, clients, RSs, and ASes that communicate with one another have to use a secure communication association and be mutually authenticated (see {{Section 5 of RFC9200}}).
+
+## Access Control
+
+The enforcement of access control at RSs is the main goal of the ACE framework.
+
+The enforcement of access control at the AS relies on the authenticated interaction of a client/RS at the AS. For example, this applies to a client sending an access token request to the token endpoint at the AS (see {{Section 5.8.1 of RFC9200}}), or to an RS sending a token introspection request to the introspect endpoint at the AS to perform token introspection (see {{Section 5.9 of RFC9200}}).
+
+For a client/RS, the secure communication association shared with the AS is bound to its active registration at the AS, which the AS maintains together with related information until a possible deregistration occurs (e.g., due to a decommissioning of the client/RS). The registration process at the AS is out of scope for this document as well for the ACE framework (see {{Section 5.5 of RFC9200}}).
+
 # Security Considerations
 
 The same security considerations from the ACE framework {{RFC9200}} apply to this document, together with those from the specific profile of ACE used.
@@ -1748,6 +1816,8 @@ ead_session_id_label = 2
 * Added example of AS-to-RS token upload using the "updated_rights" parameter.
 
 * SDC workflow with a group-audience: after a failed upload, the AS continues uploading the access token to any remaining RS (unless the error code "missing_old_token" is received).
+
+* Added "Operational Considerations" section.
 
 * Updated security considerations.
 
