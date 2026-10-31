@@ -125,21 +125,25 @@ Table of Contents
    7.  Updated Payload Format of Error Responses
    8.  Updated Requirements on Profiles of ACE
    9.  LAKE EAD Item for Transporting a Session Identifier
-   10. Security Considerations
-     10.1.  Explicit Indication of Update of Access Rights in the SDC
+   10. Operational Considerations
+     10.1.  Logging
+     10.2.  Management and Distribution of Keying Material
+     10.3.  Access Control
+   11. Security Considerations
+     11.1.  Explicit Indication of Update of Access Rights in the SDC
             Workflow
-   11. IANA Considerations
-     11.1.  OAuth Parameters Registry
-     11.2.  OAuth Parameters CBOR Mappings Registry
-     11.3.  JSON Web Token Claims Registry
-     11.4.  CBOR Web Token (CWT) Claims Registry
-     11.5.  OAuth Extensions Error Registry
-     11.6.  OAuth Error Code CBOR Mappings Registry
-     11.7.  Custom Problem Detail Keys Registry
-     11.8.  EDHOC External Authorization Data Registry
-   12. References
-     12.1.  Normative References
-     12.2.  Informative References
+   12. IANA Considerations
+     12.1.  OAuth Parameters Registry
+     12.2.  OAuth Parameters CBOR Mappings Registry
+     12.3.  JSON Web Token Claims Registry
+     12.4.  CBOR Web Token (CWT) Claims Registry
+     12.5.  OAuth Extensions Error Registry
+     12.6.  OAuth Error Code CBOR Mappings Registry
+     12.7.  Custom Problem Detail Keys Registry
+     12.8.  EDHOC External Authorization Data Registry
+   13. References
+     13.1.  Normative References
+     13.2.  Informative References
    Appendix A.  Benefits for ACE Profiles
      A.1.  DTLS Profile
      A.2.  LAKE and OSCORE Profile
@@ -1748,12 +1752,12 @@ Table of Contents
       token belongs.
 
       When CWTs are used as access tokens, such claim can be the
-      "token_series_id" claim registered in Section 11.4, which has the
+      "token_series_id" claim registered in Section 12.4, which has the
       same semantics as the "token_series_id" parameter of an access
       token response encoded in CBOR.
 
       When JWTs are used as access tokens, such claim can be the
-      "token_series_id" claim registered in Section 11.3, which has the
+      "token_series_id" claim registered in Section 12.3, which has the
       same semantics as the "token_series_id" parameter of an access
       token response encoded in JSON.
 
@@ -1921,15 +1925,15 @@ Table of Contents
    the CoAP code 5.00 (Internal Server Error).  The error response is
    analogous to error responses sent by the AS (see Section 5.8.3 of
    [RFC9200]) and MUST include the error code "missing_old_token".  The
-   error code and its CBOR abbreviation are registered in Section 11.5
-   and Section 11.6, respectively.
+   error code and its CBOR abbreviation are registered in Section 12.5
+   and Section 12.6, respectively.
 
    The explicit indication provided by the "updated_rights" parameter
    prevents possible ambiguous situations, where the RS might
    erroneously believe that the access token conveyed in the POST
    request is the first one of a new token series (e.g., following the
    deletion of stored access tokens due to memory limitations).  This is
-   further discussed in Section 10.1.
+   further discussed in Section 11.1.
 
 3.7.2.  Follow-up at the AS
 
@@ -2169,7 +2173,7 @@ Table of Contents
    MUST have a response code equivalent to the CoAP code 5.00 (Internal
    Server Error) and MUST include the error code
    "unknown_credential_referenced".  The error code and its CBOR
-   abbreviation are registered in Section 11.5 and Section 11.6,
+   abbreviation are registered in Section 12.5 and Section 12.6,
    respectively.
 
    After receiving such an error response, C can send a new access token
@@ -2292,7 +2296,7 @@ Table of Contents
    Section 5.8.3 of [RFC9200]).  The error response MUST have a response
    code equivalent to the CoAP code 4.00 (Bad Request) and MUST include
    the error code "failed_pop_verification".  The error code and its
-   CBOR abbreviation are registered in Section 11.5 and Section 11.6,
+   CBOR abbreviation are registered in Section 12.5 and Section 12.6,
    respectively.
 
 7.  Updated Payload Format of Error Responses
@@ -2314,7 +2318,7 @@ Table of Contents
    (see Section 2 of [RFC9290]).  The CBOR map is formatted as follows:
 
    *  It MUST include the Custom Problem Detail entry "ace-error"
-      registered in Section 11.7 of this document.
+      registered in Section 12.7 of this document.
 
       This entry is formatted as a CBOR map including only one field,
       namely "error-code".  The map key for the "error-code" field is
@@ -2472,7 +2476,7 @@ Table of Contents
 
    In particular:
 
-   *  ead_label is the integer value TBD registered in Section 11.8.
+   *  ead_label is the integer value TBD registered in Section 12.8.
 
    *  ead_value is a CBOR byte string equal to the value of the
       "session_id" field within the LAKE_Information object specified by
@@ -2481,7 +2485,7 @@ Table of Contents
       Section 3.3 of [I-D.ietf-ace-edhoc-oscore-profile]).
 
    Note to RFC Editor: Please replace TBD with the value registered for
-   Session ID in Section 11.8, then delete this note.
+   Session ID in Section 12.8, then delete this note.
 
    This EAD item is critical, i.e., it is used only with the negative
    value of its ead_label, indicating that the receiving RS must
@@ -2565,10 +2569,167 @@ Table of Contents
    -2, h'01fc'
 
    Note to RFC Editor: Please replace the value of the ead_label with
-   the value registered for Session ID in Section 11.8, then delete this
+   the value registered for Session ID in Section 12.8, then delete this
    note.
 
-10.  Security Considerations
+10.  Operational Considerations
+
+   This section compiles the operational considerations that hold for
+   this document.
+
+10.1.  Logging
+
+   When performing its normal operations, an AS is expected to produce
+   timestamped logs about the following:
+
+   *  The reception and processing outcome of an access token request,
+      e.g., in terms of its failure/success and issuance of an access
+      token.
+
+   *  The outcome of uploading an issued access token at one or multiple
+      RSs on behalf of the requesting client, as per the SDC workflow.
+
+   *  Events pertaining the lifecycle of issued access tokens (e.g.,
+      their issuance, expiration, and potential revocation) and the
+      lifecycle of the token series to which those access tokens belong
+      to.
+
+   *  The registration and deregistration of clients and RSs at the AS.
+
+   Analogously, when performing its normal operations, an RS is expected
+   to produce timestamped logs about the following:
+
+   *  The reception and processing outcome of an access token, e.g., in
+      terms of its failure/success.
+
+   *  Events pertaining the lifecycle of processed access tokens (e.g.,
+      their rejection, acceptance, storing, and deletion).
+
+   *  Failed accesses to protected resources due to missing/insufficient
+      access rights for the requesting client per the stored access
+      tokens.
+
+   Requests at the AS (e.g., from a client requesting an access token)
+   or at the RS (e.g., for uploading an access token or for accessing a
+   protected resource) can be effectively characterized by the
+   transport-specific information of the request, together with the
+   secure communication association shared with the requester as
+   applicable.
+
+   Although log entries are produced by the AS/RS, the storage,
+   management, controlled sharing, and disposal of logs could be
+   entrusted to a designated storage point that can be the AS/RS itself
+   or instead a separate trusted entity.
+
+   Besides what is compiled above, the AS/RS could produce additional
+   information to log.  Further details about what the AS/RS logs, with
+   what granularity, and based on what triggering events and conditions
+   are application-specific and left to operators to define.
+
+   The AS/RS MUST NOT log any secret or confidential information
+   pertaining to its operations.  For example, this includes
+   cryptographic secrets pertaining to (the establishment of) secure
+   communication associations and keying material derived thereof,
+   including own private keys associated with authentication credentials
+   used for establishing secure communication associations.
+
+   It is up to the application to specify for how long a log entry is
+   retained from the time of its creation and until its deletion.
+   Different retention policies could be enforced, for example,
+   depending on the successful/failed issuance (processing) of an access
+   token at the AS (RS), or on the secure communication association
+   shared with the specific requester.  For a given set of log entries
+   that are grouped together according to certain criteria, the oldest
+   log entries are expected to be those deleted first.
+
+   It is out of the scope of this document what specific semantics and
+   data model are used by the AS/RS for producing and processing the
+   logs.  Specific semantics and data models can be defined by
+   applications and future specifications.
+
+   It is expected that the logs produced are made available for secure
+   access by authorized external management applications and operators.
+
+   In particular, logged information could be retrieved in the following
+   ways.
+
+   *  By accessing logs at the designated storage point through polling.
+      This can occur in an occasional, regular, or event-driven way.
+
+   *  Through notifications sent by the designated storage point
+      according to an operator-defined frequency.
+
+   *  Through notifications asynchronously sent by the designated
+      storage point, throttling them in order to prevent congestion and
+      duplication and to not create attack vectors.
+
+   From the perspective of an individual management application or
+   network operator, knowledge gained from the logged information can be
+   useful for managing the installation, enforcement, revision, and
+   retirement of access policies at the AS, as well as for identifying
+   clients or RSs for which troubleshooting, upgrade, re-enrollment,
+   eviction, or decommissioning should be considered.
+
+   Some of the logged information can be privacy-sensitive.  This
+   especially holds for the metadata about clients and RSs, i.e., their
+   addressing information and, when applicable, (identifiers of) their
+   authentication credentials that are used to authenticate with the
+   other parties when establishing and using a secure communication
+   association.  If external management applications and operators
+   obtain such metadata, they become able to track a given client or RS,
+   as to its interactions with one or multiple other clients, RSs, and/
+   or ASes.
+
+   Therefore, the logged information that is effectively provided to
+   external management applications and operators SHOULD be redacted by
+   the designated storage point, by omitting any privacy-sensitive
+   information element that could enable or facilitate the impairment of
+   clients' and RSs' privacy, e.g., by tracking those as they interact
+   with other parties.  Exceptions could apply, e.g., if the designated
+   storage point can verify that the management application or operator
+   in question is specifically authorized to obtain such privacy-
+   sensitive information and appropriately entitled to obtain it
+   according to enforced privacy policies.
+
+10.2.  Management and Distribution of Keying Material
+
+   The approach used to manage and distribute keying material depend on
+   the specific profile of ACE used, for example
+   [RFC9202][RFC9203][I-D.ietf-ace-edhoc-oscore-profile].  In turn, the
+   approach used depends on the specific security protocol used between
+   clients, RSs, and ASes, which is also specified by the profile of ACE
+   used.
+
+   Appendix C of [RFC9200] compiles the list of requirements on profiles
+   of ACE, two of which are amended in Section 8 of the present
+   document.
+
+   Irrespective of the specific profile used, clients, RSs, and ASes
+   that communicate with one another have to use a secure communication
+   association and be mutually authenticated (see Section 5 of
+   [RFC9200]).
+
+10.3.  Access Control
+
+   The enforcement of access control at RSs is the main goal of the ACE
+   framework.
+
+   The enforcement of access control at the AS relies on the
+   authenticated interaction of a client/RS at the AS.  For example,
+   this applies to a client sending an access token request to the token
+   endpoint at the AS (see Section 5.8.1 of [RFC9200]), or to an RS
+   sending a token introspection request to the introspect endpoint at
+   the AS to perform token introspection (see Section 5.9 of [RFC9200]).
+
+   For a client/RS, the secure communication association shared with the
+   AS is bound to its active registration at the AS, which the AS
+   maintains together with related information until a possible
+   deregistration occurs (e.g., due to a decommissioning of the client/
+   RS).  The registration process at the AS is out of scope for this
+   document as well for the ACE framework (see Section 5.5 of
+   [RFC9200]).
+
+11.  Security Considerations
 
    The same security considerations from the ACE framework [RFC9200]
    apply to this document, together with those from the specific profile
@@ -2580,7 +2741,7 @@ Table of Contents
 
    Furthermore, the following considerations apply.
 
-10.1.  Explicit Indication of Update of Access Rights in the SDC
+11.1.  Explicit Indication of Update of Access Rights in the SDC
        Workflow
 
    According to some profiles of ACE, C can request a new access token
@@ -2629,14 +2790,14 @@ Table of Contents
    uploading an access token for dynamically updating the access rights
    of C.
 
-11.  IANA Considerations
+12.  IANA Considerations
 
    This document has the following actions for IANA.
 
    Note to RFC Editor: Please replace all occurrences of "[RFC-XXXX]"
    with the RFC number of this specification and delete this paragraph.
 
-11.1.  OAuth Parameters Registry
+12.1.  OAuth Parameters Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters"
    registry [OAuth.Parameters] within the "OAuth Parameters" registry
@@ -2805,7 +2966,7 @@ Table of Contents
    occurrences of "RFC-ietf-ace-key-groupcomm-oscore-21" with the RFC
    number of that specification and delete this paragraph.
 
-11.2.  OAuth Parameters CBOR Mappings Registry
+12.2.  OAuth Parameters CBOR Mappings Registry
 
    IANA is asked to add the following entries to the "OAuth Parameters
    CBOR Mappings" registry [OAuth.Parameters.CBOR.Mappings] within the
@@ -2928,7 +3089,7 @@ Table of Contents
 
    *  Reference: [RFC9201, Section 3.2][RFC-XXXX, Section 5.2]
 
-11.3.  JSON Web Token Claims Registry
+12.3.  JSON Web Token Claims Registry
 
    IANA is asked to add the following entry to the "JSON Web Token
    Claims" registry [JSON.Web.Token.Claims] within the "JSON Web Token
@@ -2943,7 +3104,7 @@ Table of Contents
 
    *  Reference: [RFC-XXXX]
 
-11.4.  CBOR Web Token (CWT) Claims Registry
+12.4.  CBOR Web Token (CWT) Claims Registry
 
    IANA is asked to add the following entry to the "CBOR Web Token (CWT)
    Claims" registry [CWT.Claims] within the "CBOR Web Token (CWT)
@@ -2964,7 +3125,7 @@ Table of Contents
 
    *  Reference: [RFC-XXXX, Section 3.6]
 
-11.5.  OAuth Extensions Error Registry
+12.5.  OAuth Extensions Error Registry
 
    IANA is asked to add the following entries to the "OAuth Extensions
    Error Registry" [OAuth.Extensions.Error] within the "OAuth
@@ -3004,7 +3165,7 @@ Table of Contents
 
    *  Reference: [RFC-XXXX, Section 6]
 
-11.6.  OAuth Error Code CBOR Mappings Registry
+12.6.  OAuth Error Code CBOR Mappings Registry
 
    IANA is asked to add the following entries to the "OAuth Error Code
    CBOR Mappings" registry [OAuth.Error.Code.CBOR.Mappings] within the
@@ -3039,7 +3200,7 @@ Table of Contents
 
    *  Original Specification: [RFC-XXXX]
 
-11.7.  Custom Problem Detail Keys Registry
+12.7.  Custom Problem Detail Keys Registry
 
    IANA is asked to register the following entry in the "Custom Problem
    Detail Keys" registry [Custom.Problem.Detail.Keys] within the
@@ -3056,7 +3217,7 @@ Table of Contents
 
    *  Reference: [RFC-XXXX, Section 7]
 
-11.8.  EDHOC External Authorization Data Registry
+12.8.  EDHOC External Authorization Data Registry
 
    IANA is asked to add the following entry to the "EDHOC External
    Authorization Data" registry [EDHOC.External.Authorization.Data]
@@ -3071,9 +3232,9 @@ Table of Contents
 
    *  Reference: [RFC-XXXX], Section 9
 
-12.  References
+13.  References
 
-12.1.  Normative References
+13.1.  Normative References
 
    [Custom.Problem.Detail.Keys]
               IANA, "Custom Problem Detail Keys",
@@ -3280,7 +3441,7 @@ Table of Contents
               <https://nvlpubs.nist.gov/nistpubs/FIPS/
               NIST.FIPS.180-4.pdf>.
 
-12.2.  Informative References
+13.2.  Informative References
 
    [I-D.ietf-ace-authcred-dtls-profile]
               Tiloca, M. and J. P. Mattsson, "Additional Formats of
@@ -3428,6 +3589,8 @@ C.1.  Version -08 to -09
    *  SDC workflow with a group-audience: after a failed upload, the AS
       continues uploading the access token to any remaining RS (unless
       the error code "missing_old_token" is received).
+
+   *  Added "Operational Considerations" section.
 
    *  Updated security considerations.
 
