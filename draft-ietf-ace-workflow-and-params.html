@@ -1046,7 +1046,7 @@ svg {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Tiloca &amp; Selander</td>
-<td class="center">Expires 3 May 2027</td>
+<td class="center">Expires 4 May 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1062,12 +1062,12 @@ svg {
 <a href="https://www.rfc-editor.org/rfc/rfc9200" class="eref">9200</a>, <a href="https://www.rfc-editor.org/rfc/rfc9201" class="eref">9201</a>, <a href="https://www.rfc-editor.org/rfc/rfc9202" class="eref">9202</a>, <a href="https://www.rfc-editor.org/rfc/rfc9203" class="eref">9203</a>, <a href="https://www.rfc-editor.org/rfc/rfc9431" class="eref">9431</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-10-30" class="published">30 October 2026</time>
+<time datetime="2026-10-31" class="published">31 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-05-03">3 May 2027</time></dd>
+<dd class="expires"><time datetime="2027-05-04">4 May 2027</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1120,7 +1120,7 @@ svg {
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 3 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 4 May 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2278,8 +2278,9 @@ The "audience2" parameter <span class="bcp14">MUST</span> be included if the "rs
 <p id="section-3.5-7">Each element of the array <span class="bcp14">MUST</span> follow the syntax and semantics of the "cnf" claim either from <span><a href="https://rfc-editor.org/rfc/rfc8747#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC8747" class="cite xref">RFC8747</a>]</span> for CBOR-based interactions, or from <span><a href="https://rfc-editor.org/rfc/rfc7800#section-3.1" class="relref">Section 3.1</a> of [<a href="#RFC7800" class="cite xref">RFC7800</a>]</span> for JSON-based interactions. It is not required that all the elements of the array rely on the same confirmation method.<a href="#section-3.5-7" class="pilcrow">¶</a></p>
 <p id="section-3.5-8">Any of the public keys conveyed in the "anchor_cnf" parameter may be provided together with information such as the public key algorithm and use (e.g., specified by means of the parameters "alg" and "key_ops" in a COSE_Key structure). If such information is specified, a client <span class="bcp14">MUST NOT</span> use a public key that is incompatible with the profile of ACE used or with the public keys to validate and the way to validate those.<a href="#section-3.5-8" class="pilcrow">¶</a></p>
 <p id="section-3.5-9">The presence of this parameter does not require that the access token response also includes the "rs_cnf" parameter defined in <span>[<a href="#RFC9201" class="cite xref">RFC9201</a>]</span> or the "rs_cnf2" parameter defined in <a href="#sec-rs_cnf2-audience2" class="auto internal xref">Section 3.4</a> of the present document. That is, C may be able to obtain the public keys of the RS/RSs for which the access token is issued through other means.<a href="#section-3.5-9" class="pilcrow">¶</a></p>
-<p id="section-3.5-10">When the access token response includes both the "anchor_cnf" parameter and the "audience2" parameter defined in <a href="#sec-rs_cnf2-audience2" class="auto internal xref">Section 3.4</a>, then C <span class="bcp14">MUST</span> make sure that a public key PK_RS is associated with an RS identified by an element of "audience2", before using any of the public keys specified in "anchor_cnf" to validate PK_RS.<a href="#section-3.5-10" class="pilcrow">¶</a></p>
+<p id="section-3.5-10">When the access token response includes both the "anchor_cnf" parameter and the "audience2" parameter defined in <a href="#sec-rs_cnf2-audience2" class="auto internal xref">Section 3.4</a>, then C <span class="bcp14">MUST</span> make sure that a public key PK_RS is associated with an RS identified by an element of "audience2", before using any of the public keys specified in "anchor_cnf" to validate PK_RS. The particular way that C uses to verify such an association as well as the particular relationships between the identifiers of group-audiences and the identifiers of RSs specified in the "audience2" parameter are application specific.<a href="#section-3.5-10" class="pilcrow">¶</a></p>
 <p id="section-3.5-11">When the access token response includes the "anchor_cnf" parameter but not the "audience2" parameter, then C can use any of the public keys specified in "anchor_cnf" to validate the public key PK_RS of any RS in the targeted audience. This allows C to use the access token with an RS that is deployed later on as part of the same audience, which is particularly useful in the case of a group-audience.<a href="#section-3.5-11" class="pilcrow">¶</a></p>
+<p id="section-3.5-12">Specifically when the access token is issued for a group-audience G_Aud and the access token response includes the "anchor_cnf" parameter but not the "audience2" parameter, the following applies in order to prevent C from erroneously believing that G_Aud includes a given RS that is not included therein. Unless a public key PK_Anchor specified within the "anchor_cnf" parameter comprises or is accompanied by information about the RSs included in G_Aud, PK_Anchor <span class="bcp14">MUST</span> be uniquely associated with G_Aud. In particular, PK_Anchor <span class="bcp14">MUST NOT</span> be usable to successfully validate the public key of an RS that is not included in G_Aud.<a href="#section-3.5-12" class="pilcrow">¶</a></p>
 <div id="example-2">
 <section id="section-3.5.1">
           <h4 id="name-example-3">
@@ -3824,16 +3825,19 @@ ead_session_id_label = 2
             <p id="appendix-C.1-1.3.1">Used normative language on the AS creating a token series on the fly.<a href="#appendix-C.1-1.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-C.1-1.4">
-            <p id="appendix-C.1-1.4.1">Added example of AS-to-RS token upload using the "updated_rights" parameter.<a href="#appendix-C.1-1.4.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.4.1">Guidance and requirements against possible group-audience mixup when using the "anchor_cnf" parameter.<a href="#appendix-C.1-1.4.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-C.1-1.5">
-            <p id="appendix-C.1-1.5.1">SDC workflow with a group-audience: after a failed upload, the AS continues uploading the access token to any remaining RS (unless the error code "missing_old_token" is received).<a href="#appendix-C.1-1.5.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.5.1">Added example of AS-to-RS token upload using the "updated_rights" parameter.<a href="#appendix-C.1-1.5.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-C.1-1.6">
-            <p id="appendix-C.1-1.6.1">Updated security considerations.<a href="#appendix-C.1-1.6.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.6.1">SDC workflow with a group-audience: after a failed upload, the AS continues uploading the access token to any remaining RS (unless the error code "missing_old_token" is received).<a href="#appendix-C.1-1.6.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="appendix-C.1-1.7">
-            <p id="appendix-C.1-1.7.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.7.1" class="pilcrow">¶</a></p>
+            <p id="appendix-C.1-1.7.1">Updated security considerations.<a href="#appendix-C.1-1.7.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-C.1-1.8">
+            <p id="appendix-C.1-1.8.1">Editorial fixes and improvements.<a href="#appendix-C.1-1.8.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
