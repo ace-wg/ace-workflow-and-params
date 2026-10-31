@@ -887,9 +887,11 @@ Any of the public keys conveyed in the "anchor_cnf" parameter may be provided to
 
 The presence of this parameter does not require that the access token response also includes the "rs_cnf" parameter defined in {{RFC9201}} or the "rs_cnf2" parameter defined in {{sec-rs_cnf2-audience2}} of the present document. That is, C may be able to obtain the public keys of the RS/RSs for which the access token is issued through other means.
 
-When the access token response includes both the "anchor_cnf" parameter and the "audience2" parameter defined in {{sec-rs_cnf2-audience2}}, then C MUST make sure that a public key PK_RS is associated with an RS identified by an element of "audience2", before using any of the public keys specified in "anchor_cnf" to validate PK_RS.
+When the access token response includes both the "anchor_cnf" parameter and the "audience2" parameter defined in {{sec-rs_cnf2-audience2}}, then C MUST make sure that a public key PK_RS is associated with an RS identified by an element of "audience2", before using any of the public keys specified in "anchor_cnf" to validate PK_RS. The particular way that C uses to verify such an association as well as the particular relationships between the identifiers of group-audiences and the identifiers of RSs specified in the "audience2" parameter are application specific.
 
 When the access token response includes the "anchor_cnf" parameter but not the "audience2" parameter, then C can use any of the public keys specified in "anchor_cnf" to validate the public key PK_RS of any RS in the targeted audience. This allows C to use the access token with an RS that is deployed later on as part of the same audience, which is particularly useful in the case of a group-audience.
+
+Specifically when the access token is issued for a group-audience G_Aud and the access token response includes the "anchor_cnf" parameter but not the "audience2" parameter, the following applies in order to prevent C from erroneously believing that G_Aud includes a given RS that is not included therein. Unless a public key PK_Anchor specified within the "anchor_cnf" parameter comprises or is accompanied by information about the RSs included in G_Aud, PK_Anchor MUST be uniquely associated with G_Aud. In particular, PK_Anchor MUST NOT be usable to successfully validate the public key of an RS that is not included in G_Aud.
 
 ### Example
 
@@ -1740,6 +1742,8 @@ ead_session_id_label = 2
 * Fixed use of "token_upload" values in access token response.
 
 * Used normative language on the AS creating a token series on the fly.
+
+* Guidance and requirements against possible group-audience mixup when using the "anchor_cnf" parameter.
 
 * Added example of AS-to-RS token upload using the "updated_rights" parameter.
 
