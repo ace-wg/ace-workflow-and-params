@@ -1355,7 +1355,7 @@ When performing its normal operations, an AS is expected to produce timestamped 
 
 * The registration and deregistration of clients and RSs at the AS.
 
-Analogously, when performing its normal operations, an RS is expected to produce timestamped logs about the following:
+Similarly, when performing its normal operations, it is desirable that an RS produces timestamped logs about the following, to the extent afforded by its available memory, computing, and energy resources:
 
 * The reception and processing outcome of an access token, e.g., in terms of its failure/success.
 
@@ -1371,7 +1371,7 @@ Besides what is compiled above, the AS/RS could produce additional information t
 
 The AS/RS MUST NOT log any secret or confidential information pertaining to its operations. For example, this includes cryptographic secrets pertaining to (the establishment of) secure communication associations and keying material derived thereof, including own private keys associated with authentication credentials used for establishing secure communication associations.
 
-It is up to the application to specify for how long a log entry is retained from the time of its creation and until its deletion. Different retention policies could be enforced, for example, depending on the successful/failed issuance (processing) of an access token at the AS (RS), or on the secure communication association shared with the specific requester. For a given set of log entries that are grouped together according to certain criteria, the oldest log entries are expected to be those deleted first.
+It is up to the application to specify for how long a log entry is retained from the time of its creation and until its deletion. Different retention policies could be enforced, for example, depending on what log entries pertain to (e.g., the successful/failed issuance (processing) of an access token at the AS (RS)), or on the secure communication association shared with the specific requester. For a given set of log entries that are grouped together according to certain criteria, the oldest log entries are expected to be those deleted first.
 
 It is out of the scope of this document what specific semantics and data model are used by the AS/RS for producing and processing the logs. Specific semantics and data models can be defined by applications and future specifications.
 
